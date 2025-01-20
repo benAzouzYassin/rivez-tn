@@ -1,0 +1,176 @@
+"use client"
+import { z } from "zod"
+import Facebook from "@/components/icons/facebook"
+import Google from "@/components/icons/google"
+import BackButton from "@/components/shared/back-button"
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
+import Link from "next/link"
+import { useRouter } from "nextjs-toploader/app"
+import { useForm } from "react-hook-form"
+import { zodResolver } from "@hookform/resolvers/zod"
+import { useMemo, useState } from "react"
+import {
+    dismissToasts,
+    toastError,
+    toastLoading,
+    toastSuccess,
+} from "@/lib/toasts"
+import { supabase } from "@/backend/config/supbase-client"
+
+export default function Page() {
+    const router = useRouter()
+    const [isPasswordAuth, setIsPasswordAuth] = useState(false)
+    const [isGoogleAuth, setIsGoogleAuth] = useState(false)
+
+    const formSchema = useMemo(
+        () =>
+            z.object({
+                identifier: z
+                    .string()
+                    .min(1, "Email or phone is required")
+                    .max(100, "Input exceeds maximum length"),
+                password: z
+                    .string()
+                    .min(1, "Password is required")
+                    .min(6, "Password must be at least 6 characters"),
+            }),
+        []
+    )
+
+    const {
+        register,
+        handleSubmit,
+        formState: { errors, isSubmitting },
+    } = useForm<z.infer<typeof formSchema>>({
+        resolver: zodResolver(formSchema),
+        defaultValues: {
+            identifier: "",
+            password: "",
+        },
+    })
+
+    const onSubmit = async (formData: z.infer<typeof formSchema>) => {
+        setIsPasswordAuth(true)
+        toastLoading("Creating your account")
+        const { error } = await supabase.auth.signInWithPassword({
+            email: formData.identifier,
+            password: formData.password,
+        })
+
+        if (error) {
+            // other error
+            toastError("Wrong email or password.")
+        } else {
+            //success
+            router.replace("/")
+            toastSuccess("You are logged in now.")
+        }
+
+        dismissToasts("loading")
+        setIsPasswordAuth(false)
+    }
+
+    return (
+        <main className="flex min-h-[100vh] relative flex-col items-center justify-center">
+            <section>
+                <BackButton className="absolute top-8 left-16" />
+
+                <Button
+                    onClick={() => router.push("/auth/register")}
+                    className="absolute !w-fit !px-7 uppercase font-bold text-[#1CB0F6] top-8 right-16"
+                    variant={"secondary"}
+                >
+                    REGISTER
+                </Button>
+                <form
+                    onSubmit={handleSubmit(onSubmit)}
+                    className="flex flex-col "
+                >
+                    <h1 className="text-2xl first-letter:capitalize mb-5 font-bold text-center text-[#3C3C3C]">
+                        login to your profile
+                    </h1>
+                    <Input
+                        {...register("identifier")}
+                        type="text"
+                        className="min-w-96"
+                        placeholder="Email or phone"
+                        errorMessage={errors.identifier?.message}
+                    />
+                    <div className="relative">
+                        <Input
+                            {...register("password")}
+                            type="password"
+                            className="min-w-96"
+                            placeholder="Password"
+                            errorMessage={errors.password?.message}
+                        />
+                        <div className="absolute right-3 top-[12px] ">
+                            <Link
+                                href={"/auth/forget-password"}
+                                className="font-semibold hover:underline underline-offset-2 text-[#AFAFAF] text-sm"
+                            >
+                                FORGOT ?
+                            </Link>
+                        </div>
+                    </div>
+                    <Button
+                        type="submit"
+                        className="font-semibold uppercase text-sm"
+                        variant={"blue"}
+                        isLoading={isSubmitting || isPasswordAuth}
+                    >
+                        LOGIN
+                    </Button>
+                </form>
+                <div className="flex items-center mt-5 w-full">
+                    <hr className="rounded-full w-full bg-[#E5E5E5] h-1" />
+                    <p className="mx-2 font-semibold text-[#AFAFAF]">OR</p>
+                    <hr className="rounded-full w-full bg-[#E5E5E5] h-1" />
+                </div>
+                <div className="grid gap-5 mt-2 grid-cols-2">
+                    <Button
+                        disabled
+                        type="button"
+                        className="font-bold text-[#3B5998] uppercase text-sm"
+                        variant={"secondary"}
+                    >
+                        <Facebook className="!w-4 scale-105 !h-4" /> FACEBOOK
+                    </Button>
+                    <Button
+                        isLoading={isGoogleAuth}
+                        onClick={async () => {
+                            setIsGoogleAuth(true)
+                            await supabase.auth.signInWithOAuth({
+                                provider: "google",
+                            })
+                        }}
+                        type="button"
+                        className="font-bold text-[#4285F4] uppercase text-sm"
+                        variant={"secondary"}
+                    >
+                        <Google className="!w-4 scale-105 !h-4" /> GOOGLE
+                    </Button>
+                </div>
+                <div className="flex items-center justify-center mt-5">
+                    <p className="text-[#AFAFAF] first-letter:capitalize text-sm max-w-[350px] text-center font-medium">
+                        by signing in to Fikr, you agree to our{" "}
+                        <Link
+                            className="font-semibold hover:underline underline-offset-2"
+                            href={""}
+                        >
+                            Terms
+                        </Link>{" "}
+                        and{" "}
+                        <Link
+                            className="font-semibold hover:underline underline-offset-2"
+                            href={""}
+                        >
+                            Privacy Policy.
+                        </Link>
+                    </p>
+                </div>
+            </section>
+        </main>
+    )
+}
