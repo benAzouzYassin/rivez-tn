@@ -1,8 +1,8 @@
 "use client"
 
-import { supabase } from "@/backend/config/supbase-client"
 import { Button } from "@/components/ui/button"
 import { toastError } from "@/lib/toasts"
+import { logout } from "@/use-cases/users/logout"
 import { useRouter } from "nextjs-toploader/app"
 
 export default function Page() {
@@ -12,8 +12,8 @@ export default function Page() {
             This is a protected page
             <Button
                 onClick={async () => {
-                    const { error } = await supabase.auth.signOut()
-                    if (!error) {
+                    const { success } = await logout()
+                    if (success) {
                         router.replace("/auth/register")
                     } else {
                         toastError("error while signing out")

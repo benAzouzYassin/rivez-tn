@@ -1,22 +1,17 @@
 "use client"
-import { z } from "zod"
 import Facebook from "@/components/icons/facebook"
 import Google from "@/components/icons/google"
 import BackButton from "@/components/shared/back-button"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
+import { dismissToasts, toastError } from "@/lib/toasts"
+import { loginWithGoogle, loginWithPassword } from "@/use-cases/users/login"
+import { zodResolver } from "@hookform/resolvers/zod"
 import Link from "next/link"
 import { useRouter } from "nextjs-toploader/app"
-import { useForm } from "react-hook-form"
-import { zodResolver } from "@hookform/resolvers/zod"
 import { useMemo, useState } from "react"
-import {
-    dismissToasts,
-    toastError,
-    toastLoading,
-    toastSuccess,
-} from "@/lib/toasts"
-import { supabase } from "@/backend/config/supbase-client"
+import { useForm } from "react-hook-form"
+import { z } from "zod"
 
 export default function Page() {
     const router = useRouter()
@@ -52,19 +47,14 @@ export default function Page() {
 
     const onSubmit = async (formData: z.infer<typeof formSchema>) => {
         setIsPasswordAuth(true)
-        toastLoading("Creating your account")
-        const { error } = await supabase.auth.signInWithPassword({
+        const { success } = await loginWithPassword({
             email: formData.identifier,
             password: formData.password,
         })
-
-        if (error) {
-            // other error
-            toastError("Wrong email or password.")
-        } else {
-            //success
+        if (success) {
             router.replace("/")
-            toastSuccess("You are logged in now.")
+        } else {
+            toastError("Wrong email or password.")
         }
 
         dismissToasts("loading")
@@ -141,9 +131,7 @@ export default function Page() {
                         isLoading={isGoogleAuth}
                         onClick={async () => {
                             setIsGoogleAuth(true)
-                            await supabase.auth.signInWithOAuth({
-                                provider: "google",
-                            })
+                            await loginWithGoogle()
                         }}
                         type="button"
                         className="font-bold text-[#4285F4] uppercase text-sm"

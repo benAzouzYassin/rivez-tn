@@ -1,6 +1,6 @@
 import { Check, Info, LoaderCircleIcon, TriangleAlert, X } from "lucide-react"
 import { toast } from "sonner"
-import { cn } from "./utils"
+import { cn } from "./ui-utils"
 
 export function toastSuccess(
     message?: string,

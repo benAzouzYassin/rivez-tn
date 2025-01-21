@@ -1,16 +1,14 @@
 "use client"
-import { supabase } from "@/backend/config/supbase-client"
 import Facebook from "@/components/icons/facebook"
 import Google from "@/components/icons/google"
 import XIcon from "@/components/icons/xIcon"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
+import { dismissToasts, toastError } from "@/lib/toasts"
 import {
-    dismissToasts,
-    toastError,
-    toastLoading,
-    toastSuccess,
-} from "@/lib/toasts"
+    registerWithGoogle,
+    registerWithPassword,
+} from "@/use-cases/users/register"
 import { zodResolver } from "@hookform/resolvers/zod"
 import Link from "next/link"
 import { useRouter } from "nextjs-toploader/app"
@@ -75,25 +73,17 @@ export default function Page() {
 
     const onSubmit = async (formData: z.infer<typeof formSchema>) => {
         setIsPasswordAuth(true)
-        toastLoading("Creating your account")
-        const { error } = await supabase.auth.signUp({
+        const { data, success } = await registerWithPassword({
             email: formData.email,
             password: formData.password,
+            username: formData.username,
             phone: formData.phone || undefined,
-
-            options: {
-                data: {
-                    displayName: formData.username,
-                },
-            },
         })
-
-        if (error) {
-            toastError("Error while creating your account.")
-        } else {
-            //success
+        console.log(data)
+        if (success) {
             router.replace("/")
-            toastSuccess("You are logged in now.")
+        } else {
+            toastError("Error while creating your account.")
         }
 
         dismissToasts("loading")
@@ -137,13 +127,13 @@ export default function Page() {
                         placeholder="Email"
                         errorMessage={errors.email?.message}
                     />
-                    <Input
+                    {/* <Input
                         {...register("phone")}
                         type="tel"
                         className="min-w-[450px]"
                         placeholder="Phone (optional)"
                         errorMessage={errors.phone?.message}
-                    />
+                    /> */}
                     <Input
                         {...register("password")}
                         type="password"
@@ -178,9 +168,7 @@ export default function Page() {
                         isLoading={isGoogleAuth}
                         onClick={async () => {
                             setIsGoogleAuth(true)
-                            await supabase.auth.signInWithOAuth({
-                                provider: "google",
-                            })
+                            await registerWithGoogle()
                         }}
                         type="button"
                         className="font-bold text-[#4285F4] uppercase text-sm"

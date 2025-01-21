@@ -1,7 +1,7 @@
 "use client"
 
-import { supabase } from "@/backend/config/supbase-client"
 import AnimatedLoader from "@/components/ui/animated-loader"
+import { readCurrentUser } from "@/data-access/users/read"
 import { useRouter } from "nextjs-toploader/app"
 import { useLayoutEffect, useState } from "react"
 
@@ -13,9 +13,8 @@ export default function PrivateLayout({
     const router = useRouter()
     const [allowedToEnter, setAllowedToEnter] = useState<boolean | null>(null)
     useLayoutEffect(() => {
-        console.log("effect rrun")
-        supabase.auth.getUser().then(({ data, error }) => {
-            if (data.user && !error) {
+        readCurrentUser().then(({ success }) => {
+            if (success) {
                 setAllowedToEnter(true)
             } else {
                 router.replace("/auth/register")

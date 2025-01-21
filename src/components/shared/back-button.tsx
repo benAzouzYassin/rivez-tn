@@ -1,7 +1,7 @@
 import { ComponentProps } from "react"
 import { Button } from "../ui/button"
 import XIcon from "../icons/xIcon"
-import { cn } from "@/lib/utils"
+import { cn } from "@/lib/ui-utils"
 import { useRouter } from "nextjs-toploader/app"
 
 type Props = {} & ComponentProps<typeof Button>

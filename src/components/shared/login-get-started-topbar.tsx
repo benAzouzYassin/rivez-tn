@@ -1,4 +1,4 @@
-import { cn } from "@/lib/utils"
+import { cn } from "@/lib/ui-utils"
 import { HTMLAttributes } from "react"
 import { Button } from "../ui/button"
 import Link from "next/link"
