@@ -1,13 +1,20 @@
 "use client"
-import { z } from "zod"
+
 import LoginGetStartedTopBar from "@/components/shared/login-get-started-topbar"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { useForm } from "react-hook-form"
+import { toastError, toastSuccess } from "@/lib/toasts"
+import { sendResetPasswordMail } from "@/use-cases/users/send-reset-password-mail"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { useMemo } from "react"
+import { useRouter } from "nextjs-toploader/app"
+import { useMemo, useState } from "react"
+import { useForm } from "react-hook-form"
+import { z } from "zod"
 
 export default function Page() {
+    const router = useRouter()
+    const [isSubmitted, setIsSubmitted] = useState(false)
+
     const formSchema = useMemo(
         () =>
             z.object({
@@ -31,16 +38,45 @@ export default function Page() {
     })
 
     const onSubmit = async (data: z.infer<typeof formSchema>) => {
-        try {
-            // Handle password reset logic here
-            console.log("Reset password request for:", data.email)
-            // You might want to:
-            // 1. Call your API endpoint
-            // 2. Show success message
-            // 3. Redirect to login page or confirmation page
-        } catch (error) {
+        const { error, success } = await sendResetPasswordMail(data)
+
+        if (success) {
+            setIsSubmitted(true)
+            toastSuccess(
+                "Password reset instructions have been sent to your email address"
+            )
+        } else {
             console.error("Password reset request error:", error)
+            toastError(
+                error instanceof Error
+                    ? error.message
+                    : "Failed to send reset instructions. Please try again."
+            )
         }
+    }
+
+    if (isSubmitted) {
+        return (
+            <main className="flex min-h-[100vh] relative flex-col items-center justify-center">
+                <LoginGetStartedTopBar className="w-full absolute top-0 left-0" />
+                <section className="text-center">
+                    <h1 className="text-2xl font-bold text-[#3C3C3C] mb-4">
+                        Check your email
+                    </h1>
+                    <p className="text-base text-[#3C3C3C] font-semibold max-w-[400px]">
+                        We&apos;ve sent password reset instructions to your
+                        email address. Please check your inbox.
+                    </p>
+                    <Button
+                        onClick={() => router.push("/auth/login")}
+                        className="mt-4 font-semibold uppercase text-sm"
+                        variant={"blue"}
+                    >
+                        Back to Login
+                    </Button>
+                </section>
+            </main>
+        )
     }
 
     return (
@@ -67,9 +103,9 @@ export default function Page() {
                     />
                     <Button
                         type="submit"
-                        className="font-semibold uppercase text-sm"
+                        className="font-semibold -mt-3 uppercase text-sm"
                         variant={"blue"}
-                        disabled={isSubmitting}
+                        isLoading={isSubmitting}
                     >
                         {isSubmitting ? "SUBMITTING..." : "SUBMIT"}
                     </Button>

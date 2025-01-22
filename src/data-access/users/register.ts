@@ -21,17 +21,23 @@ export async function registerUserWithPassword(params: {
     phone?: string
     username: string
 }) {
-    console.log(params)
     const { data, error } = await supabase.auth.signUp({
         email: params.email,
         password: params.password,
-        phone: params.password,
+        phone: params.phone,
         options: {
             data: {
                 displayName: params.username,
             },
         },
     })
+
+    if (params.phone) {
+        await supabase.auth.updateUser({
+            phone: params.phone,
+        })
+    }
+
     return {
         data: {
             user: {

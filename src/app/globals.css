@@ -7,3 +7,27 @@
     --radius: 0.5rem
   }
 }
+
+.virtuoso-scroll::-webkit-scrollbar {
+  width: 8px;
+}
+
+.virtuoso-scroll::-webkit-scrollbar-track {
+  background: #ffffff;
+  border-radius: 4px;
+}
+
+.virtuoso-scroll::-webkit-scrollbar-thumb {
+  background: #bebebe;
+  border-radius: 4px;
+}
+
+.virtuoso-scroll::-webkit-scrollbar-thumb:hover {
+  background: #afafaf;
+}
+
+/* For Firefox */
+.virtuoso-scroll {
+  scrollbar-width: thin;
+  scrollbar-color: #bebebe #ffffff;
+}

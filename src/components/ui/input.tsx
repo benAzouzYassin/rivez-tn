@@ -5,7 +5,9 @@ import { AlertCircle } from "lucide-react"
 
 const Input = React.forwardRef<
     HTMLInputElement,
-    React.ComponentProps<"input"> & { errorMessage?: string }
+    React.ComponentProps<"input"> & {
+        errorMessage?: string
+    }
 >(({ className, errorMessage, type, ...props }, ref) => {
     return (
         <div>

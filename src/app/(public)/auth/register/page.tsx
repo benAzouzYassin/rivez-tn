@@ -1,9 +1,9 @@
 "use client"
-import Facebook from "@/components/icons/facebook"
 import Google from "@/components/icons/google"
 import XIcon from "@/components/icons/xIcon"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
+import { PhoneInput } from "@/components/ui/phone-input"
 import { dismissToasts, toastError } from "@/lib/toasts"
 import {
     registerWithGoogle,
@@ -19,7 +19,6 @@ import { z } from "zod"
 export default function Page() {
     const [isPasswordAuth, setIsPasswordAuth] = useState(false)
     const [isGoogleAuth, setIsGoogleAuth] = useState(false)
-
     const formSchema = useMemo(
         () =>
             z.object({
@@ -31,27 +30,7 @@ export default function Page() {
                     .string()
                     .min(6, "Password must be at least 6 characters"),
                 email: z.string().email("Please enter a valid email address"),
-                phone: z
-                    .string()
-                    .nullable()
-                    .optional()
-                    .refine(
-                        (value) => {
-                            if (
-                                value !== undefined &&
-                                value !== null &&
-                                value !== ""
-                            ) {
-                                return /^\d+$/.test(value)
-                            } else {
-                                return true
-                            }
-                        },
-                        {
-                            message:
-                                "Phone number must contain only numeric values",
-                        }
-                    ),
+                phone: z.string().nullable().optional(),
             }),
         []
     )
@@ -61,6 +40,7 @@ export default function Page() {
         register,
         handleSubmit,
         formState: { errors },
+        setValue,
     } = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
@@ -73,13 +53,12 @@ export default function Page() {
 
     const onSubmit = async (formData: z.infer<typeof formSchema>) => {
         setIsPasswordAuth(true)
-        const { data, success } = await registerWithPassword({
+        const { success } = await registerWithPassword({
             email: formData.email,
             password: formData.password,
             username: formData.username,
             phone: formData.phone || undefined,
         })
-        console.log(data)
         if (success) {
             router.replace("/")
         } else {
@@ -89,7 +68,6 @@ export default function Page() {
         dismissToasts("loading")
         setIsPasswordAuth(false)
     }
-
     return (
         <main className="flex min-h-[100vh] relative flex-col items-center justify-center">
             <section>
@@ -127,13 +105,16 @@ export default function Page() {
                         placeholder="Email"
                         errorMessage={errors.email?.message}
                     />
-                    {/* <Input
-                        {...register("phone")}
+                    <PhoneInput
+                        onPhoneChange={(value) => {
+                            setValue("phone", value)
+                        }}
+                        defaultCountry="TN"
                         type="tel"
-                        className="min-w-[450px]"
+                        className="min-w-[380px]"
                         placeholder="Phone (optional)"
-                        errorMessage={errors.phone?.message}
-                    /> */}
+                        containerClassName="mb-4    "
+                    />
                     <Input
                         {...register("password")}
                         type="password"
@@ -155,28 +136,19 @@ export default function Page() {
                     <p className="mx-2 font-semibold text-[#AFAFAF]">OR</p>
                     <hr className="rounded-full w-full bg-[#E5E5E5] h-1" />
                 </div>
-                <div className="grid gap-5 mt-2 grid-cols-2">
-                    <Button
-                        disabled
-                        type="button"
-                        className="font-bold text-[#3B5998] uppercase text-sm"
-                        variant={"secondary"}
-                    >
-                        <Facebook className="!w-4 scale-105 !h-4" /> FACEBOOK
-                    </Button>
-                    <Button
-                        isLoading={isGoogleAuth}
-                        onClick={async () => {
-                            setIsGoogleAuth(true)
-                            await registerWithGoogle()
-                        }}
-                        type="button"
-                        className="font-bold text-[#4285F4] uppercase text-sm"
-                        variant={"secondary"}
-                    >
-                        <Google className="!w-4 scale-105 !h-4" /> GOOGLE
-                    </Button>
-                </div>
+
+                <Button
+                    isLoading={isGoogleAuth}
+                    onClick={async () => {
+                        setIsGoogleAuth(true)
+                        await registerWithGoogle()
+                    }}
+                    type="button"
+                    className="font-bold w-full mt-3 text-[#4285F4] uppercase text-sm"
+                    variant={"secondary"}
+                >
+                    <Google className="!w-4 scale-105 !h-4" /> GOOGLE
+                </Button>
                 <div className="flex items-center justify-center mt-5">
                     <p className="text-[#AFAFAF] text-sm max-w-[350px] text-center font-medium">
                         By signing in to Fikr, you agree to our{" "}

@@ -1,5 +1,4 @@
 "use client"
-import Facebook from "@/components/icons/facebook"
 import Google from "@/components/icons/google"
 import BackButton from "@/components/shared/back-button"
 import { Button } from "@/components/ui/button"
@@ -118,28 +117,18 @@ export default function Page() {
                     <p className="mx-2 font-semibold text-[#AFAFAF]">OR</p>
                     <hr className="rounded-full w-full bg-[#E5E5E5] h-1" />
                 </div>
-                <div className="grid gap-5 mt-2 grid-cols-2">
-                    <Button
-                        disabled
-                        type="button"
-                        className="font-bold text-[#3B5998] uppercase text-sm"
-                        variant={"secondary"}
-                    >
-                        <Facebook className="!w-4 scale-105 !h-4" /> FACEBOOK
-                    </Button>
-                    <Button
-                        isLoading={isGoogleAuth}
-                        onClick={async () => {
-                            setIsGoogleAuth(true)
-                            await loginWithGoogle()
-                        }}
-                        type="button"
-                        className="font-bold text-[#4285F4] uppercase text-sm"
-                        variant={"secondary"}
-                    >
-                        <Google className="!w-4 scale-105 !h-4" /> GOOGLE
-                    </Button>
-                </div>
+                <Button
+                    isLoading={isGoogleAuth}
+                    onClick={async () => {
+                        setIsGoogleAuth(true)
+                        await loginWithGoogle()
+                    }}
+                    type="button"
+                    className="font-bold w-full mt-3 text-[#4285F4] uppercase text-sm"
+                    variant={"secondary"}
+                >
+                    <Google className="!w-4 scale-105 !h-4" /> GOOGLE
+                </Button>
                 <div className="flex items-center justify-center mt-5">
                     <p className="text-[#AFAFAF] first-letter:capitalize text-sm max-w-[350px] text-center font-medium">
                         by signing in to Fikr, you agree to our{" "}
