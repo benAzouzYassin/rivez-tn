@@ -56,7 +56,7 @@ export default function Page() {
 
         if (success) {
             toastSuccess("Password reset successful!")
-            router.replace("/dashboard")
+            router.replace("/learn")
         } else {
             console.error("Password reset error:", error)
             toastError(
