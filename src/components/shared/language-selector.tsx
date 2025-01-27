@@ -46,7 +46,7 @@ export function LanguageSelector(props: Props) {
             </PopoverTrigger>
             <PopoverContent className="w-64 mt-0 rounded-none border-none overflow-visible shadow-none bg-transparent !p-0">
                 <div className="rounded-2xl mt-1 overflow-hidden border-2 bg-white   pt-3">
-                    <div className="font-semibold text-neutral-400 text-lg pb-3 px-6">
+                    <div className="font-bold text-neutral-400 text-lg pb-3 px-6">
                         Languages
                     </div>
                     <div className="border-t">
@@ -68,7 +68,7 @@ export function LanguageSelector(props: Props) {
                                 />
                                 <span
                                     className={cn(
-                                        "text-sm font-semibold text-neutral-600 ml-1"
+                                        "text-sm font-bold text-neutral-600 ml-1"
                                     )}
                                 >
                                     {lang.label}

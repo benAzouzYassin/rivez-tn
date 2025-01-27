@@ -4,11 +4,12 @@ import XIcon from "@/components/icons/xIcon"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { PhoneInput } from "@/components/ui/phone-input"
-import { dismissToasts, toastError } from "@/lib/toasts"
 import {
-    registerWithGoogle,
-    registerWithPassword,
-} from "@/use-cases/users/register"
+    registerUserWithGoogle,
+    registerUserWithPassword,
+} from "@/data-access/users/register"
+import { dismissToasts, toastError } from "@/lib/toasts"
+
 import { zodResolver } from "@hookform/resolvers/zod"
 import Link from "next/link"
 import { useRouter } from "nextjs-toploader/app"
@@ -53,7 +54,7 @@ export default function Page() {
 
     const onSubmit = async (formData: z.infer<typeof formSchema>) => {
         setIsPasswordAuth(true)
-        const { success } = await registerWithPassword({
+        const { success } = await registerUserWithPassword({
             email: formData.email,
             password: formData.password,
             username: formData.username,
@@ -141,7 +142,7 @@ export default function Page() {
                     isLoading={isGoogleAuth}
                     onClick={async () => {
                         setIsGoogleAuth(true)
-                        await registerWithGoogle()
+                        await registerUserWithGoogle()
                     }}
                     type="button"
                     className="font-bold w-full mt-3 text-[#4285F4] uppercase text-sm"

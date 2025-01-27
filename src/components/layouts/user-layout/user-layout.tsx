@@ -1,6 +1,6 @@
 import { ReactNode } from "react"
-import UserHeader from "../shared/user-header"
-import UserNav from "../shared/user-nav"
+import UserHeader from "./user-header"
+import UserNav from "./user-nav"
 
 type Props = {
     children?: Readonly<ReactNode>

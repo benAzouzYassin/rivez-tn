@@ -1,9 +1,9 @@
 "use client"
 
 import AnimatedLoader from "@/components/ui/animated-loader"
-import { readCurrentUser } from "@/data-access/users/read"
+import { readCurrentSession } from "@/data-access/users/read"
 import { useRouter } from "nextjs-toploader/app"
-import { useLayoutEffect, useState } from "react"
+import { useEffect, useState } from "react"
 
 export default function PrivateLayout({
     children,
@@ -12,9 +12,9 @@ export default function PrivateLayout({
 }>) {
     const router = useRouter()
     const [allowedToEnter, setAllowedToEnter] = useState<boolean | null>(null)
-    useLayoutEffect(() => {
-        readCurrentUser().then(({ success }) => {
-            if (success) {
+    useEffect(() => {
+        readCurrentSession().then(({ data }) => {
+            if (data.session) {
                 setAllowedToEnter(true)
             } else {
                 router.replace("/auth/register")

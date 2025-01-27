@@ -28,3 +28,14 @@ export async function readCurrentUser() {
         },
     }
 }
+export async function readCurrentSession() {
+    const { data, error } = await supabase.auth.getSession()
+    return {
+        data: data,
+        success: !error,
+        error: {
+            message: error?.message,
+            stack: error?.stack,
+        },
+    }
+}

@@ -1,8 +1,11 @@
 import { supabase } from "@/lib/supbase-client"
 
-export async function sendResetPasswordMail(params: { email: string }) {
+export async function sendResetPasswordMail(params: {
+    email: string
+    redirectTo: string
+}) {
     const { error } = await supabase.auth.resetPasswordForEmail(params.email, {
-        redirectTo: `${window.location.origin}/auth/reset-password`,
+        redirectTo: params.redirectTo,
     })
     return {
         data: {},

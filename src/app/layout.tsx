@@ -1,9 +1,12 @@
 import type { Metadata } from "next"
 import "./globals.css"
-import { Inter } from "next/font/google"
+import { Nunito } from "next/font/google"
 import NextTopLoader from "nextjs-toploader"
 import { Toaster } from "sonner"
-const inter = Inter({ subsets: ["latin"], display: "swap" })
+import QueryClientProvider from "@/providers/query-client"
+const nunito = Nunito({
+    weight: ["300", "400", "500", "600", "700", "800", "900", "1000"],
+})
 export const metadata: Metadata = {
     title: "Fikr",
     description: "",
@@ -16,12 +19,12 @@ export default function RootLayout({
 }>) {
     return (
         <html lang="en">
-            <body className={`${inter.className} antialiased`}>
+            <body className={`${nunito.className} antialiased`}>
                 <Toaster
                     visibleToasts={5}
                     expand
                     richColors
-                    className={`${inter.className}`}
+                    className={`${nunito.className}`}
                 />
                 <NextTopLoader
                     color="#1CB0F6"
@@ -38,7 +41,7 @@ export default function RootLayout({
                     zIndex={1600}
                     showAtBottom={false}
                 />
-                {children}
+                <QueryClientProvider>{children}</QueryClientProvider>
             </body>
         </html>
     )

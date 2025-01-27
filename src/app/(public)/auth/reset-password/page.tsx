@@ -3,8 +3,8 @@
 import BackButton from "@/components/shared/back-button"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
+import { updateUserPassword } from "@/data-access/users/update"
 import { dismissToasts, toastError, toastSuccess } from "@/lib/toasts"
-import { updatePassword } from "@/use-cases/users/update-password"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { Eye, EyeOff } from "lucide-react"
 import { useRouter } from "nextjs-toploader/app"
@@ -52,7 +52,9 @@ export default function Page() {
     const onSubmit = async (formData: z.infer<typeof formSchema>) => {
         setIsResetting(true)
 
-        const { success, error } = await updatePassword(formData)
+        const { success, error } = await updateUserPassword({
+            password: formData.newPassword,
+        })
 
         if (success) {
             toastSuccess("Password reset successful!")

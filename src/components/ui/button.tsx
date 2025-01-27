@@ -14,6 +14,7 @@ const buttonVariants = cva(
                     "bg-neutral-900 h-[44px] text-neutral-50 shadow hover:bg-neutral-900/90 dark:bg-neutral-50 dark:text-neutral-900 dark:hover:bg-neutral-50/90",
                 blue: "bg-[#1CB0F6] h-[44px]   shadow-[0px_4px_0px_0px] shadow-[#1899D6]  rounded-2xl text-white   transition-all  active:shadow-transparent active:translate-y-1",
                 green: "bg-[#58CC02] h-[44px]   shadow-[0px_4px_0px_0px] shadow-[#58A700]  rounded-2xl text-white   transition-all  active:shadow-transparent active:translate-y-1",
+                red: "bg-[#FF5353] h-[44px]   shadow-[0px_4px_0px_0px] shadow-[#FF2020]  rounded-2xl text-white   transition-all  active:shadow-transparent active:translate-y-1",
                 secondary:
                     "bg-white  hover:bg-neutral-100 h-[46px]  shadow-[0px_4px_0px_0px] shadow-[#E5E5E5]  rounded-2xl text-black border-2   transition-all  active:shadow-transparent active:translate-y-1",
                 destructive:
@@ -67,7 +68,10 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
                 {...props}
             >
                 {isLoading ? (
-                    <Loader2 className="animate-spin stroke-[2.5]   !h-[22px] duration-300 !w-[22px]" />
+                    <>
+                        {children}
+                        <Loader2 className="ml-2 animate-spin stroke-[2.5]   !h-[22px] duration-300 !w-[22px]" />
+                    </>
                 ) : (
                     children
                 )}

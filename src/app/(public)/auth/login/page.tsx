@@ -3,8 +3,11 @@ import Google from "@/components/icons/google"
 import BackButton from "@/components/shared/back-button"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
+import {
+    loginUserWithGoogle,
+    loginUserWithPassword,
+} from "@/data-access/users/login"
 import { dismissToasts, toastError } from "@/lib/toasts"
-import { loginWithGoogle, loginWithPassword } from "@/use-cases/users/login"
 import { zodResolver } from "@hookform/resolvers/zod"
 import Link from "next/link"
 import { useRouter } from "nextjs-toploader/app"
@@ -46,7 +49,7 @@ export default function Page() {
 
     const onSubmit = async (formData: z.infer<typeof formSchema>) => {
         setIsPasswordAuth(true)
-        const { success } = await loginWithPassword({
+        const { success } = await loginUserWithPassword({
             email: formData.identifier,
             password: formData.password,
         })
@@ -121,7 +124,7 @@ export default function Page() {
                     isLoading={isGoogleAuth}
                     onClick={async () => {
                         setIsGoogleAuth(true)
-                        await loginWithGoogle()
+                        await loginUserWithGoogle()
                     }}
                     type="button"
                     className="font-bold w-full mt-3 text-[#4285F4] uppercase text-sm"

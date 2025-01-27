@@ -1,10 +1,10 @@
 "use client"
 
-import LoginGetStartedTopBar from "@/components/shared/login-get-started-topbar"
+import BackButton from "@/components/shared/back-button"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
+import { sendResetPasswordMail } from "@/data-access/users/send-reset-password-mail"
 import { toastError, toastSuccess } from "@/lib/toasts"
-import { sendResetPasswordMail } from "@/use-cases/users/send-reset-password-mail"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useRouter } from "nextjs-toploader/app"
 import { useMemo, useState } from "react"
@@ -38,7 +38,10 @@ export default function Page() {
     })
 
     const onSubmit = async (data: z.infer<typeof formSchema>) => {
-        const { error, success } = await sendResetPasswordMail(data)
+        const { error, success } = await sendResetPasswordMail({
+            email: data.email,
+            redirectTo: `${window.location.origin}/auth/reset-password`,
+        })
 
         if (success) {
             setIsSubmitted(true)
@@ -58,7 +61,6 @@ export default function Page() {
     if (isSubmitted) {
         return (
             <main className="flex min-h-[100vh] relative flex-col items-center justify-center">
-                <LoginGetStartedTopBar className="w-full absolute top-0 left-0" />
                 <section className="text-center">
                     <h1 className="text-2xl font-bold text-[#3C3C3C] mb-4">
                         Check your email
@@ -81,8 +83,16 @@ export default function Page() {
 
     return (
         <main className="flex min-h-[100vh] relative flex-col items-center justify-center">
-            <LoginGetStartedTopBar className="w-full absolute top-0 left-0" />
             <section>
+                <BackButton className="absolute top-8 left-16" />
+
+                <Button
+                    onClick={() => router.push("/auth/login")}
+                    className="absolute !w-fit !px-7 uppercase font-bold text-[#1CB0F6] top-8 right-16"
+                    variant={"secondary"}
+                >
+                    LOGIN
+                </Button>
                 <form
                     onSubmit={handleSubmit(onSubmit)}
                     className="flex flex-col gap-3"
