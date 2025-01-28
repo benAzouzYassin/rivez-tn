@@ -126,7 +126,7 @@ export default function Page() {
                     <Button
                         isLoading={isPasswordAuth}
                         type="submit"
-                        className="font-semibold uppercase text-sm mt-4"
+                        className="font-bold uppercase text-sm mt-4"
                         variant={"blue"}
                     >
                         CREATE ACCOUNT
@@ -134,7 +134,7 @@ export default function Page() {
                 </form>
                 <div className="flex items-center mt-5 w-full">
                     <hr className="rounded-full w-full bg-[#E5E5E5] h-1" />
-                    <p className="mx-2 font-semibold text-[#AFAFAF]">OR</p>
+                    <p className="mx-2 font-bold text-[#AFAFAF]">OR</p>
                     <hr className="rounded-full w-full bg-[#E5E5E5] h-1" />
                 </div>
 
@@ -154,14 +154,14 @@ export default function Page() {
                     <p className="text-[#AFAFAF] text-sm max-w-[350px] text-center font-medium">
                         By signing in to Fikr, you agree to our{" "}
                         <Link
-                            className="font-semibold hover:underline underline-offset-2"
+                            className="font-bold hover:underline underline-offset-2"
                             href={""}
                         >
                             Terms
                         </Link>{" "}
                         and{" "}
                         <Link
-                            className="font-semibold hover:underline underline-offset-2"
+                            className="font-bold hover:underline underline-offset-2"
                             href={""}
                         >
                             Privacy Policy.

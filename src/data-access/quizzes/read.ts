@@ -1,21 +1,29 @@
 import { supabase } from "@/lib/supbase-client"
-import { QueryData } from "@supabase/supabase-js"
 
-export async function readQuizzes() {
-    const quizzes = supabase
+export async function readQuizzesWithQuestionsAndOptions() {
+    const quizzes = await supabase
         .from("quizzes")
         .select(`*, quizzes_questions(*,  quizzes_questions_options(*))`)
+        .throwOnError()
 
-    type QuizzesType = QueryData<typeof quizzes>
+    return quizzes.data
+}
+export async function readQuizzesWithQuestions() {
+    const quizzes = await supabase
+        .from("quizzes")
+        .select(`*, quizzes_questions(*)`)
+        .throwOnError()
 
-    const { data, error } = await quizzes
+    return quizzes.data
+}
 
-    return {
-        data: data as QuizzesType | null,
-        success: !error,
-        error: {
-            message: error?.message,
-            stack: error?.stack,
-        },
-    }
+export async function readQuizWithQuestionsAndOptionsById(id: number) {
+    const quizzes = await supabase
+        .from("quizzes")
+        .select(`*, quizzes_questions(*,  quizzes_questions_options(*))`)
+        .eq(`id`, id)
+        .single()
+        .throwOnError()
+
+    return quizzes.data
 }

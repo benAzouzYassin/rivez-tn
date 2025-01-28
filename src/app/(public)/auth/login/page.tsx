@@ -100,7 +100,7 @@ export default function Page() {
                         <div className="absolute right-3 top-[12px] ">
                             <Link
                                 href={"/auth/forget-password"}
-                                className="font-semibold hover:underline underline-offset-2 text-[#AFAFAF] text-sm"
+                                className="font-bold hover:underline underline-offset-2 text-[#AFAFAF] text-sm"
                             >
                                 FORGOT ?
                             </Link>
@@ -108,7 +108,7 @@ export default function Page() {
                     </div>
                     <Button
                         type="submit"
-                        className="font-semibold uppercase text-sm"
+                        className="font-bold uppercase text-sm"
                         variant={"blue"}
                         isLoading={isSubmitting || isPasswordAuth}
                     >
@@ -117,7 +117,7 @@ export default function Page() {
                 </form>
                 <div className="flex items-center mt-5 w-full">
                     <hr className="rounded-full w-full bg-[#E5E5E5] h-1" />
-                    <p className="mx-2 font-semibold text-[#AFAFAF]">OR</p>
+                    <p className="mx-2 font-bold text-[#AFAFAF]">OR</p>
                     <hr className="rounded-full w-full bg-[#E5E5E5] h-1" />
                 </div>
                 <Button
@@ -136,14 +136,14 @@ export default function Page() {
                     <p className="text-[#AFAFAF] first-letter:capitalize text-sm max-w-[350px] text-center font-medium">
                         by signing in to Fikr, you agree to our{" "}
                         <Link
-                            className="font-semibold hover:underline underline-offset-2"
+                            className="font-bold hover:underline underline-offset-2"
                             href={""}
                         >
                             Terms
                         </Link>{" "}
                         and{" "}
                         <Link
-                            className="font-semibold hover:underline underline-offset-2"
+                            className="font-bold hover:underline underline-offset-2"
                             href={""}
                         >
                             Privacy Policy.

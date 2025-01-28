@@ -4,15 +4,43 @@ import BackButton from "@/components/shared/back-button"
 import ProgressBar from "@/components/shared/quizzes/progress-bar"
 import { cn } from "@/lib/ui-utils"
 import { useAtom } from "jotai"
+import { useParams } from "next/navigation"
 import Question from "./_components/question"
 import Result from "./_components/result"
 import { currentStepAtom, questionsAtom } from "./atoms"
+import { useQuery } from "@tanstack/react-query"
+import { readQuizWithQuestionsAndOptionsById } from "@/data-access/quizzes/read"
+import QuestionSkeleton from "./_components/question-skeleton"
+import { useEffect } from "react"
 
 export default function Page() {
-    const [currentStep] = useAtom(currentStepAtom)
-    const [questions] = useAtom(questionsAtom)
+    const params = useParams()
+    const id = Number(params.id)
+
+    const { data, isLoading } = useQuery({
+        queryFn: () => readQuizWithQuestionsAndOptionsById(id),
+        queryKey: [
+            "quizzes",
+            "quizzes_questions",
+            "quizzes_questions_options",
+            id,
+        ],
+    })
+
+    const [currentStep, setCurrentStep] = useAtom(currentStepAtom)
+    const [questions, setQuestions] = useAtom(questionsAtom)
     const percentage = (currentStep * 100) / questions.length + 5
     const isFinished = currentStep >= questions.length
+    const isEmpty = questions.length === 0
+
+    useEffect(() => {
+        setQuestions(data?.quizzes_questions ?? [])
+        setCurrentStep(0)
+    }, [data, setQuestions, setCurrentStep])
+
+    if (isEmpty && !isLoading) {
+        return <div>error...</div>
+    }
 
     return (
         <>
@@ -30,7 +58,8 @@ export default function Page() {
                     "overflow-x-hidden mt-0": isFinished,
                 })}
             >
-                {isFinished ? <Result /> : <Question />}
+                {isLoading && <QuestionSkeleton />}
+                {isFinished && !isLoading ? <Result /> : <Question />}
             </main>
         </>
     )

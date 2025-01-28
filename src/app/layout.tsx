@@ -5,6 +5,7 @@ import NextTopLoader from "nextjs-toploader"
 import { Toaster } from "sonner"
 import QueryClientProvider from "@/providers/query-client"
 const nunito = Nunito({
+    subsets: ["latin"],
     weight: ["300", "400", "500", "600", "700", "800", "900", "1000"],
 })
 export const metadata: Metadata = {

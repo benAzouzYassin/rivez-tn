@@ -1,0 +1,15 @@
+import { Database } from "@/types/database.types"
+import { atom } from "jotai"
+
+export const currentStepAtom = atom(0)
+
+export const wrongAnswersIdsAtom = atom<number[]>([])
+
+export const questionsAtom = atom<Question[]>([])
+
+//types
+type Question = {
+    quizzes_questions_options: Option[]
+} & Database["public"]["Tables"]["quizzes_questions"]["Row"]
+
+type Option = Database["public"]["Tables"]["quizzes_questions_options"]["Row"]

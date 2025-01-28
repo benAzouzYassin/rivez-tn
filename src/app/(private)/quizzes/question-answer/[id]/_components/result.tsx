@@ -11,7 +11,7 @@ import Link from "next/link"
 
 export default function Result() {
     const [questions] = useAtom(questionsAtom)
-    const [wrongAnswersIds] = useAtom<string[]>(wrongAnswersIdsAtom)
+    const [wrongAnswersIds] = useAtom<number[]>(wrongAnswersIdsAtom)
 
     const totalQuestions: number = questions.length
     const wrongAnswers: number = wrongAnswersIds.length
