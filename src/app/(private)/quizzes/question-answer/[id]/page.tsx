@@ -9,8 +9,7 @@ import Question from "./_components/question"
 import Result from "./_components/result"
 import { currentStepAtom, questionsAtom, wrongAnswersIdsAtom } from "./atoms"
 import { useQuery } from "@tanstack/react-query"
-import { readQuizWithQuestionsAndOptionsById } from "@/data-access/quizzes/read"
-import QuestionSkeleton from "./_components/question-skeleton"
+import { readQuizWithQuestionsById } from "@/data-access/quizzes/read"
 import { useEffect } from "react"
 import AnimatedLoader from "@/components/ui/animated-loader"
 
@@ -19,13 +18,8 @@ export default function Page() {
     const id = Number(params.id)
 
     const { data, isLoading } = useQuery({
-        queryFn: () => readQuizWithQuestionsAndOptionsById(id),
-        queryKey: [
-            "quizzes",
-            "quizzes_questions",
-            "quizzes_questions_options",
-            id,
-        ],
+        queryFn: () => readQuizWithQuestionsById(id),
+        queryKey: ["quizzes", "quizzes_questions", id],
     })
 
     const [currentStep, setCurrentStep] = useAtom(currentStepAtom)
@@ -34,12 +28,11 @@ export default function Page() {
     const percentage = (currentStep * 100) / questions.length + 5
     const isFinished = currentStep >= questions.length
     const isEmpty = questions.length === 0
-
     useEffect(() => {
         setWrongAnswersIdsAtom([])
-        setQuestions(data?.quizzes_questions ?? [])
         setCurrentStep(0)
-    }, [data, setQuestions, setCurrentStep, setWrongAnswersIdsAtom])
+        setQuestions(data?.quizzes_questions || [])
+    }, [data, setCurrentStep, setQuestions, setWrongAnswersIdsAtom])
 
     if (isEmpty && !isLoading) {
         return <div>error...</div>

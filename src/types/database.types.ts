@@ -7,6 +7,31 @@ export type Json =
     | Json[]
 
 export type Database = {
+    graphql_public: {
+        Tables: {
+            [_ in never]: never
+        }
+        Views: {
+            [_ in never]: never
+        }
+        Functions: {
+            graphql: {
+                Args: {
+                    operationName?: string
+                    query?: string
+                    variables?: Json
+                    extensions?: Json
+                }
+                Returns: Json
+            }
+        }
+        Enums: {
+            [_ in never]: never
+        }
+        CompositeTypes: {
+            [_ in never]: never
+        }
+    }
     public: {
         Tables: {
             quizzes: {
@@ -18,7 +43,7 @@ export type Database = {
                 Insert: {
                     created_at?: string
                     id?: number
-                    name?: string
+                    name: string
                 }
                 Update: {
                     created_at?: string
@@ -29,25 +54,37 @@ export type Database = {
             }
             quizzes_questions: {
                 Row: {
+                    content: Json | null
                     created_at: string
                     id: number
                     image: string | null
                     question: string
                     quiz: number | null
+                    type:
+                        | Database["public"]["Enums"]["quiz_question_types"]
+                        | null
                 }
                 Insert: {
+                    content?: Json | null
                     created_at?: string
                     id?: number
                     image?: string | null
                     question?: string
                     quiz?: number | null
+                    type?:
+                        | Database["public"]["Enums"]["quiz_question_types"]
+                        | null
                 }
                 Update: {
+                    content?: Json | null
                     created_at?: string
                     id?: number
                     image?: string | null
                     question?: string
                     quiz?: number | null
+                    type?:
+                        | Database["public"]["Enums"]["quiz_question_types"]
+                        | null
                 }
                 Relationships: [
                     {
@@ -55,38 +92,6 @@ export type Database = {
                         columns: ["quiz"]
                         isOneToOne: false
                         referencedRelation: "quizzes"
-                        referencedColumns: ["id"]
-                    }
-                ]
-            }
-            quizzes_questions_options: {
-                Row: {
-                    content: string
-                    created_at: string
-                    id: number
-                    is_correct: boolean
-                    question: number | null
-                }
-                Insert: {
-                    content?: string
-                    created_at?: string
-                    id?: number
-                    is_correct: boolean
-                    question?: number | null
-                }
-                Update: {
-                    content?: string
-                    created_at?: string
-                    id?: number
-                    is_correct?: boolean
-                    question?: number | null
-                }
-                Relationships: [
-                    {
-                        foreignKeyName: "quizzes-questions-options_question_fkey"
-                        columns: ["question"]
-                        isOneToOne: false
-                        referencedRelation: "quizzes_questions"
                         referencedColumns: ["id"]
                     }
                 ]
@@ -99,7 +104,12 @@ export type Database = {
             [_ in never]: never
         }
         Enums: {
-            [_ in never]: never
+            quiz_question_types:
+                | "SINGLE_CHOICE"
+                | "MULTIPLE_CHOICE"
+                | "MATCHING_PAIRS"
+                | "DEBUG_CODE"
+                | "CODE_COMPLETION"
         }
         CompositeTypes: {
             [_ in never]: never

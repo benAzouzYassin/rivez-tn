@@ -8,8 +8,4 @@ export const wrongAnswersIdsAtom = atom<number[]>([])
 export const questionsAtom = atom<Question[]>([])
 
 //types
-type Question = {
-    quizzes_questions_options: Option[]
-} & Database["public"]["Tables"]["quizzes_questions"]["Row"]
-
-type Option = Database["public"]["Tables"]["quizzes_questions_options"]["Row"]
+type Question = Database["public"]["Tables"]["quizzes_questions"]["Row"]

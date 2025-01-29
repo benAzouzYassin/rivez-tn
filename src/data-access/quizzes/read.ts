@@ -1,13 +1,5 @@
 import { supabase } from "@/lib/supbase-client"
 
-export async function readQuizzesWithQuestionsAndOptions() {
-    const quizzes = await supabase
-        .from("quizzes")
-        .select(`*, quizzes_questions(*,  quizzes_questions_options(*))`)
-        .throwOnError()
-
-    return quizzes.data
-}
 export async function readQuizzesWithQuestions() {
     const quizzes = await supabase
         .from("quizzes")
@@ -17,10 +9,10 @@ export async function readQuizzesWithQuestions() {
     return quizzes.data
 }
 
-export async function readQuizWithQuestionsAndOptionsById(id: number) {
+export async function readQuizWithQuestionsById(id: number) {
     const quizzes = await supabase
         .from("quizzes")
-        .select(`*, quizzes_questions(*,  quizzes_questions_options(*))`)
+        .select(`*, quizzes_questions(*)`)
         .eq(`id`, id)
         .single()
         .throwOnError()
