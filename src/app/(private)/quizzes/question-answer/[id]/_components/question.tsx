@@ -1,4 +1,5 @@
 "use client"
+
 import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/ui-utils"
 import { useAtom } from "jotai"
@@ -6,6 +7,7 @@ import { useState } from "react"
 import { currentStepAtom, questionsAtom, wrongAnswersIdsAtom } from "../atoms"
 import CorrectAnswerBanner from "./correct-answer-banner"
 import WrongAnswerBanner from "./wrong-answer-banner"
+import { motion, AnimatePresence } from "motion/react"
 
 export default function Question() {
     const [, setWrongAnswers] = useAtom(wrongAnswersIdsAtom)
@@ -16,62 +18,82 @@ export default function Question() {
     const [isCorrectBannerOpen, setIsCorrectBannerOpen] = useState(false)
     const [isWrongBannerOpen, setIsWrongBannerOpen] = useState(false)
     const [selectedOption, setSelectedOption] = useState<number | null>(null)
+
     if (!currentQuestion) {
         return <p>error...</p>
     }
+
+    const questionAnimations = {
+        initial: { opacity: 0, x: 0 },
+        animate: { opacity: 1, x: 0 },
+        exit: { opacity: 0, x: -50 },
+    }
+
     return (
         <>
-            <div className=" flex flex-col relative  h-fit items-center justify-center">
-                <p className="max-w-[1000px]  mb-1 text-3xl font-extrabold top-0 text-neutral-700  text-left    w-full left-0">
-                    {currentQuestion?.question} :
-                </p>
-                <div className="relative w-fit">
-                    {!!currentQuestion.image && (
-                        <img
-                            className="h-[310px] "
-                            src={currentQuestion.image || ""}
-                            alt=""
-                        />
-                    )}
+            <div className="flex flex-col relative h-fit items-center justify-center">
+                <div>
+                    <p className="max-w-[1000px] mb-1 text-3xl font-extrabold top-0 text-neutral-700 text-left w-full left-0">
+                        {currentQuestion?.question} :
+                    </p>
+                    <div className="relative w-fit">
+                        {!!currentQuestion.image && (
+                            <img
+                                className="h-[310px]"
+                                src={currentQuestion.image || ""}
+                                alt=""
+                            />
+                        )}
+                    </div>
                 </div>
             </div>
-            <div className=" w-full">
-                <div className="max-w-[1000px] mx-auto mt-10 gap-5 w-full grid grid-cols-2">
-                    {currentQuestion?.quizzes_questions_options.map(
-                        (option) => (
-                            <Button
-                                onClick={() => {
-                                    if (selectedOption) {
-                                        return
-                                    }
-                                    setSelectedOption(option.id)
-                                    if (option.is_correct) {
-                                        setIsCorrectBannerOpen(true)
-                                    } else {
-                                        setIsWrongBannerOpen(true)
-                                    }
-                                }}
-                                key={option.id}
-                                className={cn(
-                                    "min-h-20 text-lg hover:bg-sky-100 hover:shadow-sky-300/50 hover:border-sky-300/45 text-neutral-700 font-bold max-h-24",
-                                    {
-                                        "hover:bg-red-200/50 bg-red-200/50 text-red-500 font-extrabold  hover:shadow-red-300 shadow-red-300 hover:border-red-300 border-red-300":
-                                            isWrongBannerOpen &&
-                                            selectedOption === option.id,
-                                    },
-                                    {
-                                        "hover:bg-[#D2FFCC] bg-[#D2FFCC] text-[#58A700] font-extrabold  hover:shadow-[#58CC02]/50 shadow-[#58CC02]/50 hover:border-[#58CC02]/40 border-[#58CC02]/40":
-                                            isCorrectBannerOpen &&
-                                            selectedOption === option.id,
-                                    }
-                                )}
-                                variant={"secondary"}
-                            >
-                                {option.content}
-                            </Button>
-                        )
-                    )}
-                </div>
+            <div className="w-full">
+                <AnimatePresence mode="wait">
+                    <motion.div
+                        key={currentStep} // Key ensures the animation runs when the step changes
+                        variants={questionAnimations}
+                        initial="initial"
+                        animate="animate"
+                        exit="exit"
+                        transition={{ duration: 0.4 }} // Adjust duration as needed
+                        className="max-w-[1000px] mx-auto mt-10 gap-5 w-full grid grid-cols-2"
+                    >
+                        {currentQuestion?.quizzes_questions_options.map(
+                            (option) => (
+                                <Button
+                                    onClick={() => {
+                                        if (selectedOption) {
+                                            return
+                                        }
+                                        setSelectedOption(option.id)
+                                        if (option.is_correct) {
+                                            setIsCorrectBannerOpen(true)
+                                        } else {
+                                            setIsWrongBannerOpen(true)
+                                        }
+                                    }}
+                                    key={option.id}
+                                    className={cn(
+                                        "min-h-[85px] text-lg hover:bg-sky-100 hover:shadow-sky-300/50 hover:border-sky-300/45 text-neutral-700 font-bold max-h-24",
+                                        {
+                                            "hover:bg-red-200/50 bg-red-200/50 text-red-500 font-extrabold  hover:shadow-red-300 shadow-red-300 hover:border-red-300 border-red-300":
+                                                isWrongBannerOpen &&
+                                                selectedOption === option.id,
+                                        },
+                                        {
+                                            "hover:bg-[#D2FFCC] bg-[#D2FFCC] text-[#58A700] font-extrabold  hover:shadow-[#58CC02]/50 shadow-[#58CC02]/50 hover:border-[#58CC02]/40 border-[#58CC02]/40":
+                                                isCorrectBannerOpen &&
+                                                selectedOption === option.id,
+                                        }
+                                    )}
+                                    variant={"secondary"}
+                                >
+                                    {option.content}
+                                </Button>
+                            )
+                        )}
+                    </motion.div>
+                </AnimatePresence>
                 <CorrectAnswerBanner
                     onNextClick={() => {
                         setSelectedOption(null)

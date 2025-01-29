@@ -3,15 +3,16 @@ import YellowStar from "@/components/icons/yellow-star"
 import BackButton from "@/components/shared/back-button"
 import ProgressBar from "@/components/shared/quizzes/progress-bar"
 import { cn } from "@/lib/ui-utils"
-import { useAtom } from "jotai"
+import { useAtom, useSetAtom } from "jotai"
 import { useParams } from "next/navigation"
 import Question from "./_components/question"
 import Result from "./_components/result"
-import { currentStepAtom, questionsAtom } from "./atoms"
+import { currentStepAtom, questionsAtom, wrongAnswersIdsAtom } from "./atoms"
 import { useQuery } from "@tanstack/react-query"
 import { readQuizWithQuestionsAndOptionsById } from "@/data-access/quizzes/read"
 import QuestionSkeleton from "./_components/question-skeleton"
 import { useEffect } from "react"
+import AnimatedLoader from "@/components/ui/animated-loader"
 
 export default function Page() {
     const params = useParams()
@@ -29,14 +30,16 @@ export default function Page() {
 
     const [currentStep, setCurrentStep] = useAtom(currentStepAtom)
     const [questions, setQuestions] = useAtom(questionsAtom)
+    const setWrongAnswersIdsAtom = useSetAtom(wrongAnswersIdsAtom)
     const percentage = (currentStep * 100) / questions.length + 5
     const isFinished = currentStep >= questions.length
     const isEmpty = questions.length === 0
 
     useEffect(() => {
+        setWrongAnswersIdsAtom([])
         setQuestions(data?.quizzes_questions ?? [])
         setCurrentStep(0)
-    }, [data, setQuestions, setCurrentStep])
+    }, [data, setQuestions, setCurrentStep, setWrongAnswersIdsAtom])
 
     if (isEmpty && !isLoading) {
         return <div>error...</div>
@@ -58,7 +61,11 @@ export default function Page() {
                     "overflow-x-hidden mt-0": isFinished,
                 })}
             >
-                {isLoading && <QuestionSkeleton />}
+                {isLoading && (
+                    <div className=" h-[100vh] flex items-center justify-center">
+                        <AnimatedLoader />
+                    </div>
+                )}
                 {isFinished && !isLoading ? <Result /> : <Question />}
             </main>
         </>

@@ -30,6 +30,7 @@ export default function Result() {
             height: window.innerHeight,
         })
     }, [])
+
     return (
         <div className="flex   flex-col mt-2 max-w-4xl mx-auto px-4">
             <Confetti
