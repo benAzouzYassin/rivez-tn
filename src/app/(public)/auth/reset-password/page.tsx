@@ -138,7 +138,7 @@ export default function Page() {
 
                     <Button
                         type="submit"
-                        className="font-semibold uppercase text-sm"
+                        className="font-bold uppercase text-sm"
                         variant={"blue"}
                         isLoading={isSubmitting || isResetting}
                     >
@@ -150,7 +150,7 @@ export default function Page() {
                         Remember your password?{" "}
                         <button
                             onClick={() => router.push("/auth/login")}
-                            className="font-semibold text-[#1CB0F6] hover:underline underline-offset-2"
+                            className="font-bold text-[#1CB0F6] hover:underline underline-offset-2"
                         >
                             Login here
                         </button>

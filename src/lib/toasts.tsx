@@ -24,10 +24,12 @@ export function toastSuccess(
                     <Check className="w-3  h-3 stroke-[4] text-white" />
                 </div>
                 <div className="flex flex-col">
-                    <span className="text-sm font-semibold text-green-700">
+                    <span className="text-sm font-extrabold text-green-700">
                         {opts?.title || defaultTitle}
                     </span>
-                    <span className="text-xs text-green-700 ">{message}</span>
+                    <span className="text-xs font-semibold text-green-700 ">
+                        {message}
+                    </span>
                 </div>
             </div>
         ),
@@ -59,10 +61,12 @@ export function toastWarning(
                     <TriangleAlert className="w-3  h-3 stroke-[4] text-white" />
                 </div>
                 <div className="flex flex-col">
-                    <span className="text-sm font-semibold text-yellow-700">
+                    <span className="text-sm font-extrabold text-yellow-700">
                         {opts?.title || defaultTitle}
                     </span>
-                    <span className="text-xs text-yellow-700 ">{message}</span>
+                    <span className="text-xs font-semibold text-yellow-700 ">
+                        {message}
+                    </span>
                 </div>
             </div>
         ),
@@ -94,10 +98,12 @@ export function toastError(
                     <X className="w-3  h-3 stroke-[4] text-white" />
                 </div>
                 <div className="flex flex-col">
-                    <span className="text-sm font-semibold text-red-700">
+                    <span className="text-sm font-extrabold text-red-700">
                         {opts?.title || defaultTitle}
                     </span>
-                    <span className="text-xs text-red-700 ">{message}</span>
+                    <span className="text-xs font-semibold text-red-700 ">
+                        {message}
+                    </span>
                 </div>
             </div>
         ),
@@ -129,10 +135,12 @@ export function toastLoading(
                     <LoaderCircleIcon className=" duration-500  animate-spin   w-5 h-5 text-blue-600 " />
                 </div>
                 <div className="flex flex-col">
-                    <span className="text-sm font-semibold text-blue-700">
+                    <span className="text-sm font-extrabold text-blue-700">
                         {opts?.title || defaultTitle}
                     </span>
-                    <span className="text-xs text-blue-700 ">{message}</span>
+                    <span className="text-xs font-semibold text-blue-700 ">
+                        {message}
+                    </span>
                 </div>
             </div>
         ),
@@ -164,10 +172,12 @@ export function toastInfo(
                     <Info className=" duration-500    w-5 h-5 text-neutral-600 " />
                 </div>
                 <div className="flex flex-col">
-                    <span className="text-sm font-semibold text-neutral-700">
+                    <span className="text-sm font-extrabold text-neutral-700">
                         {opts?.title || defaultTitle}
                     </span>
-                    <span className="text-xs text-neutral-700 ">{message}</span>
+                    <span className="text-xs font-semibold text-neutral-700 ">
+                        {message}
+                    </span>
                 </div>
             </div>
         ),

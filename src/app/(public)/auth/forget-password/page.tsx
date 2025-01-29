@@ -65,13 +65,13 @@ export default function Page() {
                     <h1 className="text-2xl font-bold text-[#3C3C3C] mb-4">
                         Check your email
                     </h1>
-                    <p className="text-base text-[#3C3C3C] font-semibold max-w-[400px]">
+                    <p className="text-base text-[#3C3C3C] font-bold max-w-[400px]">
                         We&apos;ve sent password reset instructions to your
                         email address. Please check your inbox.
                     </p>
                     <Button
                         onClick={() => router.push("/auth/login")}
-                        className="mt-4 font-semibold uppercase text-sm"
+                        className="mt-4 font-bold uppercase text-sm"
                         variant={"blue"}
                     >
                         Back to Login
@@ -100,7 +100,7 @@ export default function Page() {
                     <h1 className="text-2xl font-bold text-center text-[#3C3C3C]">
                         Forgot password
                     </h1>
-                    <p className="text-base text-[#3C3C3C] font-semibold max-w-[400px] text-center">
+                    <p className="text-base text-[#3C3C3C] font-bold max-w-[400px] text-center">
                         We will send you instructions on how to reset your
                         password by email.
                     </p>
@@ -113,7 +113,7 @@ export default function Page() {
                     />
                     <Button
                         type="submit"
-                        className="font-semibold -mt-3 uppercase text-sm"
+                        className="font-bold -mt-3 uppercase text-sm"
                         variant={"blue"}
                         isLoading={isSubmitting}
                     >
