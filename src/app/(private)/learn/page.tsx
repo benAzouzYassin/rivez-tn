@@ -54,7 +54,7 @@ export default function Page() {
                                     </div>
                                     <Link
                                         className="mt-8 block w-full"
-                                        href={`/quizzes/question-answer/${quiz.id}`}
+                                        href={`/quizzes/${quiz.id}`}
                                     >
                                         <Button
                                             variant={"blue"}

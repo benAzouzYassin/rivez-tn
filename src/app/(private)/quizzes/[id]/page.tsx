@@ -2,16 +2,20 @@
 import YellowStar from "@/components/icons/yellow-star"
 import BackButton from "@/components/shared/back-button"
 import ProgressBar from "@/components/shared/quizzes/progress-bar"
+import AnimatedLoader from "@/components/ui/animated-loader"
+import { readQuizWithQuestionsById } from "@/data-access/quizzes/read"
 import { cn } from "@/lib/ui-utils"
+import { useQuery } from "@tanstack/react-query"
 import { useAtom, useSetAtom } from "jotai"
 import { useParams } from "next/navigation"
-import Question from "./_components/question"
-import Result from "./_components/result"
-import { currentStepAtom, questionsAtom, wrongAnswersIdsAtom } from "./atoms"
-import { useQuery } from "@tanstack/react-query"
-import { readQuizWithQuestionsById } from "@/data-access/quizzes/read"
 import { useEffect } from "react"
-import AnimatedLoader from "@/components/ui/animated-loader"
+import Questions from "./_components/questions"
+import Result from "./_components/result"
+import {
+    currentQuestionIndexAtom,
+    failedQuestionsIdsAtom,
+    questionsAtom,
+} from "./atoms"
 
 export default function Page() {
     const params = useParams()
@@ -22,9 +26,9 @@ export default function Page() {
         queryKey: ["quizzes", "quizzes_questions", id],
     })
 
-    const [currentStep, setCurrentStep] = useAtom(currentStepAtom)
+    const [currentStep, setCurrentStep] = useAtom(currentQuestionIndexAtom)
     const [questions, setQuestions] = useAtom(questionsAtom)
-    const setWrongAnswersIdsAtom = useSetAtom(wrongAnswersIdsAtom)
+    const setWrongAnswersIdsAtom = useSetAtom(failedQuestionsIdsAtom)
     const percentage = (currentStep * 100) / questions.length + 5
     const isFinished = currentStep >= questions.length
     const isEmpty = questions.length === 0
@@ -59,7 +63,7 @@ export default function Page() {
                         <AnimatedLoader />
                     </div>
                 )}
-                {isFinished && !isLoading ? <Result /> : <Question />}
+                {isFinished && !isLoading ? <Result /> : <Questions />}
             </main>
         </>
     )

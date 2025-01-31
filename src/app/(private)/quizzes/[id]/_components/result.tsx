@@ -6,12 +6,12 @@ import { useAtom } from "jotai"
 import { motion } from "motion/react"
 import { useLayoutEffect, useState } from "react"
 import Confetti from "react-confetti"
-import { questionsAtom, wrongAnswersIdsAtom } from "../atoms"
+import { questionsAtom, failedQuestionsIdsAtom } from "../atoms"
 import Link from "next/link"
 
 export default function Result() {
     const [questions] = useAtom(questionsAtom)
-    const [wrongAnswersIds] = useAtom<number[]>(wrongAnswersIdsAtom)
+    const [wrongAnswersIds] = useAtom<number[]>(failedQuestionsIdsAtom)
 
     const totalQuestions: number = questions.length
     const wrongAnswers: number = wrongAnswersIds.length
