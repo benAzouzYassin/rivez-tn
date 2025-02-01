@@ -2,26 +2,20 @@ import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/ui-utils"
 import { useAtom } from "jotai"
 import { AnimatePresence, motion } from "motion/react"
-import Image from "next/image"
 import { useState } from "react"
-import {
-    currentQuestionIndexAtom,
-    failedQuestionsIdsAtom,
-    QuestionType,
-} from "../atoms"
+import { currentQuestionIndexAtom, QuestionType } from "../atoms"
+import { SingleChoiceContent } from "../schemas"
 import CorrectAnswerBanner from "./correct-answer-banner"
 import WrongAnswerBanner from "./wrong-answer-banner"
-import { SingleChoiceContent } from "../schemas"
 
 type Props = {
     question: { content: SingleChoiceContent } & QuestionType
 }
 export default function SingleAnswerQuestion(props: Props) {
-    const [, setFailedQuestionsAnswers] = useAtom(failedQuestionsIdsAtom)
     const [questionIndex, setQuestionIndex] = useAtom(currentQuestionIndexAtom)
     const [isCorrectBannerOpen, setIsCorrectBannerOpen] = useState(false)
     const [isWrongBannerOpen, setIsWrongBannerOpen] = useState(false)
-    const [selectedOption, setSelectedOption] = useState<number | null>(null)
+    const [selectedOption, setSelectedOption] = useState<string | null>(null)
     const questionAnimations = {
         initial: { opacity: 0, x: 0 },
         animate: { opacity: 1, x: 0 },
@@ -65,11 +59,7 @@ export default function SingleAnswerQuestion(props: Props) {
                                             <Button
                                                 key={i}
                                                 onClick={() => {
-                                                    console.log(
-                                                        opt,
-                                                        props.question.content
-                                                    )
-
+                                                    setSelectedOption(opt)
                                                     if (isCorrect) {
                                                         setIsCorrectBannerOpen(
                                                             true
@@ -85,14 +75,16 @@ export default function SingleAnswerQuestion(props: Props) {
                                                     {
                                                         "hover:bg-red-200/50 bg-red-200/50 text-red-500 font-extrabold  hover:shadow-red-300 shadow-red-300 hover:border-red-300 border-red-300":
                                                             !isCorrect &&
-                                                            (isCorrectBannerOpen ||
-                                                                isWrongBannerOpen),
+                                                            isWrongBannerOpen &&
+                                                            selectedOption ===
+                                                                opt,
                                                     },
                                                     {
                                                         "hover:bg-[#D2FFCC] bg-[#D2FFCC] text-[#58A700] font-extrabold  hover:shadow-[#58CC02]/50 shadow-[#58CC02]/50 hover:border-[#58CC02]/40 border-[#58CC02]/40":
                                                             isCorrect &&
-                                                            (isCorrectBannerOpen ||
-                                                                isWrongBannerOpen),
+                                                            isCorrectBannerOpen &&
+                                                            selectedOption ===
+                                                                opt,
                                                     }
                                                 )}
                                                 variant={"secondary"}
@@ -117,10 +109,6 @@ export default function SingleAnswerQuestion(props: Props) {
             />
             <WrongAnswerBanner
                 onNextClick={() => {
-                    // setFailedQuestionsAnswers((prev) => [
-                    //     ...prev,
-                    //     ,
-                    // ])
                     setSelectedOption(null)
                     setQuestionIndex((prev) => prev + 1)
                     setIsWrongBannerOpen(false)

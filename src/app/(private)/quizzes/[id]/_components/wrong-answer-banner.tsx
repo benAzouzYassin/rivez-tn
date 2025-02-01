@@ -41,13 +41,13 @@ export default function WrongAnswerBanner(props: Props) {
                 >
                     Continue
                 </Button>
-                <Button
+                {/* <Button
                     disabled={!props.isOpen}
                     className="ml-auto  w-full  h-12 px-7 text-lg !font-bold my-auto"
                     variant={"blue"}
                 >
                     Why ?
-                </Button>
+                </Button> */}
             </div>
         </div>
     )
