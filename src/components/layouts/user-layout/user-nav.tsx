@@ -1,6 +1,5 @@
 "use client"
 import { Button } from "@/components/ui/button"
-/* eslint-disable @next/next/no-img-element */
 import { useState } from "react"
 
 export default function UserNav() {
@@ -11,17 +10,7 @@ export default function UserNav() {
     }
 
     return (
-        <nav className="h-full z-10 border-r-2 px-4 fixed top-0 left-0 w-[256px]">
-            <div className="flex items-center justify-center mt-6">
-                <img
-                    alt=""
-                    className="opacity-80"
-                    width={100}
-                    height={100}
-                    src={"/logo.svg"}
-                />
-            </div>
-
+        <nav className="h-full z-10 border-r-2 px-4 pt-10 fixed top-0 left-0 w-[256px]">
             {/* Buttons */}
             <Button
                 variant={"secondary"}
