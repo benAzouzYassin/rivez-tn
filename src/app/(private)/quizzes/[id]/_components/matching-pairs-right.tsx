@@ -40,7 +40,7 @@ function OptionButton(props: {
     incorrectSelections: string[][]
 }) {
     const incorrectAnswerStyles =
-        "incorrect-answer bg-red-200 hover:bg-red-200 hover:shadow-red-300/50 border-red-300/45 hover:border-red-300 hover:border-red-300/45 !shadow-red-300"
+        "incorrect-answer bg-red-200 hover:bg-red-200 hover:shadow-red-300/50 border-red-300/45 hover:border-red-300 hover:border-red-300/45 shadow-red-300!"
     const incorrectSelectionsHistory = useRef(props.incorrectSelections)
     const [isShowingIncorrectAnimation, setIsShowingIncorrectAnimation] =
         useState(false)

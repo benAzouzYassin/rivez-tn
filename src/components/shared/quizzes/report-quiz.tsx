@@ -80,7 +80,7 @@ export default function ReportQuiz({
                     Report
                 </Button>
             </DialogTrigger>
-            <DialogContent className="max-w-md !rounded-3xl p-8">
+            <DialogContent className="max-w-md rounded-3xl! p-8">
                 <DialogHeader>
                     <DialogTitle className="text-xl font-bold">
                         Report an Issue

@@ -44,7 +44,7 @@ export function LanguageSelector(props: Props) {
                     />
                 </Button>
             </PopoverTrigger>
-            <PopoverContent className="w-64 mt-0 rounded-none border-none overflow-visible shadow-none bg-transparent !p-0">
+            <PopoverContent className="w-64 mt-0 rounded-none border-none overflow-visible shadow-none bg-transparent p-0!">
                 <div className="rounded-2xl mt-1 overflow-hidden border-2 bg-white   pt-3">
                     <div className="font-bold text-neutral-400 text-lg pb-3 px-6">
                         Languages

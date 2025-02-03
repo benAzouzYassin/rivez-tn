@@ -65,7 +65,7 @@ export default function SingleAnswerQuestion(props: Props) {
                     <div className="relative w-full flex-col flex">
                         {!!props.question.image && (
                             <img
-                                className="h-[330px] mx-auto !w-[800px] object-cover"
+                                className="h-[330px] mx-auto w-[800px]! object-cover"
                                 src={props.question.image}
                                 alt=""
                             />

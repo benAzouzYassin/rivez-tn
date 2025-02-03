@@ -61,7 +61,7 @@ export function Category(props: Props) {
                         ))}
                     </CarouselContent>
                     <CarouselNext
-                        iconClassName="!w-6 !h-6"
+                        iconClassName="w-6! h-6!"
                         className="right-0 bg-black hover:bg-white hover:border-neutral-300 text-white border-black w-12 h-12"
                     />
                 </Carousel>

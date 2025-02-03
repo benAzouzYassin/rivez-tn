@@ -79,7 +79,7 @@ export default function Page() {
 
                 <Button
                     onClick={() => router.push("/auth/login")}
-                    className="absolute !w-fit !px-7 uppercase font-bold text-[#1CB0F6] top-8 right-16"
+                    className="absolute w-fit! px-7! uppercase font-bold text-[#1CB0F6] top-8 right-16"
                     variant={"secondary"}
                 >
                     LOGIN

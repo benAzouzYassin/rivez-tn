@@ -17,7 +17,7 @@ export default function CorrectAnswerBanner(props: Props) {
             {" "}
             <div className="flex items-center">
                 <div className="h-[90px] flex items-center justify-center w-[90px] bg-white  border border-[#47cd35]/20  rounded-full">
-                    <Check className="stroke-[5] ml-1 h-14 w-14 stroke-[#58A700]/80" />
+                    <Check className="stroke-5 ml-1 h-14 w-14 stroke-[#58A700]/80" />
                 </div>
                 <div>
                     <p className="text-xl ml-4 font-bold text-[#58A700]">
@@ -34,7 +34,7 @@ export default function CorrectAnswerBanner(props: Props) {
             <Button
                 onClick={props.onNextClick}
                 disabled={!props.isOpen}
-                className="ml-auto h-12 px-7 text-lg !font-bold   my-auto "
+                className="ml-auto h-12 px-7 text-lg font-bold!   my-auto "
                 variant={"green"}
             >
                 Continue

@@ -31,7 +31,7 @@ export default function ProgressBar({
                 }}
                 className="relative rounded-full h-[14px] transition-all"
             >
-                <div className="from-white/25 to-white/20 bg-gradient-to-r h-1 absolute top-1 left-2 rounded-full w-[90%]" />
+                <div className="from-white/25 to-white/20 bg-linear-to-r h-1 absolute top-1 left-2 rounded-full w-[90%]" />
             </div>
         </div>
     )

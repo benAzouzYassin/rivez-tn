@@ -21,7 +21,7 @@ export function toastSuccess(
                 )}
             >
                 <div className="flex items-center justify-center  w-5 h-5 bg-green-500/60 rounded-full">
-                    <Check className="w-3  h-3 stroke-[4] text-white" />
+                    <Check className="w-3  h-3 stroke-4 text-white" />
                 </div>
                 <div className="flex flex-col">
                     <span className="text-sm font-extrabold text-green-700">
@@ -58,7 +58,7 @@ export function toastWarning(
                 )}
             >
                 <div className="flex items-center justify-center  w-5 h-5 bg-yellow-500/60 rounded-full">
-                    <TriangleAlert className="w-3  h-3 stroke-[4] text-white" />
+                    <TriangleAlert className="w-3  h-3 stroke-4 text-white" />
                 </div>
                 <div className="flex flex-col">
                     <span className="text-sm font-extrabold text-yellow-700">
@@ -95,7 +95,7 @@ export function toastError(
                 )}
             >
                 <div className="flex items-center justify-center  w-5 h-5 bg-red-500/60 rounded-full">
-                    <X className="w-3  h-3 stroke-[4] text-white" />
+                    <X className="w-3  h-3 stroke-4 text-white" />
                 </div>
                 <div className="flex flex-col">
                     <span className="text-sm font-extrabold text-red-700">

@@ -61,7 +61,7 @@ export default function UserHeader() {
     }
 
     return (
-        <header className="w-full h-20 pl-[256px] bg-white/95 backdrop-blur supports-[backdrop-filter]:bg-white/60">
+        <header className="w-full h-20 pl-[256px] bg-white/95 backdrop-blur-sm supports-backdrop-filter:bg-white/60">
             <div className="flex h-full border-b-2 items-center   px-8 md:px-20">
                 <div className="ml-auto flex items-center gap-6">
                     <LanguageSelector />

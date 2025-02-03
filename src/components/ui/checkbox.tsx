@@ -17,7 +17,7 @@ const Checkbox = React.forwardRef<
             "peer relative h-5 w-5 shrink-0  !data-[state=checked]:bg-red-500 rounded-md border-2 border-neutral-300",
             "transition-all duration-200 ease-in-out",
             "hover:border-neutral-400",
-            "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-400",
+            "focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-neutral-400",
             "focus-visible:ring-offset-2",
             "disabled:cursor-not-allowed disabled:opacity-50",
             "data-[state=checked]:border-blue-500 data-[state=checked]:bg-blue-500",
@@ -36,7 +36,7 @@ const Checkbox = React.forwardRef<
                 "duration-50"
             )}
         >
-            <Check className="h-3.5 w-3.5 stroke-[3]" />
+            <Check className="h-3.5 w-3.5 stroke-3" />
         </CheckboxPrimitive.Indicator>
     </CheckboxPrimitive.Root>
 ))

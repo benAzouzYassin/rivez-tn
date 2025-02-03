@@ -80,7 +80,7 @@ export default function Page() {
                 </Button>
                 <Button
                     onClick={() => router.push("/auth/login")}
-                    className="absolute !w-fit !px-7 uppercase font-bold text-[#1CB0F6] top-8 right-16"
+                    className="absolute w-fit! px-7! uppercase font-bold text-[#1CB0F6] top-8 right-16"
                     variant={"secondary"}
                 >
                     LOGIN
@@ -148,7 +148,7 @@ export default function Page() {
                     className="font-bold w-full mt-3 text-[#4285F4] uppercase text-sm"
                     variant={"secondary"}
                 >
-                    <Google className="!w-4 scale-105 !h-4" /> GOOGLE
+                    <Google className="w-4! scale-105 h-4!" /> GOOGLE
                 </Button>
                 <div className="flex items-center justify-center mt-5">
                     <p className="text-[#AFAFAF] text-sm max-w-[350px] text-center font-medium">

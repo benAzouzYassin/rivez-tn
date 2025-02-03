@@ -19,7 +19,7 @@ export default function ConfirmationBanner(props: Props) {
             <Button
                 onClick={props.onNextClick}
                 disabled={!props.isOpen}
-                className="ml-auto h-12  px-7 text-neutral-500 !font-extrabold   my-auto "
+                className="ml-auto h-12  px-7 text-neutral-500 font-extrabold!   my-auto "
                 variant={"secondary"}
             >
                 Skip question
