@@ -1,10 +1,9 @@
 "use client"
 
-import { JSX, useState } from "react"
-import { useRouter } from "nextjs-toploader/app"
-import { LogOutIcon, Settings, User2 } from "lucide-react"
 import XpIcon from "@/components/icons/xp"
 import { LanguageSelector } from "@/components/shared/language-selector"
+import AnimatedLoader from "@/components/ui/animated-loader"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import {
     Popover,
     PopoverContent,
@@ -12,12 +11,13 @@ import {
 } from "@/components/ui/popover"
 import TooltipWrapper from "@/components/ui/tooltip"
 import { logoutUser } from "@/data-access/users/logout"
-import { cn } from "@/lib/ui-utils"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { useCurrentUser } from "@/hooks/use-current-user"
-import AnimatedLoader from "@/components/ui/animated-loader"
 import { toastError } from "@/lib/toasts"
+import { cn } from "@/lib/ui-utils"
 import { useQueryClient } from "@tanstack/react-query"
+import { LogOutIcon, Settings, User2 } from "lucide-react"
+import { useRouter } from "nextjs-toploader/app"
+import { JSX, useState } from "react"
 
 export default function UserHeader() {
     const queryClient = useQueryClient()
@@ -61,8 +61,8 @@ export default function UserHeader() {
     }
 
     return (
-        <header className="w-full h-24 pl-[256px] bg-white/95 backdrop-blur supports-[backdrop-filter]:bg-white/60">
-            <div className="flex h-full items-center   px-8 md:px-20">
+        <header className="w-full h-20 pl-[256px] bg-white/95 backdrop-blur supports-[backdrop-filter]:bg-white/60">
+            <div className="flex h-full border-b-2 items-center   px-8 md:px-20">
                 <div className="ml-auto flex items-center gap-6">
                     <LanguageSelector />
                     <TooltipWrapper content="XP Points">

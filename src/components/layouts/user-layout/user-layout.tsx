@@ -8,8 +8,8 @@ type Props = {
 export default function UserLayout({ children }: Props) {
     return (
         <>
-            <UserNav />
             <UserHeader />
+            <UserNav />
             <main className="pl-[256px]">{children}</main>
         </>
     )
