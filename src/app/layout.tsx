@@ -4,6 +4,7 @@ import { Nunito } from "next/font/google"
 import NextTopLoader from "nextjs-toploader"
 import { Toaster } from "sonner"
 import QueryClientProvider from "@/providers/query-client"
+import { SidenavProvider } from "@/providers/sidenav-provider"
 const nunito = Nunito({
     subsets: ["latin"],
     weight: ["300", "400", "500", "600", "700", "800", "900", "1000"],
@@ -42,7 +43,9 @@ export default function RootLayout({
                     zIndex={1600}
                     showAtBottom={false}
                 />
-                <QueryClientProvider>{children}</QueryClientProvider>
+                <QueryClientProvider>
+                    <SidenavProvider>{children}</SidenavProvider>
+                </QueryClientProvider>
             </body>
         </html>
     )

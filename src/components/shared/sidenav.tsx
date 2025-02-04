@@ -1,6 +1,8 @@
 "use client"
 import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/ui-utils"
+import { useSidenav } from "@/providers/sidenav-provider"
+import { ChevronRight } from "lucide-react"
 import { useState } from "react"
 
 interface NavItem {
@@ -8,17 +10,13 @@ interface NavItem {
     icon: string
     iconScale?: string
 }
-
-export default function AdminNav() {
-    const [selected, setSelected] = useState("Dashboard")
-
-    const navItems: NavItem[] = [{ name: "Dashboard", icon: "house" }]
-
-    const settingsItem: NavItem = {
-        name: "Settings",
-        icon: "settings",
-        iconScale: "scale-95",
-    }
+type Props = {
+    items: NavItem[]
+    settingsItem: NavItem
+}
+export default function Sidenav(props: Props) {
+    const { isSidenavOpen, toggleSidenav } = useSidenav()
+    const [selected, setSelected] = useState("Learn")
 
     const getButtonStyles = (itemName: string) => {
         return {
@@ -51,14 +49,25 @@ export default function AdminNav() {
     }
 
     return (
-        <nav className="h-full z-10 border-r-2 px-4 pt-10 fixed top-0 left-0 w-[256px]">
+        <nav
+            className={cn(
+                "h-full z-10 border-r-2 px-4 pt-10 fixed top-0 left-0 transition-all",
+                {
+                    "w-[256px]": isSidenavOpen,
+                    "w-[100px]": !isSidenavOpen,
+                }
+            )}
+        >
+            <Button onClick={toggleSidenav} className="">
+                <ChevronRight />
+            </Button>
             {/* Main Navigation Buttons */}
-            {renderNavButton(navItems[0], "mt-14")}
-            {navItems.slice(1).map((item) => renderNavButton(item, "mt-1"))}
+            {renderNavButton(props.items[0], "mt-14")}
+            {props.items.slice(1).map((item) => renderNavButton(item, "mt-1"))}
 
             {/* Settings Button */}
             <div className="absolute bottom-5 px-3 left-0 w-full">
-                {renderNavButton(settingsItem, "mt-1")}
+                {renderNavButton(props.settingsItem, "mt-1")}
             </div>
         </nav>
     )
