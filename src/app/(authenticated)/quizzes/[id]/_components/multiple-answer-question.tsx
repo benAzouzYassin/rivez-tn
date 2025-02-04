@@ -13,7 +13,7 @@ type Props = {
     question: { content: MultipleChoiceContent } & QuestionType
 }
 
-export default function SingleAnswerQuestion(props: Props) {
+export default function MultipleAnswerQuestion(props: Props) {
     const [questionIndex, setQuestionIndex] = useAtom(currentQuestionIndexAtom)
     const [isCorrectBannerOpen, setIsCorrectBannerOpen] = useState(false)
     const [isWrongBannerOpen, setIsWrongBannerOpen] = useState(false)

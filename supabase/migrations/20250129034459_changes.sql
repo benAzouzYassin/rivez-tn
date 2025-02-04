@@ -1,4 +1,4 @@
-create type "public"."quiz_question_types" as enum ('SINGLE_CHOICE', 'MULTIPLE_CHOICE', 'MATCHING_PAIRS', 'DEBUG_CODE', 'CODE_COMPLETION');
+create type "public"."quiz_question_types" as enum ( 'MULTIPLE_CHOICE', 'MATCHING_PAIRS', 'DEBUG_CODE', 'CODE_COMPLETION');
 
 drop policy "Enable read access for authenticated users" on "public"."quizzes_questions_options";
 

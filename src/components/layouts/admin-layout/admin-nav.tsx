@@ -9,15 +9,10 @@ interface NavItem {
     iconScale?: string
 }
 
-export default function UserNav() {
-    const [selected, setSelected] = useState("Learn")
+export default function AdminNav() {
+    const [selected, setSelected] = useState("Dashboard")
 
-    const navItems: NavItem[] = [
-        { name: "Learn", icon: "house" },
-        { name: "Ranking", icon: "shield" },
-        { name: "Quests", icon: "box" },
-        { name: "Shop", icon: "loot" },
-    ]
+    const navItems: NavItem[] = [{ name: "Dashboard", icon: "house" }]
 
     const settingsItem: NavItem = {
         name: "Settings",

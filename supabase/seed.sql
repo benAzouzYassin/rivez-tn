@@ -1,193 +1,144 @@
 BEGIN;
+INSERT INTO public.categories (name, description, image) VALUES
+('JavaScript Fundamentals', 'Core concepts of JavaScript programming language', 'https://upload.wikimedia.org/wikipedia/commons/6/6a/JavaScript-logo.png'),
+('Python Basics', 'Essential Python programming concepts', 'https://upload.wikimedia.org/wikipedia/commons/c/c3/Python-logo-notext.svg'),
+('Data Structures', 'Common data structures in programming', 'https://example.com/data-structures.png');
 
--- Insert more sample quizzes
-INSERT INTO public.quizzes (name)
-VALUES 
-  ('Basic Math Quiz'),
-  ('Programming Fundamentals'),
-  ('World History Quiz'),
-  ('Science and Nature Quiz'),
-  ('Literature Quiz');
+INSERT INTO public.quizzes (name, category, image) VALUES
+('JavaScript Variables & Types', 1, 'https://dev.files.softyeducation.com/api/website_courses_icons_react_js-1337a72a-dcae-45fa-967e-64998bce5198.png'),
+('Python Lists & Tuples', 2, 'https://dev.files.softyeducation.com/api/website_courses_icons_ui_ux_design-2183deff-765c-4c54-9182-70f37147d6d5.png'),
+('Common Data Structures', 3, 'https://dev.files.softyeducation.com/api/website_courses_icons_software_testing-87c8888b-7fe3-4455-90a0-cc11bd03836f.png');
 
--- Insert questions for Basic Math Quiz
-INSERT INTO public.quizzes_questions (question, quiz, type, content)
-VALUES
-  (
-    'What is 2 + 2?',
-    1,
-    'SINGLE_CHOICE',
-    '{
-      "options": ["3", "4", "5"],
-      "correct": [1]
-    }'
-  ),
-  (
-    'Match the mathematical operations',
-    1,
-    'MATCHING_PAIRS',
-    '{
-      "pairs": [
-        ["2 × 3", "6"],
-        ["5 + 7", "12"],
-        ["8 ÷ 2", "4"]
+INSERT INTO public.quizzes_questions (question, quiz, type, content) VALUES
+('What is the output of: typeof null', 
+ 1, 
+ 'MULTIPLE_CHOICE',
+ '{
+      "correct": ["object"],
+      "options": ["object", "null", "undefined", "number"]
+  }'
+),
+('Which of these is not a primitive type in JavaScript?',
+ 1,
+ 'MULTIPLE_CHOICE',
+ '{
+      "correct": ["array"],
+      "options": ["array", "string", "number", "boolean"]
+  }'
+);
+
+-- Python Quiz Questions (MULTIPLE_CHOICE)
+INSERT INTO public.quizzes_questions (question, quiz, type, content) VALUES
+('Which of the following are valid ways to create a list in Python?',
+ 2,
+ 'MULTIPLE_CHOICE',
+ '{
+      "correct": ["list()", "[]", "[].copy()"],
+      "options": ["list()", "[]", "list.new()", "[].copy()"]
+  }'
+),
+('Which of these operations are valid for both lists and tuples?',
+ 2,
+ 'MULTIPLE_CHOICE',
+ '{
+      "correct": ["len()", "index()", "count()"],
+      "options": ["len()", "index()", "append()", "count()"]
+  }'
+);
+
+INSERT INTO public.quizzes_questions (question, quiz, type, content) VALUES
+('Match the data structure with its best use case:',
+ 3,
+ 'MATCHING_PAIRS',
+ '{
+      "leftSideOptions": [
+        "Hash Table",
+        "Binary Search Tree",
+        "Stack",
+        "Queue"
       ],
-      "correct": [[0,0], [1,1], [2,2]]
-    }'
-  ),
-  (
-    'What is the square root of 64?',
-    1,
-    'SINGLE_CHOICE',
-    '{
-      "options": ["6", "8", "10"],
-      "correct": [1]
-    }'
-  );
-
--- Insert questions for Programming Fundamentals
-INSERT INTO public.quizzes_questions (question, quiz, type, content)
-VALUES
-  (
-    'Which are valid programming languages?',
-    2,
-    'MULTIPLE_CHOICE',
-    '{
-      "options": ["Python", "HTML", "Java", "CSS"],
-      "correct": [0, 2]
-    }'
-  ),
-  (
-    'Debug this Python function:',
-    2,
-    'DEBUG_CODE',
-    '{
-      "code": "def add(a, b):\n    return a - b",
-      "correct": "def add(a, b):\n    return a + b"
-    }'
-  ),
-  (
-    'Complete the code to print "Hello World"',
-    2,
-    'CODE_COMPLETION',
-    '{
-      "snippet": "print(__)",
-      "hints": ["Use string syntax"],
-      "correct": "\"Hello World\""
-    }'
-  ),
-  (
-    'What does HTML stand for?',
-    2,
-    'SINGLE_CHOICE',
-    '{
-      "options": ["HyperText Markup Language", "High-Level Machine Language", "Home Tool Management Language"],
-      "correct": [0]
-    }'
-  );
-
--- Insert questions for World History Quiz
-INSERT INTO public.quizzes_questions (question, quiz, type, content)
-VALUES
-  (
-    'Who was the first President of the United States?',
-    3,
-    'SINGLE_CHOICE',
-    '{
-      "options": ["Thomas Jefferson", "George Washington", "Abraham Lincoln"],
-      "correct": [1]
-    }'
-  ),
-  (
-    'Match the historical events to their dates',
-    3,
-    'MATCHING_PAIRS',
-    '{
-      "pairs": [
-        ["World War I", "1914-1918"],
-        ["Fall of the Berlin Wall", "1989"],
-        ["American Civil War", "1861-1865"]
+      "rightSideOptions": [
+        "Fast key-value lookups",
+        "Ordered data with fast search",
+        "LIFO order processing",
+        "FIFO order processing"
       ],
-      "correct": [[0,0], [1,1], [2,2]]
-    }'
-  ),
-  (
-    'Which country was not part of the Axis Powers in WWII?',
-    3,
-    'SINGLE_CHOICE',
-    '{
-      "options": ["Germany", "Italy", "France"],
-      "correct": [2]
-    }'
-  );
-
--- Insert questions for Science and Nature Quiz
-INSERT INTO public.quizzes_questions (question, quiz, type, content)
-VALUES
-  (
-    'What is the chemical symbol for water?',
-    4,
-    'SINGLE_CHOICE',
-    '{
-      "options": ["H2O", "CO2", "NaCl"],
-      "correct": [0]
-    }'
-  ),
-  (
-    'Which planet is known as the Red Planet?',
-    4,
-    'SINGLE_CHOICE',
-    '{
-      "options": ["Mars", "Venus", "Jupiter"],
-      "correct": [0]
-    }'
-  ),
-  (
-    'Match the animal to its classification',
-    4,
-    'MATCHING_PAIRS',
-    '{
-      "pairs": [
-        ["Lion", "Mammal"],
-        ["Eagle", "Bird"],
-        ["Frog", "Amphibian"]
+      "correct": [
+        ["Hash Table", "Fast key-value lookups"],
+        ["Binary Search Tree", "Ordered data with fast search"],
+        ["Stack", "LIFO order processing"],
+        ["Queue", "FIFO order processing"]
+      ]
+  }'
+),
+('Match the Big O notation with the correct description:',
+ 3,
+ 'MATCHING_PAIRS',
+ '{
+      "leftSideOptions": [
+        "O(1)",
+        "O(n)",
+        "O(log n)",
+        "O(n²)"
       ],
-      "correct": [[0,0], [1,1], [2,2]]
-    }'
-  );
-
--- Insert questions for Literature Quiz
-INSERT INTO public.quizzes_questions (question, quiz, type, content)
-VALUES
-  (
-    'Who wrote "Pride and Prejudice"?',
-    5,
-    'SINGLE_CHOICE',
-    '{
-      "options": ["Jane Austen", "Charles Dickens", "Mark Twain"],
-      "correct": [0]
-    }'
-  ),
-  (
-    'Match the book to its author',
-    5,
-    'MATCHING_PAIRS',
-    '{
-      "pairs": [
-        ["1984", "George Orwell"],
-        ["To Kill a Mockingbird", "Harper Lee"],
-        ["The Great Gatsby", "F. Scott Fitzgerald"]
+      "rightSideOptions": [
+        "Constant time complexity",
+        "Linear time complexity",
+        "Logarithmic time complexity",
+        "Quadratic time complexity"
       ],
-      "correct": [[0,0], [1,1], [2,2]]
-    }'
-  ),
-  (
-    'Which of these is a Shakespearean play?',
-    5,
-    'MULTIPLE_CHOICE',
-    '{
-      "options": ["Hamlet", "Macbeth", "The Odyssey"],
-      "correct": [0, 1]
-    }'
-  );
+      "correct": [
+        ["O(1)", "Constant time complexity"],
+        ["O(n)", "Linear time complexity"],
+        ["O(log n)", "Logarithmic time complexity"],
+        ["O(n²)", "Quadratic time complexity"]
+      ]
+  }'
+);
 
+INSERT INTO public.quizzes_questions (question, quiz, type, content) VALUES
+('What is the result of 0.1 + 0.2 === 0.3 in JavaScript?',
+ 1,
+ 'MULTIPLE_CHOICE',
+ '{
+      "correct": ["false"],
+      "options": ["false", "true", "undefined", "NaN"]
+  }'
+);
+
+INSERT INTO public.quizzes_questions (question, quiz, type, content) VALUES
+('Which of these are valid Python string methods?',
+ 2,
+ 'MULTIPLE_CHOICE',
+ '{
+      "correct": ["upper()", "lower()", "capitalize()"],
+      "options": ["upper()", "lower()", "capitalize()", "uppercase()"]
+  }'
+);
+
+INSERT INTO public.quizzes_questions (question, quiz, type, content) VALUES
+('Match the data structure with its characteristics:',
+ 3,
+ 'MATCHING_PAIRS',
+ '{
+      "leftSideOptions": [
+        "Linked List",
+        "Array",
+        "Heap",
+        "Graph"
+      ],
+      "rightSideOptions": [
+        "Dynamic size with O(1) insertion",
+        "Fixed size with O(1) access",
+        "Priority-based operations",
+        "Network-like relationships"
+      ],
+      "correct": [
+        ["Linked List", "Dynamic size with O(1) insertion"],
+        ["Array", "Fixed size with O(1) access"],
+        ["Heap", "Priority-based operations"],
+        ["Graph", "Network-like relationships"]
+      ]
+  }'
+);
 COMMIT;

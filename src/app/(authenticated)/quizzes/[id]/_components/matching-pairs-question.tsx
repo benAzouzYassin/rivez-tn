@@ -57,6 +57,7 @@ export default function MatchingPairsQuestion(props: Props) {
         if (incorrectAttempts.current >= 2) {
             setIsWrongBannerOpen(true)
             setIsConfirmationBanner(false)
+
             setIncorrectSelections((prev) => [...prev, pair])
             return
         }
@@ -95,6 +96,9 @@ export default function MatchingPairsQuestion(props: Props) {
                                 className="max-w-[1200px] min-w-[700px] justify-center  items-center   mt-20 gap-10 w-full flex"
                             >
                                 <MatchingPairsLeft
+                                    readonly={
+                                        isWrongBannerOpen || isCorrectBannerOpen
+                                    }
                                     correctSelections={correctSelections}
                                     inCorrectSelections={incorrectSelections}
                                     wrongOptions={[]}
@@ -132,6 +136,9 @@ export default function MatchingPairsQuestion(props: Props) {
                                     options={leftSection}
                                 />
                                 <MatchingPairsRight
+                                    readonly={
+                                        isWrongBannerOpen || isCorrectBannerOpen
+                                    }
                                     correctSelections={correctSelections}
                                     inCorrectSelections={incorrectSelections}
                                     selectedOption={rightSelectedOption}
@@ -178,6 +185,8 @@ export default function MatchingPairsQuestion(props: Props) {
                 onNextClick={() => {
                     setRightSelectedOption(null)
                     setLeftSelectedOption(null)
+                    setCorrectSelections([])
+                    incorrectAttempts.current = 0
                     setQuestionIndex((prev) => prev + 1)
                     setIsConfirmationBanner(false)
                 }}
@@ -185,6 +194,8 @@ export default function MatchingPairsQuestion(props: Props) {
             />
             <CorrectAnswerBanner
                 onNextClick={() => {
+                    incorrectAttempts.current = 0
+                    setCorrectSelections([])
                     setRightSelectedOption(null)
                     setLeftSelectedOption(null)
                     setQuestionIndex((prev) => prev + 1)
@@ -196,12 +207,14 @@ export default function MatchingPairsQuestion(props: Props) {
                 onNextClick={() => {
                     setFailedQuestionsAnswers((prev) => [
                         ...prev,
-                        // currentQuestion.id,
+                        //TODO make use of this
                     ])
                     setRightSelectedOption(null)
                     setLeftSelectedOption(null)
                     setQuestionIndex((prev) => prev + 1)
                     setIsWrongBannerOpen(false)
+                    incorrectAttempts.current = 0
+                    setCorrectSelections([])
                 }}
                 isOpen={isWrongBannerOpen}
             />

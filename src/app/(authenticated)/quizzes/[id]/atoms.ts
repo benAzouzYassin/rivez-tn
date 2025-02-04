@@ -4,7 +4,6 @@ import {
     DebugCodeContent,
     MatchingPairsContent,
     MultipleChoiceContent,
-    SingleChoiceContent,
 } from "./schemas"
 import { atom } from "jotai"
 
@@ -17,7 +16,6 @@ export const questionsAtom = atom<QuestionType[]>([])
 //types
 export type QuestionType = {
     content:
-        | SingleChoiceContent
         | MultipleChoiceContent
         | MatchingPairsContent
         | DebugCodeContent

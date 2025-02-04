@@ -16,6 +16,7 @@ import {
     failedQuestionsIdsAtom,
     questionsAtom,
 } from "./atoms"
+import { ErrorDisplay } from "@/components/shared/error-display"
 
 export default function Page() {
     const params = useParams()
@@ -39,7 +40,7 @@ export default function Page() {
     }, [data, setCurrentStep, setQuestions, setWrongAnswersIdsAtom])
 
     if (isEmpty && !isLoading) {
-        return <div>error...</div>
+        return <ErrorDisplay />
     }
 
     return (

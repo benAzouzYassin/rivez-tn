@@ -65,6 +65,7 @@ export type Database = {
           id: number
           image: string | null
           name: string
+          publication_status: Database["public"]["Enums"]["publication_states"]
         }
         Insert: {
           category?: number | null
@@ -72,6 +73,7 @@ export type Database = {
           id?: number
           image?: string | null
           name: string
+          publication_status?: Database["public"]["Enums"]["publication_states"]
         }
         Update: {
           category?: number | null
@@ -79,6 +81,7 @@ export type Database = {
           id?: number
           image?: string | null
           name?: string
+          publication_status?: Database["public"]["Enums"]["publication_states"]
         }
         Relationships: [
           {
@@ -136,6 +139,7 @@ export type Database = {
       [_ in never]: never
     }
     Enums: {
+      publication_states: "DRAFT" | "PUBLISHED" | "ARCHIVED"
       quiz_question_types:
         | "SINGLE_CHOICE"
         | "MULTIPLE_CHOICE"

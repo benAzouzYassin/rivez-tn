@@ -3,7 +3,6 @@
 import { useAtom } from "jotai"
 import { currentQuestionIndexAtom, questionsAtom, QuestionType } from "../atoms"
 import CodeCompletionQuestion from "./code-completion-question"
-import SingleAnswerQuestion from "./single-answer-question"
 import MultipleAnswerQuestion from "./multiple-answer-question"
 import MatchingPairsQuestion from "./matching-pairs-question"
 import DebugCodeQuestion from "./debug-code-question"
@@ -17,8 +16,6 @@ import {
     MatchingPairsContentSchema,
     MultipleChoiceContent,
     MultipleChoiceContentSchema,
-    SingleChoiceContent,
-    SingleChoiceContentSchema,
 } from "../schemas"
 
 export default function Questions() {
@@ -29,15 +26,10 @@ export default function Questions() {
     if (!currentQuestion) {
         return <ErrorDisplay />
     }
-    switch (currentQuestion?.type) {
-        case "SINGLE_CHOICE":
-            return isSingleChoice(currentQuestion) ? (
-                <SingleAnswerQuestion question={currentQuestion} />
-            ) : (
-                <ErrorDisplay />
-            )
 
+    switch (currentQuestion?.type) {
         case "MULTIPLE_CHOICE":
+            console.log(currentQuestion)
             return isMultipleChoice(currentQuestion) ? (
                 <MultipleAnswerQuestion question={currentQuestion} />
             ) : (
@@ -67,14 +59,6 @@ export default function Questions() {
 }
 
 // assertion functions
-function isSingleChoice(
-    currentQuestion: QuestionType
-): currentQuestion is QuestionType & { content: SingleChoiceContent } {
-    const { success } = SingleChoiceContentSchema.safeParse(
-        currentQuestion.content
-    )
-    return success
-}
 function isMultipleChoice(
     currentQuestion: QuestionType
 ): currentQuestion is QuestionType & { content: MultipleChoiceContent } {
