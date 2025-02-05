@@ -13,7 +13,18 @@ export default function AdminLayout({ children }: Props) {
         <>
             <UserHeader />
             <Sidenav
-                items={[{ name: "Dashboard", icon: "house" }]}
+                items={[
+                    {
+                        name: "Dashboard",
+                        icon: "house",
+                        route: "/admin/dashboard",
+                    },
+                    {
+                        name: "Quizzes",
+                        icon: "art-palette",
+                        route: "/admin/quizzes/list",
+                    },
+                ]}
                 settingsItem={{
                     name: "Settings",
                     icon: "settings",

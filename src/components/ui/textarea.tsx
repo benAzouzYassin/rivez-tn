@@ -1,21 +1,48 @@
 import * as React from "react"
-
 import { cn } from "@/lib/ui-utils"
+import { AlertCircle } from "lucide-react"
 
 const Textarea = React.forwardRef<
-  HTMLTextAreaElement,
-  React.ComponentProps<"textarea">
->(({ className, ...props }, ref) => {
-  return (
-    <textarea
-      className={cn(
-        "flex min-h-[60px] w-full rounded-md border border-neutral-200 bg-transparent px-3 py-2 text-base shadow-xs placeholder:text-neutral-500 focus-visible:outline-hidden focus-visible:ring-1 focus-visible:ring-neutral-950 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm dark:border-neutral-800 dark:placeholder:text-neutral-400 dark:focus-visible:ring-neutral-300",
-        className
-      )}
-      ref={ref}
-      {...props}
-    />
-  )
+    HTMLTextAreaElement,
+    React.ComponentProps<"textarea"> & {
+        errorMessage?: string
+    }
+>(({ className, errorMessage, ...props }, ref) => {
+    return (
+        <div>
+            <textarea
+                className={cn(
+                    "rounded-xl transition-all duration-200",
+                    "bg-[#F7F7F7]/50 font-medium border-2 p-3 border-[#E5E5E5]",
+                    "placeholder:font-medium placeholder:text-[#AFAFAF]",
+                    "placeholder:transition-all focus:placeholder:translate-x-1",
+                    "focus:outline-none focus:ring focus:ring-offset-0",
+                    "focus:border-blue-300 focus:ring-blue-200/50",
+                    "w-full min-h-[60px] resize-y",
+                    "disabled:cursor-not-allowed disabled:opacity-50",
+                    {
+                        "border-red-400 focus:border-red-400 focus:ring-red-200/50":
+                            !!errorMessage,
+                    },
+                    className
+                )}
+                ref={ref}
+                {...props}
+            />
+            <div
+                className={cn(
+                    "text-red-500 h-4 transition-all duration-200",
+                    "flex text-sm items-center gap-1 font-medium",
+                    { "h-9 pb-1": !!errorMessage }
+                )}
+            >
+                {!!errorMessage && (
+                    <AlertCircle className="h-4 w-4 ml-1 shrink-0" />
+                )}
+                <span className="first-letter:capitalize">{errorMessage}</span>
+            </div>
+        </div>
+    )
 })
 Textarea.displayName = "Textarea"
 

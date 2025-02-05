@@ -3,12 +3,14 @@ import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/ui-utils"
 import { useSidenav } from "@/providers/sidenav-provider"
 import { ChevronRight } from "lucide-react"
+import { useRouter } from "nextjs-toploader/app"
 import { useState } from "react"
 
 interface NavItem {
     name: string
     icon: string
     iconScale?: string
+    route?: string
 }
 type Props = {
     items: NavItem[]
@@ -17,7 +19,7 @@ type Props = {
 export default function Sidenav(props: Props) {
     const { isSidenavOpen, toggleSidenav } = useSidenav()
     const [selected, setSelected] = useState("Learn")
-
+    const router = useRouter()
     const getButtonStyles = (itemName: string) => {
         return {
             base: "py-7 text-lg font-extrabold rounded-xl shadow-none  w-full justify-start",
@@ -35,7 +37,12 @@ export default function Sidenav(props: Props) {
             <Button
                 key={item.name}
                 variant="secondary"
-                onClick={() => setSelected(item.name)}
+                onClick={() => {
+                    setSelected(item.name)
+                    if (item.route) {
+                        router.push(item.route)
+                    }
+                }}
                 className={cn(styles.base, styles.active, additionalClasses)}
             >
                 <img
