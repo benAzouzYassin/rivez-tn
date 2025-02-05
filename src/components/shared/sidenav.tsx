@@ -41,9 +41,15 @@ export default function Sidenav(props: Props) {
                 <img
                     alt=""
                     src={`/icons/${item.icon}.svg`}
-                    className={cn("h-8 w-8", item.iconScale)}
+                    className={cn(
+                        "h-8 transition-transform w-8 min-w-8 min-h-8 ",
+                        item.iconScale,
+                        {
+                            "-translate-x-1": !isSidenavOpen,
+                        }
+                    )}
                 />
-                <span className="ml-3">{item.name}</span>
+                {isSidenavOpen && <span className="ml-3">{item.name}</span>}
             </Button>
         )
     }
@@ -51,15 +57,26 @@ export default function Sidenav(props: Props) {
     return (
         <nav
             className={cn(
-                "h-full z-10 border-r-2 px-4 pt-10 fixed top-0 left-0 transition-all",
+                "h-full z-10 group  hover:border-r-sky-300 border-r-2 px-4 pt-10 fixed top-0 left-0 transition-all  duration-300",
                 {
                     "w-[256px]": isSidenavOpen,
                     "w-[100px]": !isSidenavOpen,
                 }
             )}
         >
-            <Button onClick={toggleSidenav} className="">
-                <ChevronRight />
+            <Button
+                onClick={toggleSidenav}
+                variant={"outline"}
+                className="absolute scale-110 -right-4 hover:bg-sky-50 hover:cursor-pointer group-hover:opacity-100 border-2 duration-300 border-sky-300 opacity-0 top-6 !p-1 h-fit rounded-full w-fit"
+            >
+                <ChevronRight
+                    className={cn(
+                        "!w-5 transition-all  text-sky-400 stroke-[2.5] !h-5",
+                        {
+                            "rotate-180": isSidenavOpen,
+                        }
+                    )}
+                />
             </Button>
             {/* Main Navigation Buttons */}
             {renderNavButton(props.items[0], "mt-14")}

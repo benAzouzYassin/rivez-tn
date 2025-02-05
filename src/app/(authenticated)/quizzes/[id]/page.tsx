@@ -46,7 +46,7 @@ export default function Page() {
     return (
         <>
             {!isFinished && (
-                <header className="w-full fixed top-0 bg-white z-50  flex items-center border-b h-24 px-20  bg-white/95 backdrop-blur-sm supports-backdrop-filter:bg-white/60">
+                <header className="w-full fixed top-0 z-50  flex items-center border-b h-24 px-20  bg-white/95 backdrop-blur-sm supports-backdrop-filter:bg-white/60">
                     <BackButton className="ml-auto mr-2 opacity-50" />
                     <ProgressBar className="w-[65%]" percentage={percentage} />
                     <div className="mr-auto">

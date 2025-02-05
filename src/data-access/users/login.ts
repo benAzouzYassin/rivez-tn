@@ -5,6 +5,7 @@ export async function loginUserWithPassword(params: {
     password: string
 }) {
     const { error } = await supabase.auth.signInWithPassword(params)
+
     return {
         data: {},
         success: !error,
