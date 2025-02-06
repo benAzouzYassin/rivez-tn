@@ -1,4 +1,4 @@
-import ReportQuiz from "@/components/shared/quizzes/report-quiz"
+import ReportQuiz from "@/components/shared/report-quiz"
 import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/ui-utils"
 import { X } from "lucide-react"

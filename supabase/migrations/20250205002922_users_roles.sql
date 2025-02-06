@@ -17,9 +17,6 @@ alter table "public"."users_to_roles" add constraint "users_to_roles_user_id_fke
 
 alter table "public"."users_to_roles" validate constraint "users_to_roles_user_id_fkey";
 
-alter table "public"."users_to_roles" add constraint "users_to_roles_user_id_fkey1" FOREIGN KEY (user_id) REFERENCES auth.users(id) ON DELETE CASCADE not valid;
-
-alter table "public"."users_to_roles" validate constraint "users_to_roles_user_id_fkey1";
 
 grant delete on table "public"."users_to_roles" to "anon";
 
@@ -62,24 +59,3 @@ grant trigger on table "public"."users_to_roles" to "service_role";
 grant truncate on table "public"."users_to_roles" to "service_role";
 
 grant update on table "public"."users_to_roles" to "service_role";
-
-
-set check_function_bodies = off;
-
-CREATE OR REPLACE FUNCTION public.handle_new_user_role()
- RETURNS trigger
- LANGUAGE plpgsql
- SECURITY DEFINER
- SET search_path TO ''
-AS $function$
-begin
- 
-  insert into "public"."users_to_roles" (user_id ,"user_role")
-  values (new.id, 'USER'); 
-    return new;
-end;
-$function$
-;
-
-
-create trigger assign_new_user_role after insert on auth.users for each row execute function public.handle_new_user_role();

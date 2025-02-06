@@ -1,4 +1,4 @@
-import { supabase } from "@/lib/supbase-client"
+import { supabase } from "@/lib/supabase-client-side"
 
 export async function readCurrentUser() {
     const { data, error } = await supabase.auth.getUser()

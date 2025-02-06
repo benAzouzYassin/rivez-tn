@@ -1,7 +1,7 @@
 "use client"
 import YellowStar from "@/components/icons/yellow-star"
 import BackButton from "@/components/shared/back-button"
-import ProgressBar from "@/components/shared/quizzes/progress-bar"
+import ProgressBar from "@/components/shared/progress-bar"
 import AnimatedLoader from "@/components/ui/animated-loader"
 import { readQuizWithQuestionsById } from "@/data-access/quizzes/read"
 import { cn } from "@/lib/ui-utils"

@@ -2,31 +2,35 @@
 
 import { toastError } from "@/lib/toasts"
 import { cn } from "@/lib/ui-utils"
-import { FileTextIcon, Upload, X } from "lucide-react"
-import { useCallback, useState } from "react"
+import { FileTextIcon, Loader2, Upload, X } from "lucide-react"
+import { useCallback } from "react"
 import { useDropzone } from "react-dropzone"
 
-interface FileUploadProps {
-    value?: string
+interface Props {
     onChange: (file: File | null) => void
     disabled?: boolean
     className?: string
     allowImage?: boolean
     allowDocument?: boolean
+    preview?: string
+    isLoading?: boolean
+    previewAsImage?: boolean
+    previewAsDocument?: boolean
+    fileName?: string
 }
 
-export function FileUpload({
-    value,
+export function FileInput({
     onChange,
     disabled,
     className,
     allowDocument = true,
     allowImage = true,
-}: FileUploadProps) {
-    const [preview, setPreview] = useState(value || "")
-    const [fileType, setFileType] = useState("")
-    const [fileName, setFileName] = useState("")
-
+    preview,
+    isLoading = false,
+    previewAsDocument,
+    previewAsImage,
+    fileName,
+}: Props) {
     const onDrop = useCallback(
         (acceptedFiles: File[]) => {
             const file = acceptedFiles[0]
@@ -36,22 +40,7 @@ export function FileUpload({
                     toastError("File size too large. Maximum size is 10MB")
                     return
                 }
-
-                setFileName(file.name)
-                setFileType(file.type)
-
-                const reader = new FileReader()
-                reader.onloadend = () => {
-                    const base64String = reader.result as string
-                    setPreview(base64String)
-                    onChange(file)
-                }
-
-                if (file.type.startsWith("image/")) {
-                    reader.readAsDataURL(file)
-                } else {
-                    reader.readAsDataURL(file)
-                }
+                onChange(file)
             }
         },
         [onChange]
@@ -74,6 +63,7 @@ export function FileUpload({
                   [".xlsx"],
           }
         : null
+
     const { getRootProps, getInputProps, isDragActive } = useDropzone({
         onDrop,
         accept: {
@@ -81,17 +71,12 @@ export function FileUpload({
             ...acceptedDocumentTypes,
         },
         maxFiles: 1,
-        disabled,
+        disabled: disabled || isLoading,
     })
 
     const removeFile = () => {
-        setPreview("")
-        setFileType("")
-        setFileName("")
         onChange(null)
     }
-
-    const isImage = fileType.startsWith("image/")
 
     return (
         <div
@@ -103,27 +88,36 @@ export function FileUpload({
             <div
                 {...getRootProps()}
                 className={cn(
-                    "w-full min-h-[200px] hover:cursor-pointer  relative border-2 border-dashed rounded-xl",
+                    "w-full min-h-[200px] hover:cursor-pointer relative border-2 border-dashed rounded-xl",
                     "transition-all duration-200 ease-in-out",
                     "flex items-center justify-center",
                     isDragActive
                         ? "border-blue-500 bg-blue-50"
-                        : "border-neutral-300 hover:bg-[#F7F7F7]  bg-[#F7F7F7]/50",
-                    disabled && "opacity-50 cursor-not-allowed",
+                        : "border-neutral-300 hover:bg-[#F7F7F7] bg-[#F7F7F7]/50",
+                    (disabled || isLoading) && "opacity-50 cursor-not-allowed",
                     preview ? "p-4" : "p-8"
                 )}
             >
                 <input {...getInputProps()} />
 
-                {preview ? (
-                    <div className="relative w-full h-full">
-                        {isImage ? (
+                {isLoading ? (
+                    <div className="relative hover:cursor-not-allowed min-w-[350px] w-full h-full">
+                        <div className="flex flex-col w-full h-full items-center justify-center">
+                            <Loader2 className="w-7 h-7  animate-spin duration-[animation-duration:350ms] text-black" />
+                        </div>
+                    </div>
+                ) : preview ? (
+                    <div className="relative min-w-[350px] w-full h-full">
+                        {(previewAsImage ||
+                            (previewAsImage === undefined &&
+                                !previewAsDocument)) && (
                             <img
                                 src={preview}
                                 alt="Preview"
-                                className="rounded-lg h-[200px] w-full  object-contain"
+                                className="rounded-lg h-[200px] w-full object-contain"
                             />
-                        ) : (
+                        )}
+                        {previewAsDocument && (
                             <div className="flex flex-col items-center justify-center h-full">
                                 <FileTextIcon className="w-16 h-16 text-neutral-500 mb-2" />
                                 <p className="text-base text-neutral-700 text-center font-semibold break-all">
@@ -131,7 +125,7 @@ export function FileUpload({
                                 </p>
                             </div>
                         )}
-                        {!disabled && (
+                        {!disabled && !isLoading && (
                             <button
                                 onClick={(e) => {
                                     e.stopPropagation()
@@ -148,7 +142,7 @@ export function FileUpload({
                         )}
                     </div>
                 ) : (
-                    <div className="text-center">
+                    <div className="text-center min-w-[350px] border-red-500">
                         <Upload className="w-10 h-10 mb-2 mx-auto text-neutral-400" />
                         <p className="text-neutral-600 mb-2">
                             {isDragActive

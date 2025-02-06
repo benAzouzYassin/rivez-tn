@@ -6,6 +6,10 @@
 
 `bunx supabase gen types typescript --local > src/types/database.types.ts`
 
-### seed local database
+### reset && seed local database
 
 `bunx supabase db reset --local`
+
+## Assets management
+
+![](/public/readme/assets-management.png)

@@ -9,13 +9,15 @@ import {
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { useForm } from "react-hook-form"
-import { useMemo } from "react"
+import { Controller, useForm } from "react-hook-form"
+import { useMemo, useState } from "react"
 import { z } from "zod"
 import { Textarea } from "@/components/ui/textarea"
-import { FileUpload } from "@/components/ui/file-upload"
+import CategorySelect from "@/components/shared/category-select"
+import ImageUpload from "@/components/shared/image-upload"
 
 export default function AddQuizDialog(props: Props) {
+    const [imageUrl, setImageUrl] = useState<string | null>(null)
     const formSchema = useMemo(
         () =>
             z.object({
@@ -24,7 +26,7 @@ export default function AddQuizDialog(props: Props) {
                     .min(1, "Name is required")
                     .max(100, "Input exceeds maximum length"),
                 category: z
-                    .string()
+                    .string({ message: "Category is required" })
                     .min(1, "Category is required")
                     .max(100, "Input exceeds maximum length"),
                 description: z.string().optional(),
@@ -33,6 +35,7 @@ export default function AddQuizDialog(props: Props) {
     )
 
     const {
+        control,
         register,
         handleSubmit,
         formState: { errors, isSubmitting },
@@ -67,18 +70,35 @@ export default function AddQuizDialog(props: Props) {
                         className="w-full"
                         errorMessage={errors.name?.message}
                     />
-                    <Input
-                        {...register("category")}
-                        placeholder="Category"
-                        className="w-full"
-                        errorMessage={errors.category?.message}
+                    <Controller
+                        control={control}
+                        name="category"
+                        render={({ field: { onChange, value, onBlur } }) => (
+                            <CategorySelect
+                                inputClassName="w-full"
+                                selectedId={value}
+                                errorMessage={errors.category?.message}
+                                onSelect={({ id }) => {
+                                    onChange(id)
+                                    onBlur()
+                                }}
+                                onUnselect={() => {
+                                    onChange(null)
+                                    onBlur()
+                                }}
+                            />
+                        )}
                     />
+
                     <Textarea
                         {...register("description")}
                         placeholder="Description (optional)"
                         className="min-h-[100px]"
                     />
-                    <FileUpload onChange={() => {}} />
+                    <ImageUpload
+                        imageUrl={imageUrl}
+                        onImageUrlChange={setImageUrl}
+                    />
                     <Button
                         isLoading={isSubmitting}
                         type="submit"

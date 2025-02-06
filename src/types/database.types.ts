@@ -65,7 +65,6 @@ export type Database = {
           id: number
           image: string | null
           name: string
-          publication_status: Database["public"]["Enums"]["publication_states"]
         }
         Insert: {
           category?: number | null
@@ -73,7 +72,6 @@ export type Database = {
           id?: number
           image?: string | null
           name: string
-          publication_status?: Database["public"]["Enums"]["publication_states"]
         }
         Update: {
           category?: number | null
@@ -81,7 +79,6 @@ export type Database = {
           id?: number
           image?: string | null
           name?: string
-          publication_status?: Database["public"]["Enums"]["publication_states"]
         }
         Relationships: [
           {
@@ -131,6 +128,24 @@ export type Database = {
           },
         ]
       }
+      users_to_roles: {
+        Row: {
+          created_at: string
+          user_id: string
+          user_role: Database["public"]["Enums"]["user_role_types"] | null
+        }
+        Insert: {
+          created_at?: string
+          user_id?: string
+          user_role?: Database["public"]["Enums"]["user_role_types"] | null
+        }
+        Update: {
+          created_at?: string
+          user_id?: string
+          user_role?: Database["public"]["Enums"]["user_role_types"] | null
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
@@ -139,13 +154,12 @@ export type Database = {
       [_ in never]: never
     }
     Enums: {
-      publication_states: "DRAFT" | "PUBLISHED" | "ARCHIVED"
       quiz_question_types:
-        | "SINGLE_CHOICE"
         | "MULTIPLE_CHOICE"
         | "MATCHING_PAIRS"
         | "DEBUG_CODE"
         | "CODE_COMPLETION"
+      user_role_types: "ADMIN" | "USER"
     }
     CompositeTypes: {
       [_ in never]: never

@@ -5,16 +5,15 @@ import { cn } from "./ui-utils"
 export function toastSuccess(
     message?: string,
     opts?: {
-        title?: string
+        description?: string
         className?: string
     }
 ) {
-    const defaultTitle = "Success"
     return toast.custom(
         () => (
             <div
                 className={cn(
-                    `flex items-center min-w-[350px] gap-3 px-4 py-3 w-full 
+                    `flex items-center min-w-[350px] gap-3 px-4 py-4 w-full 
       bg-green-100/60 border-green-300 border   rounded-lg shadow-sm 
       animate-in fade-in-0 duration-300 `,
                     opts?.className
@@ -25,10 +24,10 @@ export function toastSuccess(
                 </div>
                 <div className="flex flex-col">
                     <span className="text-sm font-extrabold text-green-700">
-                        {opts?.title || defaultTitle}
+                        {message}
                     </span>
                     <span className="text-xs font-semibold text-green-700 ">
-                        {message}
+                        {opts?.description}
                     </span>
                 </div>
             </div>
@@ -42,16 +41,15 @@ export function toastSuccess(
 export function toastWarning(
     message?: string,
     opts?: {
-        title?: string
+        description?: string
         className?: string
     }
 ) {
-    const defaultTitle = "Warning"
     return toast.custom(
         () => (
             <div
                 className={cn(
-                    `flex items-center min-w-[350px] gap-3 px-4 py-3 w-full 
+                    `flex items-center min-w-[350px] gap-3 px-4 py-4 w-full 
           bg-yellow-100/30 border-yellow-300 border   rounded-lg shadow-sm 
           animate-in fade-in-0 duration-300 `,
                     opts?.className
@@ -62,10 +60,10 @@ export function toastWarning(
                 </div>
                 <div className="flex flex-col">
                     <span className="text-sm font-extrabold text-yellow-700">
-                        {opts?.title || defaultTitle}
+                        {message}
                     </span>
                     <span className="text-xs font-semibold text-yellow-700 ">
-                        {message}
+                        {opts?.description}
                     </span>
                 </div>
             </div>
@@ -79,16 +77,15 @@ export function toastWarning(
 export function toastError(
     message?: string,
     opts?: {
-        title?: string
+        description?: string
         className?: string
     }
 ) {
-    const defaultTitle = "Error"
     return toast.custom(
         () => (
             <div
                 className={cn(
-                    `flex items-center min-w-[350px] gap-3 px-4 py-3 w-full 
+                    `flex items-center min-w-[350px] gap-3 px-4 py-4 w-full 
           bg-red-100/60 border-red-300 border   rounded-lg shadow-sm 
           animate-in fade-in-0 duration-300 `,
                     opts?.className
@@ -99,10 +96,10 @@ export function toastError(
                 </div>
                 <div className="flex flex-col">
                     <span className="text-sm font-extrabold text-red-700">
-                        {opts?.title || defaultTitle}
+                        {message}
                     </span>
                     <span className="text-xs font-semibold text-red-700 ">
-                        {message}
+                        {opts?.description}{" "}
                     </span>
                 </div>
             </div>
@@ -116,16 +113,15 @@ export function toastError(
 export function toastLoading(
     message?: string,
     opts?: {
-        title?: string
+        description?: string
         className?: string
     }
 ) {
-    const defaultTitle = "Processing..."
     return toast.custom(
         () => (
             <div
                 className={cn(
-                    `flex items-center min-w-[350px] gap-3 px-4 py-3 w-full 
+                    `flex items-center min-w-[350px] gap-3 px-4 py-4 w-full 
           bg-blue-100/40 border-blue-300 border   rounded-lg shadow-sm 
           animate-in fade-in-0 duration-300 `,
                     opts?.className
@@ -136,10 +132,10 @@ export function toastLoading(
                 </div>
                 <div className="flex flex-col">
                     <span className="text-sm font-extrabold text-blue-700">
-                        {opts?.title || defaultTitle}
+                        {message}
                     </span>
                     <span className="text-xs font-semibold text-blue-700 ">
-                        {message}
+                        {opts?.description}{" "}
                     </span>
                 </div>
             </div>
@@ -153,16 +149,15 @@ export function toastLoading(
 export function toastInfo(
     message?: string,
     opts?: {
-        title?: string
+        description?: string
         className?: string
     }
 ) {
-    const defaultTitle = "Information"
     return toast.custom(
         () => (
             <div
                 className={cn(
-                    `flex items-center min-w-[350px] gap-3 px-4 py-3 w-full 
+                    `flex items-center min-w-[350px] gap-3 px-4 py-4 w-full 
           bg-neutral-100/40 border-neutral-300 border   rounded-lg shadow-sm 
           animate-in fade-in-0 duration-300 `,
                     opts?.className
@@ -173,10 +168,10 @@ export function toastInfo(
                 </div>
                 <div className="flex flex-col">
                     <span className="text-sm font-extrabold text-neutral-700">
-                        {opts?.title || defaultTitle}
+                        {message}
                     </span>
                     <span className="text-xs font-semibold text-neutral-700 ">
-                        {message}
+                        {opts?.description}{" "}
                     </span>
                 </div>
             </div>
