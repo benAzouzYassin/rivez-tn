@@ -21,7 +21,9 @@ export default function RootLayout({
 }>) {
     return (
         <html lang="en">
-            <body className={`${nunito.className} antialiased`}>
+            <body
+                className={`${nunito.className} overflow-y-auto overflow-x-hidden antialiased  min-w-[100vw]`}
+            >
                 <Toaster
                     visibleToasts={5}
                     expand

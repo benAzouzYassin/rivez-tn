@@ -32,10 +32,13 @@ export default function AdminLayout({ children }: Props) {
                 }}
             />
             <main
-                className={cn("transition-all duration-300", {
-                    "pl-[256px]": isSidenavOpen,
-                    "pl-[100px]": !isSidenavOpen,
-                })}
+                className={cn(
+                    "transition-all pt-20 min-h-[100vh] duration-300",
+                    {
+                        "pl-[256px]": isSidenavOpen,
+                        "pl-[100px]": !isSidenavOpen,
+                    }
+                )}
             >
                 {children}
             </main>

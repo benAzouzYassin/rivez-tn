@@ -27,7 +27,7 @@ export default function UserLayout({ children }: Props) {
                 }}
             />
             <main
-                className={cn("transition-all duration-300", {
+                className={cn("transition-all pt-20 duration-300", {
                     "pl-[256px]": isSidenavOpen,
                     "pl-[100px]": !isSidenavOpen,
                 })}

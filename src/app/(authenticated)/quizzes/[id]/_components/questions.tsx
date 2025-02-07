@@ -16,7 +16,7 @@ import {
     MatchingPairsContentSchema,
     MultipleChoiceContent,
     MultipleChoiceContentSchema,
-} from "../schemas"
+} from "@/schemas/questions-content"
 
 export default function Questions() {
     const [questionIndex] = useAtom(currentQuestionIndexAtom)

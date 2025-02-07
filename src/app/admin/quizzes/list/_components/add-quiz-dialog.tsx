@@ -15,9 +15,16 @@ import { z } from "zod"
 import { Textarea } from "@/components/ui/textarea"
 import CategorySelect from "@/components/shared/category-select"
 import ImageUpload from "@/components/shared/image-upload"
+import { createQuiz } from "@/data-access/quizzes/create"
+import { toastError, toastSuccess } from "@/lib/toasts"
+import { useRouter } from "nextjs-toploader/app"
 
 export default function AddQuizDialog(props: Props) {
     const [imageUrl, setImageUrl] = useState<string | null>(null)
+    const [isUploadingImage, setIsUploadingImage] = useState(false)
+    const [isLoading, setIsLoading] = useState(false)
+    const router = useRouter()
+
     const formSchema = useMemo(
         () =>
             z.object({
@@ -25,10 +32,7 @@ export default function AddQuizDialog(props: Props) {
                     .string()
                     .min(1, "Name is required")
                     .max(100, "Input exceeds maximum length"),
-                category: z
-                    .string({ message: "Category is required" })
-                    .min(1, "Category is required")
-                    .max(100, "Input exceeds maximum length"),
+                category: z.string().nullable(),
                 description: z.string().optional(),
             }),
         []
@@ -39,6 +43,7 @@ export default function AddQuizDialog(props: Props) {
         register,
         handleSubmit,
         formState: { errors, isSubmitting },
+        reset,
     } = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
@@ -49,8 +54,24 @@ export default function AddQuizDialog(props: Props) {
     })
 
     const onSubmit = async (data: z.infer<typeof formSchema>) => {
-        // Handle form submission
-        console.log(data)
+        try {
+            const result = await createQuiz({
+                name: data.name,
+                category: data.category ? Number(data.category) : null,
+                image: imageUrl,
+                description: data.description,
+            })
+            toastSuccess("Created successfully.")
+            const quizId = result[0].id
+            router.push(`/admin/quizzes/add/${quizId}`)
+            setIsLoading(false)
+            reset()
+            setImageUrl(null)
+        } catch (error) {
+            toastError("Something wrong happened.")
+            console.error(error)
+            setIsLoading(false)
+        }
     }
 
     return (
@@ -75,7 +96,7 @@ export default function AddQuizDialog(props: Props) {
                         name="category"
                         render={({ field: { onChange, value, onBlur } }) => (
                             <CategorySelect
-                                inputClassName="w-full"
+                                inputClassName="w-full "
                                 selectedId={value}
                                 errorMessage={errors.category?.message}
                                 onSelect={({ id }) => {
@@ -96,11 +117,14 @@ export default function AddQuizDialog(props: Props) {
                         className="min-h-[100px]"
                     />
                     <ImageUpload
+                        isLoading={isUploadingImage}
+                        onLoadingChange={setIsUploadingImage}
+                        className="-mt-3"
                         imageUrl={imageUrl}
                         onImageUrlChange={setImageUrl}
                     />
                     <Button
-                        isLoading={isSubmitting}
+                        isLoading={isSubmitting || isLoading}
                         type="submit"
                         className="font-bold uppercase text-sm"
                         variant="blue"

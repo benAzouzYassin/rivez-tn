@@ -4,7 +4,7 @@ import {
     DebugCodeContent,
     MatchingPairsContent,
     MultipleChoiceContent,
-} from "./schemas"
+} from "@/schemas/questions-content"
 import { atom } from "jotai"
 
 export const currentQuestionIndexAtom = atom(0)

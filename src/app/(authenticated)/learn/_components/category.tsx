@@ -13,7 +13,7 @@ type Props = {
 }
 export function Category(props: Props) {
     return (
-        <div className="min-h-[200px] w-full ">
+        <section className="min-h-[200px] w-full ">
             <div className="flex items-center gap-4 ">
                 {!!props.category.image && (
                     <img className="w-14" alt="" src={props.category.image} />
@@ -38,7 +38,7 @@ export function Category(props: Props) {
                     <CarouselContent className="relative">
                         {props.category.quizzes.map((quiz) => (
                             <CarouselItem key={quiz.id} className="basis-72 ">
-                                <div className="p-1">
+                                <article className="p-1">
                                     <Link href={`/quizzes/${quiz.id}`}>
                                         <Button
                                             variant={"secondary"}
@@ -56,7 +56,7 @@ export function Category(props: Props) {
                                             </p>
                                         </Button>
                                     </Link>
-                                </div>
+                                </article>
                             </CarouselItem>
                         ))}
                     </CarouselContent>
@@ -66,6 +66,6 @@ export function Category(props: Props) {
                     />
                 </Carousel>
             </div>
-        </div>
+        </section>
     )
 }
