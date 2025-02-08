@@ -1,30 +1,24 @@
-import { EditableContent } from "@/components/ui/editable-content"
 import { cn } from "@/lib/ui-utils"
-import { useState } from "react"
-
+import useQuizStore from "../../store"
 interface Props {
+    localId: string
     text: string
-    onTextChange: (text: string) => void
 }
 export function QuestionText(props: Props) {
-    const [isTyping, setIsTyping] = useState(false)
-
+    const updateQuestion = useQuizStore((s) => s.updateQuestion)
     return (
         <div className=" w-fit">
-            <EditableContent
-                onFocus={() => setIsTyping(true)}
-                onBlur={() => setIsTyping(false)}
-                onContentChange={props.onTextChange}
+            <input
+                value={props.text}
+                onChange={(e) => {
+                    updateQuestion(
+                        { questionText: e.target.value },
+                        props.localId
+                    )
+                }}
                 placeholder={"Write your question..."}
                 className={cn(
-                    "font-extrabold focus-within:outline-none text-3xl",
-                    {
-                        "text-neutral-400 ": !isTyping,
-                        "text-neutral-800 ":
-                            (props.text &&
-                                props.text !== "Write your question...") ||
-                            isTyping,
-                    }
+                    "font-extrabold placeholder:opacity-50 text-neutral-800 focus-within:outline-none text-3xl"
                 )}
             />
             <hr className="h-1 mt-1 w-full min-w-96 rounded-md bg-neutral-300" />

@@ -17,10 +17,6 @@ export function EditableContent({
 }: Props) {
     const [content, setContent] = useState("")
 
-    const handleFocus = useCallback(() => {
-        onFocus?.()
-    }, [onFocus])
-
     const handleChange = useCallback(
         (e: React.ChangeEvent<HTMLInputElement>) => {
             const newContent = e.target.value
@@ -29,18 +25,13 @@ export function EditableContent({
         []
     )
 
-    const handleBlur = useCallback(() => {
-        onBlur?.()
-        onContentChange?.(content)
-    }, [content, onBlur, onContentChange])
-
     return (
         <input
             type="text"
             value={content}
             onChange={handleChange}
-            onFocus={handleFocus}
-            onBlur={handleBlur}
+            onFocus={onFocus}
+            onBlur={onBlur}
             className={className}
             placeholder={placeholder}
         />

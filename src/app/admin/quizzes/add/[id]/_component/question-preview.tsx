@@ -1,39 +1,23 @@
 import { cn } from "@/lib/ui-utils"
-import { wait } from "@/utils/wait"
 import { X } from "lucide-react"
-import { useState } from "react"
+import { memo, useState } from "react"
 import useQuizStore from "../store"
-import { QuizQuestionType } from "../types"
+import { wait } from "@/utils/wait"
 
 type Props = {
-    question: QuizQuestionType
+    questionLocalId: string
+    questionText: string
+    isSelected: boolean
 }
 
-export default function QuestionPreview({ question }: Props) {
-    const selectedQuestionId = useQuizStore((state) => state.selectedQuestionId)
-    const setSelectedQuestionId = useQuizStore(
-        (state) => state.setSelectedQuestionId
-    )
-    const setAllQuestions = useQuizStore((state) => state.setAllQuestions)
+function QuestionPreview(props: Props) {
+    const removeQuestion = useQuizStore((s) => s.removeQuestion)
+    const selectQuestion = useQuizStore((s) => s.setSelectedQuestion)
     const [isDeleting, setIsDeleting] = useState(false)
-
-    const isSelected = selectedQuestionId === question.localId
 
     const handleRemove = () => {
         setIsDeleting(true)
-        wait(300).then(() => {
-            const currentQuestions = useQuizStore.getState().allQuestions
-            const updated = currentQuestions.filter(
-                (q) => q.localId !== question.localId
-            )
-
-            if (updated.length && isSelected) {
-                setSelectedQuestionId(
-                    currentQuestions[updated.length - 1].localId
-                )
-            }
-            setAllQuestions(updated)
-        })
+        wait(300).then(() => removeQuestion(props.questionLocalId))
     }
 
     return (
@@ -54,16 +38,21 @@ export default function QuestionPreview({ question }: Props) {
             </button>
             <button
                 onClick={() => {
-                    setSelectedQuestionId(question.localId)
+                    selectQuestion(props.questionLocalId)
                 }}
                 className={cn(
-                    "h-full min-w-36 hover:bg-blue-300/10 p-4 transition-all duration-200 border rounded-xl hover:cursor-pointer hover:shadow-md border-neutral-300",
+                    "h-full w-36 overflow-hidden hover:bg-blue-300/10 p-4 transition-all duration-200 border rounded-xl hover:cursor-pointer hover:shadow-md border-neutral-300",
                     {
                         "bg-blue-50/90 border-blue-400/60 shadow-lg shadow-blue-200/60 border-2 hover:bg-blue-100/90":
-                            selectedQuestionId === question.localId,
+                            props.isSelected,
                     }
                 )}
-            ></button>
+            >
+                <span className="text-sm text-neutral-400 font-medium">
+                    {props.questionText}
+                </span>
+            </button>
         </div>
     )
 }
+export default memo(QuestionPreview)

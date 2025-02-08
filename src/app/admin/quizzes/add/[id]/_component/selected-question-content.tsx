@@ -1,38 +1,30 @@
-import { Plus } from "lucide-react"
-import QuestionTypeSelect from "./question-type-select"
 import { Button } from "@/components/ui/button"
-import MatchingPairsContent from "./pair-matching-content"
-import MultipleChoiceContent from "./multiple-choice-question/multiple-choice-content"
+import { Plus } from "lucide-react"
+import { useMemo } from "react"
 import useQuizStore from "../store"
+import MultipleChoiceContent from "./multiple-choice-question/multiple-choice-content"
+import QuestionTypeSelect from "./question-type-select"
 
 export default function SelectedQuestionContent() {
-    const selectedQuestion = useQuizStore((state) => state.selectedQuestion)
-    const setAllQuestions = useQuizStore((state) => state.setAllQuestions)
-    const setSelectedQuestionId = useQuizStore(
-        (state) => state.setSelectedQuestionId
+    const selectedQuestionId = useQuizStore((s) => s.selectedQuestionLocalId)
+    const getSelectedQuestion = useQuizStore((s) => s.getQuestion)
+    const addQuestion = useQuizStore((s) => s.addQuestion)
+    const selectedQuestion = useMemo(
+        () => getSelectedQuestion(selectedQuestionId || ""),
+        [getSelectedQuestion, selectedQuestionId]
     )
-
     if (!selectedQuestion) {
         return (
             <section className="flex items-center justify-center w-full h-full">
                 <button
                     onClick={() => {
-                        const newQuestion = {
-                            content: {
-                                correctOptionsIndexes: [],
-                                options: ["", ""],
-                            },
+                        addQuestion({
+                            content: { options: [] },
                             imageUrl: null,
                             localId: crypto.randomUUID(),
                             questionText: "",
                             type: "MULTIPLE_CHOICE" as const,
-                        }
-
-                        setAllQuestions([
-                            ...useQuizStore.getState().allQuestions,
-                            newQuestion,
-                        ])
-                        setSelectedQuestionId(newQuestion.localId)
+                        })
                     }}
                     aria-label="Add new question"
                     className="h-56 hover:cursor-pointer w-96 flex flex-col items-center justify-center 
@@ -68,14 +60,14 @@ export default function SelectedQuestionContent() {
                     </Button>
                 </div>
             </section>
-            {/* content */}
-            {selectedQuestion.type === "MULTIPLE_CHOICE" && (
+            <MultipleChoiceContent />
+            {/* {selectedQuestion.type === "MULTIPLE_CHOICE" && (
                 <MultipleChoiceContent />
             )}
 
             {selectedQuestion.type === "MATCHING_PAIRS" && (
                 <MatchingPairsContent />
-            )}
+            )} */}
         </section>
     )
 }

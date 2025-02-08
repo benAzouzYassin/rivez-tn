@@ -1,27 +1,24 @@
 import { cn } from "@/lib/ui-utils"
-import { useMemo, useState } from "react"
+import { useState } from "react"
 import CorrectToggleButton from "./correct-toggle-button"
 import DeleteOption from "./delete-option"
-import EditableOptionContent from "./option-text"
+import OptionText from "./option-text"
+import useQuizStore from "../../store"
+import { wait } from "@/utils/wait"
 
 interface Props {
-    index: number
+    questionLocalId: string
+    optionLocalId: string
+    isCorrect: boolean | null
+    handleDelete: () => void
+    changeIsCorrect: (value: boolean) => void
 }
 
 function MultipleChoiceOption(props: Props) {
     const [isDeleting, setIsDeleting] = useState(false)
-    const placeholder = "..........................."
-    // fixes rerenders bug
-    const oneTimeDeleteButton = useMemo(
-        () => (
-            <DeleteOption
-                endDeleting={() => setIsDeleting(false)}
-                index={props.index}
-                startDeleting={() => setIsDeleting(true)}
-            />
-        ),
-        [setIsDeleting, props.index]
-    )
+    const currentOption = useQuizStore((s) => s.allQuestions)
+        .find((q) => q.localId === props.questionLocalId)
+        ?.content.options.find((opt) => opt.localId === props.optionLocalId)
 
     return (
         <div
@@ -34,15 +31,21 @@ function MultipleChoiceOption(props: Props) {
                 }
             )}
         >
-            {oneTimeDeleteButton}
-            <EditableOptionContent
-                placeholder={placeholder}
-                index={props.index}
+            <DeleteOption
+                onClick={() => {
+                    wait(250).then(props.handleDelete)
+                    setIsDeleting(true)
+                }}
+            />
+            <OptionText
+                text={currentOption?.text || ""}
+                questionLocalId={props.questionLocalId}
+                optionLocalId={props.optionLocalId}
             />
             <div className="absolute top-0 right-0 h-full w-[15%] flex items-center justify-center border-l">
                 <CorrectToggleButton
-                    placeholder={placeholder}
-                    index={props.index}
+                    isCorrect={props.isCorrect}
+                    onChange={props.changeIsCorrect}
                 />
             </div>
         </div>

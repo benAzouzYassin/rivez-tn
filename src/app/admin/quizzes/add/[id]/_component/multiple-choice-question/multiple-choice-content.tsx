@@ -1,50 +1,37 @@
 import ImageUpload from "@/components/shared/image-upload"
 import { cn } from "@/lib/ui-utils"
-import { MultipleChoiceContent as MultipleChoiceContentType } from "@/schemas/questions-content"
 import { ImageIcon, PlusCircle } from "lucide-react"
 import { useState } from "react"
-import useQuizStore, { QuizQuestionType } from "../../store"
+import useQuizStore from "../../store"
 import MultipleChoiceOption from "./multiple-choice-option"
 import { QuestionText } from "./question-text"
 
 export default function MultipleChoiceContent() {
-    const selectedQuestion = useQuizStore((state) => state.selectedQuestion)
-    const setAllQuestions = useQuizStore((state) => state.setAllQuestions)
+    const selectedOptionId = useQuizStore((s) => s.selectedQuestionLocalId)
     const [isImageUploading, setIsImageUploading] = useState(false)
-
-    const content = selectedQuestion?.content as
-        | MultipleChoiceContentType
-        | undefined
-
-    const updateQuestionData = (data: Partial<QuizQuestionType>) => {
-        setAllQuestions(
-            useQuizStore.getState().allQuestions.map((q) => {
-                if (q.localId === selectedQuestion?.localId) {
-                    return { ...q, ...data }
-                }
-                return q
-            })
-        )
+    const selectedQuestion = useQuizStore((s) => s.allQuestions).find(
+        (q) => q.localId === selectedOptionId
+    )
+    const updateQuestion = useQuizStore((s) => s.updateQuestion)
+    if (!selectedQuestion) {
+        return null
     }
-
     return (
         <section className="pt-5 flex items-center justify-center">
             <div className="w-[1000px]">
-                <QuestionText
-                    text={selectedQuestion?.questionText || ""}
-                    onTextChange={(questionText) =>
-                        updateQuestionData({ questionText })
-                    }
-                />
+                {
+                    <QuestionText
+                        text={selectedQuestion.questionText}
+                        localId={selectedQuestion?.localId}
+                    />
+                }
                 <div className="flex w-full h-fit">
                     <div className="w-[800px] mt-5 h-[350px] mx-auto rounded-xl">
                         <ImageUpload
                             imageClassName="w-full h-full !h-[550px] w-[800px] object-cover"
                             containerClassName="bg-white w-[800px] h-[330px] overflow-clip border-blue-200 hover:bg-blue-50/50 group"
-                            imageUrl={selectedQuestion?.imageUrl || null}
-                            onImageUrlChange={(imageUrl) =>
-                                updateQuestionData({ imageUrl })
-                            }
+                            imageUrl={null}
+                            onImageUrlChange={() => {}}
                             isLoading={isImageUploading}
                             onLoadingChange={setIsImageUploading}
                             renderEmptyContent={() => (
@@ -56,36 +43,79 @@ export default function MultipleChoiceContent() {
                     </div>
                 </div>
                 <div className="grid grid-cols-2 gap-5">
-                    {content?.options?.map((opt, i) => {
-                        return (
-                            <MultipleChoiceOption
-                                index={i}
-                                key={crypto.randomUUID()}
-                            />
-                        )
-                    })}
-                    {content?.options.length !== undefined &&
-                        content?.options.length < 4 && (
-                            <button
-                                onClick={() => {
-                                    updateQuestionData({
+                    {selectedQuestion.content.options.map((opt) => (
+                        <MultipleChoiceOption
+                            changeIsCorrect={(newValue) => {
+                                updateQuestion(
+                                    {
                                         content: {
-                                            ...(content || {}),
-                                            options: [
-                                                ...(content?.options || []),
-                                                "",
-                                            ],
+                                            options:
+                                                selectedQuestion.content.options.map(
+                                                    (item) => {
+                                                        if (
+                                                            item.localId ===
+                                                            opt.localId
+                                                        ) {
+                                                            return {
+                                                                ...item,
+                                                                isCorrect:
+                                                                    newValue,
+                                                            }
+                                                        }
+                                                        return item
+                                                    }
+                                                ),
                                         },
-                                    })
-                                }}
-                                className={cn(
-                                    "bg-white border-dashed text-stone-300 hover:bg-blue-300/20 hover:cursor-pointer hover:border-stone-300 hover:text-blue-300 border-[3px] border-neutral-300 justify-center active:scale-95 shadow-none h-20 flex items-center pl-6 shadow-[#E5E5E5] rounded-2xl transition-colors",
-                                    "relative group transform transition-all duration-300 ease-in-out"
-                                )}
-                            >
-                                <PlusCircle className="w-10 h-10" />
-                            </button>
+                                    },
+                                    selectedQuestion.localId
+                                )
+                            }}
+                            handleDelete={() => {
+                                updateQuestion(
+                                    {
+                                        content: {
+                                            options:
+                                                selectedQuestion.content.options.filter(
+                                                    (item) =>
+                                                        item.localId !==
+                                                        opt.localId
+                                                ),
+                                        },
+                                    },
+                                    selectedQuestion.localId
+                                )
+                            }}
+                            key={opt.localId}
+                            isCorrect={opt.isCorrect}
+                            optionLocalId={opt.localId}
+                            questionLocalId={selectedQuestion.localId}
+                        />
+                    ))}
+                    <button
+                        onClick={() => {
+                            updateQuestion(
+                                {
+                                    content: {
+                                        options: [
+                                            ...selectedQuestion.content.options,
+                                            {
+                                                isCorrect: null,
+                                                localId: crypto.randomUUID(),
+                                                text: "",
+                                            },
+                                        ],
+                                    },
+                                },
+                                selectedQuestion.localId
+                            )
+                        }}
+                        className={cn(
+                            "bg-white border-dashed text-stone-300 hover:bg-blue-300/20 hover:cursor-pointer hover:border-stone-300 hover:text-blue-300 border-[3px] border-neutral-300 justify-center active:scale-95 shadow-none h-20 flex items-center pl-6 shadow-[#E5E5E5] rounded-2xl transition-colors",
+                            "relative group transform transition-all duration-300 ease-in-out"
                         )}
+                    >
+                        <PlusCircle className="w-10 h-10" />
+                    </button>
                 </div>
             </div>
         </section>

@@ -3,15 +3,13 @@ import { useSidenav } from "@/providers/sidenav-provider"
 import { Plus } from "lucide-react"
 import QuestionPreview from "./question-preview"
 import useQuizStore from "../store"
-
 export default function AllQuestionsPreviews() {
     const { isSidenavOpen } = useSidenav()
     const questions = useQuizStore((state) => state.allQuestions)
-    const setAllQuestions = useQuizStore((state) => state.setAllQuestions)
-    const setSelectedQuestionId = useQuizStore(
-        (state) => state.setSelectedQuestionId
+    const addQuestion = useQuizStore((state) => state.addQuestion)
+    const selectedQuestionId = useQuizStore(
+        (state) => state.selectedQuestionLocalId
     )
-
     return (
         <footer
             className={cn(
@@ -25,31 +23,21 @@ export default function AllQuestionsPreviews() {
             <section className="pt-5 h-full overflow-x-auto flex gap-4 px-8 border-t-2">
                 {questions.map((question) => (
                     <QuestionPreview
-                        question={question}
+                        isSelected={question.localId == selectedQuestionId}
+                        questionLocalId={question.localId}
+                        questionText={question.questionText}
                         key={question.localId}
                     />
                 ))}
                 <button
                     onClick={() => {
-                        const newQuestion = {
-                            content: {
-                                options: ["", ""],
-                                correctOptionsIndexes: [],
-                            },
+                        addQuestion({
+                            content: { options: [] },
                             imageUrl: null,
                             localId: crypto.randomUUID(),
                             questionText: "",
                             type: "MULTIPLE_CHOICE" as const,
-                        }
-
-                        setAllQuestions([
-                            ...useQuizStore.getState().allQuestions,
-                            newQuestion,
-                        ])
-
-                        if (questions.length === 0) {
-                            setSelectedQuestionId(newQuestion.localId)
-                        }
+                        })
                     }}
                     className="h-full flex items-center justify-center min-w-32 hover:cursor-pointer hover:bg-neutral-50 active:scale-95 transition-all border-dashed border-neutral-300 border-2 rounded-lg"
                 >
