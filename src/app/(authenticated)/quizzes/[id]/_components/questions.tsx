@@ -29,7 +29,6 @@ export default function Questions() {
 
     switch (currentQuestion?.type) {
         case "MULTIPLE_CHOICE":
-            console.log(currentQuestion)
             return isMultipleChoice(currentQuestion) ? (
                 <MultipleAnswerQuestion question={currentQuestion} />
             ) : (

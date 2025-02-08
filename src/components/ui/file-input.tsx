@@ -3,7 +3,7 @@
 import { toastError } from "@/lib/toasts"
 import { cn } from "@/lib/ui-utils"
 import { FileTextIcon, Loader2, Upload, X } from "lucide-react"
-import { useCallback } from "react"
+import { ReactNode, useCallback } from "react"
 import { useDropzone } from "react-dropzone"
 
 interface Props {
@@ -17,6 +17,9 @@ interface Props {
     previewAsImage?: boolean
     previewAsDocument?: boolean
     fileName?: string
+    renderEmptyContent?: () => ReactNode
+    containerClassName?: string
+    imageClassName?: string
 }
 
 export function FileInput({
@@ -30,6 +33,9 @@ export function FileInput({
     previewAsDocument,
     previewAsImage,
     fileName,
+    renderEmptyContent,
+    containerClassName,
+    imageClassName,
 }: Props) {
     const onDrop = useCallback(
         (acceptedFiles: File[]) => {
@@ -95,7 +101,8 @@ export function FileInput({
                         ? "border-blue-500 bg-blue-50"
                         : "border-neutral-300 hover:bg-[#F7F7F7] bg-[#F7F7F7]/50",
                     (disabled || isLoading) && "opacity-50 cursor-not-allowed",
-                    preview ? "p-4" : "p-8"
+                    preview ? "p-4" : "p-8",
+                    containerClassName
                 )}
             >
                 <input {...getInputProps()} />
@@ -114,7 +121,10 @@ export function FileInput({
                             <img
                                 src={preview}
                                 alt="Preview"
-                                className="rounded-lg h-[200px] w-full object-contain"
+                                className={cn(
+                                    "rounded-lg h-[200px] w-full object-contain",
+                                    imageClassName
+                                )}
                             />
                         )}
                         {previewAsDocument && (
@@ -142,21 +152,29 @@ export function FileInput({
                         )}
                     </div>
                 ) : (
-                    <div className="text-center min-w-[350px] border-red-500">
-                        <Upload className="w-10 h-10 mb-2 mx-auto text-neutral-400" />
-                        <p className="text-neutral-600 mb-2">
-                            {isDragActive
-                                ? "Drop the file here"
-                                : "Drag & drop a file here"}
-                        </p>
-                        <p className="text-sm text-neutral-500">
-                            or click to select a file
-                        </p>
-                        <p className="text-xs text-neutral-400 mt-2">
-                            Images (PNG, JPG, GIF) or Documents (PDF, DOC, DOCX,
-                            XLS, XLSX)
-                        </p>
-                        <p className="text-xs text-neutral-400">up to 10MB</p>
+                    <div className="text-center min-w-[350px]">
+                        {renderEmptyContent ? (
+                            renderEmptyContent()
+                        ) : (
+                            <>
+                                <Upload className="w-10 h-10 mb-2 mx-auto text-neutral-400" />
+                                <p className="text-neutral-600 mb-2">
+                                    {isDragActive
+                                        ? "Drop the file here"
+                                        : "Drag & drop a file here"}
+                                </p>
+                                <p className="text-sm text-neutral-500">
+                                    or click to select a file
+                                </p>
+                                <p className="text-xs text-neutral-400 mt-2">
+                                    Images (PNG, JPG, GIF) or Documents (PDF,
+                                    DOC, DOCX, XLS, XLSX)
+                                </p>
+                                <p className="text-xs text-neutral-400">
+                                    up to 10MB
+                                </p>
+                            </>
+                        )}
                     </div>
                 )}
             </div>

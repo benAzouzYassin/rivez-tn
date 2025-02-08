@@ -7,7 +7,7 @@ export default function Page() {
     // const params = useParams()
     // const quizId = params["id"]
     return (
-        <section className=" !h-full flex relative  ">
+        <section className="   min-h-[100vh] pb-[200px]">
             <SelectedQuestionContent />
             <AllQuestionsPreviews />
         </section>

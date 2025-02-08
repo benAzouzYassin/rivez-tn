@@ -7,7 +7,7 @@ export default function Page() {
     const [imgUrl, setImageUrl] = useState<string | null>(null)
     return (
         <div className="flex min-h-[50vh] items-center justify-center">
-            <ImageUpload onImageUrlChange={setImageUrl} imageUrl={imgUrl} />
+            {/* <ImageUpload  onImageUrlChange={setImageUrl} imageUrl={imgUrl} /> */}
             {imgUrl}
         </div>
     )

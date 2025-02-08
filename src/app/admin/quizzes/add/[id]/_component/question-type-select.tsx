@@ -5,34 +5,37 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select"
-import { useAtomValue, useSetAtom } from "jotai"
-import { allQuestionsAtom, selectedQuestionAtom } from "../atoms"
-import { PossibleQuestionTypesEnum } from "@/schemas/questions-content"
+import {
+    PossibleQuestionTypes,
+    PossibleQuestionTypesEnum,
+} from "@/schemas/questions-content"
 import { cn } from "@/lib/ui-utils"
+import useQuizStore from "../store"
 
 interface Props {
     className?: string
 }
+
 export default function QuestionTypeSelect(props: Props) {
-    const selectedQuestion = useAtomValue(selectedQuestionAtom)
-    const setAllQuestions = useSetAtom(allQuestionsAtom)
+    const selectedQuestion = useQuizStore((state) => state.selectedQuestion)
+    const setAllQuestions = useQuizStore((state) => state.setAllQuestions)
+    const allQuestions = useQuizStore((state) => state.allQuestions)
 
     return (
         <Select
             onValueChange={(value) => {
-                setAllQuestions((prev) =>
-                    prev.map((q) => {
-                        if (q.localId === selectedQuestion?.localId) {
-                            return { ...q, type: value as any }
-                        }
-                        return q
-                    })
-                )
+                const updatedQuestions = allQuestions.map((q) => {
+                    if (q.localId === selectedQuestion?.localId) {
+                        return { ...q, type: value as PossibleQuestionTypes }
+                    }
+                    return q
+                })
+                setAllQuestions(updatedQuestions)
             }}
             value={selectedQuestion?.type}
         >
             <SelectTrigger className={cn(props.className)}>
-                <span className=" mr-2 font-bold">Type :</span>{" "}
+                <span className="mr-2 font-bold">Type:</span>
                 <SelectValue placeholder="Question type" />
                 <span className="mr-2"></span>
             </SelectTrigger>

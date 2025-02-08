@@ -7,12 +7,12 @@ import {
     failedQuestionsIdsAtom,
     QuestionType,
 } from "../atoms"
-import { MatchingPairsContent } from "../schemas"
 import ConfirmationBanner from "./confirmation-banner"
 import CorrectAnswerBanner from "./correct-answer-banner"
 import MatchingPairsLeft from "./matching-pairs-left"
 import MatchingPairsRight from "./matching-pairs-right"
 import WrongAnswerBanner from "./wrong-answer-banner"
+import { MatchingPairsContent } from "@/schemas/questions-content"
 
 type Props = {
     question: { content: MatchingPairsContent } & QuestionType

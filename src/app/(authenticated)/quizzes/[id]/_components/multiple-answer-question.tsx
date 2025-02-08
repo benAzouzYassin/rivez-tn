@@ -7,7 +7,7 @@ import WrongAnswerBanner from "./wrong-answer-banner"
 import { cn } from "@/lib/ui-utils"
 import { areArraysEqual } from "@/utils/array"
 import { currentQuestionIndexAtom, QuestionType } from "../atoms"
-import { MultipleChoiceContent } from "../schemas"
+import { MultipleChoiceContent } from "@/schemas/questions-content"
 
 type Props = {
     question: { content: MultipleChoiceContent } & QuestionType

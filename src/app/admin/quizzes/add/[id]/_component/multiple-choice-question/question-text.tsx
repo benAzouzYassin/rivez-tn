@@ -1,26 +1,29 @@
 import { EditableContent } from "@/components/ui/editable-content"
 import { cn } from "@/lib/ui-utils"
-import { useMemo, useState } from "react"
+import { useState } from "react"
 
-export function QuestionText() {
+interface Props {
+    text: string
+    onTextChange: (text: string) => void
+}
+export function QuestionText(props: Props) {
     const [isTyping, setIsTyping] = useState(false)
-    const placeholder = useMemo(() => "Write your question...", [])
-    const [content, setContent] = useState(placeholder)
+
     return (
         <div className=" w-fit">
             <EditableContent
                 onFocus={() => setIsTyping(true)}
                 onBlur={() => setIsTyping(false)}
-                onContentChange={setContent}
-                content={content}
-                placeholder={placeholder}
+                onContentChange={props.onTextChange}
+                placeholder={"Write your question..."}
                 className={cn(
                     "font-extrabold focus-within:outline-none text-3xl",
                     {
-                        "text-neutral-400 ":
-                            content === placeholder && !isTyping,
+                        "text-neutral-400 ": !isTyping,
                         "text-neutral-800 ":
-                            content !== placeholder || isTyping,
+                            (props.text &&
+                                props.text !== "Write your question...") ||
+                            isTyping,
                     }
                 )}
             />
