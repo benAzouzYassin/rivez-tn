@@ -16,9 +16,9 @@ export default function UserLayout({ children }: Props) {
             <Sidenav
                 items={[
                     { name: "Learn", icon: "house" },
-                    { name: "Ranking", icon: "shield" },
-                    { name: "Quests", icon: "box" },
-                    { name: "Shop", icon: "loot" },
+                    { name: "Ranking", icon: "ranks" },
+                    // { name: "Quests", icon: "box" },
+                    // { name: "Shop", icon: "loot" },
                 ]}
                 settingsItem={{
                     name: "Settings",

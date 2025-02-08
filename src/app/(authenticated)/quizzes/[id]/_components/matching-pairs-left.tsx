@@ -103,7 +103,7 @@ function OptionButton(props: {
             className={cn(
                 "min-h-[65px] font-semibold  shadow-[0px_3px_0px_0px] py-4 h-fit transition-all duration-200 text-base text-neutral-700  hover:bg-neutral-100 hover:border-neutral-200 hover:shadow-neutral-200",
                 {
-                    "bg-sky-200 hover:bg-sky-200 hover:shadow-sky-300/50 border-sky-300/45 hover:border-sky-300 hover:border-sky-300/45 shadow-sky-300":
+                    "bg-sky-200 hover:bg-sky-200 hover:shadow-sky-300/50 border-sky-300/45 hover:border-sky-300/45  shadow-sky-300":
                         props.isSelected &&
                         !isShowingCorrectAnimation &&
                         !isShowingIncorrectAnimation,

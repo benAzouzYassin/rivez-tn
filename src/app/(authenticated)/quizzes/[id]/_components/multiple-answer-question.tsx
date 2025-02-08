@@ -1,20 +1,23 @@
-import { useState } from "react"
-import { useAtom } from "jotai"
-import { AnimatePresence, motion } from "motion/react"
 import { Button } from "@/components/ui/button"
+import { cn } from "@/lib/ui-utils"
+import { MultipleChoiceContent } from "@/schemas/questions-content"
+import { areArraysEqual } from "@/utils/array"
+import { AnimatePresence, motion } from "motion/react"
+import { useState } from "react"
+import { QuestionType, useQuestionsStore } from "../store"
 import CorrectAnswerBanner from "./correct-answer-banner"
 import WrongAnswerBanner from "./wrong-answer-banner"
-import { cn } from "@/lib/ui-utils"
-import { areArraysEqual } from "@/utils/array"
-import { currentQuestionIndexAtom, QuestionType } from "../atoms"
-import { MultipleChoiceContent } from "@/schemas/questions-content"
 
 type Props = {
     question: { content: MultipleChoiceContent } & QuestionType
 }
 
 export default function MultipleAnswerQuestion(props: Props) {
-    const [questionIndex, setQuestionIndex] = useAtom(currentQuestionIndexAtom)
+    const questionIndex = useQuestionsStore((s) => s.currentQuestionIndex)
+    const incrementQuestionIndex = useQuestionsStore(
+        (s) => s.incrementQuestionIndex
+    )
+
     const [isCorrectBannerOpen, setIsCorrectBannerOpen] = useState(false)
     const [isWrongBannerOpen, setIsWrongBannerOpen] = useState(false)
     const [selectedOptions, setSelectedOptions] = useState<string[]>([])
@@ -47,7 +50,7 @@ export default function MultipleAnswerQuestion(props: Props) {
 
     const handleNextQuestion = (isBannerCorrect: boolean) => {
         setSelectedOptions([])
-        setQuestionIndex((prev) => prev + 1)
+        incrementQuestionIndex()
         if (isBannerCorrect) {
             setIsCorrectBannerOpen(false)
         } else {

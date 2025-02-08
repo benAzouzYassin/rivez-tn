@@ -18,10 +18,11 @@ export default function AdminLayout({ children }: Props) {
                         name: "Dashboard",
                         icon: "house",
                         route: "/admin/dashboard",
+                        iconScale: "105",
                     },
                     {
                         name: "Quizzes",
-                        icon: "art-palette",
+                        icon: "quiz",
                         route: "/admin/quizzes/list",
                     },
                 ]}

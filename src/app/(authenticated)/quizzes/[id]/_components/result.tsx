@@ -2,16 +2,15 @@
 
 import XpIcon from "@/components/icons/xp"
 import { Button } from "@/components/ui/button"
-import { useAtom } from "jotai"
 import { motion } from "motion/react"
+import Link from "next/link"
 import { useLayoutEffect, useState } from "react"
 import Confetti from "react-confetti"
-import { questionsAtom, failedQuestionsIdsAtom } from "../atoms"
-import Link from "next/link"
+import { useQuestionsStore } from "../store"
 
 export default function Result() {
-    const [questions] = useAtom(questionsAtom)
-    const [wrongAnswersIds] = useAtom<number[]>(failedQuestionsIdsAtom)
+    const questions = useQuestionsStore((s) => s.questions)
+    const wrongAnswersIds = useQuestionsStore((s) => s.failedQuestionsIds)
 
     const totalQuestions: number = questions.length
     const wrongAnswers: number = wrongAnswersIds.length

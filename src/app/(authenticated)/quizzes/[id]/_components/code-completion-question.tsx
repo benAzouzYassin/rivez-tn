@@ -1,19 +1,14 @@
 import { Button } from "@/components/ui/button"
-import { useAtom } from "jotai"
-import { currentQuestionIndexAtom, QuestionType } from "../atoms"
-type Props = {
-    question: QuestionType
-}
-export default function CodeCompletionQuestion(props: Props) {
-    const [, setQuestionIndex] = useAtom(currentQuestionIndexAtom)
+import { useQuestionsStore } from "../store"
 
+export default function CodeCompletionQuestion() {
+    const incrementQuestionIndex = useQuestionsStore(
+        (s) => s.incrementQuestionIndex
+    )
     return (
         <div className="flex flex-col items-center justify-center">
             not ready yet
-            <Button
-                variant={"green"}
-                onClick={() => setQuestionIndex((prev) => prev + 1)}
-            >
+            <Button variant={"green"} onClick={() => incrementQuestionIndex()}>
                 Next question
             </Button>
         </div>

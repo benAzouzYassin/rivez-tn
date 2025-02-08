@@ -126,7 +126,7 @@ export default function AddQuizDialog(props: Props) {
                     <Button
                         isLoading={isSubmitting || isLoading}
                         type="submit"
-                        className="font-bold uppercase text-sm"
+                        className="font-extrabold uppercase text-sm"
                         variant="blue"
                     >
                         Create Quiz

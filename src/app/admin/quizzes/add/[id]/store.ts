@@ -45,7 +45,7 @@ const useQuizStore = create<Store>((set, get) => ({
     removeQuestion: (localId: string) => {
         set((state) => {
             const isSelected = state.selectedQuestionLocalId === localId
-            // make sure there to select the first question if the removed item is the selected one
+            // makes sure there to select the first question if the removed item is the selected one
             const updated = state.allQuestions.filter(
                 (q) => q.localId !== localId
             )
