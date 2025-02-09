@@ -110,6 +110,7 @@ const useQuizStore = create<Store>((set, get) => ({
 }))
 
 export default useQuizStore
+
 export interface QuizQuestionType {
     content: MultipleChoiceOptions
     localId: string

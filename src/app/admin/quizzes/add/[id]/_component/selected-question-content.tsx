@@ -1,8 +1,9 @@
-import { Button } from "@/components/ui/button"
 import { Plus } from "lucide-react"
 import { useMemo } from "react"
 import useQuizStore from "../store"
+import Buttons from "./buttons"
 import MultipleChoiceContent from "./multiple-choice-question/multiple-choice-content"
+import MatchingPairsContent from "./pair-matching-content"
 import QuestionTypeSelect from "./question-type-select"
 
 export default function SelectedQuestionContent() {
@@ -15,7 +16,7 @@ export default function SelectedQuestionContent() {
     )
     if (!selectedQuestion) {
         return (
-            <section className="flex items-center justify-center w-full h-full">
+            <section className="flex min-h-[70vh] items-center justify-center w-full h-full">
                 <button
                     onClick={() => {
                         addQuestion({
@@ -45,29 +46,15 @@ export default function SelectedQuestionContent() {
         <section className="mt-10 h-full px-20 w-full">
             <section className="flex justify-between">
                 <QuestionTypeSelect className="" />
-                <div className="flex items-center gap-2">
-                    <Button className="text-base font-extrabold" variant="red">
-                        Cancel
-                    </Button>
-                    <Button
-                        className="text-base font-extrabold"
-                        variant="secondary"
-                    >
-                        Publish
-                    </Button>
-                    <Button className="text-base font-extrabold" variant="blue">
-                        Save draft
-                    </Button>
-                </div>
+                <Buttons />
             </section>
-            <MultipleChoiceContent />
-            {/* {selectedQuestion.type === "MULTIPLE_CHOICE" && (
+            {selectedQuestion.type === "MULTIPLE_CHOICE" && (
                 <MultipleChoiceContent />
             )}
 
             {selectedQuestion.type === "MATCHING_PAIRS" && (
                 <MatchingPairsContent />
-            )} */}
+            )}
         </section>
     )
 }

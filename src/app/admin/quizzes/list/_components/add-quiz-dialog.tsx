@@ -1,5 +1,8 @@
 "use client"
 
+import CategorySelect from "@/components/shared/category-select"
+import ImageUpload from "@/components/shared/image-upload"
+import { Button } from "@/components/ui/button"
 import {
     Dialog,
     DialogContent,
@@ -7,17 +10,14 @@ import {
     DialogTitle,
 } from "@/components/ui/dialog"
 import { Input } from "@/components/ui/input"
-import { Button } from "@/components/ui/button"
-import { zodResolver } from "@hookform/resolvers/zod"
-import { Controller, useForm } from "react-hook-form"
-import { useMemo, useState } from "react"
-import { z } from "zod"
 import { Textarea } from "@/components/ui/textarea"
-import CategorySelect from "@/components/shared/category-select"
-import ImageUpload from "@/components/shared/image-upload"
 import { createQuiz } from "@/data-access/quizzes/create"
-import { toastError, toastSuccess } from "@/lib/toasts"
+import { toastError } from "@/lib/toasts"
+import { zodResolver } from "@hookform/resolvers/zod"
 import { useRouter } from "nextjs-toploader/app"
+import { useMemo, useState } from "react"
+import { Controller, useForm } from "react-hook-form"
+import { z } from "zod"
 
 export default function AddQuizDialog(props: Props) {
     const [imageUrl, setImageUrl] = useState<string | null>(null)
@@ -61,10 +61,8 @@ export default function AddQuizDialog(props: Props) {
                 image: imageUrl,
                 description: data.description,
             })
-            toastSuccess("Created successfully.")
             const quizId = result[0].id
             router.push(`/admin/quizzes/add/${quizId}`)
-            setIsLoading(false)
             reset()
             setImageUrl(null)
         } catch (error) {

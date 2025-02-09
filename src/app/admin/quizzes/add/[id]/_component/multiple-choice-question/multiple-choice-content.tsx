@@ -7,10 +7,10 @@ import MultipleChoiceOption from "./multiple-choice-option"
 import { QuestionText } from "./question-text"
 
 export default function MultipleChoiceContent() {
-    const selectedOptionId = useQuizStore((s) => s.selectedQuestionLocalId)
+    const selectedQuestionId = useQuizStore((s) => s.selectedQuestionLocalId)
     const [isImageUploading, setIsImageUploading] = useState(false)
     const selectedQuestion = useQuizStore((s) => s.allQuestions).find(
-        (q) => q.localId === selectedOptionId
+        (q) => q.localId === selectedQuestionId
     )
     const updateQuestion = useQuizStore((s) => s.updateQuestion)
     if (!selectedQuestion) {
@@ -30,8 +30,15 @@ export default function MultipleChoiceContent() {
                         <ImageUpload
                             imageClassName="w-full h-full !h-[550px] w-[800px] object-cover"
                             containerClassName="bg-white w-[800px] h-[330px] overflow-clip border-blue-200 hover:bg-blue-50/50 group"
-                            imageUrl={null}
-                            onImageUrlChange={() => {}}
+                            imageUrl={selectedQuestion.imageUrl}
+                            onImageUrlChange={(imageUrl) => {
+                                if (selectedQuestionId) {
+                                    updateQuestion(
+                                        { imageUrl },
+                                        selectedQuestionId
+                                    )
+                                }
+                            }}
                             isLoading={isImageUploading}
                             onLoadingChange={setIsImageUploading}
                             renderEmptyContent={() => (
@@ -91,31 +98,35 @@ export default function MultipleChoiceContent() {
                             questionLocalId={selectedQuestion.localId}
                         />
                     ))}
-                    <button
-                        onClick={() => {
-                            updateQuestion(
-                                {
-                                    content: {
-                                        options: [
-                                            ...selectedQuestion.content.options,
-                                            {
-                                                isCorrect: null,
-                                                localId: crypto.randomUUID(),
-                                                text: "",
-                                            },
-                                        ],
+                    {selectedQuestion.content.options.length < 4 && (
+                        <button
+                            onClick={() => {
+                                updateQuestion(
+                                    {
+                                        content: {
+                                            options: [
+                                                ...selectedQuestion.content
+                                                    .options,
+                                                {
+                                                    isCorrect: null,
+                                                    localId:
+                                                        crypto.randomUUID(),
+                                                    text: "",
+                                                },
+                                            ],
+                                        },
                                     },
-                                },
-                                selectedQuestion.localId
-                            )
-                        }}
-                        className={cn(
-                            "bg-white border-dashed text-stone-300 hover:bg-blue-300/20 hover:cursor-pointer hover:border-stone-300 hover:text-blue-300 border-[3px] border-neutral-300 justify-center active:scale-95 shadow-none h-20 flex items-center pl-6 shadow-[#E5E5E5] rounded-2xl transition-colors",
-                            "relative group transform transition-all duration-300 ease-in-out"
-                        )}
-                    >
-                        <PlusCircle className="w-10 h-10" />
-                    </button>
+                                    selectedQuestion.localId
+                                )
+                            }}
+                            className={cn(
+                                "bg-white border-dashed text-stone-300 hover:bg-blue-300/20 hover:cursor-pointer hover:border-stone-300 hover:text-blue-300 border-[3px] border-neutral-300 justify-center active:scale-95 shadow-none h-20 flex items-center pl-6 shadow-[#E5E5E5] rounded-2xl transition-colors",
+                                "relative group transform transition-all duration-300 ease-in-out"
+                            )}
+                        >
+                            <PlusCircle className="w-10 h-10" />
+                        </button>
+                    )}
                 </div>
             </div>
         </section>
