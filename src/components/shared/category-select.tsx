@@ -10,7 +10,7 @@ export default function CategorySelect({
     ...props
 }: Props) {
     const { data, isLoading } = useQuery({
-        queryKey: ["categories"],
+        queryKey: ["quizzes_categories"],
         queryFn: readCategories,
     })
 

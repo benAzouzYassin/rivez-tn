@@ -34,30 +34,6 @@ export type Database = {
   }
   public: {
     Tables: {
-      categories: {
-        Row: {
-          created_at: string
-          description: string | null
-          id: number
-          image: string | null
-          name: string | null
-        }
-        Insert: {
-          created_at?: string
-          description?: string | null
-          id?: number
-          image?: string | null
-          name?: string | null
-        }
-        Update: {
-          created_at?: string
-          description?: string | null
-          id?: number
-          image?: string | null
-          name?: string | null
-        }
-        Relationships: []
-      }
       quizzes: {
         Row: {
           category: number | null
@@ -91,10 +67,34 @@ export type Database = {
             foreignKeyName: "quizzes_category_fkey"
             columns: ["category"]
             isOneToOne: false
-            referencedRelation: "categories"
+            referencedRelation: "quizzes_categories"
             referencedColumns: ["id"]
           },
         ]
+      }
+      quizzes_categories: {
+        Row: {
+          created_at: string
+          description: string | null
+          id: number
+          image: string | null
+          name: string | null
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          id?: number
+          image?: string | null
+          name?: string | null
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          id?: number
+          image?: string | null
+          name?: string | null
+        }
+        Relationships: []
       }
       quizzes_questions: {
         Row: {
