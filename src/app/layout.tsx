@@ -20,9 +20,12 @@ export default function RootLayout({
     children: React.ReactNode
 }>) {
     return (
-        <html lang="en">
+        <html lang="en" className=" overflow-x-hidden">
+            <head>
+                {/* <script src="https://unpkg.com/react-scan/dist/auto.global.js"></script> */}
+            </head>
             <body
-                className={`${nunito.className} overflow-y-auto overflow-x-hidden antialiased  min-w-[100vw]`}
+                className={`${nunito.className} overflow-y-auto overflow-x-hidden antialiased  min-w-screen`}
             >
                 <Toaster />
                 <NextTopLoader

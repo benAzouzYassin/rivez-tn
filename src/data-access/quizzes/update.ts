@@ -4,7 +4,9 @@ import { Database } from "@/types/database.types"
 export async function addQuestionsToQuiz(
     quizId: number,
     questions: {
-        content: any
+        content:
+            | AddQuestionToQuizContentTypes["MatchingPairs"]
+            | AddQuestionToQuizContentTypes["MultipleChoice"]
         image: string
         question: string
         type: "MULTIPLE_CHOICE" | "MATCHING_PAIRS"
@@ -13,13 +15,7 @@ export async function addQuestionsToQuiz(
     const formattedData = questions.map((q) => {
         if (q.type === "MULTIPLE_CHOICE") {
             const content = q.content as
-                | {
-                      options: {
-                          text: string
-                          localId: string
-                          isCorrect: boolean | null
-                      }[]
-                  }
+                | AddQuestionToQuizContentTypes["MultipleChoice"]
                 | undefined
 
             const correct =
@@ -36,7 +32,42 @@ export async function addQuestionsToQuiz(
                 content: {
                     correct,
                     options,
-                } satisfies MultipleChoiceContent,
+                } satisfies DbMultipleChoiceContent,
+            }
+        }
+        if (q.type === "MATCHING_PAIRS") {
+            const content = q.content as
+                | AddQuestionToQuizContentTypes["MatchingPairs"]
+                | undefined
+            const correct =
+                content?.rightOptions
+                    .map((opt) => {
+                        return [
+                            opt.text,
+                            content.leftOptions.find(
+                                (leftOpt) =>
+                                    leftOpt.localId === opt.leftOptionLocalId
+                            )?.text,
+                        ]
+                    })
+                    .filter((item) =>
+                        item.every(
+                            (item) => item !== null && item !== undefined
+                        )
+                    ) || []
+
+            return {
+                image: q.image,
+                type: q.type,
+                quiz: quizId,
+                question: q.question,
+                content: {
+                    correct,
+                    leftSideOptions:
+                        content?.leftOptions.map((opt) => opt.text) || [],
+                    rightSideOptions:
+                        content?.rightOptions.map((opt) => opt.text) || [],
+                } satisfies DbMatchingPairsContent,
             }
         }
         return null
@@ -51,14 +82,6 @@ export async function addQuestionsToQuiz(
         .throwOnError()
     return result
 }
-interface MultipleChoiceContent {
-    correct: string[]
-    options: string[]
-}
-
-// interface MatchingPairsContent {
-//     options: any //TODO change this after implementing the matching pair
-// }
 
 export async function updateQuizPublishingStatus(
     quizId: number,
@@ -76,7 +99,38 @@ export async function updateQuizPublishingStatus(
     return result
 }
 
+//types
 type PublishingQuizStatus = Exclude<
     Database["public"]["Tables"]["quizzes"]["Update"]["publishing_status"],
     undefined
 >
+
+type AddQuestionToQuizContentTypes = {
+    MultipleChoice: {
+        options: {
+            text: string
+            localId: string
+            isCorrect: boolean | null
+        }[]
+    }
+    MatchingPairs: {
+        leftOptions: {
+            text: string
+            localId: string
+        }[]
+        rightOptions: {
+            text: string
+            localId: string
+            leftOptionLocalId: string | null
+        }[]
+    }
+}
+interface DbMultipleChoiceContent {
+    correct: string[]
+    options: string[]
+}
+interface DbMatchingPairsContent {
+    rightSideOptions: string[]
+    leftSideOptions: string[]
+    correct: string[][]
+}

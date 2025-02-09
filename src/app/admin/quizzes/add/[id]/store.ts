@@ -16,6 +16,17 @@ interface Actions {
         question: Partial<QuizQuestionType>,
         localId: string
     ) => void
+    deleteMatchingPairsOption: (
+        side: "right" | "left",
+        optionId: string
+    ) => void
+    updateMatchingPairsOption: (params: {
+        side: "right" | "left"
+        value?: string
+        optionId: string
+        leftOptionLocalId?: string | null
+    }) => void
+
     updateMultipleChoiceQuestionOption: (
         question: Partial<
             Omit<MultipleChoiceOptions["options"][number], "localId">
@@ -23,7 +34,7 @@ interface Actions {
         questionLocalId: string,
         optionLocalId: string
     ) => void
-
+    addMatchingPairsOption: (side: "left" | "right") => void
     reset: () => void
 }
 
@@ -75,6 +86,166 @@ const useQuizStore = create<Store>((set, get) => ({
             ),
         }))
     },
+
+    addMatchingPairsOption: (side: "right" | "left") => {
+        if (side === "left") {
+            set((state) => {
+                return {
+                    allQuestions: state.allQuestions.map((q) => {
+                        if (
+                            q.localId === state.selectedQuestionLocalId &&
+                            q.type == "MATCHING_PAIRS"
+                        ) {
+                            const content = q.content as
+                                | MatchingPairsOptions
+                                | undefined
+                            return {
+                                ...q,
+                                content: {
+                                    rightOptions: content?.rightOptions || [],
+                                    leftOptions: [
+                                        ...(content?.leftOptions || []),
+                                        {
+                                            localId: crypto.randomUUID(),
+                                            rightSideOptionLocalId: null,
+                                            text: "",
+                                        },
+                                    ],
+                                },
+                            }
+                        }
+                        return q
+                    }),
+                }
+            })
+        }
+        if (side === "right") {
+            set((state) => {
+                return {
+                    allQuestions: state.allQuestions.map((q) => {
+                        if (
+                            q.localId === state.selectedQuestionLocalId &&
+                            q.type == "MATCHING_PAIRS"
+                        ) {
+                            const content = q.content as
+                                | MatchingPairsOptions
+                                | undefined
+                            return {
+                                ...q,
+                                content: {
+                                    leftOptions: content?.leftOptions || [],
+                                    rightOptions: [
+                                        ...(content?.rightOptions || []),
+                                        {
+                                            localId: crypto.randomUUID(),
+                                            text: "",
+                                            leftOptionLocalId: null,
+                                        },
+                                    ],
+                                },
+                            }
+                        }
+                        return q
+                    }),
+                }
+            })
+        }
+    },
+    updateMatchingPairsOption: ({ optionId, side, value, leftOptionLocalId }) =>
+        set((state) => {
+            return {
+                allQuestions: state.allQuestions.map((q) => {
+                    if (q.localId === state.selectedQuestionLocalId) {
+                        const content = q.content as
+                            | MatchingPairsOptions
+                            | undefined
+
+                        if (side === "left") {
+                            return {
+                                ...q,
+                                content: {
+                                    leftOptions:
+                                        content?.leftOptions.map((opt) => {
+                                            if (opt.localId === optionId) {
+                                                return {
+                                                    ...opt,
+                                                    text:
+                                                        value === undefined
+                                                            ? opt.text
+                                                            : value,
+                                                }
+                                            }
+                                            return opt
+                                        }) || [],
+                                    rightOptions: content?.rightOptions || [],
+                                },
+                            }
+                        } else {
+                            return {
+                                ...q,
+                                content: {
+                                    leftOptions: content?.leftOptions || [],
+                                    rightOptions:
+                                        content?.rightOptions.map((opt) => {
+                                            if (opt.localId === optionId) {
+                                                return {
+                                                    ...opt,
+
+                                                    text:
+                                                        value === undefined
+                                                            ? opt.text
+                                                            : value,
+                                                    leftOptionLocalId:
+                                                        leftOptionLocalId ===
+                                                        undefined
+                                                            ? opt.leftOptionLocalId
+                                                            : leftOptionLocalId,
+                                                }
+                                            }
+                                            return opt
+                                        }) || [],
+                                },
+                            }
+                        }
+                    }
+                    return q
+                }),
+            }
+        }),
+    deleteMatchingPairsOption: (side, optionId) =>
+        set((state) => ({
+            allQuestions: state.allQuestions.map((q) => {
+                if (q.localId === state.selectedQuestionLocalId) {
+                    const content = q.content as
+                        | MatchingPairsOptions
+                        | undefined
+                    if (side === "right") {
+                        return {
+                            ...q,
+                            content: {
+                                leftOptions: content?.leftOptions || [],
+                                rightOptions:
+                                    content?.rightOptions.filter(
+                                        (opt) => opt.localId !== optionId
+                                    ) || [],
+                            },
+                        }
+                    } else {
+                        return {
+                            ...q,
+                            content: {
+                                leftOptions:
+                                    content?.leftOptions.filter(
+                                        (opt) => opt.localId !== optionId
+                                    ) || [],
+                                rightOptions: content?.rightOptions || [],
+                            },
+                        }
+                    }
+                }
+                return q
+            }),
+        })),
     updateMultipleChoiceQuestionOption: (
         updatedOption,
         questionLocalId,
@@ -83,10 +254,9 @@ const useQuizStore = create<Store>((set, get) => ({
         set((state) => ({
             allQuestions: state.allQuestions.map((question) => {
                 if (question.localId !== questionLocalId) return question
-
                 if (question.type !== "MULTIPLE_CHOICE") return question
-
-                const updatedOptions = question.content.options.map((option) =>
+                const content = question.content as MultipleChoiceOptions
+                const updatedOptions = content.options.map((option) =>
                     option.localId === optionLocalId
                         ? { ...option, ...updatedOption }
                         : option
@@ -112,13 +282,25 @@ const useQuizStore = create<Store>((set, get) => ({
 export default useQuizStore
 
 export interface QuizQuestionType {
-    content: MultipleChoiceOptions
+    content: MultipleChoiceOptions | MatchingPairsOptions
     localId: string
     questionText: string
     imageUrl: string | null
     type: PossibleQuestionTypes
 }
 
-interface MultipleChoiceOptions {
+export interface MultipleChoiceOptions {
     options: { text: string; localId: string; isCorrect: boolean | null }[]
+}
+export interface MatchingPairsOptions {
+    leftOptions: {
+        text: string
+        localId: string
+    }[]
+
+    rightOptions: {
+        text: string
+        localId: string
+        leftOptionLocalId: string | null
+    }[]
 }

@@ -2,9 +2,9 @@ import ImageUpload from "@/components/shared/image-upload"
 import { cn } from "@/lib/ui-utils"
 import { ImageIcon, PlusCircle } from "lucide-react"
 import { useState } from "react"
-import useQuizStore from "../../store"
+import useQuizStore, { MultipleChoiceOptions } from "../../store"
 import MultipleChoiceOption from "./multiple-choice-option"
-import { QuestionText } from "./question-text"
+import { QuestionText } from "../question-text"
 
 export default function MultipleChoiceContent() {
     const selectedQuestionId = useQuizStore((s) => s.selectedQuestionLocalId)
@@ -12,6 +12,9 @@ export default function MultipleChoiceContent() {
     const selectedQuestion = useQuizStore((s) => s.allQuestions).find(
         (q) => q.localId === selectedQuestionId
     )
+    const questionContent = selectedQuestion?.content as
+        | MultipleChoiceOptions
+        | undefined
     const updateQuestion = useQuizStore((s) => s.updateQuestion)
     if (!selectedQuestion) {
         return null
@@ -50,14 +53,14 @@ export default function MultipleChoiceContent() {
                     </div>
                 </div>
                 <div className="grid grid-cols-2 gap-5">
-                    {selectedQuestion.content.options.map((opt) => (
+                    {questionContent?.options?.map((opt) => (
                         <MultipleChoiceOption
                             changeIsCorrect={(newValue) => {
                                 updateQuestion(
                                     {
                                         content: {
                                             options:
-                                                selectedQuestion.content.options.map(
+                                                questionContent.options.map(
                                                     (item) => {
                                                         if (
                                                             item.localId ===
@@ -82,7 +85,7 @@ export default function MultipleChoiceContent() {
                                     {
                                         content: {
                                             options:
-                                                selectedQuestion.content.options.filter(
+                                                questionContent.options.filter(
                                                     (item) =>
                                                         item.localId !==
                                                         opt.localId
@@ -98,35 +101,35 @@ export default function MultipleChoiceContent() {
                             questionLocalId={selectedQuestion.localId}
                         />
                     ))}
-                    {selectedQuestion.content.options.length < 4 && (
-                        <button
-                            onClick={() => {
-                                updateQuestion(
-                                    {
-                                        content: {
-                                            options: [
-                                                ...selectedQuestion.content
-                                                    .options,
-                                                {
-                                                    isCorrect: null,
-                                                    localId:
-                                                        crypto.randomUUID(),
-                                                    text: "",
-                                                },
-                                            ],
+                    {!!questionContent &&
+                        questionContent.options?.length < 4 && (
+                            <button
+                                onClick={() => {
+                                    updateQuestion(
+                                        {
+                                            content: {
+                                                options: [
+                                                    ...questionContent.options,
+                                                    {
+                                                        isCorrect: null,
+                                                        localId:
+                                                            crypto.randomUUID(),
+                                                        text: "",
+                                                    },
+                                                ],
+                                            },
                                         },
-                                    },
-                                    selectedQuestion.localId
-                                )
-                            }}
-                            className={cn(
-                                "bg-white border-dashed text-stone-300 hover:bg-blue-300/20 hover:cursor-pointer hover:border-stone-300 hover:text-blue-300 border-[3px] border-neutral-300 justify-center active:scale-95 shadow-none h-20 flex items-center pl-6 shadow-[#E5E5E5] rounded-2xl transition-colors",
-                                "relative group transform transition-all duration-300 ease-in-out"
-                            )}
-                        >
-                            <PlusCircle className="w-10 h-10" />
-                        </button>
-                    )}
+                                        selectedQuestion.localId
+                                    )
+                                }}
+                                className={cn(
+                                    "bg-white border-dashed text-stone-300 hover:bg-blue-300/20 hover:cursor-pointer hover:border-stone-300 hover:text-blue-300 border-[3px] border-neutral-300 justify-center active:scale-95 shadow-none h-20 flex items-center pl-6 shadow-[#E5E5E5] rounded-2xl transition-colors",
+                                    "relative group transform transition-all duration-300 ease-in-out"
+                                )}
+                            >
+                                <PlusCircle className="w-10 h-10" />
+                            </button>
+                        )}
                 </div>
             </div>
         </section>

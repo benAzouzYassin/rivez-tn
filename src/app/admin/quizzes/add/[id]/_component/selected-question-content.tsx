@@ -1,18 +1,17 @@
 import { Plus } from "lucide-react"
-import { useMemo } from "react"
 import useQuizStore from "../store"
 import Buttons from "./buttons"
 import MultipleChoiceContent from "./multiple-choice-question/multiple-choice-content"
-import MatchingPairsContent from "./pair-matching-content"
 import QuestionTypeSelect from "./question-type-select"
+import MatchingPairsContent from "./pair-matchint-question/pair-matching-content"
 
 export default function SelectedQuestionContent() {
     const selectedQuestionId = useQuizStore((s) => s.selectedQuestionLocalId)
-    const getSelectedQuestion = useQuizStore((s) => s.getQuestion)
+    const allQuestions = useQuizStore((s) => s.allQuestions)
+
     const addQuestion = useQuizStore((s) => s.addQuestion)
-    const selectedQuestion = useMemo(
-        () => getSelectedQuestion(selectedQuestionId || ""),
-        [getSelectedQuestion, selectedQuestionId]
+    const selectedQuestion = allQuestions.find(
+        (q) => q.localId === selectedQuestionId
     )
     if (!selectedQuestion) {
         return (
@@ -45,7 +44,11 @@ export default function SelectedQuestionContent() {
     return (
         <section className="mt-10 h-full px-20 w-full">
             <section className="flex justify-between">
-                <QuestionTypeSelect className="" />
+                <QuestionTypeSelect
+                    selectedType={selectedQuestion.type}
+                    questionLocalId={selectedQuestion.localId}
+                    className=""
+                />
                 <Buttons />
             </section>
             {selectedQuestion.type === "MULTIPLE_CHOICE" && (

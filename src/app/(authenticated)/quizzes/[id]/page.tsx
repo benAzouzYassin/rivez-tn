@@ -37,7 +37,6 @@ export default function Page() {
     }, [data?.quizzes_questions, reset, setQuestions])
 
     if (isEmpty && !isLoading) {
-        console.log(data?.quizzes_questions)
         return <ErrorDisplay />
     }
 

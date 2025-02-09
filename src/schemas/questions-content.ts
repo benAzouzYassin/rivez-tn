@@ -1,11 +1,12 @@
 import { z } from "zod"
 
-const PossibleQuestionTypesEnum = z.enum([
+export const possibleQuestionTypes = [
     "MULTIPLE_CHOICE",
     "MATCHING_PAIRS",
     "DEBUG_CODE",
     "CODE_COMPLETION",
-])
+] as const
+const PossibleQuestionTypesEnum = z.enum(possibleQuestionTypes)
 
 const MultipleChoiceContentSchema = z.object({
     correct: z.array(z.string()),
@@ -50,7 +51,7 @@ export {
     QuestionContentSchema,
 }
 
-export type PossibleQuestionTypes = z.infer<typeof PossibleQuestionTypesEnum>
+export type PossibleQuestionTypes = (typeof possibleQuestionTypes)[number]
 export type MultipleChoiceContent = z.infer<typeof MultipleChoiceContentSchema>
 export type MatchingPairsContent = z.infer<typeof MatchingPairsContentSchema>
 export type DebugCodeContent = z.infer<typeof DebugCodeContentSchema>

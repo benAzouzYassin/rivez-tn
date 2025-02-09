@@ -1,9 +1,9 @@
 import { cn } from "@/lib/ui-utils"
 import { useState } from "react"
 import CorrectToggleButton from "./correct-toggle-button"
-import DeleteOption from "./delete-option"
+import DeleteOption from "../delete-option"
 import OptionText from "./option-text"
-import useQuizStore from "../../store"
+import useQuizStore, { MultipleChoiceOptions } from "../../store"
 import { wait } from "@/utils/wait"
 
 interface Props {
@@ -16,9 +16,12 @@ interface Props {
 
 function MultipleChoiceOption(props: Props) {
     const [isDeleting, setIsDeleting] = useState(false)
-    const currentOption = useQuizStore((s) => s.allQuestions)
-        .find((q) => q.localId === props.questionLocalId)
-        ?.content.options.find((opt) => opt.localId === props.optionLocalId)
+    const currentQuestionContent = useQuizStore((s) => s.allQuestions).find(
+        (q) => q.localId === props.questionLocalId
+    )?.content as MultipleChoiceOptions | undefined
+    const currentOption = currentQuestionContent?.options.find(
+        (opt) => opt.localId === props.optionLocalId
+    )
 
     return (
         <div

@@ -37,7 +37,7 @@ const SelectTrigger = React.forwardRef<
         >
             {children}
             <SelectPrimitive.Icon asChild>
-                <ChevronDown className="h-4 w-4 opacity-50" />
+                <ChevronDown className="h-4 ml-1 w-4 stroke-2 opacity-50" />
             </SelectPrimitive.Icon>
         </SelectPrimitive.Trigger>
         <div
@@ -48,7 +48,7 @@ const SelectTrigger = React.forwardRef<
             )}
         >
             {!!errorMessage && (
-                <AlertCircle className="h-4 w-4 ml-1 shrink-0" />
+                <AlertCircle className="h-4 w-4 ml-1  shrink-0" />
             )}
             <span className="first-letter:capitalize">{errorMessage}</span>
         </div>
