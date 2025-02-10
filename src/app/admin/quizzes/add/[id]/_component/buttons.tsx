@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button"
-import DestructiveAction from "@/components/ui/destructive-action-warning"
+import WarningDialog from "@/components/ui/warning-dialog"
 import { softDeleteQuizById } from "@/data-access/quizzes/delete"
 import {
     addQuestionsToQuiz,
@@ -8,8 +8,11 @@ import {
 import { toastError, toastSuccess } from "@/lib/toasts"
 import { useParams } from "next/navigation"
 import { useRouter } from "nextjs-toploader/app"
-import { useState } from "react"
-import useQuizStore from "../store"
+import { useRef, useState } from "react"
+import useQuizStore, {
+    MatchingPairsOptions,
+    MultipleChoiceOptions,
+} from "../store"
 export default function Buttons() {
     const params = useParams()
     const quizId = parseInt(params["id"] as string)
@@ -18,6 +21,9 @@ export default function Buttons() {
     const router = useRouter()
     const [isPublishing, setIsPublishing] = useState(false)
     const [isSavingAsDraft, setIsSavingAsDraft] = useState(false)
+    const [isCanceling, setIsCanceling] = useState(false)
+    const [isWarning, setIsWarning] = useState(false)
+    const savingActionRef = useRef<"saveAsDraft" | "publish">("saveAsDraft")
 
     const handleSave = async (action?: "publish" | "saveAsDraft") => {
         try {
@@ -29,12 +35,47 @@ export default function Buttons() {
                 }
                 await addQuestionsToQuiz(
                     quizId,
-                    questions.map((q) => ({
-                        content: q.content,
-                        type: q.type as any,
-                        image: q.imageUrl || "",
-                        question: q.questionText,
-                    }))
+                    questions
+                        .map((q) => {
+                            if (q.type === "MULTIPLE_CHOICE") {
+                                const content =
+                                    q.content as MultipleChoiceOptions
+                                const filteredOptions = content.options.filter(
+                                    (opt) => !!opt.text
+                                )
+                                return {
+                                    content: { options: filteredOptions },
+                                    type: q.type as any,
+                                    image: q.imageUrl || "",
+                                    question: q.questionText,
+                                }
+                            }
+                            if (q.type === "MATCHING_PAIRS") {
+                                const content =
+                                    q.content as MatchingPairsOptions
+                                const filteredRightOptions =
+                                    content.rightOptions.filter(
+                                        (opt) => !!opt.text
+                                    )
+
+                                const filteredLeftOptions =
+                                    content.rightOptions.filter(
+                                        (opt) => !!opt.text
+                                    )
+
+                                return {
+                                    content: {
+                                        leftOptions: filteredLeftOptions,
+                                        rightOptions: filteredRightOptions,
+                                    },
+                                    type: q.type as any,
+                                    image: q.imageUrl || "",
+                                    question: q.questionText,
+                                }
+                            }
+                            return null
+                        })
+                        .filter((q) => !!q)
                 )
                 toastSuccess("Saved successfully.")
                 if (action === "publish") {
@@ -53,10 +94,50 @@ export default function Buttons() {
             setIsSavingAsDraft(false)
         }
     }
+    const handleSubmit = (action?: "publish" | "saveAsDraft") => {
+        const isAllOptionsFilled = questions.every((q) => {
+            if (q.type === "MULTIPLE_CHOICE") {
+                const content = q.content as MultipleChoiceOptions | undefined
 
+                if (!content || !content.options.length) {
+                    return false
+                }
+                const isOptionsValid = content.options.every(
+                    (opt) => !!opt.text
+                )
+                return isOptionsValid
+            }
+            if (q.type === "MATCHING_PAIRS") {
+                const content = q.content as MatchingPairsOptions | undefined
+                if (
+                    !content ||
+                    !content.leftOptions.length ||
+                    !content.rightOptions.length
+                ) {
+                    return false
+                }
+                const isRightOptionsValid = content.rightOptions.every(
+                    (opt) => !!opt.text
+                )
+                const isLeftOptionsValid = content.leftOptions.every(
+                    (opt) => !!opt.text
+                )
+                return isLeftOptionsValid && isRightOptionsValid
+            }
+            return false
+        })
+        const isQuestionsFilled = questions.every((q) => !!q.content)
+        if (!isAllOptionsFilled || !isQuestionsFilled) {
+            savingActionRef.current = action || "saveAsDraft"
+            return setIsWarning(true)
+        }
+        handleSave(action)
+    }
     return (
         <div className="flex items-center gap-2">
-            <DestructiveAction
+            <WarningDialog
+                isOpen={isCanceling}
+                onOpenChange={setIsCanceling}
                 confirmText="Remove the quiz"
                 onConfirm={async () => {
                     await softDeleteQuizById(quizId)
@@ -67,9 +148,9 @@ export default function Buttons() {
                 <Button className="text-base font-extrabold" variant="red">
                     Cancel
                 </Button>
-            </DestructiveAction>
+            </WarningDialog>
             <Button
-                onClick={() => handleSave("publish")}
+                onClick={() => handleSubmit("publish")}
                 isLoading={isPublishing}
                 className="text-base font-extrabold"
                 variant="secondary"
@@ -78,12 +159,26 @@ export default function Buttons() {
             </Button>
             <Button
                 isLoading={isSavingAsDraft}
-                onClick={() => () => handleSave("saveAsDraft")}
+                onClick={() => handleSubmit("saveAsDraft")}
                 className="text-base font-extrabold"
                 variant="blue"
             >
                 Save draft
             </Button>
+            <WarningDialog
+                titleClassName="text-[#EF9C07]"
+                isOpen={isWarning}
+                onOpenChange={setIsWarning}
+                description="You have left some options empty. Any empty will option be ignored."
+                title="Warning: Proceed with caution"
+                confirmText="Continue"
+                confirmBtnClassName="bg-amber-400 shadow-amber-400"
+                onConfirm={async () => {
+                    handleSave()
+                    reset()
+                    router.back()
+                }}
+            />
         </div>
     )
 }

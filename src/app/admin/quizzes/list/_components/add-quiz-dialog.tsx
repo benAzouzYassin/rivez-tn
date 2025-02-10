@@ -115,6 +115,7 @@ export default function AddQuizDialog(props: Props) {
                         className="min-h-[100px]"
                     />
                     <ImageUpload
+                        displayCancelBtn
                         isLoading={isUploadingImage}
                         onLoadingChange={setIsUploadingImage}
                         className="-mt-3"
@@ -123,6 +124,7 @@ export default function AddQuizDialog(props: Props) {
                     />
                     <Button
                         isLoading={isSubmitting || isLoading}
+                        disabled={isUploadingImage}
                         type="submit"
                         className="font-extrabold uppercase text-sm"
                         variant="blue"

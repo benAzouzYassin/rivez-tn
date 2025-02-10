@@ -5,6 +5,7 @@ import { cn } from "@/lib/ui-utils"
 import { FileTextIcon, Loader2, Upload, X } from "lucide-react"
 import { ReactNode, useCallback } from "react"
 import { useDropzone } from "react-dropzone"
+import { Button } from "./button"
 
 interface Props {
     onChange: (file: File | null) => void
@@ -20,6 +21,8 @@ interface Props {
     renderEmptyContent?: () => ReactNode
     containerClassName?: string
     imageClassName?: string
+    onCancel?: () => void
+    displayCancelBtn?: boolean
 }
 
 export function FileInput({
@@ -36,6 +39,8 @@ export function FileInput({
     renderEmptyContent,
     containerClassName,
     imageClassName,
+    displayCancelBtn,
+    onCancel,
 }: Props) {
     const onDrop = useCallback(
         (acceptedFiles: File[]) => {
@@ -100,9 +105,13 @@ export function FileInput({
                     isDragActive
                         ? "border-blue-500 bg-blue-50"
                         : "border-neutral-300 hover:bg-[#F7F7F7] bg-[#F7F7F7]/50",
-                    (disabled || isLoading) && "opacity-50 cursor-not-allowed",
+                    disabled && "opacity-50  cursor-not-allowed",
                     preview ? "p-4" : "p-8",
-                    containerClassName
+
+                    containerClassName,
+                    {
+                        "hover:bg-white": isLoading,
+                    }
                 )}
             >
                 <input {...getInputProps()} />
@@ -110,7 +119,17 @@ export function FileInput({
                 {isLoading ? (
                     <div className="relative hover:cursor-not-allowed min-w-[350px] w-full h-full">
                         <div className="flex flex-col w-full h-full items-center justify-center">
-                            <Loader2 className="w-7 h-7  animate-spin duration-[animation-duration:350ms] text-black" />
+                            <Loader2 className="w-7 h-7  animate-spin duration-[animation-duration:350ms] text-blue-400" />
+                            {displayCancelBtn && (
+                                <Button
+                                    onClick={onCancel}
+                                    type="button"
+                                    variant={"outline-red"}
+                                    className="h-10 font-extrabold  mt-5"
+                                >
+                                    Cancel
+                                </Button>
+                            )}
                         </div>
                     </div>
                 ) : preview ? (

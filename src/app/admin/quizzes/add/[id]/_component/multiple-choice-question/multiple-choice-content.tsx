@@ -31,6 +31,7 @@ export default function MultipleChoiceContent() {
                 <div className="flex w-full h-fit">
                     <div className="w-[800px] mt-5 h-[350px] mx-auto rounded-xl">
                         <ImageUpload
+                            displayCancelBtn
                             imageClassName="w-full h-full !h-[550px] w-[800px] object-cover"
                             containerClassName="bg-white w-[800px] h-[330px] overflow-clip border-blue-200 hover:bg-blue-50/50 group"
                             imageUrl={selectedQuestion.imageUrl}

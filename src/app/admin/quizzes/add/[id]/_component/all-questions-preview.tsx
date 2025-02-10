@@ -38,6 +38,10 @@ export default function AllQuestionsPreviews() {
                             questionText: "",
                             type: "MULTIPLE_CHOICE" as const,
                         })
+                        window.scrollTo({
+                            behavior: "smooth",
+                            top: 0,
+                        })
                     }}
                     className="h-full flex items-center justify-center min-w-32 hover:cursor-pointer hover:bg-neutral-50 active:scale-95 transition-all border-dashed border-neutral-300 border-2 rounded-lg"
                 >

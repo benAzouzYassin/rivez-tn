@@ -41,8 +41,24 @@ interface Actions {
 type Store = State & Actions
 
 const initialState: State = {
-    allQuestions: [],
-    selectedQuestionLocalId: null,
+    allQuestions: [
+        {
+            content: {
+                options: [
+                    {
+                        isCorrect: true,
+                        localId: crypto.randomUUID(),
+                        text: "",
+                    },
+                ],
+            },
+            imageUrl: null,
+            localId: "1",
+            questionText: "",
+            type: "MULTIPLE_CHOICE",
+        },
+    ],
+    selectedQuestionLocalId: "1",
 }
 
 const useQuizStore = create<Store>((set, get) => ({
@@ -73,9 +89,7 @@ const useQuizStore = create<Store>((set, get) => ({
         set((state) => {
             return {
                 allQuestions: [...state.allQuestions, question],
-                selectedQuestionLocalId: !state.selectedQuestionLocalId
-                    ? question.localId
-                    : state.selectedQuestionLocalId,
+                selectedQuestionLocalId: question.localId,
             }
         }),
 

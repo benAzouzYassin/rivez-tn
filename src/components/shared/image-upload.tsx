@@ -2,7 +2,7 @@
 
 import { FileInput } from "@/components/ui/file-input"
 import { deleteFile, uploadFile } from "@/utils/file-management"
-import { ReactNode } from "react"
+import { ReactNode, useRef } from "react"
 
 interface Props {
     imageUrl: string | null
@@ -13,8 +13,17 @@ interface Props {
     renderEmptyContent?: () => ReactNode
     containerClassName?: string
     imageClassName?: string
+    displayCancelBtn?: boolean
 }
 export default function ImageUpload(props: Props) {
+    const abortControllerRef = useRef<AbortController | null>(null)
+    const handleCancel = () => {
+        if (abortControllerRef.current) {
+            abortControllerRef.current.abort()
+            props.onImageUrlChange(props.imageUrl || null)
+        }
+    }
+
     return (
         <FileInput
             imageClassName={props.imageClassName}
@@ -25,6 +34,8 @@ export default function ImageUpload(props: Props) {
             allowImage
             previewAsImage
             isLoading={props.isLoading}
+            displayCancelBtn={props.displayCancelBtn}
+            onCancel={handleCancel}
             preview={props.imageUrl || undefined}
             onChange={async (file) => {
                 if (!file) {
@@ -38,12 +49,16 @@ export default function ImageUpload(props: Props) {
                 }
                 try {
                     props.onLoadingChange?.(true)
-                    const url = await uploadFile(file)
+                    const abortController = new AbortController()
+                    abortControllerRef.current = abortController
+                    const url = await uploadFile(file, abortController)
                     props.onImageUrlChange(url)
                     props.onLoadingChange?.(false)
                 } catch (error) {
                     console.error(error)
                     props.onLoadingChange?.(false)
+                } finally {
+                    abortControllerRef.current = null
                 }
             }}
         />

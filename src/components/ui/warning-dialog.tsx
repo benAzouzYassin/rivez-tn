@@ -9,35 +9,41 @@ import {
     DialogTitle,
     DialogTrigger,
 } from "@/components/ui/dialog"
-import { Loader2, Trash2, TriangleAlert } from "lucide-react"
+import { cn } from "@/lib/ui-utils"
+import { Loader2, TriangleAlert } from "lucide-react"
 import { ReactNode, useState } from "react"
 
 type Props = {
     onConfirm: () => Promise<void>
+    titleClassName?: string
     title?: string
     description?: string
     children?: ReactNode
     confirmText?: string
     cancelText?: string
-    icon?: ReactNode
+    isOpen: boolean
+    onOpenChange: (value: boolean) => void
+    confirmBtnClassName?: string
 }
-const DestructiveAction = ({
+const WarningDialog = ({
     onConfirm,
     title = "Are you absolutely sure?",
     description = "This action cannot be undone. This will permanently delete this item from our servers.",
     children,
     confirmText = "Delete",
     cancelText = "Cancel",
-    icon = <Trash2 className="h-4 w-4" />,
+    isOpen,
+    onOpenChange,
+    confirmBtnClassName,
+    titleClassName,
 }: Props) => {
     const [isLoading, setIsLoading] = useState(false)
-    const [isOpen, setIsOpen] = useState(false)
 
     const handleConfirm = async () => {
         try {
             setIsLoading(true)
             await onConfirm()
-            setIsOpen(false)
+            onOpenChange(false)
         } catch (error) {
             console.error(error)
         } finally {
@@ -46,23 +52,17 @@ const DestructiveAction = ({
     }
 
     return (
-        <Dialog open={isOpen} onOpenChange={setIsOpen}>
-            <DialogTrigger asChild>
-                {children || (
-                    <Button
-                        variant="destructive"
-                        size="icon"
-                        className="hover:scale-105 active:scale-100 transition-all duration-200"
-                        onClick={() => setIsOpen(true)}
-                    >
-                        {icon}
-                    </Button>
-                )}
-            </DialogTrigger>
+        <Dialog open={isOpen} onOpenChange={onOpenChange}>
+            {!!children && <DialogTrigger asChild>{children}</DialogTrigger>}
 
             <DialogContent className="sm:max-w-[35vw] !rounded-2xl">
                 <DialogHeader>
-                    <DialogTitle className="flex items-start gap-2 text-[#FF5353] text-2xl font-extrabold">
+                    <DialogTitle
+                        className={cn(
+                            "flex items-start gap-2 text-[#FF5353] text-2xl font-extrabold",
+                            titleClassName
+                        )}
+                    >
                         <TriangleAlert className="h-6 w-6 mt-[3px] stroke-3" />
                         {title}
                     </DialogTitle>
@@ -75,10 +75,12 @@ const DestructiveAction = ({
                     <DialogClose
                         asChild
                         disabled={isLoading}
-                        onClick={() => !isLoading && setIsOpen(false)}
+                        onClick={() => !isLoading && onOpenChange(false)}
                     >
                         <Button
-                            className="font-extrabold px-8 text-neutral-700 !text-lg"
+                            className={cn(
+                                "font-extrabold px-8 text-neutral-700 !text-lg"
+                            )}
                             variant={"secondary"}
                         >
                             {cancelText}
@@ -89,7 +91,10 @@ const DestructiveAction = ({
                         variant={"red"}
                         onClick={handleConfirm}
                         disabled={isLoading}
-                        className="font-extrabold bg-red-500 shadow-red-600/80 !text-lg px-8"
+                        className={cn(
+                            "font-extrabold bg-red-500 shadow-red-600/80 !text-lg px-8",
+                            confirmBtnClassName
+                        )}
                     >
                         {isLoading ? (
                             <div className="flex items-center gap-2">
@@ -105,4 +110,4 @@ const DestructiveAction = ({
     )
 }
 
-export default DestructiveAction
+export default WarningDialog

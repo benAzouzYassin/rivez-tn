@@ -39,18 +39,24 @@ function QuestionPreview(props: Props) {
             <button
                 onClick={() => {
                     selectQuestion(props.questionLocalId)
+                    window.scrollTo({
+                        behavior: "smooth",
+                        top: 0,
+                    })
                 }}
                 className={cn(
-                    "h-full w-36 overflow-hidden hover:bg-blue-300/10 p-4 transition-all duration-200 border rounded-xl hover:cursor-pointer hover:shadow-md border-neutral-300",
+                    "h-full flex items-center justify-center w-36 overflow-hidden hover:bg-blue-300/10  transition-all duration-200 border rounded-xl hover:cursor-pointer hover:shadow-md border-neutral-300",
                     {
                         "bg-blue-50/90 border-blue-400/60 shadow-lg shadow-blue-200/60 border-2 hover:bg-blue-100/90":
                             props.isSelected,
                     }
                 )}
             >
-                <span className="text-sm text-neutral-400 font-medium">
-                    {props.questionText}
-                </span>
+                <div className="max-h-[90%] h-fit overflow-hidden  ">
+                    <span className="text-sm text-neutral-400 font-medium">
+                        {props.questionText}
+                    </span>
+                </div>
             </button>
         </div>
     )
