@@ -18,10 +18,11 @@ export default function AdminLayout({ children }: Props) {
                         name: "Dashboard",
                         icon: "house",
                         route: "/admin/dashboard",
+                        iconScale: "105",
                     },
                     {
                         name: "Quizzes",
-                        icon: "art-palette",
+                        icon: "quiz",
                         route: "/admin/quizzes/list",
                     },
                 ]}
@@ -32,10 +33,13 @@ export default function AdminLayout({ children }: Props) {
                 }}
             />
             <main
-                className={cn("transition-all duration-300", {
-                    "pl-[256px]": isSidenavOpen,
-                    "pl-[100px]": !isSidenavOpen,
-                })}
+                className={cn(
+                    "transition-all pt-20 min-h-[100vh] duration-300",
+                    {
+                        "pl-[256px]": isSidenavOpen,
+                        "pl-[100px]": !isSidenavOpen,
+                    }
+                )}
             >
                 {children}
             </main>

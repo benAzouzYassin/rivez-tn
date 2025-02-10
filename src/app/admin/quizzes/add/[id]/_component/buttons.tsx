@@ -1,0 +1,184 @@
+import { Button } from "@/components/ui/button"
+import WarningDialog from "@/components/ui/warning-dialog"
+import { softDeleteQuizById } from "@/data-access/quizzes/delete"
+import {
+    addQuestionsToQuiz,
+    updateQuizPublishingStatus,
+} from "@/data-access/quizzes/update"
+import { toastError, toastSuccess } from "@/lib/toasts"
+import { useParams } from "next/navigation"
+import { useRouter } from "nextjs-toploader/app"
+import { useRef, useState } from "react"
+import useQuizStore, {
+    MatchingPairsOptions,
+    MultipleChoiceOptions,
+} from "../store"
+export default function Buttons() {
+    const params = useParams()
+    const quizId = parseInt(params["id"] as string)
+    const reset = useQuizStore((s) => s.reset)
+    const questions = useQuizStore((s) => s.allQuestions)
+    const router = useRouter()
+    const [isPublishing, setIsPublishing] = useState(false)
+    const [isSavingAsDraft, setIsSavingAsDraft] = useState(false)
+    const [isCanceling, setIsCanceling] = useState(false)
+    const [isWarning, setIsWarning] = useState(false)
+    const savingActionRef = useRef<"saveAsDraft" | "publish">("saveAsDraft")
+
+    const handleSave = async (action?: "publish" | "saveAsDraft") => {
+        try {
+            if (isNaN(quizId) === false && quizId) {
+                if (action === "publish") {
+                    setIsPublishing(true)
+                } else {
+                    setIsSavingAsDraft(true)
+                }
+                await addQuestionsToQuiz(
+                    quizId,
+                    questions
+                        .map((q) => {
+                            if (q.type === "MULTIPLE_CHOICE") {
+                                const content =
+                                    q.content as MultipleChoiceOptions
+                                const filteredOptions = content.options.filter(
+                                    (opt) => !!opt.text
+                                )
+                                return {
+                                    content: { options: filteredOptions },
+                                    type: q.type as any,
+                                    image: q.imageUrl || "",
+                                    question: q.questionText,
+                                }
+                            }
+                            if (q.type === "MATCHING_PAIRS") {
+                                const content =
+                                    q.content as MatchingPairsOptions
+                                const filteredRightOptions =
+                                    content.rightOptions.filter(
+                                        (opt) => !!opt.text
+                                    )
+
+                                const filteredLeftOptions =
+                                    content.rightOptions.filter(
+                                        (opt) => !!opt.text
+                                    )
+
+                                return {
+                                    content: {
+                                        leftOptions: filteredLeftOptions,
+                                        rightOptions: filteredRightOptions,
+                                    },
+                                    type: q.type as any,
+                                    image: q.imageUrl || "",
+                                    question: q.questionText,
+                                }
+                            }
+                            return null
+                        })
+                        .filter((q) => !!q)
+                )
+                toastSuccess("Saved successfully.")
+                if (action === "publish") {
+                    await updateQuizPublishingStatus(quizId, "PUBLISHED")
+                } else {
+                    await updateQuizPublishingStatus(quizId, "DRAFT")
+                }
+                router.back()
+                reset()
+            }
+        } catch (error) {
+            console.error(error)
+            toastError("Error while saving...")
+        } finally {
+            setIsPublishing(false)
+            setIsSavingAsDraft(false)
+        }
+    }
+    const handleSubmit = (action?: "publish" | "saveAsDraft") => {
+        const isAllOptionsFilled = questions.every((q) => {
+            if (q.type === "MULTIPLE_CHOICE") {
+                const content = q.content as MultipleChoiceOptions | undefined
+
+                if (!content || !content.options.length) {
+                    return false
+                }
+                const isOptionsValid = content.options.every(
+                    (opt) => !!opt.text
+                )
+                return isOptionsValid
+            }
+            if (q.type === "MATCHING_PAIRS") {
+                const content = q.content as MatchingPairsOptions | undefined
+                if (
+                    !content ||
+                    !content.leftOptions.length ||
+                    !content.rightOptions.length
+                ) {
+                    return false
+                }
+                const isRightOptionsValid = content.rightOptions.every(
+                    (opt) => !!opt.text
+                )
+                const isLeftOptionsValid = content.leftOptions.every(
+                    (opt) => !!opt.text
+                )
+                return isLeftOptionsValid && isRightOptionsValid
+            }
+            return false
+        })
+        const isQuestionsFilled = questions.every((q) => !!q.content)
+        if (!isAllOptionsFilled || !isQuestionsFilled) {
+            savingActionRef.current = action || "saveAsDraft"
+            return setIsWarning(true)
+        }
+        handleSave(action)
+    }
+    return (
+        <div className="flex items-center gap-2">
+            <WarningDialog
+                isOpen={isCanceling}
+                onOpenChange={setIsCanceling}
+                confirmText="Remove the quiz"
+                onConfirm={async () => {
+                    await softDeleteQuizById(quizId)
+                    reset()
+                    router.back()
+                }}
+            >
+                <Button className="text-base font-extrabold" variant="red">
+                    Cancel
+                </Button>
+            </WarningDialog>
+            <Button
+                onClick={() => handleSubmit("publish")}
+                isLoading={isPublishing}
+                className="text-base font-extrabold"
+                variant="secondary"
+            >
+                Publish
+            </Button>
+            <Button
+                isLoading={isSavingAsDraft}
+                onClick={() => handleSubmit("saveAsDraft")}
+                className="text-base font-extrabold"
+                variant="blue"
+            >
+                Save draft
+            </Button>
+            <WarningDialog
+                titleClassName="text-[#EF9C07]"
+                isOpen={isWarning}
+                onOpenChange={setIsWarning}
+                description="You have left some options empty. Any empty will option be ignored."
+                title="Warning: Proceed with caution"
+                confirmText="Continue"
+                confirmBtnClassName="bg-amber-400 shadow-amber-400"
+                onConfirm={async () => {
+                    handleSave()
+                    reset()
+                    router.back()
+                }}
+            />
+        </div>
+    )
+}

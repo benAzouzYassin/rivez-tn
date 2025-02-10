@@ -3,8 +3,9 @@
 import { toastError } from "@/lib/toasts"
 import { cn } from "@/lib/ui-utils"
 import { FileTextIcon, Loader2, Upload, X } from "lucide-react"
-import { useCallback } from "react"
+import { ReactNode, useCallback } from "react"
 import { useDropzone } from "react-dropzone"
+import { Button } from "./button"
 
 interface Props {
     onChange: (file: File | null) => void
@@ -17,6 +18,11 @@ interface Props {
     previewAsImage?: boolean
     previewAsDocument?: boolean
     fileName?: string
+    renderEmptyContent?: () => ReactNode
+    containerClassName?: string
+    imageClassName?: string
+    onCancel?: () => void
+    displayCancelBtn?: boolean
 }
 
 export function FileInput({
@@ -30,6 +36,11 @@ export function FileInput({
     previewAsDocument,
     previewAsImage,
     fileName,
+    renderEmptyContent,
+    containerClassName,
+    imageClassName,
+    displayCancelBtn,
+    onCancel,
 }: Props) {
     const onDrop = useCallback(
         (acceptedFiles: File[]) => {
@@ -94,8 +105,13 @@ export function FileInput({
                     isDragActive
                         ? "border-blue-500 bg-blue-50"
                         : "border-neutral-300 hover:bg-[#F7F7F7] bg-[#F7F7F7]/50",
-                    (disabled || isLoading) && "opacity-50 cursor-not-allowed",
-                    preview ? "p-4" : "p-8"
+                    disabled && "opacity-50  cursor-not-allowed",
+                    preview ? "p-4" : "p-8",
+
+                    containerClassName,
+                    {
+                        "hover:bg-white": isLoading,
+                    }
                 )}
             >
                 <input {...getInputProps()} />
@@ -103,7 +119,17 @@ export function FileInput({
                 {isLoading ? (
                     <div className="relative hover:cursor-not-allowed min-w-[350px] w-full h-full">
                         <div className="flex flex-col w-full h-full items-center justify-center">
-                            <Loader2 className="w-7 h-7  animate-spin duration-[animation-duration:350ms] text-black" />
+                            <Loader2 className="w-7 h-7  animate-spin duration-[animation-duration:350ms] text-blue-400" />
+                            {displayCancelBtn && (
+                                <Button
+                                    onClick={onCancel}
+                                    type="button"
+                                    variant={"outline-red"}
+                                    className="h-10 font-extrabold  mt-5"
+                                >
+                                    Cancel
+                                </Button>
+                            )}
                         </div>
                     </div>
                 ) : preview ? (
@@ -114,7 +140,10 @@ export function FileInput({
                             <img
                                 src={preview}
                                 alt="Preview"
-                                className="rounded-lg h-[200px] w-full object-contain"
+                                className={cn(
+                                    "rounded-lg h-[200px] w-full object-contain",
+                                    imageClassName
+                                )}
                             />
                         )}
                         {previewAsDocument && (
@@ -142,21 +171,29 @@ export function FileInput({
                         )}
                     </div>
                 ) : (
-                    <div className="text-center min-w-[350px] border-red-500">
-                        <Upload className="w-10 h-10 mb-2 mx-auto text-neutral-400" />
-                        <p className="text-neutral-600 mb-2">
-                            {isDragActive
-                                ? "Drop the file here"
-                                : "Drag & drop a file here"}
-                        </p>
-                        <p className="text-sm text-neutral-500">
-                            or click to select a file
-                        </p>
-                        <p className="text-xs text-neutral-400 mt-2">
-                            Images (PNG, JPG, GIF) or Documents (PDF, DOC, DOCX,
-                            XLS, XLSX)
-                        </p>
-                        <p className="text-xs text-neutral-400">up to 10MB</p>
+                    <div className="text-center min-w-[350px]">
+                        {renderEmptyContent ? (
+                            renderEmptyContent()
+                        ) : (
+                            <>
+                                <Upload className="w-10 h-10 mb-2 mx-auto text-neutral-400" />
+                                <p className="text-neutral-600 mb-2">
+                                    {isDragActive
+                                        ? "Drop the file here"
+                                        : "Drag & drop a file here"}
+                                </p>
+                                <p className="text-sm text-neutral-500">
+                                    or click to select a file
+                                </p>
+                                <p className="text-xs text-neutral-400 mt-2">
+                                    Images (PNG, JPG, GIF) or Documents (PDF,
+                                    DOC, DOCX, XLS, XLSX)
+                                </p>
+                                <p className="text-xs text-neutral-400">
+                                    up to 10MB
+                                </p>
+                            </>
+                        )}
                     </div>
                 )}
             </div>

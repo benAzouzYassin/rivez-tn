@@ -34,7 +34,45 @@ export type Database = {
   }
   public: {
     Tables: {
-      categories: {
+      quizzes: {
+        Row: {
+          category: number | null
+          created_at: string
+          description: string | null
+          id: number
+          image: string | null
+          name: string
+          publishing_status: Database["public"]["Enums"]["publishing_status"]
+        }
+        Insert: {
+          category?: number | null
+          created_at?: string
+          description?: string | null
+          id?: number
+          image?: string | null
+          name: string
+          publishing_status?: Database["public"]["Enums"]["publishing_status"]
+        }
+        Update: {
+          category?: number | null
+          created_at?: string
+          description?: string | null
+          id?: number
+          image?: string | null
+          name?: string
+          publishing_status?: Database["public"]["Enums"]["publishing_status"]
+        }
+        Relationships: [
+          {
+            foreignKeyName: "quizzes_category_fkey"
+            columns: ["category"]
+            isOneToOne: false
+            referencedRelation: "quizzes_categories"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      quizzes_categories: {
         Row: {
           created_at: string
           description: string | null
@@ -57,38 +95,6 @@ export type Database = {
           name?: string | null
         }
         Relationships: []
-      }
-      quizzes: {
-        Row: {
-          category: number | null
-          created_at: string
-          id: number
-          image: string | null
-          name: string
-        }
-        Insert: {
-          category?: number | null
-          created_at?: string
-          id?: number
-          image?: string | null
-          name: string
-        }
-        Update: {
-          category?: number | null
-          created_at?: string
-          id?: number
-          image?: string | null
-          name?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "quizzes_category_fkey"
-            columns: ["category"]
-            isOneToOne: false
-            referencedRelation: "categories"
-            referencedColumns: ["id"]
-          },
-        ]
       }
       quizzes_questions: {
         Row: {
@@ -154,6 +160,7 @@ export type Database = {
       [_ in never]: never
     }
     Enums: {
+      publishing_status: "DRAFT" | "PUBLISHED" | "ARCHIVED"
       quiz_question_types:
         | "MULTIPLE_CHOICE"
         | "MATCHING_PAIRS"

@@ -6,16 +6,11 @@ import AnimatedLoader from "@/components/ui/animated-loader"
 import { readQuizWithQuestionsById } from "@/data-access/quizzes/read"
 import { cn } from "@/lib/ui-utils"
 import { useQuery } from "@tanstack/react-query"
-import { useAtom, useSetAtom } from "jotai"
 import { useParams } from "next/navigation"
 import { useEffect } from "react"
 import Questions from "./_components/questions"
 import Result from "./_components/result"
-import {
-    currentQuestionIndexAtom,
-    failedQuestionsIdsAtom,
-    questionsAtom,
-} from "./atoms"
+import { useQuestionsStore } from "./store"
 import { ErrorDisplay } from "@/components/shared/error-display"
 
 export default function Page() {
@@ -26,18 +21,20 @@ export default function Page() {
         queryFn: () => readQuizWithQuestionsById(id),
         queryKey: ["quizzes", "quizzes_questions", id],
     })
+    const currentQuestionIndex = useQuestionsStore(
+        (s) => s.currentQuestionIndex
+    )
+    const questions = useQuestionsStore((s) => s.questions)
+    const setQuestions = useQuestionsStore((s) => s.setQuestions)
+    const reset = useQuestionsStore((s) => s.reset)
 
-    const [currentStep, setCurrentStep] = useAtom(currentQuestionIndexAtom)
-    const [questions, setQuestions] = useAtom(questionsAtom)
-    const setWrongAnswersIdsAtom = useSetAtom(failedQuestionsIdsAtom)
-    const percentage = (currentStep * 100) / questions.length + 5
-    const isFinished = currentStep >= questions.length
+    const percentage = (currentQuestionIndex * 100) / questions.length + 5
+    const isFinished = currentQuestionIndex >= questions.length
     const isEmpty = questions.length === 0
+
     useEffect(() => {
-        setWrongAnswersIdsAtom([])
-        setCurrentStep(0)
         setQuestions(data?.quizzes_questions || [])
-    }, [data, setCurrentStep, setQuestions, setWrongAnswersIdsAtom])
+    }, [data?.quizzes_questions, reset, setQuestions])
 
     if (isEmpty && !isLoading) {
         return <ErrorDisplay />

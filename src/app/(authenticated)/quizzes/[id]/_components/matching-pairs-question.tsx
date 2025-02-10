@@ -1,26 +1,31 @@
 import { areArraysEqual } from "@/utils/array"
-import { useAtom } from "jotai"
 import { AnimatePresence, motion } from "motion/react"
 import { useRef, useState } from "react"
-import {
-    currentQuestionIndexAtom,
-    failedQuestionsIdsAtom,
-    QuestionType,
-} from "../atoms"
-import { MatchingPairsContent } from "../schemas"
+import { useQuestionsStore, QuestionType } from "../store"
 import ConfirmationBanner from "./confirmation-banner"
 import CorrectAnswerBanner from "./correct-answer-banner"
 import MatchingPairsLeft from "./matching-pairs-left"
 import MatchingPairsRight from "./matching-pairs-right"
 import WrongAnswerBanner from "./wrong-answer-banner"
+import { MatchingPairsContent } from "@/schemas/questions-content"
 
 type Props = {
     question: { content: MatchingPairsContent } & QuestionType
 }
+
 export default function MatchingPairsQuestion(props: Props) {
     const incorrectAttempts = useRef(0)
-    const [, setFailedQuestionsAnswers] = useAtom(failedQuestionsIdsAtom)
-    const [questionIndex, setQuestionIndex] = useAtom(currentQuestionIndexAtom)
+
+    const currentQuestionIndex = useQuestionsStore(
+        (s) => s.currentQuestionIndex
+    )
+    const incrementQuestionIndex = useQuestionsStore(
+        (s) => s.incrementQuestionIndex
+    )
+    const addFailedQuestionIds = useQuestionsStore(
+        (s) => s.addFailedQuestionIds
+    )
+
     const [isCorrectBannerOpen, setIsCorrectBannerOpen] = useState(false)
     const [isWrongBannerOpen, setIsWrongBannerOpen] = useState(false)
     const [isConfirmationBanner, setIsConfirmationBanner] = useState(true)
@@ -57,13 +62,11 @@ export default function MatchingPairsQuestion(props: Props) {
         if (incorrectAttempts.current >= 2) {
             setIsWrongBannerOpen(true)
             setIsConfirmationBanner(false)
-
             setIncorrectSelections((prev) => [...prev, pair])
             return
         }
 
         incorrectAttempts.current = incorrectAttempts.current + 1
-
         setIncorrectSelections((prev) => [...prev, pair])
     }
 
@@ -77,23 +80,43 @@ export default function MatchingPairsQuestion(props: Props) {
             setIsConfirmationBanner(false)
         }
     }
+
+    const handleNextQuestion = () => {
+        setRightSelectedOption(null)
+        setLeftSelectedOption(null)
+        setCorrectSelections([])
+        incorrectAttempts.current = 0
+        incrementQuestionIndex()
+        setIsConfirmationBanner(false)
+    }
+
+    const handleWrongAnswer = () => {
+        addFailedQuestionIds([props.question.id])
+        setRightSelectedOption(null)
+        setLeftSelectedOption(null)
+        incrementQuestionIndex()
+        setIsWrongBannerOpen(false)
+        incorrectAttempts.current = 0
+        setCorrectSelections([])
+    }
+
     return (
         <>
             <div className="flex flex-col relative h-fit items-center justify-center">
                 <div>
                     <p className="max-w-[1200px] mb-1 text-3xl font-extrabold top-0 text-neutral-700 text-left w-full left-0">
-                        {props.question?.question} :
+                        {props.question?.question || "Match the items "} :
                     </p>
-                    <div className="relative ">
+                    <div className="relative">
                         <AnimatePresence mode="wait">
                             <motion.div
-                                key={questionIndex}
+                                key={currentQuestionIndex}
                                 variants={questionAnimations}
                                 initial="initial"
                                 animate="animate"
                                 exit="exit"
                                 transition={{ duration: 0.4 }}
-                                className="max-w-[1200px] min-w-[700px] justify-center  items-center   mt-20 gap-10 w-full flex"
+                                className="max-w-[1200px] min-w-[700px] justify-center items-center mt-20 gap-10 w-full flex"
                             >
                                 <MatchingPairsLeft
                                     readonly={
@@ -182,40 +205,15 @@ export default function MatchingPairsQuestion(props: Props) {
             </div>
 
             <ConfirmationBanner
-                onNextClick={() => {
-                    setRightSelectedOption(null)
-                    setLeftSelectedOption(null)
-                    setCorrectSelections([])
-                    incorrectAttempts.current = 0
-                    setQuestionIndex((prev) => prev + 1)
-                    setIsConfirmationBanner(false)
-                }}
+                onNextClick={handleNextQuestion}
                 isOpen={isConfirmationBanner}
             />
             <CorrectAnswerBanner
-                onNextClick={() => {
-                    incorrectAttempts.current = 0
-                    setCorrectSelections([])
-                    setRightSelectedOption(null)
-                    setLeftSelectedOption(null)
-                    setQuestionIndex((prev) => prev + 1)
-                    setIsCorrectBannerOpen(false)
-                }}
+                onNextClick={handleNextQuestion}
                 isOpen={isCorrectBannerOpen}
             />
             <WrongAnswerBanner
-                onNextClick={() => {
-                    setFailedQuestionsAnswers((prev) => [
-                        ...prev,
-                        //TODO make use of this
-                    ])
-                    setRightSelectedOption(null)
-                    setLeftSelectedOption(null)
-                    setQuestionIndex((prev) => prev + 1)
-                    setIsWrongBannerOpen(false)
-                    incorrectAttempts.current = 0
-                    setCorrectSelections([])
-                }}
+                onNextClick={handleWrongAnswer}
                 isOpen={isWrongBannerOpen}
             />
         </>

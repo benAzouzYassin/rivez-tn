@@ -16,9 +16,9 @@ export default function UserLayout({ children }: Props) {
             <Sidenav
                 items={[
                     { name: "Learn", icon: "house" },
-                    { name: "Ranking", icon: "shield" },
-                    { name: "Quests", icon: "box" },
-                    { name: "Shop", icon: "loot" },
+                    { name: "Ranking", icon: "ranks" },
+                    // { name: "Quests", icon: "box" },
+                    // { name: "Shop", icon: "loot" },
                 ]}
                 settingsItem={{
                     name: "Settings",
@@ -27,7 +27,7 @@ export default function UserLayout({ children }: Props) {
                 }}
             />
             <main
-                className={cn("transition-all duration-300", {
+                className={cn("transition-all pt-20 duration-300", {
                     "pl-[256px]": isSidenavOpen,
                     "pl-[100px]": !isSidenavOpen,
                 })}

@@ -1,7 +1,10 @@
 import { readCurrentSession } from "@/data-access/users/read"
 import axios from "axios"
 
-export async function uploadFile(fileObject: File) {
+export async function uploadFile(
+    fileObject: File,
+    abortController?: AbortController
+) {
     // TODO make rate limiting for each user
     const {
         data: { session },
@@ -22,6 +25,7 @@ export async function uploadFile(fileObject: File) {
                     "refresh-token": session.refresh_token,
                     "Content-Type": "multipart/form-data",
                 },
+                signal: abortController?.signal,
             }
         )
 

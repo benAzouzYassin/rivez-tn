@@ -1,26 +1,20 @@
 "use client"
 
-import { useAtom } from "jotai"
-import { currentQuestionIndexAtom, questionsAtom, QuestionType } from "../atoms"
-import CodeCompletionQuestion from "./code-completion-question"
-import MultipleAnswerQuestion from "./multiple-answer-question"
-import MatchingPairsQuestion from "./matching-pairs-question"
-import DebugCodeQuestion from "./debug-code-question"
+import { QuestionType, useQuestionsStore } from "../store"
+
 import { ErrorDisplay } from "@/components/shared/error-display"
 import {
-    CodeCompletionContent,
-    CodeCompletionContentSchema,
-    DebugCodeContent,
-    DebugCodeContentSchema,
     MatchingPairsContent,
     MatchingPairsContentSchema,
     MultipleChoiceContent,
     MultipleChoiceContentSchema,
-} from "../schemas"
+} from "@/schemas/questions-content"
+import MatchingPairsQuestion from "./matching-pairs-question"
+import MultipleAnswerQuestion from "./multiple-answer-question"
 
 export default function Questions() {
-    const [questionIndex] = useAtom(currentQuestionIndexAtom)
-    const [questions] = useAtom(questionsAtom)
+    const questionIndex = useQuestionsStore((s) => s.currentQuestionIndex)
+    const questions = useQuestionsStore((s) => s.questions)
 
     const currentQuestion = questions[questionIndex]
     if (!currentQuestion) {
@@ -29,7 +23,6 @@ export default function Questions() {
 
     switch (currentQuestion?.type) {
         case "MULTIPLE_CHOICE":
-            console.log(currentQuestion)
             return isMultipleChoice(currentQuestion) ? (
                 <MultipleAnswerQuestion question={currentQuestion} />
             ) : (
@@ -41,18 +34,18 @@ export default function Questions() {
             ) : (
                 <ErrorDisplay />
             )
-        case "CODE_COMPLETION":
-            return isCodeCompletion(currentQuestion) ? (
-                <CodeCompletionQuestion question={currentQuestion} />
-            ) : (
-                <ErrorDisplay />
-            )
-        case "DEBUG_CODE":
-            return isCodeDebug(currentQuestion) ? (
-                <DebugCodeQuestion question={currentQuestion} />
-            ) : (
-                <ErrorDisplay />
-            )
+        // case "CODE_COMPLETION":
+        //     return isCodeCompletion(currentQuestion) ? (
+        //         <CodeCompletionQuestion question={currentQuestion} />
+        //     ) : (
+        //         <ErrorDisplay />
+        //     )
+        // case "DEBUG_CODE":
+        //     return isCodeDebug(currentQuestion) ? (
+        //         <DebugCodeQuestion question={currentQuestion} />
+        //     ) : (
+        //         <ErrorDisplay />
+        //     )
         default:
             return <ErrorDisplay />
     }
@@ -75,19 +68,19 @@ function isMatchingPairs(
     )
     return success
 }
-function isCodeCompletion(
-    currentQuestion: QuestionType
-): currentQuestion is QuestionType & { content: CodeCompletionContent } {
-    const { success } = CodeCompletionContentSchema.safeParse(
-        currentQuestion.content
-    )
-    return success
-}
-function isCodeDebug(
-    currentQuestion: QuestionType
-): currentQuestion is QuestionType & { content: DebugCodeContent } {
-    const { success } = DebugCodeContentSchema.safeParse(
-        currentQuestion.content
-    )
-    return success
-}
+// function isCodeCompletion(
+//     currentQuestion: QuestionType
+// ): currentQuestion is QuestionType & { content: CodeCompletionContent } {
+//     const { success } = CodeCompletionContentSchema.safeParse(
+//         currentQuestion.content
+//     )
+//     return success
+// }
+// function isCodeDebug(
+//     currentQuestion: QuestionType
+// ): currentQuestion is QuestionType & { content: DebugCodeContent } {
+//     const { success } = DebugCodeContentSchema.safeParse(
+//         currentQuestion.content
+//     )
+//     return success
+// }

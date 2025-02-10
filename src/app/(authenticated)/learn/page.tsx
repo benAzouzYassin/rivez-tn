@@ -7,7 +7,7 @@ import { Category } from "./_components/category"
 
 export default function Page() {
     const { data, isLoading, isError } = useQuery({
-        queryKey: ["categories", "quizzes", "quizzes_questions"],
+        queryKey: ["quizzes_categories", "quizzes", "quizzes_questions"],
         queryFn: () => readCategoriesWithQuizzes(),
     })
     if (isError) {

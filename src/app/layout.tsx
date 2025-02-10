@@ -2,7 +2,7 @@ import type { Metadata } from "next"
 import "./globals.css"
 import { Nunito } from "next/font/google"
 import NextTopLoader from "nextjs-toploader"
-import { Toaster } from "sonner"
+import { Toaster } from "react-hot-toast"
 import QueryClientProvider from "@/providers/query-client"
 import { SidenavProvider } from "@/providers/sidenav-provider"
 const nunito = Nunito({
@@ -20,14 +20,14 @@ export default function RootLayout({
     children: React.ReactNode
 }>) {
     return (
-        <html lang="en">
-            <body className={`${nunito.className} antialiased`}>
-                <Toaster
-                    visibleToasts={5}
-                    expand
-                    richColors
-                    className={`${nunito.className}`}
-                />
+        <html lang="en" className=" overflow-x-hidden">
+            <head>
+                {/* <script src="https://unpkg.com/react-scan/dist/auto.global.js"></script> */}
+            </head>
+            <body
+                className={`${nunito.className} overflow-y-auto overflow-x-hidden antialiased  min-w-screen`}
+            >
+                <Toaster />
                 <NextTopLoader
                     color="#1CB0F6"
                     initialPosition={0.08}
