@@ -9,3 +9,14 @@ export async function readQuizWithQuestionsById(id: number) {
         .throwOnError()
     return response.data
 }
+
+export async function readQuizzesWithCategory() {
+    const response = await supabase
+        .from("quizzes")
+        .select(`*, category(*),quizzes_questions(count)`)
+        .throwOnError()
+    return response.data
+}
+export type QuizWithCategory = Awaited<
+    ReturnType<typeof readQuizzesWithCategory>
+>[number]
