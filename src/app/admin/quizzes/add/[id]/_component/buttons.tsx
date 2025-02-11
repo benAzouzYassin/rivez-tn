@@ -10,6 +10,7 @@ import useQuizStore, {
     MatchingPairsOptions,
     MultipleChoiceOptions,
 } from "../store"
+import { useQueryClient } from "@tanstack/react-query"
 export default function Buttons() {
     const params = useParams()
     const quizId = parseInt(params["id"] as string)
@@ -21,7 +22,7 @@ export default function Buttons() {
     const [isCanceling, setIsCanceling] = useState(false)
     const [isWarning, setIsWarning] = useState(false)
     const savingActionRef = useRef<"saveAsDraft" | "publish">("saveAsDraft")
-
+    const queryClient = useQueryClient()
     const handleSave = async (action?: "publish" | "saveAsDraft") => {
         try {
             if (isNaN(quizId) === false && quizId) {
@@ -80,6 +81,9 @@ export default function Buttons() {
                 } else {
                     await updateQuiz(quizId, { publishing_status: "DRAFT" })
                 }
+                queryClient.invalidateQueries({
+                    queryKey: ["quizzes"],
+                })
                 router.back()
                 reset()
             }
