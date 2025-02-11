@@ -46,7 +46,7 @@ export default function SearchSelect<OptionData>(props: Props<OptionData>) {
                         value={inputValue}
                         autoFocus={false}
                         autoComplete="off"
-                        placeholder="Search"
+                        placeholder={props.placeholder || "Search"}
                         onChange={(e) => {
                             const value = e.target.value || ""
                             setInputValue(value)
@@ -83,7 +83,7 @@ export default function SearchSelect<OptionData>(props: Props<OptionData>) {
                         }}
                     />
                 </PopoverAnchor>
-                <PopoverContent className="min-w-[200px] rounded-xl overflow-hidden border !w-(--radix-popover-trigger-width) p-0">
+                <PopoverContent className="min-w-[250px] rounded-xl overflow-hidden border !w-(--radix-popover-trigger-width) p-0">
                     <CommandList>
                         {props.isLoading ? (
                             <CommandEmpty className="h-full flex items-center justify-center">
@@ -143,6 +143,7 @@ export default function SearchSelect<OptionData>(props: Props<OptionData>) {
 interface Props<OptionData> {
     items: { id: string; label: string; data?: OptionData }[]
     selectedId: string | null
+    placeholder?: string
     onSelect?: (data: Props<OptionData>["items"][number]) => void
     onUnselect?: () => void
     onAddButtonClick?: (inputValue: string) => void

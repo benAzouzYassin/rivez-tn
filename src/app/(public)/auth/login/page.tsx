@@ -54,7 +54,10 @@ export default function Page() {
             password: formData.password,
         })
         if (success) {
-            router.replace("/")
+            window.location.replace(
+                localStorage.getItem("afterAuthRedirect") ||
+                    process.env.NEXT_PUBLIC_SITE_URL!
+            )
         } else {
             toastError("Wrong email or password.")
         }
@@ -124,7 +127,11 @@ export default function Page() {
                     isLoading={isGoogleAuth}
                     onClick={async () => {
                         setIsGoogleAuth(true)
-                        await loginUserWithGoogle()
+                        await loginUserWithGoogle({
+                            redirectTo:
+                                localStorage.getItem("afterAuthRedirect") ||
+                                process.env.NEXT_PUBLIC_SITE_URL,
+                        })
                     }}
                     type="button"
                     className="font-bold w-full mt-3 text-[#4285F4] uppercase text-sm"

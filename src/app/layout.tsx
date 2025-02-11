@@ -5,6 +5,8 @@ import NextTopLoader from "nextjs-toploader"
 import { Toaster } from "react-hot-toast"
 import QueryClientProvider from "@/providers/query-client"
 import { SidenavProvider } from "@/providers/sidenav-provider"
+import { NuqsAdapter } from "nuqs/adapters/next/app"
+
 const nunito = Nunito({
     subsets: ["latin"],
     weight: ["300", "400", "500", "600", "700", "800", "900", "1000"],
@@ -44,7 +46,9 @@ export default function RootLayout({
                     showAtBottom={false}
                 />
                 <QueryClientProvider>
-                    <SidenavProvider>{children}</SidenavProvider>
+                    <SidenavProvider>
+                        <NuqsAdapter>{children}</NuqsAdapter>
+                    </SidenavProvider>
                 </QueryClientProvider>
             </body>
         </html>

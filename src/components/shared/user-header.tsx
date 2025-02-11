@@ -94,8 +94,8 @@ export default function UserHeader() {
                         </PopoverTrigger>
 
                         <PopoverContent
-                            align="end"
-                            className="w-64 p-0 rounded-xl shadow-lg border border-neutral-200"
+                            align="center"
+                            className="w-64 -translate-x-2 p-0 rounded-xl shadow-lg border border-neutral-200"
                         >
                             <UserMenu
                                 items={menuItems}

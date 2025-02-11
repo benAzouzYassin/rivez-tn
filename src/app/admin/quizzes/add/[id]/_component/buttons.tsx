@@ -1,10 +1,7 @@
 import { Button } from "@/components/ui/button"
 import WarningDialog from "@/components/ui/warning-dialog"
 import { softDeleteQuizById } from "@/data-access/quizzes/delete"
-import {
-    addQuestionsToQuiz,
-    updateQuizPublishingStatus,
-} from "@/data-access/quizzes/update"
+import { addQuestionsToQuiz, updateQuiz } from "@/data-access/quizzes/update"
 import { toastError, toastSuccess } from "@/lib/toasts"
 import { useParams } from "next/navigation"
 import { useRouter } from "nextjs-toploader/app"
@@ -13,6 +10,7 @@ import useQuizStore, {
     MatchingPairsOptions,
     MultipleChoiceOptions,
 } from "../store"
+import { useQueryClient } from "@tanstack/react-query"
 export default function Buttons() {
     const params = useParams()
     const quizId = parseInt(params["id"] as string)
@@ -24,7 +22,7 @@ export default function Buttons() {
     const [isCanceling, setIsCanceling] = useState(false)
     const [isWarning, setIsWarning] = useState(false)
     const savingActionRef = useRef<"saveAsDraft" | "publish">("saveAsDraft")
-
+    const queryClient = useQueryClient()
     const handleSave = async (action?: "publish" | "saveAsDraft") => {
         try {
             if (isNaN(quizId) === false && quizId) {
@@ -79,10 +77,13 @@ export default function Buttons() {
                 )
                 toastSuccess("Saved successfully.")
                 if (action === "publish") {
-                    await updateQuizPublishingStatus(quizId, "PUBLISHED")
+                    await updateQuiz(quizId, { publishing_status: "PUBLISHED" })
                 } else {
-                    await updateQuizPublishingStatus(quizId, "DRAFT")
+                    await updateQuiz(quizId, { publishing_status: "DRAFT" })
                 }
+                queryClient.invalidateQueries({
+                    queryKey: ["quizzes"],
+                })
                 router.back()
                 reset()
             }
