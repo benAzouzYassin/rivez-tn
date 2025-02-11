@@ -16,9 +16,10 @@ export async function loginUserWithPassword(params: {
     }
 }
 
-export async function loginUserWithGoogle() {
+export async function loginUserWithGoogle(params?: { redirectTo?: string }) {
     const { error } = await supabase.auth.signInWithOAuth({
         provider: "google",
+        options: { redirectTo: params?.redirectTo },
     })
 
     return {

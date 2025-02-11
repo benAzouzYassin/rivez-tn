@@ -17,6 +17,7 @@ export default function PrivateLayout({
             if (data.session) {
                 setAllowedToEnter(true)
             } else {
+                localStorage.setItem("afterAuthRedirect", window.location.href)
                 router.replace("/auth/register")
             }
         })

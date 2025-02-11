@@ -4,7 +4,7 @@ import { cva, type VariantProps } from "class-variance-authority"
 import { cn } from "@/lib/ui-utils"
 
 const badgeVariants = cva(
-    "inline-flex items-center rounded-xl px-4 py-2 text-sm font-bold transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 ",
+    "inline-flex items-center rounded-xl px-4 py-2 text-sm !font-[800] transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 ",
     {
         variants: {
             variant: {
@@ -24,11 +24,27 @@ const badgeVariants = cva(
 
 export interface BadgeProps
     extends React.HTMLAttributes<HTMLDivElement>,
-        VariantProps<typeof badgeVariants> {}
-
-function Badge({ className, variant, ...props }: BadgeProps) {
+        VariantProps<typeof badgeVariants> {
+    isLoading?: boolean
+}
+function Badge({
+    className,
+    variant,
+    isLoading,
+    children,
+    ...props
+}: BadgeProps) {
     return (
-        <div className={cn(badgeVariants({ variant }), className)} {...props} />
+        <div className={cn(badgeVariants({ variant }), className)} {...props}>
+            {isLoading ? (
+                <div className="flex items-center relative gap-2">
+                    <div className="h-3 w-3 absolute left-1/2 -translate-x-1/2 animate-spin duration-300 min-w-fit rounded-full border-2 border-current border-t-transparent" />
+                    <div className="opacity-0">{children}</div>
+                </div>
+            ) : (
+                children
+            )}
+        </div>
     )
 }
 

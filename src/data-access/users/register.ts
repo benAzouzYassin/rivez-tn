@@ -1,8 +1,11 @@
 import { supabase } from "@/lib/supabase-client-side"
 
-export async function registerUserWithGoogle() {
+export async function registerUserWithGoogle(params?: { redirectTo?: string }) {
     const { error } = await supabase.auth.signInWithOAuth({
         provider: "google",
+        options: {
+            redirectTo: params?.redirectTo,
+        },
     })
 
     return {

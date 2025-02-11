@@ -1,10 +1,7 @@
 import { Button } from "@/components/ui/button"
 import WarningDialog from "@/components/ui/warning-dialog"
 import { softDeleteQuizById } from "@/data-access/quizzes/delete"
-import {
-    addQuestionsToQuiz,
-    updateQuizPublishingStatus,
-} from "@/data-access/quizzes/update"
+import { addQuestionsToQuiz, updateQuiz } from "@/data-access/quizzes/update"
 import { toastError, toastSuccess } from "@/lib/toasts"
 import { useParams } from "next/navigation"
 import { useRouter } from "nextjs-toploader/app"
@@ -79,9 +76,9 @@ export default function Buttons() {
                 )
                 toastSuccess("Saved successfully.")
                 if (action === "publish") {
-                    await updateQuizPublishingStatus(quizId, "PUBLISHED")
+                    await updateQuiz(quizId, { publishing_status: "PUBLISHED" })
                 } else {
-                    await updateQuizPublishingStatus(quizId, "DRAFT")
+                    await updateQuiz(quizId, { publishing_status: "DRAFT" })
                 }
                 router.back()
                 reset()

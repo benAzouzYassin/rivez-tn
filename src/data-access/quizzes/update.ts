@@ -83,15 +83,10 @@ export async function addQuestionsToQuiz(
     return result
 }
 
-export async function updateQuizPublishingStatus(
-    quizId: number,
-    status: PublishingQuizStatus
-) {
+export async function updateQuiz(quizId: number, data: QuizUpdateType) {
     const result = await supabase
         .from("quizzes")
-        .update({
-            publishing_status: status,
-        })
+        .update(data)
         .eq(`id`, quizId)
         .select("id")
         .throwOnError()
@@ -100,10 +95,7 @@ export async function updateQuizPublishingStatus(
 }
 
 //types
-type PublishingQuizStatus = Exclude<
-    Database["public"]["Tables"]["quizzes"]["Update"]["publishing_status"],
-    undefined
->
+type QuizUpdateType = Database["public"]["Tables"]["quizzes"]["Update"]
 
 type AddQuestionToQuizContentTypes = {
     MultipleChoice: {

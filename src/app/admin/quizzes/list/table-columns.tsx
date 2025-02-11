@@ -1,12 +1,12 @@
-import { Badge } from "@/components/ui/badge"
 import { Checkbox } from "@/components/ui/checkbox"
+import ImageWithPreview from "@/components/ui/img-with-preview"
 import { cn } from "@/lib/ui-utils"
 import { formatDate } from "@/utils/date"
 import { ColumnDef } from "@tanstack/react-table"
+import CategoryButton from "./_components/category"
+import MoreButton from "./_components/more-button"
+import StatusButton from "./_components/status-button"
 import { Item } from "./page"
-import MoreButton from "@/components/ui/more-button"
-import { Edit, Trash2 } from "lucide-react"
-import { toastSuccess } from "@/lib/toasts"
 
 export const columns: ColumnDef<Item>[] = [
     {
@@ -18,7 +18,7 @@ export const columns: ColumnDef<Item>[] = [
                     onCheckedChange={(checked) =>
                         table.toggleAllRowsSelected(!!checked)
                     }
-                    className="border-neutral-400/60 z-10 w-6 h-6"
+                    className="border-neutral-400/60 z-[2] w-6 h-6"
                 />
             )
         },
@@ -55,7 +55,7 @@ export const columns: ColumnDef<Item>[] = [
                     >
                         {!!row.original.image && (
                             <div className=" overflow-hidden  rounded-xl  h-full w-full ">
-                                <img
+                                <ImageWithPreview
                                     alt=""
                                     src={row.original.image}
                                     className="object-cover object-center"
@@ -74,7 +74,12 @@ export const columns: ColumnDef<Item>[] = [
         header: "Category",
         cell: ({ row }) => (
             <div className="flex items-center !text-base font-semibold justify-center">
-                {row.original.category?.name}
+                <div className="translate-y-2">
+                    <CategoryButton
+                        itemId={row.original.id}
+                        categoryId={row.original.category?.id || null}
+                    />
+                </div>
             </div>
         ),
     },
@@ -93,10 +98,8 @@ export const columns: ColumnDef<Item>[] = [
         cell: ({ row }) => {
             const status = row.original.publishing_status as string
             return (
-                <div className="flex items-center !text-base font-semibold justify-center">
-                    <Badge variant={"blue"} className="font-bold">
-                        {status}
-                    </Badge>
+                <div className="flex items-center !text-base font-semibold justify-center ">
+                    <StatusButton itemId={row.original.id} status={status} />
                 </div>
             )
         },
@@ -114,23 +117,7 @@ export const columns: ColumnDef<Item>[] = [
     {
         id: "actions",
         cell: ({ row }) => {
-            return (
-                <MoreButton
-                    items={[
-                        {
-                            icon: <Edit className="w-5  h-5" />,
-                            label: "Edit",
-                            onClick: () => toastSuccess("hello world"),
-                        },
-                        {
-                            icon: <Trash2 className="w-5  h-5" />,
-                            label: "Delete",
-                            className: "focus:bg-red-200",
-                            isDanger: true,
-                        },
-                    ]}
-                />
-            )
+            return <MoreButton itemId={row.original.id} />
         },
     },
 ]

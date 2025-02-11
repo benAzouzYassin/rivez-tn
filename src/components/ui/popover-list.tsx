@@ -10,37 +10,30 @@ import {
     PopoverTrigger,
 } from "@/components/ui/popover"
 import { cn } from "@/lib/ui-utils"
-import { wait } from "@/utils/wait"
-import { MoreVerticalIcon } from "lucide-react"
 import { ReactNode, useState } from "react"
 
 type Props = {
     children?: ReactNode
+    contentClassName?: string
     items: {
         isDanger?: boolean
-        icon: ReactNode
+        icon?: ReactNode
         label: string
         onClick?: () => void
         className?: string
     }[]
 }
-export default function MoreButton(props: Props) {
+export default function PopoverList(props: Props) {
     const [isOpen, setIsOpen] = useState(false)
     return (
-        <Command>
+        <Command className="bg-transparent">
             <Popover onOpenChange={setIsOpen} open={isOpen}>
-                <PopoverTrigger asChild>
-                    {props.children || (
-                        <button
-                            role="button"
-                            className="h-8 hover:border-2 hover:bg-neutral-50 flex items-center justify-center rounded-lg  w-8 p-0  hover:cursor-pointer active:scale-95"
-                        >
-                            <MoreVerticalIcon className="!h-6 text-neutral-600 !w-6" />
-                        </button>
-                    )}
-                </PopoverTrigger>
+                <PopoverTrigger asChild>{props.children}</PopoverTrigger>
                 <PopoverContent
-                    className="min-w-[200px] -translate-x-4 rounded-xl overflow-hidden border !w-(--radix-popover-trigger-width) p-0"
+                    className={cn(
+                        "min-w-[200px]  rounded-xl overflow-hidden border !w-(--radix-popover-trigger-width) p-0",
+                        props.contentClassName
+                    )}
                     align="center"
                 >
                     <CommandList className="p-0">
@@ -57,7 +50,8 @@ export default function MoreButton(props: Props) {
                                         {
                                             "data-[selected=true]:bg-red-200/70 !text-red-600":
                                                 item.isDanger,
-                                        }
+                                        },
+                                        item.className
                                     )}
                                 >
                                     <span className="scale-90">

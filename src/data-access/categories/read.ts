@@ -4,7 +4,7 @@ export async function readCategoriesWithQuizzes() {
     const response = await supabase
         .from("quizzes_categories")
         .select(`*, quizzes(* ,quizzes_questions(count))`)
-        .neq("quizzes.publishing_status", "ARCHIVED")
+        .in("quizzes.publishing_status", ["PUBLISHED"])
         .throwOnError()
     return response.data
 }
