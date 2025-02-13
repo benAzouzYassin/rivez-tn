@@ -1,5 +1,5 @@
 BEGIN;
-INSERT INTO public.categories (name, description, image) VALUES
+INSERT INTO public.quizzes_categories (name, description, image) VALUES
 ('JavaScript Fundamentals', 'Core concepts of JavaScript programming language', 'https://upload.wikimedia.org/wikipedia/commons/6/6a/JavaScript-logo.png'),
 ('Python Basics', 'Essential Python programming concepts', 'https://upload.wikimedia.org/wikipedia/commons/c/c3/Python-logo-notext.svg'),
 ('Data Structures', 'Common data structures in programming', 'https://example.com/data-structures.png');
