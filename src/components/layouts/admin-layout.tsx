@@ -3,6 +3,7 @@ import { useSidenav } from "@/providers/sidenav-provider"
 import { ReactNode } from "react"
 import UserHeader from "@/components/shared/user-header"
 import Sidenav from "@/components/shared/sidenav"
+import { BookCopy, Gamepad2, Home, Settings } from "lucide-react"
 
 type Props = {
     children?: Readonly<ReactNode>
@@ -16,19 +17,24 @@ export default function AdminLayout({ children }: Props) {
                 items={[
                     {
                         name: "Dashboard",
-                        icon: "house",
+                        icon: <Home className="!w-6 !h-6" />,
                         route: "/admin/dashboard",
                         iconScale: "105",
                     },
                     {
                         name: "Quizzes",
-                        icon: "quiz",
+                        icon: <Gamepad2 className="!w-6 !h-6" />,
                         route: "/admin/quizzes/list",
+                    },
+                    {
+                        name: "Categories",
+                        icon: <BookCopy className="!w-6 !h-6" />,
+                        route: "/admin/categories/list",
                     },
                 ]}
                 settingsItem={{
                     name: "Settings",
-                    icon: "settings",
+                    icon: <Settings className="!w-6 !h-6" />,
                     iconScale: "scale-95",
                 }}
             />
