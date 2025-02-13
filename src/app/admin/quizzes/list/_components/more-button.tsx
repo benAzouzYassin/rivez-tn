@@ -2,7 +2,7 @@ import PopoverList from "@/components/ui/popover-list"
 import { softDeleteQuizById } from "@/data-access/quizzes/delete"
 import { dismissToasts, toastLoading, toastSuccess } from "@/lib/toasts"
 import { useQueryClient } from "@tanstack/react-query"
-import { Edit, Info, MoreVerticalIcon, Trash2 } from "lucide-react"
+import { Edit, Eye, Info, MoreVerticalIcon, Trash2 } from "lucide-react"
 import { useRouter } from "nextjs-toploader/app"
 
 interface Props {
@@ -36,6 +36,11 @@ export default function MoreButton(props: Props) {
                     label: "Details",
                     onClick: () =>
                         router.push(`/admin/quizzes/details/${props.itemId}`),
+                },
+                {
+                    icon: <Eye className="w-5 h-5" />,
+                    label: "View",
+                    onClick: () => router.push(`/quizzes/${props.itemId}`),
                 },
                 {
                     icon: <Edit className="w-5 h-5" />,

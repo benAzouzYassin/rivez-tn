@@ -1,8 +1,8 @@
 import { Plus } from "lucide-react"
 import useQuizStore from "../store"
 import Buttons from "./buttons"
+import LayoutSelect from "./layout-select"
 import MultipleChoiceContent from "./multiple-choice-question/multiple-choice-content"
-import QuestionTypeSelect from "./question-type-select"
 import MatchingPairsContent from "./pair-matchint-question/pair-matching-content"
 
 export default function SelectedQuestionContent() {
@@ -24,6 +24,7 @@ export default function SelectedQuestionContent() {
                             localId: crypto.randomUUID(),
                             questionText: "",
                             type: "MULTIPLE_CHOICE" as const,
+                            layout: "horizontal",
                         })
                     }}
                     aria-label="Add new question"
@@ -44,13 +45,19 @@ export default function SelectedQuestionContent() {
     return (
         <section className="mt-10 h-full px-20 w-full">
             <section className="flex justify-between">
-                <QuestionTypeSelect
-                    selectedType={selectedQuestion.type}
-                    questionLocalId={selectedQuestion.localId}
-                    className=""
-                />
-                <Buttons />
+                <div className="flex items-center ">
+                    <LayoutSelect
+                        layout={selectedQuestion.layout}
+                        selectedType={selectedQuestion.type}
+                        questionLocalId={selectedQuestion.localId}
+                        className=""
+                    />
+                </div>
+                <div className="flex items-center">
+                    <Buttons />
+                </div>
             </section>
+
             {selectedQuestion.type === "MULTIPLE_CHOICE" && (
                 <MultipleChoiceContent />
             )}

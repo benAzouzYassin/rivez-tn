@@ -37,6 +37,7 @@ export default function AllQuestionsPreviews() {
                             localId: crypto.randomUUID(),
                             questionText: "",
                             type: "MULTIPLE_CHOICE" as const,
+                            layout: "horizontal",
                         })
                         window.scrollTo({
                             behavior: "smooth",

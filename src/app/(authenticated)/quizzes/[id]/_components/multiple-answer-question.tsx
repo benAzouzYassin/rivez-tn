@@ -60,15 +60,48 @@ export default function MultipleAnswerQuestion(props: Props) {
 
     return (
         <>
-            <div className="flex flex-col relative h-fit items-center justify-center">
-                <div>
-                    <p className="w-[100vw] max-w-[1000px] mb-1 flex text-3xl font-extrabold top-0 text-neutral-700 text-left left-0">
+            <div
+                className={cn(
+                    "flex flex-col relative h-fit items-center justify-center"
+                )}
+            >
+                <div
+                    className={cn("", {
+                        "flex flex-col w-full  items-center justify-center":
+                            props.question.layout == "horizontal",
+                    })}
+                >
+                    <p
+                        className={cn(
+                            "w-[100vw] max-w-[1000px] mt-1 mb-1 flex text-3xl font-extrabold top-0 text-neutral-700 text-left left-0",
+                            {
+                                "max-w-[1250px] mt-5":
+                                    props.question.layout === "horizontal",
+                            }
+                        )}
+                    >
                         {props?.question.question} :
                     </p>
-                    <div className="relative w-full flex-col flex">
+                    <div
+                        className={cn(
+                            "relative w-full mt-6 flex-col flex",
+
+                            {
+                                " flex-row mt-6 max-w-[1300px]":
+                                    props.question.layout === "horizontal",
+                            }
+                        )}
+                    >
                         {!!props.question.image && (
                             <img
-                                className="h-[330px] mx-auto w-[800px]! object-cover"
+                                className={cn(
+                                    "h-[330px]  mx-auto w-[800px]! object-cover",
+                                    {
+                                        "max-w-[600px] rounded-xl mr-10 h-[500px] ":
+                                            props.question.layout ===
+                                            "horizontal",
+                                    }
+                                )}
                                 src={props.question.image}
                                 alt=""
                             />
@@ -82,7 +115,14 @@ export default function MultipleAnswerQuestion(props: Props) {
                                 animate="animate"
                                 exit="exit"
                                 transition={{ duration: 0.4 }}
-                                className="max-w-[1000px] mx-auto mt-10 gap-5 w-full grid grid-cols-2"
+                                className={cn(
+                                    "max-w-[1000px] mx-auto mt-10 gap-5 w-full grid grid-cols-2",
+                                    {
+                                        "flex max-w-[600px] mr-0 flex-col ml-auto":
+                                            props.question.layout ===
+                                            "horizontal",
+                                    }
+                                )}
                             >
                                 {props.question.content.options.map(
                                     (opt, i) => {

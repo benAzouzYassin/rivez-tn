@@ -46,6 +46,7 @@ export default function Buttons() {
                                     type: q.type as any,
                                     image: q.imageUrl || "",
                                     question: q.questionText,
+                                    layout: q.layout,
                                 }
                             }
                             if (q.type === "MATCHING_PAIRS") {
@@ -69,6 +70,7 @@ export default function Buttons() {
                                     type: q.type as any,
                                     image: q.imageUrl || "",
                                     question: q.questionText,
+                                    layout: q.layout,
                                 }
                             }
                             return null
