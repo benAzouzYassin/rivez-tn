@@ -4,7 +4,7 @@
 
 ### push migrations
 
-`bunx supabase db push --db-url postgresql://postgres.ejlmrncfwukursbmjyhe:DbvUrjcU2TkTDyw3@aws-0-eu-central-1.pooler.supabase.com:5432/postgres`
+`bunx supabase db push --db-url <db_url>`
 
 ### generate types
 
