@@ -84,7 +84,7 @@ export default function Page() {
                         }}
                     >
                         <Plus />
-                        Add new quiz
+                        Add quiz
                     </Button>
                 </div>
             </section>

@@ -56,6 +56,7 @@ const initialState: State = {
             localId: "1",
             questionText: "",
             type: "MULTIPLE_CHOICE",
+            layout: "horizontal",
         },
     ],
     selectedQuestionLocalId: "1",
@@ -301,6 +302,7 @@ export interface QuizQuestionType {
     questionText: string
     imageUrl: string | null
     type: PossibleQuestionTypes
+    layout: "horizontal" | "vertical"
 }
 
 export interface MultipleChoiceOptions {
