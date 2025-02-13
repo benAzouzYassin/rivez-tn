@@ -42,7 +42,6 @@ export default function CategorySelect({
                 <AddCategoryDialog
                     isOpen={isAdding}
                     onOpenChange={setIsAdding}
-                    categoryName={nameToAdd}
                 />
             )}
         </>
