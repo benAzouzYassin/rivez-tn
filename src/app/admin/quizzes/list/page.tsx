@@ -17,14 +17,6 @@ import Search from "./_components/search"
 import { columns } from "./table-columns"
 
 export default function Page() {
-    // const [viewMode, setViewMode] = useLocalStorage("view-mode", "list")
-    const [viewMode, setViewMode] = useState("list")
-
-    useEffect(() => {
-        const savedMode = localStorage.getItem("view-mode") || "list"
-        setViewMode(["cards", "list"].includes(savedMode) ? savedMode : "list")
-    }, [])
-
     const [searchValue, setSearchValue] = useQueryState(
         "search-value",
         parseAsString.withDefault("")
@@ -70,7 +62,7 @@ export default function Page() {
                     {response?.count || 0} Quiz
                 </div>
             </div>
-            <section className=" flex justify-between my-5 min-h-10">
+            <section className=" flex justify-between mt-5 mb-3 min-h-10">
                 <Search
                     searchValue={searchValue}
                     onSearchChange={setSearchValue}
@@ -96,7 +88,6 @@ export default function Page() {
                     </Button>
                 </div>
             </section>
-
             <DataTable
                 isLoading={isFetching}
                 columns={columns}

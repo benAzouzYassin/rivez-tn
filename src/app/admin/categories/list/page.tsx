@@ -60,7 +60,6 @@ export default function Page() {
             }),
     })
     const data = response?.data
-    console.log(data)
     if (isError) {
         return <ErrorDisplay />
     }

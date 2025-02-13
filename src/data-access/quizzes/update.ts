@@ -93,6 +93,19 @@ export async function updateQuiz(quizId: number, data: QuizUpdateType) {
 
     return result
 }
+export async function updateManyQuizzes(
+    quizzesIds: number[],
+    data: QuizUpdateType
+) {
+    const result = await supabase
+        .from("quizzes")
+        .update(data)
+        .in(`id`, quizzesIds)
+        .select("id")
+        .throwOnError()
+
+    return result
+}
 
 //types
 type QuizUpdateType = Database["public"]["Tables"]["quizzes"]["Update"]
