@@ -79,6 +79,9 @@ export type Database = {
           id: number
           image: string | null
           name: string | null
+          publishing_status:
+            | Database["public"]["Enums"]["publishing_status"]
+            | null
         }
         Insert: {
           created_at?: string
@@ -86,6 +89,9 @@ export type Database = {
           id?: number
           image?: string | null
           name?: string | null
+          publishing_status?:
+            | Database["public"]["Enums"]["publishing_status"]
+            | null
         }
         Update: {
           created_at?: string
@@ -93,6 +99,9 @@ export type Database = {
           id?: number
           image?: string | null
           name?: string | null
+          publishing_status?:
+            | Database["public"]["Enums"]["publishing_status"]
+            | null
         }
         Relationships: []
       }

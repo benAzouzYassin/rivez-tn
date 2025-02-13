@@ -64,7 +64,7 @@ export default function Sidenav(props: Props) {
     return (
         <nav
             className={cn(
-                "h-full z-10  group  hover:border-r-[#8aa8fb] border-r-2 px-4 pt-10 fixed top-0 left-0 transition-all  duration-300",
+                "h-full z-10  group  hover:border-r-[#1CB0F6] border-r-2 px-4 pt-10 fixed top-0 left-0 transition-all  duration-300",
                 {
                     "w-[256px]": isSidenavOpen,
                     "w-[100px]": !isSidenavOpen,
@@ -74,7 +74,7 @@ export default function Sidenav(props: Props) {
             <Button
                 onClick={toggleSidenav}
                 variant={"outline"}
-                className="absolute scale-100 active:scale-95 -right-4 bg-[#4e7bf5] hover:bg-[#467ffa] hover:cursor-pointer group-hover:opacity-100 border-2 duration-300 border-[#4676fa] opacity-0 top-6 !p-1 h-fit rounded-full w-fit"
+                className="absolute scale-100 active:scale-95 -right-4 bg-[#1CB0F6] hover:bg-[#1c8df6bc] hover:cursor-pointer group-hover:opacity-100 border-2 duration-300 border-[#1CB0F6] opacity-0 top-6 !p-1 h-fit rounded-full w-fit"
             >
                 <ChevronRight
                     className={cn(

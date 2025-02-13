@@ -36,6 +36,7 @@ export async function readQuizzesWithCategory(config?: {
                 ascending: false,
             })
             .neq("publishing_status", "ARCHIVED")
+
             .throwOnError()
         return { data: response.data, count: response.count }
     }
@@ -44,9 +45,26 @@ export async function readQuizzesWithCategory(config?: {
         .select(`*, category(*),quizzes_questions(count)`)
         .ilike("name", `%${config?.filters?.name || ""}%`)
         .neq("publishing_status", "ARCHIVED")
+        .order("created_at", {
+            ascending: false,
+        })
         .throwOnError()
     return { data: response.data }
 }
+
 export type QuizWithCategory = Awaited<
     ReturnType<typeof readQuizzesWithCategory>
 >["data"][number]
+
+export async function readQuizzesWithEmptyCategory() {
+    const response = await supabase
+        .from("quizzes")
+        .select(`*, category(*),quizzes_questions(count)`)
+        .neq("publishing_status", "ARCHIVED")
+        .is("category", null)
+        .order("created_at", {
+            ascending: false,
+        })
+        .throwOnError()
+    return response
+}

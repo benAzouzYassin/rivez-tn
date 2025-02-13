@@ -79,10 +79,7 @@ export default function AddQuizDialog(props: Props) {
                     Create New Quiz
                 </DialogTitle>
                 <DialogDescription></DialogDescription>
-                <form
-                    onSubmit={handleSubmit(onSubmit)}
-                    className="flex flex-col gap-4"
-                >
+                <section className="flex flex-col gap-4">
                     <Input
                         {...register("name")}
                         placeholder="Quiz Name"
@@ -94,6 +91,7 @@ export default function AddQuizDialog(props: Props) {
                         name="category"
                         render={({ field: { onChange, value, onBlur } }) => (
                             <CategorySelect
+                                enableAddButton
                                 inputClassName="w-full "
                                 selectedId={value}
                                 errorMessage={errors.category?.message}
@@ -125,13 +123,14 @@ export default function AddQuizDialog(props: Props) {
                     <Button
                         isLoading={isSubmitting || isLoading}
                         disabled={isUploadingImage}
-                        type="submit"
+                        type="button"
+                        onClick={handleSubmit(onSubmit)}
                         className="font-extrabold uppercase text-sm"
                         variant="blue"
                     >
                         Create Quiz
                     </Button>
-                </form>
+                </section>
             </DialogContent>
         </Dialog>
     )
