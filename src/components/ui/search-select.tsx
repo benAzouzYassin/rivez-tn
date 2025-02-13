@@ -10,6 +10,7 @@ import { wait } from "@/utils/wait"
 import { useEffect, useRef, useState } from "react"
 import { Button } from "./button"
 import { Input } from "./input"
+import { cn } from "@/lib/ui-utils"
 
 export default function SearchSelect<OptionData>(props: Props<OptionData>) {
     const [visibleItems, setVisibleItems] = useState(props.items)
@@ -37,7 +38,7 @@ export default function SearchSelect<OptionData>(props: Props<OptionData>) {
             autoFocus={false}
             shouldFilter={false}
         >
-            <Popover open={isPopoverOpen} modal={false}>
+            <Popover open={isPopoverOpen} modal={true}>
                 <PopoverAnchor autoFocus={false} asChild>
                     <Input
                         errorMessage={props.errorMessage}
@@ -83,8 +84,13 @@ export default function SearchSelect<OptionData>(props: Props<OptionData>) {
                         }}
                     />
                 </PopoverAnchor>
-                <PopoverContent className="min-w-[250px] rounded-xl overflow-hidden border !w-(--radix-popover-trigger-width) p-0">
-                    <CommandList>
+                <PopoverContent
+                    className={cn(
+                        "min-w-[250px] h-[200px]  rounded-xl  overflow-hidden border !w-(--radix-popover-trigger-width) p-0",
+                        props.contentClassName
+                    )}
+                >
+                    <CommandList className="">
                         {props.isLoading ? (
                             <CommandEmpty className="h-full flex items-center justify-center">
                                 <p className="font-medium">Loading...</p>
@@ -94,11 +100,12 @@ export default function SearchSelect<OptionData>(props: Props<OptionData>) {
                                 <CommandEmpty className="h-full flex items-center justify-center">
                                     {props.enableAddButton ? (
                                         <Button
-                                            onClick={() =>
+                                            type="button"
+                                            onClick={() => {
                                                 props.onAddButtonClick?.(
                                                     inputValue
                                                 )
-                                            }
+                                            }}
                                             variant={"secondary"}
                                             className="font-extrabold absolute top-1/2 active:-translate-y-[40%] -translate-y-1/2 min-w-1/2 mt-auto"
                                         >
@@ -113,7 +120,12 @@ export default function SearchSelect<OptionData>(props: Props<OptionData>) {
                                         </p>
                                     )}
                                 </CommandEmpty>
-                                <CommandGroup className="p-0 h-[150px]">
+                                <CommandGroup
+                                    className={cn(
+                                        "p-0 max-h-[200px] overflow-visible",
+                                        props.contentClassName
+                                    )}
+                                >
                                     {visibleItems.map((item) => (
                                         <CommandItem
                                             key={item.id}
@@ -124,7 +136,9 @@ export default function SearchSelect<OptionData>(props: Props<OptionData>) {
                                             onSelect={() => {
                                                 props.onSelect?.(item)
                                                 setIsPopoverOpen(false)
-                                                inputRef.current?.blur()
+                                                wait(10).then(() =>
+                                                    inputRef.current?.blur()
+                                                )
                                             }}
                                         >
                                             {item.label}
@@ -141,6 +155,7 @@ export default function SearchSelect<OptionData>(props: Props<OptionData>) {
 }
 
 interface Props<OptionData> {
+    contentClassName?: string
     items: { id: string; label: string; data?: OptionData }[]
     selectedId: string | null
     placeholder?: string

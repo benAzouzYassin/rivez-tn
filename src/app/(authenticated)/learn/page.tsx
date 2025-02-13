@@ -1,14 +1,14 @@
 "use client"
 import { ErrorDisplay } from "@/components/shared/error-display"
 import AnimatedLoader from "@/components/ui/animated-loader"
-import { readCategoriesWithQuizzes } from "@/data-access/categories/read"
+import { readPublishedCategoriesWithQuizzes } from "@/data-access/categories/read"
 import { useQuery } from "@tanstack/react-query"
 import { Category } from "./_components/category"
 
 export default function Page() {
     const { data, isLoading, isError } = useQuery({
         queryKey: ["quizzes_categories", "quizzes", "quizzes_questions"],
-        queryFn: () => readCategoriesWithQuizzes(),
+        queryFn: () => readPublishedCategoriesWithQuizzes(),
     })
     if (isError) {
         return (
@@ -55,5 +55,5 @@ export default function Page() {
 }
 
 export type CategoryType = Awaited<
-    ReturnType<typeof readCategoriesWithQuizzes>
+    ReturnType<typeof readPublishedCategoriesWithQuizzes>
 >[number]
