@@ -11,6 +11,12 @@ export default function MatchingPairsContent() {
     const content = selectedQuestion?.content as
         | MatchingPairsOptions
         | undefined
+
+    const matchedLeftOptions =
+        content?.rightOptions
+            ?.map((item) => item.leftOptionLocalId)
+            .filter((item) => item !== null) || []
+
     if (!selectedQuestion) {
         return null
     }
@@ -27,8 +33,11 @@ export default function MatchingPairsContent() {
                 <div className="max-w-[1200px] min-w-[700px] justify-center items-center mt-20 gap-10 w-full flex">
                     <LeftSection leftOptions={content?.leftOptions} />
                     <RightSection
-                        leftOptions={content?.leftOptions}
+                        notSelectedLeftOptions={content?.leftOptions?.filter(
+                            (opt) => !matchedLeftOptions.includes(opt.localId)
+                        )}
                         rightOptions={content?.rightOptions}
+                        leftOptions={content?.leftOptions}
                     />
                 </div>
             </div>

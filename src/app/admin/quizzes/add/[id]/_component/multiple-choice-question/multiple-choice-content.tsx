@@ -27,10 +27,13 @@ export default function MultipleChoiceContent() {
                     "w-[1200px]": layout === "horizontal",
                 })}
             >
-                <QuestionText
-                    text={selectedQuestion.questionText}
-                    localId={selectedQuestion?.localId}
-                />
+                <div className="flex items-center mb-3 justify-center">
+                    <QuestionText
+                        className="w-[500px] "
+                        text={selectedQuestion.questionText}
+                        localId={selectedQuestion?.localId}
+                    />
+                </div>
                 <div className={cn({ "flex ": layout === "horizontal" })}>
                     <div
                         className={cn("flex w-full h-fit", {
@@ -39,19 +42,18 @@ export default function MultipleChoiceContent() {
                     >
                         <div
                             className={cn(
-                                "w-[800px] mt-5 h-[350px] mx-auto rounded-xl",
+                                "w-[800px] mt-5 h-[400px] mx-auto rounded-xl",
                                 { "mx-0 w-[600px]": layout === "horizontal" }
                             )}
                         >
                             <ImageUpload
                                 displayCancelBtn
-                                imageClassName={cn(
-                                    "w-full h-full !h-[550px] w-[800px] object-cover",
-                                    { "!h-[340px]": layout === "horizontal" }
-                                )}
+                                imageClassName={cn("h-[350px]", {
+                                    "!h-[400px] ": layout === "horizontal",
+                                })}
                                 containerClassName={cn(
-                                    "bg-white w-[800px] h-[330px] overflow-clip border-blue-200 hover:bg-blue-50/50 group",
-                                    { "!h-[380px]": layout === "horizontal" }
+                                    "bg-white w-[800px] h-[400px] overflow-scroll border-blue-200 hover:bg-blue-50/50 group",
+                                    { "!h-[450px]": layout === "horizontal" }
                                 )}
                                 imageUrl={selectedQuestion.imageUrl}
                                 onImageUrlChange={(imageUrl) => {
@@ -73,7 +75,7 @@ export default function MultipleChoiceContent() {
                         </div>
                     </div>
                     <div
-                        className={cn("grid grid-cols-2 gap-5", {
+                        className={cn("grid grid-cols-2 pt-9 gap-5", {
                             "flex flex-col mt-4 grow ml-10":
                                 layout === "horizontal",
                         })}

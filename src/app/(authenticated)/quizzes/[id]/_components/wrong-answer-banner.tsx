@@ -1,6 +1,7 @@
 import ReportQuiz from "@/components/shared/report-quiz"
 import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/ui-utils"
+import { wait } from "@/utils/wait"
 import { X } from "lucide-react"
 
 type Props = {
@@ -34,7 +35,15 @@ export default function WrongAnswerBanner(props: Props) {
             </div>
             <div className="flex ml-auto flex-col gap-4">
                 <Button
-                    onClick={props.onNextClick}
+                    onClick={() => {
+                        props.onNextClick()
+                        wait(100).then(() =>
+                            window.scroll({
+                                behavior: "smooth",
+                                top: 0,
+                            })
+                        )
+                    }}
                     disabled={!props.isOpen}
                     className="ml-auto h-12 px-7 text-lg font-bold! my-auto"
                     variant={"red"}

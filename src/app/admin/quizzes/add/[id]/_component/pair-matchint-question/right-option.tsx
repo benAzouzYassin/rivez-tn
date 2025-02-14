@@ -11,6 +11,8 @@ import { memo, useState } from "react"
 import useQuizStore, { MatchingPairsOptions } from "../../store"
 import DeleteOption from "../delete-option"
 import OptionText from "./option-text"
+import { X } from "lucide-react"
+import { Badge } from "@/components/ui/badge"
 
 interface Props {
     questionLocalId: string
@@ -18,6 +20,7 @@ interface Props {
     text: string
     selectedLeftOption: string | null
     leftOptions: MatchingPairsOptions["leftOptions"] | undefined
+    notSelectedLeftOptions: MatchingPairsOptions["leftOptions"] | undefined
 }
 
 function RightOption(props: Props) {
@@ -59,32 +62,55 @@ function RightOption(props: Props) {
                         })
                     }}
                 />
-                <Select
-                    value={props.selectedLeftOption || undefined}
-                    onValueChange={(value) => {
-                        updateOption({
-                            optionId: props.optionLocalId,
-                            side: "right",
-                            leftOptionLocalId: value,
-                        })
-                    }}
-                >
-                    <SelectTrigger className="justify-end mt-3  ">
-                        <SelectValue placeholder="Select answer" />
-                    </SelectTrigger>
-                    <SelectContent align="center">
-                        {props.leftOptions?.map((opt) => {
-                            return (
-                                <SelectItem
-                                    key={opt.localId}
-                                    value={opt.localId}
-                                >
-                                    {opt.text}
-                                </SelectItem>
-                            )
-                        })}
-                    </SelectContent>
-                </Select>
+                <div className="relative group ">
+                    {props.selectedLeftOption && (
+                        <button
+                            onClick={() => {
+                                updateOption({
+                                    optionId: props.optionLocalId,
+                                    side: "right",
+                                    leftOptionLocalId: null,
+                                })
+                            }}
+                            className="absolute rounded-full opacity-0 group-hover:opacity-100 top-1 bg-white cursor-pointer active:scale-90 transition-all -right-2"
+                        >
+                            <Badge className="  p-px " variant={"red"}>
+                                <X className="h-4 scale-90 stroke-3 w-4" />
+                            </Badge>
+                        </button>
+                    )}
+                    <Select
+                        value={props.selectedLeftOption || ""}
+                        onValueChange={(value) => {
+                            updateOption({
+                                optionId: props.optionLocalId,
+                                side: "right",
+                                leftOptionLocalId: value,
+                            })
+                        }}
+                    >
+                        <SelectTrigger className="justify-end mt-3  ">
+                            <SelectValue placeholder="Select answer" />
+                        </SelectTrigger>
+                        <SelectContent align="center">
+                            {props.leftOptions?.map((opt) => {
+                                return (
+                                    <SelectItem
+                                        key={opt.localId}
+                                        value={opt.localId}
+                                        className={cn({
+                                            hidden: !props.notSelectedLeftOptions
+                                                ?.map((item) => item.localId)
+                                                ?.includes(opt.localId),
+                                        })}
+                                    >
+                                        {opt.text}
+                                    </SelectItem>
+                                )
+                            })}
+                        </SelectContent>
+                    </Select>
+                </div>
             </div>
         </div>
     )

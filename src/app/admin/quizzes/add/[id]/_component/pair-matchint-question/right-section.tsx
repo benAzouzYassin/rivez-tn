@@ -4,6 +4,7 @@ import RightOption from "./right-option"
 
 type Props = {
     rightOptions: MatchingPairsOptions["rightOptions"] | undefined
+    notSelectedLeftOptions: MatchingPairsOptions["leftOptions"] | undefined
     leftOptions: MatchingPairsOptions["leftOptions"] | undefined
 }
 export default function RightSection(props: Props) {
@@ -18,6 +19,9 @@ export default function RightSection(props: Props) {
             {props.rightOptions?.map((opt) => {
                 return (
                     <RightOption
+                        notSelectedLeftOptions={
+                            props.notSelectedLeftOptions || []
+                        }
                         leftOptions={props.leftOptions || []}
                         selectedLeftOption={opt.leftOptionLocalId}
                         text={opt.text}
