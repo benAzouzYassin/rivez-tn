@@ -46,6 +46,7 @@ export default function Buttons() {
                                     type: q.type as any,
                                     image: q.imageUrl || "",
                                     question: q.questionText,
+                                    layout: q.layout,
                                 }
                             }
                             if (q.type === "MATCHING_PAIRS") {
@@ -57,7 +58,7 @@ export default function Buttons() {
                                     )
 
                                 const filteredLeftOptions =
-                                    content.rightOptions.filter(
+                                    content.leftOptions.filter(
                                         (opt) => !!opt.text
                                     )
 
@@ -69,6 +70,7 @@ export default function Buttons() {
                                     type: q.type as any,
                                     image: q.imageUrl || "",
                                     question: q.questionText,
+                                    layout: q.layout,
                                 }
                             }
                             return null
@@ -84,7 +86,7 @@ export default function Buttons() {
                 queryClient.invalidateQueries({
                     queryKey: ["quizzes"],
                 })
-                router.back()
+                router.replace("/admin/quizzes/list")
                 reset()
             }
         } catch (error) {
@@ -103,9 +105,9 @@ export default function Buttons() {
                 if (!content || !content.options.length) {
                     return false
                 }
-                const isOptionsValid = content.options.every(
-                    (opt) => !!opt.text
-                )
+                const isOptionsValid =
+                    content.options.every((opt) => !!opt.text) &&
+                    content.options.length > 0
                 return isOptionsValid
             }
             if (q.type === "MATCHING_PAIRS") {
@@ -117,12 +119,14 @@ export default function Buttons() {
                 ) {
                     return false
                 }
-                const isRightOptionsValid = content.rightOptions.every(
-                    (opt) => !!opt.text
-                )
-                const isLeftOptionsValid = content.leftOptions.every(
-                    (opt) => !!opt.text
-                )
+                const isRightOptionsValid =
+                    content.rightOptions.every((opt) => !!opt.text) &&
+                    content.rightOptions.length > 0
+
+                const isLeftOptionsValid =
+                    content.leftOptions.every((opt) => !!opt.text) &&
+                    content.leftOptions.length > 0
+
                 return isLeftOptionsValid && isRightOptionsValid
             }
             return false

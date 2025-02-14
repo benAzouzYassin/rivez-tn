@@ -3,25 +3,20 @@ import { ErrorDisplay } from "@/components/shared/error-display"
 import { Button } from "@/components/ui/button"
 import DashboardPagination from "@/components/ui/dashboard-pagination"
 import { DataTable } from "@/components/ui/data-table"
+import {
+    QuizWithCategory,
+    readQuizzesWithCategory,
+} from "@/data-access/quizzes/read"
 
-import { readCategories } from "@/data-access/categories/read"
 import { useQuery } from "@tanstack/react-query"
 import { Filter, Plus } from "lucide-react"
 import { parseAsInteger, parseAsString, useQueryState } from "nuqs"
 import { useEffect, useState } from "react"
+import AddQuizDialog from "./_components/add-quiz-dialog"
 import Search from "./_components/search"
 import { columns } from "./table-columns"
-import AddCategoryDialog from "@/components/shared/add-category-dialog"
 
 export default function Page() {
-    // const [viewMode, setViewMode] = useLocalStorage("view-mode", "list")
-    const [viewMode, setViewMode] = useState("list")
-
-    useEffect(() => {
-        const savedMode = localStorage.getItem("view-mode") || "list"
-        setViewMode(["cards", "list"].includes(savedMode) ? savedMode : "list")
-    }, [])
-
     const [searchValue, setSearchValue] = useQueryState(
         "search-value",
         parseAsString.withDefault("")
@@ -35,21 +30,16 @@ export default function Page() {
         "page",
         parseAsInteger.withDefault(1)
     )
-    const [isAddingCategory, setIsAddingCategory] = useState(false)
+    const [isAddingQuiz, setIsAddingQuiz] = useState(false)
 
     const {
         data: response,
         isError,
         isFetching,
     } = useQuery({
-        queryKey: [
-            "quizzes_categories",
-            itemsPerPage,
-            currentPage,
-            searchValue,
-        ],
+        queryKey: ["quizzes", itemsPerPage, currentPage, searchValue],
         queryFn: () =>
-            readCategories({
+            readQuizzesWithCategory({
                 filters: {
                     name: searchValue || undefined,
                 },
@@ -67,12 +57,12 @@ export default function Page() {
     return (
         <section className="flex flex-col min-h-[50vh] px-10 py-10">
             <div className="flex items-center gap-3">
-                <h1 className="text-[2.5rem] font-bold">Categories List</h1>
+                <h1 className="text-[2.5rem] font-bold">Quizzes List</h1>
                 <div className="text-lg font-extrabold opacity-80 py-1 px-5  rounded-full bg-blue-50 text-blue-600 border-2 border-blue-400">
-                    {response?.count || 0} Category
+                    {response?.count || 0} Quiz
                 </div>
             </div>
-            <section className=" flex justify-between my-5 min-h-10">
+            <section className=" flex justify-between mt-5 mb-3 min-h-10">
                 <Search
                     searchValue={searchValue}
                     onSearchChange={setSearchValue}
@@ -90,15 +80,14 @@ export default function Page() {
                         className="text-base "
                         variant={"blue"}
                         onClick={() => {
-                            setIsAddingCategory(true)
+                            setIsAddingQuiz(true)
                         }}
                     >
                         <Plus />
-                        Add category
+                        Add quiz
                     </Button>
                 </div>
             </section>
-
             <DataTable
                 isLoading={isFetching}
                 columns={columns}
@@ -111,12 +100,12 @@ export default function Page() {
                 itemsPerPage={itemsPerPage}
                 onItemsPerPageChange={setItemsPerPage}
             />
-            <AddCategoryDialog
-                isOpen={isAddingCategory}
-                onOpenChange={setIsAddingCategory}
+            <AddQuizDialog
+                isOpen={isAddingQuiz}
+                onOpenChange={setIsAddingQuiz}
             />
         </section>
     )
 }
 
-export type Item = Awaited<ReturnType<typeof readCategories>>["data"][number]
+export type Item = QuizWithCategory

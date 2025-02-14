@@ -111,6 +111,7 @@ export type Database = {
           created_at: string
           id: number
           image: string | null
+          layout: string | null
           question: string
           quiz: number | null
           type: Database["public"]["Enums"]["quiz_question_types"] | null
@@ -120,6 +121,7 @@ export type Database = {
           created_at?: string
           id?: number
           image?: string | null
+          layout?: string | null
           question?: string
           quiz?: number | null
           type?: Database["public"]["Enums"]["quiz_question_types"] | null
@@ -129,6 +131,7 @@ export type Database = {
           created_at?: string
           id?: number
           image?: string | null
+          layout?: string | null
           question?: string
           quiz?: number | null
           type?: Database["public"]["Enums"]["quiz_question_types"] | null

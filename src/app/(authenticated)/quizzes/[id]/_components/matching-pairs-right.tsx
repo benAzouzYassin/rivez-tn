@@ -34,6 +34,7 @@ function MatchingPairsRight(props: Props) {
 }
 
 export default memo(MatchingPairsRight)
+
 function OptionButton(props: {
     onClick: () => void
     optionText: string
@@ -65,7 +66,10 @@ function OptionButton(props: {
             incorrectSelectionsHistory.current = props.incorrectSelections
         }
 
-        return () => clearTimeout(animationTimerId)
+        return () => {
+            clearTimeout(animationTimerId)
+            setIsShowingIncorrectAnimation(false)
+        }
     }, [props.incorrectSelections, props.optionText])
 
     const correctAnswerStyles =

@@ -3,18 +3,15 @@ import { ErrorDisplay } from "@/components/shared/error-display"
 import { Button } from "@/components/ui/button"
 import DashboardPagination from "@/components/ui/dashboard-pagination"
 import { DataTable } from "@/components/ui/data-table"
-import {
-    QuizWithCategory,
-    readQuizzesWithCategory,
-} from "@/data-access/quizzes/read"
 
+import { readCategories } from "@/data-access/categories/read"
 import { useQuery } from "@tanstack/react-query"
 import { Filter, Plus } from "lucide-react"
 import { parseAsInteger, parseAsString, useQueryState } from "nuqs"
 import { useEffect, useState } from "react"
-import AddQuizDialog from "./_components/add-quiz-dialog"
 import Search from "./_components/search"
 import { columns } from "./table-columns"
+import AddCategoryDialog from "@/components/shared/add-category-dialog"
 
 export default function Page() {
     // const [viewMode, setViewMode] = useLocalStorage("view-mode", "list")
@@ -38,16 +35,21 @@ export default function Page() {
         "page",
         parseAsInteger.withDefault(1)
     )
-    const [isAddingQuiz, setIsAddingQuiz] = useState(false)
+    const [isAddingCategory, setIsAddingCategory] = useState(false)
 
     const {
         data: response,
         isError,
         isFetching,
     } = useQuery({
-        queryKey: ["quizzes", itemsPerPage, currentPage, searchValue],
+        queryKey: [
+            "quizzes_categories",
+            itemsPerPage,
+            currentPage,
+            searchValue,
+        ],
         queryFn: () =>
-            readQuizzesWithCategory({
+            readCategories({
                 filters: {
                     name: searchValue || undefined,
                 },
@@ -58,16 +60,15 @@ export default function Page() {
             }),
     })
     const data = response?.data
-    console.log(data)
     if (isError) {
         return <ErrorDisplay />
     }
     return (
         <section className="flex flex-col min-h-[50vh] px-10 py-10">
             <div className="flex items-center gap-3">
-                <h1 className="text-[2.5rem] font-bold">Quizzes List</h1>
+                <h1 className="text-[2.5rem] font-bold">Categories List</h1>
                 <div className="text-lg font-extrabold opacity-80 py-1 px-5  rounded-full bg-blue-50 text-blue-600 border-2 border-blue-400">
-                    {response?.count || 0} Quiz
+                    {response?.count || 0} Category
                 </div>
             </div>
             <section className=" flex justify-between my-5 min-h-10">
@@ -88,11 +89,11 @@ export default function Page() {
                         className="text-base "
                         variant={"blue"}
                         onClick={() => {
-                            setIsAddingQuiz(true)
+                            setIsAddingCategory(true)
                         }}
                     >
                         <Plus />
-                        Add new quiz
+                        Add category
                     </Button>
                 </div>
             </section>
@@ -109,12 +110,12 @@ export default function Page() {
                 itemsPerPage={itemsPerPage}
                 onItemsPerPageChange={setItemsPerPage}
             />
-            <AddQuizDialog
-                isOpen={isAddingQuiz}
-                onOpenChange={setIsAddingQuiz}
+            <AddCategoryDialog
+                isOpen={isAddingCategory}
+                onOpenChange={setIsAddingCategory}
             />
         </section>
     )
 }
 
-export type Item = QuizWithCategory
+export type Item = Awaited<ReturnType<typeof readCategories>>["data"][number]

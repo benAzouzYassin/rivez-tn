@@ -10,6 +10,7 @@ export async function addQuestionsToQuiz(
         image: string
         question: string
         type: "MULTIPLE_CHOICE" | "MATCHING_PAIRS"
+        layout: "vertical" | "horizontal"
     }[]
 ) {
     const formattedData = questions.map((q) => {
@@ -29,6 +30,7 @@ export async function addQuestionsToQuiz(
                 type: q.type,
                 quiz: quizId,
                 question: q.question,
+                layout: q.layout,
                 content: {
                     correct,
                     options,
@@ -61,6 +63,7 @@ export async function addQuestionsToQuiz(
                 type: q.type,
                 quiz: quizId,
                 question: q.question,
+                layout: q.layout,
                 content: {
                     correct,
                     leftSideOptions:
@@ -88,6 +91,19 @@ export async function updateQuiz(quizId: number, data: QuizUpdateType) {
         .from("quizzes")
         .update(data)
         .eq(`id`, quizId)
+        .select("id")
+        .throwOnError()
+
+    return result
+}
+export async function updateManyQuizzes(
+    quizzesIds: number[],
+    data: QuizUpdateType
+) {
+    const result = await supabase
+        .from("quizzes")
+        .update(data)
+        .in(`id`, quizzesIds)
         .select("id")
         .throwOnError()
 

@@ -1,4 +1,5 @@
 import { supabase } from "@/lib/supabase-client-side"
+import { Database } from "@/types/database.types"
 
 export async function readPublishedCategoriesWithQuizzes() {
     const response = await supabase
@@ -57,4 +58,25 @@ export async function readCategories(config?: {
         })
         .throwOnError()
     return { data: response.data, count: response.count }
+}
+
+export async function readCategoryWithQuizzesFields(
+    categoryId: number,
+    config?: {
+        quizFields: Array<keyof Database["public"]["Tables"]["quizzes"]["Row"]>
+    }
+) {
+    const response = await supabase
+        .from(`quizzes_categories`)
+        .select(`* ,quizzes(${config?.quizFields.join(",") || ""})`)
+        .in("publishing_status", ["PUBLISHED", "DRAFT"])
+        .in("quizzes.publishing_status", ["PUBLISHED", "DRAFT"])
+        .eq("id", categoryId)
+        .single()
+        .throwOnError()
+
+    const data = response.data as any
+    return data as Database["public"]["Tables"]["quizzes_categories"]["Row"] & {
+        quizzes: Partial<Database["public"]["Tables"]["quizzes"]["Row"]>[]
+    }
 }
