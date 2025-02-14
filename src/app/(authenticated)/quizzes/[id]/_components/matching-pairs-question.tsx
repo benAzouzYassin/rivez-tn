@@ -8,6 +8,7 @@ import MatchingPairsLeft from "./matching-pairs-left"
 import MatchingPairsRight from "./matching-pairs-right"
 import WrongAnswerBanner from "./wrong-answer-banner"
 import { MatchingPairsContent } from "@/schemas/questions-content"
+import { toastError } from "@/lib/toasts"
 
 type Props = {
     question: { content: MatchingPairsContent } & QuestionType
@@ -205,8 +206,10 @@ export default function MatchingPairsQuestion(props: Props) {
             </div>
 
             <ConfirmationBanner
-                onNextClick={handleNextQuestion}
-                isOpen={isConfirmationBanner}
+                onSkip={handleNextQuestion}
+                actionType="skip"
+                onConfirm={() => {}}
+                isOpen={true}
             />
             <CorrectAnswerBanner
                 onNextClick={handleNextQuestion}

@@ -1,6 +1,7 @@
 import ReportQuiz from "@/components/shared/report-quiz"
 import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/ui-utils"
+import { wait } from "@/utils/wait"
 import { Check } from "lucide-react"
 type Props = {
     isOpen: boolean
@@ -32,7 +33,15 @@ export default function CorrectAnswerBanner(props: Props) {
                 </div>
             </div>
             <Button
-                onClick={props.onNextClick}
+                onClick={() => {
+                    props.onNextClick()
+                    wait(100).then(() =>
+                        window.scroll({
+                            behavior: "smooth",
+                            top: 0,
+                        })
+                    )
+                }}
                 disabled={!props.isOpen}
                 className="ml-auto h-12 px-7 text-lg font-bold!   my-auto "
                 variant={"green"}

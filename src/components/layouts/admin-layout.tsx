@@ -24,12 +24,12 @@ export default function AdminLayout({ children }: Props) {
                     {
                         name: "Quizzes",
                         icon: <Gamepad2 className="!w-6 !h-6" />,
-                        route: "/admin/quizzes/list",
+                        route: "/admin/quizzes",
                     },
                     {
                         name: "Categories",
                         icon: <BookCopy className="!w-6 !h-6" />,
-                        route: "/admin/categories/list",
+                        route: "/admin/categories",
                     },
                 ]}
                 settingsItem={{

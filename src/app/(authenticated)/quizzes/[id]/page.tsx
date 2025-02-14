@@ -34,7 +34,12 @@ export default function Page() {
 
     useEffect(() => {
         setQuestions(data?.quizzes_questions || [])
-    }, [data?.quizzes_questions, reset, setQuestions])
+    }, [data?.quizzes_questions, setQuestions])
+
+    useEffect(() => {
+        // resets the store when the user enter the
+        reset()
+    }, [reset])
 
     if (isEmpty && !isLoading) {
         return <ErrorDisplay />
