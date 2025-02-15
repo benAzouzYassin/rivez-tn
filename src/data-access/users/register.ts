@@ -39,6 +39,14 @@ export async function registerUserWithPassword(params: {
         await supabase.auth.updateUser({
             phone: params.phone,
         })
+        if (data.user?.id) {
+            await supabase
+                .from("users_profiles")
+                .update({
+                    phone: params.phone,
+                })
+                .eq("user_id", data.user.id)
+        }
     }
 
     return {
