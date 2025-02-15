@@ -3,7 +3,13 @@ import { useSidenav } from "@/providers/sidenav-provider"
 import { ReactNode } from "react"
 import UserHeader from "@/components/shared/user-header"
 import Sidenav from "@/components/shared/sidenav"
-import { BookCopy, Gamepad2, Home, Settings } from "lucide-react"
+import {
+    BookCopy,
+    Gamepad2,
+    Home,
+    Settings,
+    SquareMousePointer,
+} from "lucide-react"
 
 type Props = {
     children?: Readonly<ReactNode>
@@ -30,6 +36,11 @@ export default function AdminLayout({ children }: Props) {
                         name: "Categories",
                         icon: <BookCopy className="!w-6 !h-6" />,
                         route: "/admin/categories",
+                    },
+                    {
+                        name: "Submissions",
+                        icon: <SquareMousePointer className="!w-6 !h-6" />,
+                        route: "/admin/quiz-submissions",
                     },
                 ]}
                 settingsItem={{

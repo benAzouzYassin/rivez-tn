@@ -34,8 +34,92 @@ export type Database = {
   }
   public: {
     Tables: {
+      quiz_submission_answers: {
+        Row: {
+          created_at: string
+          failed_attempts: number | null
+          id: number
+          is_answered_correctly: boolean | null
+          is_skipped: boolean
+          question: number | null
+          quiz_submission: number | null
+          responses: Json | null
+          seconds_spent: number | null
+        }
+        Insert: {
+          created_at?: string
+          failed_attempts?: number | null
+          id?: number
+          is_answered_correctly?: boolean | null
+          is_skipped?: boolean
+          question?: number | null
+          quiz_submission?: number | null
+          responses?: Json | null
+          seconds_spent?: number | null
+        }
+        Update: {
+          created_at?: string
+          failed_attempts?: number | null
+          id?: number
+          is_answered_correctly?: boolean | null
+          is_skipped?: boolean
+          question?: number | null
+          quiz_submission?: number | null
+          responses?: Json | null
+          seconds_spent?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "quiz_submission_answers_question_fkey"
+            columns: ["question"]
+            isOneToOne: false
+            referencedRelation: "quizzes_questions"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "quiz_submission_answers_quiz_submission_fkey"
+            columns: ["quiz_submission"]
+            isOneToOne: false
+            referencedRelation: "quiz_submissions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      quiz_submissions: {
+        Row: {
+          created_at: string
+          id: number
+          quiz: number | null
+          seconds_spent: number | null
+          user: string | null
+        }
+        Insert: {
+          created_at?: string
+          id?: number
+          quiz?: number | null
+          seconds_spent?: number | null
+          user?: string | null
+        }
+        Update: {
+          created_at?: string
+          id?: number
+          quiz?: number | null
+          seconds_spent?: number | null
+          user?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "quiz_submissions_quiz_id_fkey"
+            columns: ["quiz"]
+            isOneToOne: false
+            referencedRelation: "quizzes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       quizzes: {
         Row: {
+          author_id: string | null
           category: number | null
           created_at: string
           description: string | null
@@ -45,6 +129,7 @@ export type Database = {
           publishing_status: Database["public"]["Enums"]["publishing_status"]
         }
         Insert: {
+          author_id?: string | null
           category?: number | null
           created_at?: string
           description?: string | null
@@ -54,6 +139,7 @@ export type Database = {
           publishing_status?: Database["public"]["Enums"]["publishing_status"]
         }
         Update: {
+          author_id?: string | null
           category?: number | null
           created_at?: string
           description?: string | null
@@ -146,21 +232,36 @@ export type Database = {
           },
         ]
       }
-      users_to_roles: {
+      users_profiles: {
         Row: {
+          avatar_url: string | null
           created_at: string
+          email: string | null
+          full_name: string | null
+          phone: string | null
           user_id: string
           user_role: Database["public"]["Enums"]["user_role_types"] | null
+          username: string | null
         }
         Insert: {
+          avatar_url?: string | null
           created_at?: string
+          email?: string | null
+          full_name?: string | null
+          phone?: string | null
           user_id?: string
           user_role?: Database["public"]["Enums"]["user_role_types"] | null
+          username?: string | null
         }
         Update: {
+          avatar_url?: string | null
           created_at?: string
+          email?: string | null
+          full_name?: string | null
+          phone?: string | null
           user_id?: string
           user_role?: Database["public"]["Enums"]["user_role_types"] | null
+          username?: string | null
         }
         Relationships: []
       }

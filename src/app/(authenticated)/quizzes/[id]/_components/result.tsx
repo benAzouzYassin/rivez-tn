@@ -4,20 +4,22 @@ import XpIcon from "@/components/icons/xp"
 import { Button } from "@/components/ui/button"
 import { motion } from "motion/react"
 import Link from "next/link"
-import { useLayoutEffect, useState } from "react"
+import { useEffect, useLayoutEffect, useState } from "react"
 import Confetti from "react-confetti"
 import { useQuestionsStore } from "../store"
+import { toastInfo } from "@/lib/toasts"
 
 export default function Result() {
     const questions = useQuestionsStore((s) => s.questions)
     const wrongAnswersIds = useQuestionsStore((s) => s.failedQuestionsIds)
-
     const totalQuestions: number = questions.length
     const wrongAnswers: number = wrongAnswersIds.length
     const correctAnswers: number = totalQuestions - wrongAnswers
     const score: number = Math.round((correctAnswers / totalQuestions) * 100)
     const xpEarned: number = Math.round(score * 2)
-
+    const currentQuestionIndex = useQuestionsStore(
+        (s) => s.currentQuestionIndex
+    )
     const [windowDimensions, setWindowDimensions] = useState({
         width: 0,
         height: 0,

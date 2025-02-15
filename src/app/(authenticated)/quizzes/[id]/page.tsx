@@ -27,19 +27,18 @@ export default function Page() {
     const questions = useQuestionsStore((s) => s.questions)
     const setQuestions = useQuestionsStore((s) => s.setQuestions)
     const reset = useQuestionsStore((s) => s.reset)
+    const setStartDate = useQuestionsStore((s) => s.setStartDate)
 
     const percentage = (currentQuestionIndex * 100) / questions.length + 5
     const isFinished = currentQuestionIndex >= questions.length
     const isEmpty = questions.length === 0
 
     useEffect(() => {
-        setQuestions(data?.quizzes_questions || [])
-    }, [data?.quizzes_questions, setQuestions])
-
-    useEffect(() => {
         // resets the store when the user enter the
         reset()
-    }, [reset])
+        setQuestions(data?.quizzes_questions || [])
+        setStartDate(new Date())
+    }, [data?.quizzes_questions, reset, setQuestions, setStartDate])
 
     if (isEmpty && !isLoading) {
         return <ErrorDisplay />

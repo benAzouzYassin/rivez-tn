@@ -23,7 +23,7 @@ import { JSX, useState } from "react"
 export default function UserHeader() {
     const queryClient = useQueryClient()
     const { isSidenavOpen } = useSidenav()
-    const { data: user, isLoading } = useCurrentUser()
+    const { data: user, isLoading, isError } = useCurrentUser()
     const [isUserSettingOpen, setIsUserSettingOpen] = useState(false)
     const router = useRouter()
 
@@ -56,12 +56,16 @@ export default function UserHeader() {
 
     if (isLoading) {
         return (
-            <div>
+            <div className="h-[100vh] flex items-center absolute top-0 left-0 bg-white w-full z-50 justify-center">
                 <AnimatedLoader />
             </div>
         )
     }
 
+    if (isError) {
+        router.replace("/auth/login")
+        return null
+    }
     return (
         <header
             className={cn(
