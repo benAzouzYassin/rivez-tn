@@ -89,9 +89,9 @@ export const useQuestionsStore = create<Store>((set, get) => ({
         try {
             quizSubmissionId = (
                 await createQuizSubmission({
-                    quiz_id: Number(quizData.quizId),
+                    quiz: Number(quizData.quizId),
                     seconds_spent: quizData.secondsSpent || 0,
-                    user_id: quizData.userId,
+                    user: quizData.userId,
                 })
             )[0].id
             const quizzesSubmissionsResponse =
@@ -100,7 +100,7 @@ export const useQuestionsStore = create<Store>((set, get) => ({
                         failed_attempts: item.failedAttempts,
                         is_answered_correctly: item.isAnsweredCorrectly,
                         is_skipped: item.isSkipped,
-                        question_id: item.questionId,
+                        question: item.questionId,
                         quiz_submission: quizSubmissionId,
                         responses: item.responses,
                         seconds_spent: item.secondsSpent || 0,

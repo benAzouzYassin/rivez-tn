@@ -41,7 +41,7 @@ export type Database = {
           id: number
           is_answered_correctly: boolean | null
           is_skipped: boolean
-          question_id: number | null
+          question: number | null
           quiz_submission: number | null
           responses: Json | null
           seconds_spent: number | null
@@ -52,7 +52,7 @@ export type Database = {
           id?: number
           is_answered_correctly?: boolean | null
           is_skipped?: boolean
-          question_id?: number | null
+          question?: number | null
           quiz_submission?: number | null
           responses?: Json | null
           seconds_spent?: number | null
@@ -63,15 +63,15 @@ export type Database = {
           id?: number
           is_answered_correctly?: boolean | null
           is_skipped?: boolean
-          question_id?: number | null
+          question?: number | null
           quiz_submission?: number | null
           responses?: Json | null
           seconds_spent?: number | null
         }
         Relationships: [
           {
-            foreignKeyName: "quiz_submission_answers_question_id_fkey"
-            columns: ["question_id"]
+            foreignKeyName: "quiz_submission_answers_question_fkey"
+            columns: ["question"]
             isOneToOne: false
             referencedRelation: "quizzes_questions"
             referencedColumns: ["id"]
@@ -89,28 +89,28 @@ export type Database = {
         Row: {
           created_at: string
           id: number
-          quiz_id: number | null
+          quiz: number | null
           seconds_spent: number | null
-          user_id: string | null
+          user: string | null
         }
         Insert: {
           created_at?: string
           id?: number
-          quiz_id?: number | null
+          quiz?: number | null
           seconds_spent?: number | null
-          user_id?: string | null
+          user?: string | null
         }
         Update: {
           created_at?: string
           id?: number
-          quiz_id?: number | null
+          quiz?: number | null
           seconds_spent?: number | null
-          user_id?: string | null
+          user?: string | null
         }
         Relationships: [
           {
             foreignKeyName: "quiz_submissions_quiz_id_fkey"
-            columns: ["quiz_id"]
+            columns: ["quiz"]
             isOneToOne: false
             referencedRelation: "quizzes"
             referencedColumns: ["id"]
@@ -232,7 +232,7 @@ export type Database = {
           },
         ]
       }
-      users_to_roles: {
+      users_profiles: {
         Row: {
           created_at: string
           user_id: string
