@@ -24,13 +24,19 @@ export default function Questions() {
     switch (currentQuestion?.type) {
         case "MULTIPLE_CHOICE":
             return isMultipleChoice(currentQuestion) ? (
-                <MultipleAnswerQuestion question={currentQuestion} />
+                <MultipleAnswerQuestion
+                    questionsCount={questions.length}
+                    question={currentQuestion}
+                />
             ) : (
                 <ErrorDisplay />
             )
         case "MATCHING_PAIRS":
             return isMatchingPairs(currentQuestion) ? (
-                <MatchingPairsQuestion question={currentQuestion} />
+                <MatchingPairsQuestion
+                    questionsCount={questions.length}
+                    question={currentQuestion}
+                />
             ) : (
                 <ErrorDisplay />
             )

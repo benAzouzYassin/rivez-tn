@@ -1,31 +1,45 @@
+import { MatchingPairsContent } from "@/schemas/questions-content"
 import { areArraysEqual } from "@/utils/array"
 import { AnimatePresence, motion } from "motion/react"
-import { useRef, useState } from "react"
-import { useQuestionsStore, QuestionType } from "../store"
+import { useParams } from "next/navigation"
+import { useEffect, useRef, useState } from "react"
+import { QuestionType, useQuestionsStore } from "../store"
 import ConfirmationBanner from "./confirmation-banner"
 import CorrectAnswerBanner from "./correct-answer-banner"
 import MatchingPairsLeft from "./matching-pairs-left"
 import MatchingPairsRight from "./matching-pairs-right"
 import WrongAnswerBanner from "./wrong-answer-banner"
-import { MatchingPairsContent } from "@/schemas/questions-content"
+import { useCurrentUser } from "@/hooks/use-current-user"
 import { toastError } from "@/lib/toasts"
 
 type Props = {
     question: { content: MatchingPairsContent } & QuestionType
+    questionsCount: number
 }
 
 export default function MatchingPairsQuestion(props: Props) {
+    const [renderDate, setRenderDate] = useState(new Date())
+    useEffect(() => {
+        setRenderDate(new Date())
+    }, [props.question])
+    const user = useCurrentUser()
     const incorrectAttempts = useRef(0)
-
+    const params = useParams()
+    const quizId = params["id"] as string
     const currentQuestionIndex = useQuestionsStore(
         (s) => s.currentQuestionIndex
     )
     const incrementQuestionIndex = useQuestionsStore(
         (s) => s.incrementQuestionIndex
     )
-    const addFailedQuestionIds = useQuestionsStore(
+    const handleFailedQuestions = useQuestionsStore(
         (s) => s.addFailedQuestionIds
     )
+    const handleSkippedQuestions = useQuestionsStore(
+        (s) => s.addSkippedQuestionIds
+    )
+    const handleQuizFinish = useQuestionsStore((s) => s.handleQuizFinish)
+    const addAnswerToState = useQuestionsStore((s) => s.addAnswer)
 
     const [isCorrectBannerOpen, setIsCorrectBannerOpen] = useState(false)
     const [isWrongBannerOpen, setIsWrongBannerOpen] = useState(false)
@@ -38,11 +52,10 @@ export default function MatchingPairsQuestion(props: Props) {
         string | null
     >(null)
 
-    const [correctSelections, setCorrectSelections] = useState<string[]>([])
+    const [correctSelections, setCorrectSelections] = useState<string[][]>([])
     const [incorrectSelections, setIncorrectSelections] = useState<string[][]>(
         []
     )
-
     const questionAnimations = {
         initial: { opacity: 0, x: 0 },
         animate: { opacity: 1, x: 0 },
@@ -60,6 +73,7 @@ export default function MatchingPairsQuestion(props: Props) {
     }
 
     const handleInCorrectSelection = (pair: string[]) => {
+        // max attempts is 3
         if (incorrectAttempts.current >= 2) {
             setIsWrongBannerOpen(true)
             setIsConfirmationBanner(false)
@@ -72,10 +86,10 @@ export default function MatchingPairsQuestion(props: Props) {
     }
 
     const handleCorrectSelection = (pair: string[]) => {
-        const updated = [...correctSelections, ...pair]
+        const updated = [...correctSelections, pair]
         setCorrectSelections(updated)
         const isFinished =
-            updated.length >= props.question.content.correct.length * 2
+            updated.length >= props.question.content.correct.length
         if (isFinished) {
             setIsCorrectBannerOpen(true)
             setIsConfirmationBanner(false)
@@ -83,22 +97,47 @@ export default function MatchingPairsQuestion(props: Props) {
     }
 
     const handleNextQuestion = () => {
+        if (currentQuestionIndex === props.questionsCount - 1) {
+            if (user.data?.id) {
+                handleQuizFinish({ quizId, userId: user.data.id })
+            } else {
+                return toastError("Something went wrong.")
+            }
+        }
+
         setRightSelectedOption(null)
         setLeftSelectedOption(null)
-        setCorrectSelections([])
         incorrectAttempts.current = 0
         incrementQuestionIndex()
-        setIsConfirmationBanner(false)
+        setIsCorrectBannerOpen(false)
+        setCorrectSelections([])
+        setIncorrectSelections([])
     }
 
     const handleWrongAnswer = () => {
-        addFailedQuestionIds([props.question.id])
+        addAnswerToState({
+            questionId: props.question.id,
+            questionType: "MATCHING_PAIRS",
+            responses: [...incorrectSelections, ...correctSelections],
+            failedAttempts: incorrectAttempts.current || null,
+            secondsSpent: (new Date().getTime() - renderDate.getTime()) / 1000,
+        })
+        if (currentQuestionIndex === props.questionsCount - 1) {
+            if (user.data?.id) {
+                handleQuizFinish({ quizId, userId: user.data.id })
+            } else {
+                return toastError("Something went wrong.")
+            }
+        }
+
+        handleFailedQuestions([props.question.id])
         setRightSelectedOption(null)
         setLeftSelectedOption(null)
         incrementQuestionIndex()
         setIsWrongBannerOpen(false)
         incorrectAttempts.current = 0
         setCorrectSelections([])
+        setIncorrectSelections([])
     }
 
     return (
@@ -123,7 +162,7 @@ export default function MatchingPairsQuestion(props: Props) {
                                     readonly={
                                         isWrongBannerOpen || isCorrectBannerOpen
                                     }
-                                    correctSelections={correctSelections}
+                                    correctSelections={correctSelections.flat()}
                                     inCorrectSelections={incorrectSelections}
                                     wrongOptions={[]}
                                     selectedOption={leftSelectedOption}
@@ -163,7 +202,7 @@ export default function MatchingPairsQuestion(props: Props) {
                                     readonly={
                                         isWrongBannerOpen || isCorrectBannerOpen
                                     }
-                                    correctSelections={correctSelections}
+                                    correctSelections={correctSelections.flat()}
                                     inCorrectSelections={incorrectSelections}
                                     selectedOption={rightSelectedOption}
                                     onOptionClick={(opt) => {
@@ -206,13 +245,42 @@ export default function MatchingPairsQuestion(props: Props) {
             </div>
 
             <ConfirmationBanner
-                onSkip={handleNextQuestion}
-                actionType="skip"
+                onSkip={() => {
+                    addAnswerToState({
+                        questionId: props.question.id,
+                        questionType: "MATCHING_PAIRS",
+                        responses: [
+                            ...incorrectSelections,
+                            ...correctSelections,
+                        ],
+                        failedAttempts: incorrectAttempts.current || null,
+                        secondsSpent:
+                            (new Date().getTime() - renderDate.getTime()) /
+                            1000,
+                    })
+                    handleNextQuestion()
+                    handleSkippedQuestions([props.question.id])
+                }}
+                actionType={"skip"}
                 onConfirm={() => {}}
                 isOpen={true}
             />
             <CorrectAnswerBanner
-                onNextClick={handleNextQuestion}
+                onNextClick={() => {
+                    addAnswerToState({
+                        questionId: props.question.id,
+                        questionType: "MATCHING_PAIRS",
+                        responses: [
+                            ...incorrectSelections,
+                            ...correctSelections,
+                        ],
+                        failedAttempts: incorrectAttempts.current || null,
+                        secondsSpent:
+                            (new Date().getTime() - renderDate.getTime()) /
+                            1000,
+                    })
+                    handleNextQuestion()
+                }}
                 isOpen={isCorrectBannerOpen}
             />
             <WrongAnswerBanner

@@ -15,7 +15,7 @@ interface SidenavProviderProps {
 export const SidenavProvider: React.FC<SidenavProviderProps> = ({
     children,
 }) => {
-    const [isSidenavOpen, setIsSidenavOpen] = useState(false)
+    const [isSidenavOpen, setIsSidenavOpen] = useState(true)
 
     const toggleSidenav = () => setIsSidenavOpen((prev) => !prev)
 
