@@ -4,15 +4,14 @@ import { Button } from "@/components/ui/button"
 import DashboardPagination from "@/components/ui/dashboard-pagination"
 import { DataTable } from "@/components/ui/data-table"
 
-import { readCategories } from "@/data-access/categories/read"
+import AddCategoryDialog from "@/components/shared/add-category-dialog"
+import { readSubmissionsWithAllData } from "@/data-access/quiz_submissions/read"
 import { useQuery } from "@tanstack/react-query"
-import { Filter, Plus } from "lucide-react"
+import { Filter } from "lucide-react"
 import { parseAsInteger, parseAsString, useQueryState } from "nuqs"
 import { useEffect, useState } from "react"
 import Search from "./_components/search"
 import { columns } from "./table-columns"
-import AddCategoryDialog from "@/components/shared/add-category-dialog"
-import { readSubmissionsWithAllData } from "@/data-access/quiz_submissions/read"
 
 export default function Page() {
     // const [viewMode, setViewMode] = useLocalStorage("view-mode", "list")
@@ -88,11 +87,11 @@ export default function Page() {
                 </div>
             </section>
 
-            {/* <DataTable
+            <DataTable
                 isLoading={isFetching}
                 columns={columns}
                 data={data || []}
-            /> */}
+            />
             <DashboardPagination
                 currentPage={currentPage}
                 itemsCount={response?.count || 0}
@@ -108,4 +107,6 @@ export default function Page() {
     )
 }
 
-export type Item = Awaited<ReturnType<typeof readCategories>>["data"][number]
+export type Item = Awaited<
+    ReturnType<typeof readSubmissionsWithAllData>
+>["data"][number]

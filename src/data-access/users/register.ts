@@ -30,7 +30,7 @@ export async function registerUserWithPassword(params: {
         phone: params.phone,
         options: {
             data: {
-                displayName: params.username,
+                username: params.username,
             },
         },
     })
@@ -41,7 +41,7 @@ export async function registerUserWithPassword(params: {
         })
         if (data.user?.id) {
             await supabase
-                .from("users_profiles")
+                .from("user_profiles")
                 .update({
                     phone: params.phone,
                 })

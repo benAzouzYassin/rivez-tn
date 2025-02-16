@@ -94,19 +94,17 @@ export const useQuestionsStore = create<Store>((set, get) => ({
                     user: quizData.userId,
                 })
             )[0].id
-            const quizzesSubmissionsResponse =
-                await createQuizSubmissionAnswers(
-                    quizData.answers.map((item) => ({
-                        failed_attempts: item.failedAttempts,
-                        is_answered_correctly: item.isAnsweredCorrectly,
-                        is_skipped: item.isSkipped,
-                        question: item.questionId,
-                        quiz_submission: quizSubmissionId,
-                        responses: item.responses,
-                        seconds_spent: item.secondsSpent || 0,
-                    }))
-                )
-            console.log(quizzesSubmissionsResponse)
+            await createQuizSubmissionAnswers(
+                quizData.answers.map((item) => ({
+                    failed_attempts: item.failedAttempts,
+                    is_answered_correctly: item.isAnsweredCorrectly,
+                    is_skipped: item.isSkipped,
+                    question: item.questionId,
+                    quiz_submission: quizSubmissionId,
+                    responses: item.responses,
+                    seconds_spent: item.secondsSpent || 0,
+                }))
+            )
         } catch (error) {
             if (quizSubmissionId) {
                 await deleteQuizSubmissionById(quizSubmissionId)

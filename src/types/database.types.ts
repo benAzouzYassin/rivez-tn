@@ -115,6 +115,13 @@ export type Database = {
             referencedRelation: "quizzes"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "quiz_submissions_user_fkey"
+            columns: ["user"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["user_id"]
+          },
         ]
       }
       quizzes: {
@@ -149,6 +156,13 @@ export type Database = {
           publishing_status?: Database["public"]["Enums"]["publishing_status"]
         }
         Relationships: [
+          {
+            foreignKeyName: "quizzes_author_id_fkey1"
+            columns: ["author_id"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["user_id"]
+          },
           {
             foreignKeyName: "quizzes_category_fkey"
             columns: ["category"]
@@ -232,36 +246,42 @@ export type Database = {
           },
         ]
       }
-      users_profiles: {
+      user_profiles: {
         Row: {
           avatar_url: string | null
-          created_at: string
           email: string | null
-          full_name: string | null
           phone: string | null
           user_id: string
-          user_role: Database["public"]["Enums"]["user_role_types"] | null
           username: string | null
         }
         Insert: {
           avatar_url?: string | null
-          created_at?: string
           email?: string | null
-          full_name?: string | null
           phone?: string | null
           user_id?: string
-          user_role?: Database["public"]["Enums"]["user_role_types"] | null
           username?: string | null
         }
         Update: {
           avatar_url?: string | null
-          created_at?: string
           email?: string | null
-          full_name?: string | null
           phone?: string | null
           user_id?: string
-          user_role?: Database["public"]["Enums"]["user_role_types"] | null
           username?: string | null
+        }
+        Relationships: []
+      }
+      user_roles: {
+        Row: {
+          user_id: string
+          user_role: Database["public"]["Enums"]["user_role_types"] | null
+        }
+        Insert: {
+          user_id?: string
+          user_role?: Database["public"]["Enums"]["user_role_types"] | null
+        }
+        Update: {
+          user_id?: string
+          user_role?: Database["public"]["Enums"]["user_role_types"] | null
         }
         Relationships: []
       }
