@@ -5,7 +5,6 @@ export async function createQuizSubmissionAnswers(params: InsertType[]) {
     const { data } = await supabase
         .from("quiz_submission_answers")
         .insert(params)
-        .select("id")
         .throwOnError()
 
     return data

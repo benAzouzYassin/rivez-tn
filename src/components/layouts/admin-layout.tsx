@@ -4,6 +4,7 @@ import { ReactNode } from "react"
 import UserHeader from "@/components/shared/user-header"
 import Sidenav from "@/components/shared/sidenav"
 import {
+    AppWindowIcon,
     BookCopy,
     Gamepad2,
     Home,
@@ -41,6 +42,11 @@ export default function AdminLayout({ children }: Props) {
                         name: "Submissions",
                         icon: <SquareMousePointer className="!w-6 !h-6" />,
                         route: "/admin/quiz-submissions",
+                    },
+                    {
+                        name: "User preview",
+                        icon: <AppWindowIcon className="!w-6 !h-6" />,
+                        route: "/learn",
                     },
                 ]}
                 settingsItem={{
