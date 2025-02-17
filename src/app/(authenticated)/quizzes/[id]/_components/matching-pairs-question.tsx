@@ -11,6 +11,7 @@ import MatchingPairsRight from "./matching-pairs-right"
 import WrongAnswerBanner from "./wrong-answer-banner"
 import { useCurrentUser } from "@/hooks/use-current-user"
 import { toastError } from "@/lib/toasts"
+import { useQueryClient } from "@tanstack/react-query"
 
 type Props = {
     question: { content: MatchingPairsContent } & QuestionType
@@ -19,6 +20,7 @@ type Props = {
 
 export default function MatchingPairsQuestion(props: Props) {
     const [renderDate, setRenderDate] = useState(new Date())
+    const queryClient = useQueryClient()
     useEffect(() => {
         setRenderDate(new Date())
     }, [props.question])
@@ -99,7 +101,20 @@ export default function MatchingPairsQuestion(props: Props) {
     const handleNextQuestion = () => {
         if (currentQuestionIndex === props.questionsCount - 1) {
             if (user.data?.id) {
-                handleQuizFinish({ quizId, userId: user.data.id })
+                handleQuizFinish({ quizId, userId: user.data.id }).then(
+                    (success) => {
+                        if (success) {
+                            queryClient.invalidateQueries({
+                                predicate: (query) =>
+                                    query.queryKey.some(
+                                        (key) => key === "quiz_submissions"
+                                    ),
+                            })
+                        } else {
+                            toastError("Something went wrong.")
+                        }
+                    }
+                )
             } else {
                 return toastError("Something went wrong.")
             }
@@ -124,7 +139,20 @@ export default function MatchingPairsQuestion(props: Props) {
         })
         if (currentQuestionIndex === props.questionsCount - 1) {
             if (user.data?.id) {
-                handleQuizFinish({ quizId, userId: user.data.id })
+                handleQuizFinish({ quizId, userId: user.data.id }).then(
+                    (success) => {
+                        if (success) {
+                            queryClient.invalidateQueries({
+                                predicate: (query) =>
+                                    query.queryKey.some(
+                                        (key) => key === "quiz_submissions"
+                                    ),
+                            })
+                        } else {
+                            toastError("Something went wrong.")
+                        }
+                    }
+                )
             } else {
                 return toastError("Something went wrong.")
             }

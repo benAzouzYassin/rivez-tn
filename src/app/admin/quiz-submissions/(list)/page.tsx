@@ -10,8 +10,8 @@ import { useQuery } from "@tanstack/react-query"
 import { Filter } from "lucide-react"
 import { parseAsInteger, parseAsString, useQueryState } from "nuqs"
 import { useEffect, useState } from "react"
-import Search from "./_components/search"
 import { columns } from "./table-columns"
+import SearchInput from "@/components/shared/search-input"
 
 export default function Page() {
     // const [viewMode, setViewMode] = useLocalStorage("view-mode", "list")
@@ -22,8 +22,12 @@ export default function Page() {
         setViewMode(["cards", "list"].includes(savedMode) ? savedMode : "list")
     }, [])
 
-    const [searchValue, setSearchValue] = useQueryState(
-        "search-value",
+    const [quizSearchValue, setQuizSearchValue] = useQueryState(
+        "quiz-search-value",
+        parseAsString.withDefault("")
+    )
+    const [userSearchValue, setUserSearchValue] = useQueryState(
+        "user-search-value",
         parseAsString.withDefault("")
     )
     const [itemsPerPage, setItemsPerPage] = useQueryState(
@@ -44,10 +48,13 @@ export default function Page() {
     } = useQuery({
         queryKey: [
             "quiz_submissions",
+            "quiz_submission_answers",
             "quizzes",
+            "user_profiles",
             itemsPerPage,
             currentPage,
-            searchValue,
+            quizSearchValue,
+            userSearchValue,
         ],
         queryFn: () =>
             readSubmissionsWithAllData({
@@ -55,15 +62,18 @@ export default function Page() {
                     itemsPerPage,
                     currentPage,
                 },
+                filters: {
+                    quizSearch: quizSearchValue,
+                    userSearch: userSearchValue,
+                },
             }),
     })
     const data = response?.data
     if (isError) {
         return <ErrorDisplay />
     }
-    console.log(data)
     return (
-        <section className="flex flex-col min-h-[50vh] px-10 py-10">
+        <section className="flex flex-col min-h-[50vh] p-10">
             <div className="flex items-center gap-3">
                 <h1 className="text-[2.5rem] font-bold">Submissions List</h1>
                 <div className="text-lg font-extrabold opacity-80 py-1 px-5  rounded-full bg-blue-50 text-blue-600 border-2 border-blue-400">
@@ -71,10 +81,18 @@ export default function Page() {
                 </div>
             </div>
             <section className=" flex justify-between my-5 min-h-10">
-                <Search
-                    searchValue={searchValue}
-                    onSearchChange={setSearchValue}
-                />
+                <div className="flex items-center gap-2">
+                    <SearchInput
+                        searchValue={userSearchValue}
+                        onSearchChange={setUserSearchValue}
+                        placeholder="Username / Email "
+                    />
+                    <SearchInput
+                        searchValue={quizSearchValue}
+                        onSearchChange={setQuizSearchValue}
+                        placeholder="Quiz name"
+                    />
+                </div>
                 <div className="flex  gap-3">
                     <Button
                         disabled

@@ -11,7 +11,7 @@ import {
 import { useQuery } from "@tanstack/react-query"
 import { Filter, Plus } from "lucide-react"
 import { parseAsInteger, parseAsString, useQueryState } from "nuqs"
-import { useEffect, useState } from "react"
+import { useState } from "react"
 import AddQuizDialog from "./_components/add-quiz-dialog"
 import Search from "./_components/search"
 import { columns } from "./table-columns"
@@ -37,7 +37,15 @@ export default function Page() {
         isError,
         isFetching,
     } = useQuery({
-        queryKey: ["quizzes", itemsPerPage, currentPage, searchValue],
+        queryKey: [
+            "quizzes",
+            "quizzes_categories",
+            "quiz_submissions",
+            "quizzes_questions",
+            itemsPerPage,
+            currentPage,
+            searchValue,
+        ],
         queryFn: () =>
             readQuizzesWithCategory({
                 filters: {

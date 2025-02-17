@@ -41,7 +41,7 @@ export default function TooltipWrapper(props: {
                 <TooltipTrigger asChild={props.asChild}>
                     {props.children}
                 </TooltipTrigger>
-                <TooltipContent className="bg-white border border-neutral-300 font-medium  text-neutral-700">
+                <TooltipContent className="bg-white text-xs border border-neutral-300 font-semibold  text-neutral-700">
                     {props.content}
                 </TooltipContent>
             </Tooltip>

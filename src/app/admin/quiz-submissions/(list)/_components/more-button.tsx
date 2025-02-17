@@ -1,24 +1,23 @@
 import PopoverList from "@/components/ui/popover-list"
-import { softDeleteCategoryById } from "@/data-access/categories/delete"
+import { deleteQuizSubmissionById } from "@/data-access/quiz_submissions/delete"
 import { dismissToasts, toastLoading, toastSuccess } from "@/lib/toasts"
 import { useQueryClient } from "@tanstack/react-query"
-import { Edit, Info, MoreVerticalIcon, Trash2 } from "lucide-react"
-import EditCategoryDialog from "./edit-category-dialog"
-import { useState } from "react"
+import { Info, MoreVerticalIcon, Trash2 } from "lucide-react"
+import { useRouter } from "nextjs-toploader/app"
 
 interface Props {
     itemId: number
 }
 export default function MoreButton(props: Props) {
-    const [isUpdating, setIsUpdating] = useState(false)
+    const router = useRouter()
     const queryClient = useQueryClient()
     const handleDelete = () => {
         toastLoading("Deleting...")
-        softDeleteCategoryById(props.itemId)
+        deleteQuizSubmissionById(props.itemId)
             .then((res) => {
                 console.log(res)
                 queryClient.refetchQueries({
-                    queryKey: ["quizzes_categories"],
+                    queryKey: ["quiz_submissions"],
                 })
                 dismissToasts("loading")
                 toastSuccess("Deleted successfully.")
@@ -34,9 +33,12 @@ export default function MoreButton(props: Props) {
                 contentClassName="-translate-x-4 "
                 items={[
                     {
-                        icon: <Edit className="w-5 h-5" />,
-                        label: "Update",
-                        onClick: () => setIsUpdating(true),
+                        icon: <Info className="w-5 h-5" />,
+                        label: "Details",
+                        onClick: () =>
+                            router.push(
+                                `/admin/quiz-submissions/details/${props.itemId}`
+                            ),
                     },
                     {
                         icon: <Trash2 className="w-5 h-5" />,
@@ -54,11 +56,6 @@ export default function MoreButton(props: Props) {
                     <MoreVerticalIcon className="!h-6 text-neutral-600 !w-6" />
                 </button>
             </PopoverList>
-            <EditCategoryDialog
-                isOpen={isUpdating}
-                onOpenChange={setIsUpdating}
-                categoryId={props.itemId}
-            />
         </>
     )
 }
