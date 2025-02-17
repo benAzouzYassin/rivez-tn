@@ -11,7 +11,6 @@ import { useQuestionsStore } from "../store"
 export default function Result() {
     const questions = useQuestionsStore((s) => s.questions)
     const wrongAnswersIds = useQuestionsStore((s) => s.failedQuestionsIds)
-
     const totalQuestions: number = questions.length
     const wrongAnswers: number = wrongAnswersIds.length
     const correctAnswers: number = totalQuestions - wrongAnswers

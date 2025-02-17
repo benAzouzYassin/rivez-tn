@@ -2,11 +2,13 @@ import { Badge } from "@/components/ui/badge"
 import PopoverList from "@/components/ui/popover-list"
 import { updateQuiz } from "@/data-access/quizzes/update"
 import { toastError } from "@/lib/toasts"
+import { cn } from "@/lib/ui-utils"
 import { useQueryClient } from "@tanstack/react-query"
 import { useEffect, useState } from "react"
 interface Props {
     itemId: number
     status: string
+    className?: string
 }
 export default function StatusButton(props: Props) {
     const [isLoading, setIsLoading] = useState(false)
@@ -48,7 +50,12 @@ export default function StatusButton(props: Props) {
                 },
             ]}
         >
-            <button className="mx-auto  bg-transparent cursor-pointer w-fit ">
+            <button
+                className={cn(
+                    "mx-auto  bg-transparent cursor-pointer w-fit ",
+                    props.className
+                )}
+            >
                 <Badge
                     isLoading={isLoading}
                     variant={

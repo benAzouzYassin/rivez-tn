@@ -1,16 +1,27 @@
-import { ReactNode } from "react"
-import { useSidenav } from "@/providers/sidenav-provider"
-import { cn } from "@/lib/ui-utils"
-import UserHeader from "@/components/shared/user-header"
 import Sidenav from "@/components/shared/sidenav"
-import { ChartColumnDecreasing, Home, Settings } from "lucide-react"
+import UserHeader from "@/components/shared/user-header"
+import { useCurrentUser } from "@/hooks/use-current-user"
+import { cn } from "@/lib/ui-utils"
+import { useSidenav } from "@/providers/sidenav-provider"
+import { ChartColumnDecreasing, Home, LockIcon, Settings } from "lucide-react"
+import { ReactNode } from "react"
 
 type Props = {
     children?: Readonly<ReactNode>
 }
 export default function UserLayout({ children }: Props) {
     const { isSidenavOpen } = useSidenav()
-
+    const user = useCurrentUser()
+    const adminItems =
+        user.data?.user_role === "ADMIN"
+            ? [
+                  {
+                      name: "Dashboard",
+                      icon: <LockIcon className="!w-6 !h-6" />,
+                      route: "/admin/dashboard",
+                  },
+              ]
+            : []
     return (
         <>
             <UserHeader />
@@ -25,8 +36,7 @@ export default function UserLayout({ children }: Props) {
                         name: "Ranking",
                         icon: <ChartColumnDecreasing className="!w-6 !h-6" />,
                     },
-                    // { name: "Quests", icon: "box" },
-                    // { name: "Shop", icon: "loot" },
+                    ...adminItems,
                 ]}
                 settingsItem={{
                     name: "Settings",

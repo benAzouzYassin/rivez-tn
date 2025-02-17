@@ -28,6 +28,7 @@ export async function createCategoryWithQuizzes(params: {
 
         return categoryId
     } catch (error) {
+        console.error(error)
         return null
     }
 }

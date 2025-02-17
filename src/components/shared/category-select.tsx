@@ -11,7 +11,6 @@ export default function CategorySelect({
     onAddButtonClick,
     ...props
 }: Props) {
-    const [nameToAdd, setNameToAdd] = useState("")
     const [isAdding, setIsAdding] = useState(false)
     const { data: response, isLoading } = useQuery({
         queryKey: ["quizzes_categories"],
@@ -23,7 +22,6 @@ export default function CategorySelect({
             <SearchSelect
                 {...props}
                 onAddButtonClick={(val) => {
-                    setNameToAdd(val)
                     setIsAdding((prev) => !prev)
                     onAddButtonClick?.(val)
                 }}

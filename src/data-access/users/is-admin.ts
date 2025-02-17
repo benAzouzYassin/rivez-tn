@@ -20,7 +20,7 @@ export async function isUserAdmin(params: {
     const isAdmin =
         (
             await supabase
-                .from("users_to_roles")
+                .from("user_roles")
                 .select("*")
                 .eq("user_id", data.user?.id)
                 .single()

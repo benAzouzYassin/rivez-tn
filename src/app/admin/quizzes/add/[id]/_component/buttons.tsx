@@ -79,6 +79,7 @@ export default function Buttons() {
                 )
                 toastSuccess("Saved successfully.")
                 if (action === "publish") {
+                    console.log("publishing the quiz")
                     await updateQuiz(quizId, { publishing_status: "PUBLISHED" })
                 } else {
                     await updateQuiz(quizId, { publishing_status: "DRAFT" })
@@ -86,7 +87,7 @@ export default function Buttons() {
                 queryClient.invalidateQueries({
                     queryKey: ["quizzes"],
                 })
-                router.replace("/admin/quizzes/list")
+                router.replace("/admin/quizzes")
                 reset()
             }
         } catch (error) {

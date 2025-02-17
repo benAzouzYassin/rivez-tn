@@ -2,29 +2,50 @@ import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/ui-utils"
 import { MultipleChoiceContent } from "@/schemas/questions-content"
 import { areArraysEqual } from "@/utils/array"
+import { ImageIcon } from "lucide-react"
 import { AnimatePresence, motion } from "motion/react"
-import { useState } from "react"
+import { useParams } from "next/navigation"
+import { useEffect, useState } from "react"
 import { QuestionType, useQuestionsStore } from "../store"
+import ConfirmationBanner from "./confirmation-banner"
 import CorrectAnswerBanner from "./correct-answer-banner"
 import WrongAnswerBanner from "./wrong-answer-banner"
-import ConfirmationBanner from "./confirmation-banner"
-import { ImageIcon } from "lucide-react"
+import { useCurrentUser } from "@/hooks/use-current-user"
+import { toastError } from "@/lib/toasts"
+import { useQueryClient } from "@tanstack/react-query"
 
 type Props = {
     question: { content: MultipleChoiceContent } & QuestionType
+    questionsCount: number
 }
 
 export default function MultipleAnswerQuestion(props: Props) {
+    const params = useParams()
+    const quizId = params["id"] as string
+    const [renderDate, setRenderDate] = useState(new Date())
+    const queryClient = useQueryClient()
+
+    useEffect(() => {
+        setRenderDate(new Date())
+    }, [props.question])
+    const user = useCurrentUser()
     const questionIndex = useQuestionsStore((s) => s.currentQuestionIndex)
     const incrementQuestionIndex = useQuestionsStore(
         (s) => s.incrementQuestionIndex
     )
+    const handleQuizFinish = useQuestionsStore((s) => s.handleQuizFinish)
+    const handleSkippedQuestions = useQuestionsStore(
+        (s) => s.addSkippedQuestionIds
+    )
+    const handleFailedQuestions = useQuestionsStore(
+        (s) => s.addFailedQuestionIds
+    )
+    const addAnswerToState = useQuestionsStore((s) => s.addAnswer)
 
     const [isCorrectBannerOpen, setIsCorrectBannerOpen] = useState(false)
     const [isWrongBannerOpen, setIsWrongBannerOpen] = useState(false)
 
     const [selectedOptions, setSelectedOptions] = useState<string[]>([])
-
     const correctAnswers = props.question.content.correct
 
     const handleOptionClick = (opt: string, isSelected: boolean) => {
@@ -35,6 +56,26 @@ export default function MultipleAnswerQuestion(props: Props) {
         )
     }
     const handleNextQuestion = (isBannerCorrect: boolean) => {
+        if (questionIndex === props.questionsCount - 1) {
+            if (user.data?.id) {
+                handleQuizFinish({ quizId, userId: user.data?.id }).then(
+                    (success) => {
+                        if (success) {
+                            queryClient.invalidateQueries({
+                                predicate: (query) =>
+                                    query.queryKey.some(
+                                        (key) => key === "quiz_submissions"
+                                    ),
+                            })
+                        } else {
+                            toastError("Something went wrong.")
+                        }
+                    }
+                )
+            } else {
+                return toastError("Something went wrong.")
+            }
+        }
         setSelectedOptions([])
         incrementQuestionIndex()
         if (isBannerCorrect) {
@@ -45,10 +86,18 @@ export default function MultipleAnswerQuestion(props: Props) {
     }
 
     const handleConfirmation = () => {
-        setSelectedOptions(props.question.content.options)
+        addAnswerToState({
+            questionId: props.question.id,
+            questionType: "MULTIPLE_CHOICE",
+            responses: selectedOptions,
+            failedAttempts: null,
+            secondsSpent: (new Date().getTime() - renderDate.getTime()) / 1000,
+        })
+        console.log("saving the data.....")
         if (areArraysEqual(correctAnswers, selectedOptions)) {
             setIsCorrectBannerOpen(true)
         } else {
+            setSelectedOptions(props.question.content.options)
             setIsWrongBannerOpen(true)
         }
     }
@@ -56,7 +105,7 @@ export default function MultipleAnswerQuestion(props: Props) {
         <>
             <div
                 className={cn(
-                    "flex flex-col relative h-fit items-center justify-center"
+                    "flex flex-col relative h-fit items-center justify-center pb-44"
                 )}
             >
                 <div
@@ -132,6 +181,7 @@ export default function MultipleAnswerQuestion(props: Props) {
                                             )
                                         const isSelected =
                                             selectedOptions.includes(opt)
+
                                         return (
                                             <Button
                                                 key={i}
@@ -174,16 +224,33 @@ export default function MultipleAnswerQuestion(props: Props) {
             </div>
 
             <CorrectAnswerBanner
-                onNextClick={() => handleNextQuestion(true)}
+                onNextClick={() => {
+                    handleNextQuestion(true)
+                }}
                 isOpen={isCorrectBannerOpen}
             />
             <WrongAnswerBanner
-                onNextClick={() => handleNextQuestion(false)}
+                onNextClick={() => {
+                    handleFailedQuestions([props.question.id])
+                    handleNextQuestion(false)
+                }}
                 isOpen={isWrongBannerOpen}
             />
             <ConfirmationBanner
                 actionType={selectedOptions.length ? "confirm" : "skip"}
-                onSkip={() => handleNextQuestion(false)}
+                onSkip={() => {
+                    handleSkippedQuestions([props.question.id])
+                    addAnswerToState({
+                        questionId: props.question.id,
+                        questionType: "MULTIPLE_CHOICE",
+                        responses: selectedOptions,
+                        failedAttempts: null,
+                        secondsSpent:
+                            (new Date().getTime() - renderDate.getTime()) /
+                            1000,
+                    })
+                    handleNextQuestion(false)
+                }}
                 onConfirm={handleConfirmation}
                 isOpen={!isWrongBannerOpen && !isCorrectBannerOpen}
             />

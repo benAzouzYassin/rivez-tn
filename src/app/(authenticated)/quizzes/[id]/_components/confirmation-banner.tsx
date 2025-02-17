@@ -41,12 +41,6 @@ export default function ConfirmationBanner(props: Props) {
                 </Button>
                 <Button
                     onClick={() => {
-                        wait(100).then(() =>
-                            window.scroll({
-                                behavior: "smooth",
-                                top: 0,
-                            })
-                        )
                         props.onConfirm()
                     }}
                     disabled={!props.isOpen}

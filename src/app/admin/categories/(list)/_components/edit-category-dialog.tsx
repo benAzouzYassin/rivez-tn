@@ -215,6 +215,7 @@ export default function EditCategoryDialog(props: Props) {
                                             )
                                             onBlur()
                                         } catch (error) {
+                                            console.error(error)
                                             toastError("Something went wrong.")
                                             onChange(copy)
                                             onChange(value)
@@ -240,6 +241,7 @@ export default function EditCategoryDialog(props: Props) {
                                             )
                                             onBlur()
                                         } catch (error) {
+                                            console.error(error)
                                             toastError("Something went wrong.")
                                             onChange(copy)
                                             onChange(value)
@@ -299,7 +301,9 @@ type QuizzesSelectProps = Omit<
 > & { categoryId: number }
 
 function QuizzesSelect({
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     isLoading: isLoadingProp,
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     categoryId,
     ...props
 }: QuizzesSelectProps) {

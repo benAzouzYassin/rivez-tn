@@ -2,9 +2,9 @@ import PopoverList from "@/components/ui/popover-list"
 import { softDeleteCategoryById } from "@/data-access/categories/delete"
 import { dismissToasts, toastLoading, toastSuccess } from "@/lib/toasts"
 import { useQueryClient } from "@tanstack/react-query"
-import { Edit, Info, MoreVerticalIcon, Trash2 } from "lucide-react"
-import EditCategoryDialog from "./edit-category-dialog"
+import { Edit, MoreVerticalIcon, Trash2 } from "lucide-react"
 import { useState } from "react"
+import EditCategoryDialog from "./edit-category-dialog"
 
 interface Props {
     itemId: number

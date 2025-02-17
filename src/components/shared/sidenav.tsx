@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/ui-utils"
 import { useSidenav } from "@/providers/sidenav-provider"
 import { ChevronRight } from "lucide-react"
-import { ReactNode, useState } from "react"
+import { ReactNode } from "react"
 import { NavButton } from "./nav-button"
 
 interface NavItem {

@@ -12,6 +12,7 @@ import {
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { createQuiz } from "@/data-access/quizzes/create"
+import { useCurrentUser } from "@/hooks/use-current-user"
 import { toastError } from "@/lib/toasts"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useRouter } from "nextjs-toploader/app"
@@ -24,7 +25,7 @@ export default function AddQuizDialog(props: Props) {
     const [isUploadingImage, setIsUploadingImage] = useState(false)
     const [isLoading, setIsLoading] = useState(false)
     const router = useRouter()
-
+    const user = useCurrentUser()
     const formSchema = useMemo(
         () =>
             z.object({
@@ -60,6 +61,7 @@ export default function AddQuizDialog(props: Props) {
                 category: data.category ? Number(data.category) : null,
                 image: imageUrl,
                 description: data.description,
+                author_id: user.data?.id,
             })
             const quizId = result[0].id
             router.push(`/admin/quizzes/add/${quizId}`)
@@ -91,6 +93,7 @@ export default function AddQuizDialog(props: Props) {
                         name="category"
                         render={({ field: { onChange, value, onBlur } }) => (
                             <CategorySelect
+                                placeholder="Category"
                                 enableAddButton
                                 inputClassName="w-full "
                                 selectedId={value}
