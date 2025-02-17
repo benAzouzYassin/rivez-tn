@@ -1,5 +1,8 @@
+import { useCurrentUser } from "@/hooks/use-current-user"
+import { toastError } from "@/lib/toasts"
 import { MatchingPairsContent } from "@/schemas/questions-content"
 import { areArraysEqual } from "@/utils/array"
+import { useQueryClient } from "@tanstack/react-query"
 import { AnimatePresence, motion } from "motion/react"
 import { useParams } from "next/navigation"
 import { useEffect, useRef, useState } from "react"
@@ -9,8 +12,6 @@ import CorrectAnswerBanner from "./correct-answer-banner"
 import MatchingPairsLeft from "./matching-pairs-left"
 import MatchingPairsRight from "./matching-pairs-right"
 import WrongAnswerBanner from "./wrong-answer-banner"
-import { useCurrentUser } from "@/hooks/use-current-user"
-import { toastError } from "@/lib/toasts"
 
 type Props = {
     question: { content: MatchingPairsContent } & QuestionType
@@ -19,6 +20,7 @@ type Props = {
 
 export default function MatchingPairsQuestion(props: Props) {
     const [renderDate, setRenderDate] = useState(new Date())
+    const queryClient = useQueryClient()
     useEffect(() => {
         setRenderDate(new Date())
     }, [props.question])
@@ -43,7 +45,6 @@ export default function MatchingPairsQuestion(props: Props) {
 
     const [isCorrectBannerOpen, setIsCorrectBannerOpen] = useState(false)
     const [isWrongBannerOpen, setIsWrongBannerOpen] = useState(false)
-    const [isConfirmationBanner, setIsConfirmationBanner] = useState(true)
 
     const [leftSelectedOption, setLeftSelectedOption] = useState<string | null>(
         null
@@ -76,7 +77,6 @@ export default function MatchingPairsQuestion(props: Props) {
         // max attempts is 3
         if (incorrectAttempts.current >= 2) {
             setIsWrongBannerOpen(true)
-            setIsConfirmationBanner(false)
             setIncorrectSelections((prev) => [...prev, pair])
             return
         }
@@ -92,14 +92,26 @@ export default function MatchingPairsQuestion(props: Props) {
             updated.length >= props.question.content.correct.length
         if (isFinished) {
             setIsCorrectBannerOpen(true)
-            setIsConfirmationBanner(false)
         }
     }
 
     const handleNextQuestion = () => {
         if (currentQuestionIndex === props.questionsCount - 1) {
             if (user.data?.id) {
-                handleQuizFinish({ quizId, userId: user.data.id })
+                handleQuizFinish({ quizId, userId: user.data.id }).then(
+                    (success) => {
+                        if (success) {
+                            queryClient.invalidateQueries({
+                                predicate: (query) =>
+                                    query.queryKey.some(
+                                        (key) => key === "quiz_submissions"
+                                    ),
+                            })
+                        } else {
+                            toastError("Something went wrong.")
+                        }
+                    }
+                )
             } else {
                 return toastError("Something went wrong.")
             }
@@ -124,7 +136,20 @@ export default function MatchingPairsQuestion(props: Props) {
         })
         if (currentQuestionIndex === props.questionsCount - 1) {
             if (user.data?.id) {
-                handleQuizFinish({ quizId, userId: user.data.id })
+                handleQuizFinish({ quizId, userId: user.data.id }).then(
+                    (success) => {
+                        if (success) {
+                            queryClient.invalidateQueries({
+                                predicate: (query) =>
+                                    query.queryKey.some(
+                                        (key) => key === "quiz_submissions"
+                                    ),
+                            })
+                        } else {
+                            toastError("Something went wrong.")
+                        }
+                    }
+                )
             } else {
                 return toastError("Something went wrong.")
             }

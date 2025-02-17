@@ -33,7 +33,10 @@ interface Actions {
     setQuestions: (questions: QuestionType[]) => void
     incrementQuestionIndex: () => void
     setStartDate: (date: Date) => void
-    handleQuizFinish: (param: { quizId: string; userId: string }) => void
+    handleQuizFinish: (param: {
+        quizId: string
+        userId: string
+    }) => Promise<boolean>
     addAnswer: (answer: State["answers"][number]) => void
     reset: () => void
 }
@@ -105,11 +108,13 @@ export const useQuestionsStore = create<Store>((set, get) => ({
                     seconds_spent: item.secondsSpent || 0,
                 }))
             )
+            return true
         } catch (error) {
             if (quizSubmissionId) {
                 await deleteQuizSubmissionById(quizSubmissionId)
             }
             console.error(error)
+            return false
         }
     },
     addSkippedQuestionIds: (ids) =>

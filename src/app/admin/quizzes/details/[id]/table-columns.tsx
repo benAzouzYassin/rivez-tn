@@ -2,13 +2,13 @@ import { Checkbox } from "@/components/ui/checkbox"
 import ImageWithPreview from "@/components/ui/img-with-preview"
 import { cn } from "@/lib/ui-utils"
 import { ColumnDef } from "@tanstack/react-table"
-import { Item } from "./page"
 import { formatDate } from "@/utils/date"
-import MoreButton from "./_components/more-button"
 import { Badge } from "@/components/ui/badge"
 import TooltipWrapper from "@/components/ui/tooltip"
+import { SubmissionType } from "./_components/submissions"
+import SubmissionsMoreButton from "./_components/submissions-more-button"
 
-export const columns: ColumnDef<Item>[] = [
+export const columns: ColumnDef<SubmissionType>[] = [
     {
         id: "checkbox",
         header: ({ table }) => {
@@ -85,36 +85,6 @@ export const columns: ColumnDef<Item>[] = [
         },
     },
     {
-        id: "Quiz",
-        header: "Quiz",
-        cell: ({ row }) => {
-            return (
-                <div className="flex items-center gap-4">
-                    <div
-                        className={cn(
-                            "min-h-14  h-14 ml-4 relative w-14 min-w-14 rounded-xl",
-                            { " bg-zinc-200/70": !row.original?.quiz?.image }
-                        )}
-                    >
-                        {!!row.original?.quiz?.image && (
-                            <div className=" overflow-hidden  rounded-xl  h-full w-full ">
-                                <ImageWithPreview
-                                    alt=""
-                                    src={row.original.quiz.image}
-                                    className="object-cover object-center"
-                                />
-                            </div>
-                        )}
-                    </div>
-                    <p className="text-left !text-sm font-semibold">
-                        {row.original?.quiz?.name}
-                    </p>
-                </div>
-            )
-        },
-    },
-
-    {
         id: "Correct questions",
         header: "Correct ",
         cell: ({ row }) => {
@@ -135,7 +105,7 @@ export const columns: ColumnDef<Item>[] = [
         },
     },
     {
-        id: "Wrong questions",
+        id: "Failed questions",
         header: "Wrong ",
         cell: ({ row }) => {
             return (
@@ -195,7 +165,7 @@ export const columns: ColumnDef<Item>[] = [
                 <div className="min-w-[70px] flex items-center  justify-center">
                     <div className="">
                         {row.original?.id ? (
-                            <MoreButton itemId={row.original?.id} />
+                            <SubmissionsMoreButton itemId={row.original?.id} />
                         ) : (
                             <></>
                         )}

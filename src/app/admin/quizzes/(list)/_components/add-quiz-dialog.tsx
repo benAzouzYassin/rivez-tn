@@ -93,6 +93,7 @@ export default function AddQuizDialog(props: Props) {
                         name="category"
                         render={({ field: { onChange, value, onBlur } }) => (
                             <CategorySelect
+                                placeholder="Category"
                                 enableAddButton
                                 inputClassName="w-full "
                                 selectedId={value}

@@ -71,6 +71,16 @@ export const columns: ColumnDef<Item>[] = [
         },
     },
     {
+        header: "Submissions",
+        cell: ({ row }) => {
+            return (
+                <div className="flex items-center !text-base font-semibold justify-center">
+                    {row.original.quiz_submissions?.[0]?.count}
+                </div>
+            )
+        },
+    },
+    {
         header: "Category",
         cell: ({ row }) => (
             <div className="flex items-center !text-base font-semibold justify-center">

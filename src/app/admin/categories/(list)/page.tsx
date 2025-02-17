@@ -4,23 +4,17 @@ import { Button } from "@/components/ui/button"
 import DashboardPagination from "@/components/ui/dashboard-pagination"
 import { DataTable } from "@/components/ui/data-table"
 
+import AddCategoryDialog from "@/components/shared/add-category-dialog"
 import { readCategories } from "@/data-access/categories/read"
 import { useQuery } from "@tanstack/react-query"
 import { Filter, Plus } from "lucide-react"
 import { parseAsInteger, parseAsString, useQueryState } from "nuqs"
-import { useEffect, useState } from "react"
+import { useState } from "react"
 import Search from "./_components/search"
 import { columns } from "./table-columns"
-import AddCategoryDialog from "@/components/shared/add-category-dialog"
 
 export default function Page() {
     // const [viewMode, setViewMode] = useLocalStorage("view-mode", "list")
-    const [viewMode, setViewMode] = useState("list")
-
-    useEffect(() => {
-        const savedMode = localStorage.getItem("view-mode") || "list"
-        setViewMode(["cards", "list"].includes(savedMode) ? savedMode : "list")
-    }, [])
 
     const [searchValue, setSearchValue] = useQueryState(
         "search-value",

@@ -9,7 +9,6 @@ type Props = {
 }
 
 export function EditableContent({
-    onContentChange,
     className,
     onFocus,
     onBlur,
