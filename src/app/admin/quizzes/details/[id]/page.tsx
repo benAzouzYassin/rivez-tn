@@ -8,6 +8,8 @@ import { useQuery } from "@tanstack/react-query"
 import { Check, Clock, SkipForward, X } from "lucide-react"
 import { useParams } from "next/navigation"
 import Submissions from "./_components/submissions"
+import { QuestionsBarChart } from "./_components/questions-bar-chart"
+import StatusButton from "../../(list)/_components/status-button"
 
 export default function Page() {
     const params = useParams()
@@ -32,26 +34,37 @@ export default function Page() {
             <div className="flex w-full items-center gap-4">
                 <div
                     className={cn(
-                        "min-h-14 h-14 ml-4 relative w-14 min-w-14 rounded-xl",
+                        "min-h-20 h-20 ml-4 relative w-32 min-w-32 rounded-xl",
                         {
                             "bg-zinc-200/70": !data?.quizData?.image,
                         }
                     )}
                 >
                     {!!data?.quizData?.image && (
-                        <div className="overflow-hidden rounded-xl h-full w-full">
+                        <div className="overflow-hidden border rounded-xl h-full w-full">
                             <img
                                 alt=""
                                 src={data?.quizData.image}
-                                className="object-cover object-center"
+                                className="object-cover w-full h-full  object-center"
                             />
                         </div>
                     )}
                 </div>
                 <div>
-                    <h1 className="text-left text-2xl font-bold">
+                    <h1 className="text-left text-3xl first-letter:uppercase text-neutral-700 font-extrabold">
                         {data?.quizData?.name}
                     </h1>
+                    <p className="text-base font-bold text-neutral-500">
+                        {data?.quizData.category?.name}
+                    </p>
+                </div>
+                <div className=" ml-auto scale-125 mr-4">
+                    {data?.quizData && (
+                        <StatusButton
+                            itemId={data?.quizData.id}
+                            status={data?.quizData.publishing_status}
+                        />
+                    )}
                 </div>
             </div>
             <section className="grid gap-5 mt-10 grid-cols-4">
@@ -135,8 +148,12 @@ export default function Page() {
                     </div>
                 </Card>
             </section>
-            <div className="mt-10 pb-20">
-                <h2 className="text-2xl mb-4 font-extrabold">
+
+            <div className="mt-10  border-red-500 min-h-56 w-full">
+                <QuestionsBarChart />
+            </div>
+            <div className=" pb-20 mt-10">
+                <h2 className="text-2xl mb-4 text-black/80 font-extrabold">
                     Quiz submissions :{" "}
                 </h2>
                 <Submissions />

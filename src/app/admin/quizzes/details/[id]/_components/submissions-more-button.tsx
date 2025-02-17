@@ -16,9 +16,7 @@ export default function SubmissionsMoreButton(props: Props) {
         deleteQuizSubmissionById(props.itemId)
             .then((res) => {
                 console.log(res)
-                queryClient.refetchQueries({
-                    queryKey: ["quiz_submissions"],
-                })
+                queryClient.refetchQueries()
                 dismissToasts("loading")
                 toastSuccess("Deleted successfully.")
             })

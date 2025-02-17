@@ -79,6 +79,7 @@ export default function Buttons() {
                 )
                 toastSuccess("Saved successfully.")
                 if (action === "publish") {
+                    console.log("publishing the quiz")
                     await updateQuiz(quizId, { publishing_status: "PUBLISHED" })
                 } else {
                     await updateQuiz(quizId, { publishing_status: "DRAFT" })

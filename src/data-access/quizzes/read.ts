@@ -156,3 +156,30 @@ export async function readQuizSubmissions(params: { quizId: number }) {
         .throwOnError()
     return response.data
 }
+
+export async function readQuizQuestionsDetails(params: { quizId: number }) {
+    const response = await supabase
+        .from("quizzes_questions")
+        .select(`*,quiz_submission_answers(is_skipped, is_answered_correctly)`)
+        .eq("quiz", params.quizId)
+        .order("created_at", {
+            ascending: false,
+        })
+        .throwOnError()
+    const formattedData = response.data.map((question) => {
+        return {
+            ...question,
+            correct: question.quiz_submission_answers.filter(
+                (answer) => answer.is_answered_correctly === true
+            ).length,
+
+            wrong: question.quiz_submission_answers.filter(
+                (answer) => !answer.is_answered_correctly && !answer.is_skipped
+            ).length,
+            skipped: question.quiz_submission_answers.filter(
+                (answer) => answer.is_skipped
+            ).length,
+        }
+    })
+    return formattedData
+}
