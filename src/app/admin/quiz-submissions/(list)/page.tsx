@@ -5,22 +5,16 @@ import DashboardPagination from "@/components/ui/dashboard-pagination"
 import { DataTable } from "@/components/ui/data-table"
 
 import AddCategoryDialog from "@/components/shared/add-category-dialog"
+import SearchInput from "@/components/shared/search-input"
 import { readSubmissionsWithAllData } from "@/data-access/quiz_submissions/read"
 import { useQuery } from "@tanstack/react-query"
 import { Filter } from "lucide-react"
 import { parseAsInteger, parseAsString, useQueryState } from "nuqs"
-import { useEffect, useState } from "react"
+import { useState } from "react"
 import { columns } from "./table-columns"
-import SearchInput from "@/components/shared/search-input"
 
 export default function Page() {
     // const [viewMode, setViewMode] = useLocalStorage("view-mode", "list")
-    const [viewMode, setViewMode] = useState("list")
-
-    useEffect(() => {
-        const savedMode = localStorage.getItem("view-mode") || "list"
-        setViewMode(["cards", "list"].includes(savedMode) ? savedMode : "list")
-    }, [])
 
     const [quizSearchValue, setQuizSearchValue] = useQueryState(
         "quiz-search-value",

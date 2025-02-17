@@ -5,16 +5,15 @@ import { Card } from "@/components/ui/card"
 import { DataTable } from "@/components/ui/data-table"
 import { readSubmissionWithDataById } from "@/data-access/quiz_submissions/read"
 import { cn } from "@/lib/ui-utils"
+import {
+    MatchingPairsContent,
+    MultipleChoiceContent,
+} from "@/schemas/questions-content"
 import { formatDate } from "@/utils/date"
 import { useQuery } from "@tanstack/react-query"
 import { Check, Clock, SkipForward, X } from "lucide-react"
 import { useParams } from "next/navigation"
 import { columns } from "./table-columns"
-import {
-    MatchingPairsContent,
-    MultipleChoiceContent,
-} from "@/schemas/questions-content"
-import { unknown } from "zod"
 export default function Page() {
     const params = useParams()
     const id = Number(params["id"])
@@ -72,6 +71,7 @@ export default function Page() {
             status: status, // failed / succeeded / skipped
             responseContent: responseContent,
             correctAnswers: questionContent["correct"],
+            questionImage: answer.question?.image || undefined,
         }
     })
     return (
@@ -116,7 +116,7 @@ export default function Page() {
                         <Clock className="w-6 h-6 stroke-3 text-neutral-400" />
                     </div>
                     <div className="space-y-1">
-                        <div className="text-3xl mt-3 text-black/80 font-extrabold">
+                        <div className="text-3xl mt-3 text-black/70 font-extrabold">
                             {data?.seconds_spent?.toFixed(1)}s
                         </div>
                         <div className="text-sm font-bold text-neutral-400">
@@ -141,7 +141,7 @@ export default function Page() {
                         <Check className="w-6 h-6 stroke-3  text-neutral-400 " />
                     </div>
                     <div className="space-y-1">
-                        <div className="text-3xl mt-3 text-green-600/80  font-extrabold">
+                        <div className="text-3xl mt-3 text-green-500/90  font-extrabold">
                             {successQuestions}{" "}
                             <span className="text-xl -translate-y-1 inline-flex">
                                 Questions
@@ -167,7 +167,7 @@ export default function Page() {
                         <X className="w-6 h-6 stroke-3 text-neutral-400" />
                     </div>
                     <div className="space-y-1">
-                        <div className="text-3xl mt-3 text-red-600 font-extrabold">
+                        <div className="text-3xl mt-3 text-red-500/90 font-extrabold">
                             {failedQuestions}{" "}
                             <span className="text-xl -translate-y-1 inline-flex">
                                 Questions
@@ -235,4 +235,5 @@ export type AnswerTableItem = {
     status: "skipped" | "failed" | "succeeded"
     responseContent: string[] | string[][]
     correctAnswers: string[] | string[][]
+    questionImage?: string
 }

@@ -1,15 +1,9 @@
-import React from "react"
-import { ChevronLeft, ChevronRight, ChevronUp } from "lucide-react"
-import { ColumnDef } from "@tanstack/react-table"
 import { Badge } from "@/components/ui/badge"
-import { Button } from "@/components/ui/button"
 import { Checkbox } from "@/components/ui/checkbox"
-import ImageWithPreview from "@/components/ui/img-with-preview"
-import TooltipWrapper from "@/components/ui/tooltip"
 import { cn } from "@/lib/ui-utils"
-import { formatDate } from "@/utils/date"
-import { AnswerTableItem } from "./page"
+import { ColumnDef } from "@tanstack/react-table"
 import QuestionResponses from "./_components/question-responses"
+import { AnswerTableItem } from "./page"
 
 export const columns: ColumnDef<AnswerTableItem>[] = [
     {
@@ -85,6 +79,7 @@ export const columns: ColumnDef<AnswerTableItem>[] = [
         cell: ({ row }) => (
             <div className="min-w-[100px] flex items-center justify-center">
                 <QuestionResponses
+                    questionImage={row.original.questionImage}
                     question={row.original.question || ""}
                     questionType={
                         (row.original.questionType as any) || "MULTIPLE_CHOICE"

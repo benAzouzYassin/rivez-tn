@@ -84,3 +84,75 @@ export async function readQuizzesFilteredByCategories(categories: number[]) {
         .throwOnError()
     return response
 }
+
+export async function readQuizWithCategory(params: { id: number }) {
+    const quizData = (
+        await supabase
+            .from("quizzes")
+            .select(`*, category(*)`, {
+                count: "exact",
+            })
+            .eq("id", params.id)
+            .neq("publishing_status", "ARCHIVED")
+            .single()
+            .throwOnError()
+    ).data
+
+    const submissionData = await supabase
+        .from("quiz_submissions")
+        .select(
+            "seconds_spent,quiz_submission_answers(seconds_spent,is_skipped, is_answered_correctly)"
+        )
+        .eq("quiz", quizData.id)
+        .throwOnError()
+
+    let avgSkipped = 0
+    let avgCorrect = 0
+    let avgFailed = 0
+    let avgTimeSpent = 0
+
+    // Process the data to calculate averages
+    if (submissionData && submissionData.data) {
+        const submissions = submissionData.data
+        let totalTimeSpent = 0
+        let totalSkipped = 0
+        let totalCorrect = 0
+        let totalFailed = 0
+        let totalAnswers = 0
+
+        submissions.forEach((submission) => {
+            if (submission.quiz_submission_answers) {
+                totalTimeSpent += submission.seconds_spent || 0
+                submission.quiz_submission_answers.forEach((answer) => {
+                    totalAnswers++
+                    if (answer.is_skipped) {
+                        totalSkipped++
+                    } else if (answer.is_answered_correctly) {
+                        totalCorrect++
+                    } else {
+                        totalFailed++
+                    }
+                })
+            }
+        })
+
+        avgSkipped = totalAnswers > 0 ? totalSkipped / totalAnswers : 0
+        avgCorrect = totalAnswers > 0 ? totalCorrect / totalAnswers : 0
+        avgFailed = totalAnswers > 0 ? totalFailed / totalAnswers : 0
+        avgTimeSpent = totalAnswers > 0 ? totalTimeSpent / totalAnswers : 0
+    }
+    // TODO make the aggregation in the database
+    return { quizData, avgSkipped, avgCorrect, avgFailed, avgTimeSpent }
+}
+
+export async function readQuizSubmissions(params: { quizId: number }) {
+    const response = await supabase
+        .from("quiz_submissions")
+        .select(`*,user(*),quiz_submission_answers(*)`)
+        .eq("quiz", params.quizId)
+        .order("created_at", {
+            ascending: false,
+        })
+        .throwOnError()
+    return response.data
+}

@@ -17,7 +17,6 @@ type Props = {
     questionType: "MATCHING_PAIRS" | "MULTIPLE_CHOICE"
     responses: string[] | string[][]
     correctAnswers: string[] | string[][]
-    questionImage?: string
 }
 
 const QuestionResponses = ({
@@ -25,7 +24,6 @@ const QuestionResponses = ({
     questionType,
     responses,
     correctAnswers,
-    questionImage,
 }: Props) => {
     const [isOpen, setIsOpen] = useState(false)
 
@@ -53,15 +51,7 @@ const QuestionResponses = ({
                                     {question}
                                 </p>
                             </div>
-                            {!!questionImage && (
-                                <div className="h-[250px] overflow-hidden  rounded-xl relative mx-auto border w-[450px]">
-                                    <img
-                                        alt=""
-                                        src={questionImage}
-                                        className="absolute top-0 left-0  w-full h-full object-cover object-center"
-                                    />
-                                </div>
-                            )}
+
                             <div>
                                 <h3 className="text-sm font-extrabold uppercase tracking-wider  text-neutral-500 mb-2">
                                     User Answers
