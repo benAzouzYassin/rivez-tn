@@ -301,9 +301,7 @@ type QuizzesSelectProps = Omit<
 > & { categoryId: number }
 
 function QuizzesSelect({
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     isLoading: isLoadingProp,
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     categoryId,
     ...props
 }: QuizzesSelectProps) {

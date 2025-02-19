@@ -7,10 +7,7 @@ import {
     ChartTooltip,
     ChartTooltipContent,
 } from "@/components/ui/chart"
-import { readQuizQuestionsDetails } from "@/data-access/quizzes/read"
-import { useQuery } from "@tanstack/react-query"
 import { Loader2 } from "lucide-react"
-import { useParams } from "next/navigation"
 import { Bar, BarChart, CartesianGrid, XAxis, YAxis } from "recharts"
 
 const chartConfig = {
@@ -28,42 +25,42 @@ const chartConfig = {
     },
 } satisfies ChartConfig
 
-export function QuestionsBarChart() {
-    const params = useParams()
-    const quizId = Number(params["id"])
-    const { data, isLoading } = useQuery({
-        queryKey: [
-            "quizzes_questions",
-            "quiz",
-            "quiz_submission_answers",
-            quizId,
-        ],
-        queryFn: () => readQuizQuestionsDetails({ quizId }),
-    })
-    const chartData = data?.map((q) => {
-        return {
-            question: q.question,
-            correct: q.correct || 0.03, //if the value is 0 we make 0.03 so the chart does not feel empty
-            wrong: q.wrong || 0.03,
-            skipped: q.skipped || 0.03,
-        }
-    })
+type QuizData = {
+    quizName: string
+    correct: number
+    wrong: number
+    skipped: number
+}
+
+type Props = {
+    data: QuizData[]
+    isLoading?: boolean
+}
+
+export function SubmissionsChart({ data, isLoading = false }: Props) {
+    const chartData = data?.map((q) => ({
+        ...q,
+        correct: q.correct || 0.03,
+        wrong: q.wrong || 0.03,
+        skipped: q.skipped || 0.03,
+    }))
+
     const isDataNotEnough = chartData?.every(
         (item) => item.correct < 1 && item.wrong < 1 && item.skipped < 1
     )
-    return (
-        <Card className=" mt-10 pb-2 pt-5  w-full">
-            <h2 className="text-2xl px-5 font-extrabold  text-black/80">
-                Questions data :
-            </h2>
 
+    return (
+        <Card className=" pb-2 pt-5 w-full">
+            <h2 className="pl-10 text-2xl mb-4 font-extrabold">
+                Quiz submissions chart:{" "}
+            </h2>
             {isLoading ? (
                 <div className="h-80 flex items-center justify-center">
                     <Loader2 className="text-neutral-400 duration-300 w-10 h-10 animate-spin" />
                 </div>
             ) : (
                 <ChartContainer
-                    className="h-full max-h-80 mt-5  w-full"
+                    className="h-full max-h-80 mt-5 w-full"
                     config={chartConfig}
                 >
                     <BarChart
@@ -83,7 +80,7 @@ export function QuestionsBarChart() {
                     >
                         <CartesianGrid vertical={false} />
                         <XAxis
-                            dataKey="question"
+                            dataKey="quizName"
                             tickLine={false}
                             tickMargin={10}
                             axisLine={false}

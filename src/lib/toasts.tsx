@@ -31,7 +31,7 @@ export function toastLoading(message?: string) {
         duration: Infinity,
         id: "loading",
         icon: (
-            <Loader2 className="w-7 h-7 text-blue-500 animate-spin stroke-[2.5]" />
+            <Loader2 className="w-5 h-5 duration-300 text-neutral-500 animate-spin " />
         ),
         className: "font-bold",
     })
