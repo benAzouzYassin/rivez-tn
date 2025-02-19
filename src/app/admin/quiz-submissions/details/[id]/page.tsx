@@ -151,7 +151,7 @@ export default function Page() {
                             {(
                                 ((successQuestions || 0) /
                                     (data?.quiz_submission_answers?.length ||
-                                        0)) *
+                                        1)) *
                                 100
                             ).toFixed(1)}
                             % success rate
@@ -177,7 +177,7 @@ export default function Page() {
                             {(
                                 ((failedQuestions || 0) /
                                     (data?.quiz_submission_answers?.length ||
-                                        0)) *
+                                        1)) *
                                 100
                             ).toFixed(1)}
                             % failure rate
@@ -203,7 +203,7 @@ export default function Page() {
                             {(
                                 ((skippedQuestions || 0) /
                                     (data?.quiz_submission_answers?.length ||
-                                        0)) *
+                                        1)) *
                                 100
                             ).toFixed(1)}
                             % skip rate

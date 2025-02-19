@@ -119,6 +119,7 @@ export default function AddCategoryDialog(props: Props) {
                         name="quizzes"
                         render={({ field: { onChange, value, onBlur } }) => (
                             <QuizzesSelect
+                                placeholder="Quizzes"
                                 inputClassName="w-full "
                                 selectedIds={
                                     value?.map((id) => String(id)) || []

@@ -1,4 +1,4 @@
-import { isUserAdmin } from "@/data-access/users/is-admin"
+import { isCurrentUserAdmin } from "@/data-access/users/is-admin"
 import { NextRequest, NextResponse } from "next/server"
 import { s3Client } from "@/lib/s3"
 import { DeleteObjectCommand, PutObjectCommand } from "@aws-sdk/client-s3"
@@ -18,7 +18,7 @@ export async function POST(req: NextRequest) {
             )
         }
 
-        const isAdmin = await isUserAdmin({ refreshToken, accessToken })
+        const isAdmin = await isCurrentUserAdmin({ refreshToken, accessToken })
         if (!isAdmin) {
             return NextResponse.json(
                 { message: "Unauthorized: Admin access required" },
@@ -79,7 +79,7 @@ export async function DELETE(req: NextRequest) {
             return NextResponse.json(false, { status: 401 })
         }
 
-        const isAdmin = await isUserAdmin({ refreshToken, accessToken })
+        const isAdmin = await isCurrentUserAdmin({ refreshToken, accessToken })
         if (!isAdmin) {
             return NextResponse.json(false, { status: 403 })
         }

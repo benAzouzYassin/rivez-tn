@@ -28,7 +28,7 @@ BEGIN
 
   INSERT INTO public.user_roles (
     user_id
-  )
+      )
   VALUES (
     new.id
   ); 

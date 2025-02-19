@@ -10,6 +10,7 @@ import {
     Home,
     Settings,
     SquareMousePointer,
+    Users2,
 } from "lucide-react"
 
 type Props = {
@@ -22,12 +23,12 @@ export default function AdminLayout({ children }: Props) {
             <UserHeader />
             <Sidenav
                 items={[
-                    {
-                        name: "Dashboard",
-                        icon: <Home className="!w-6 !h-6" />,
-                        route: "/admin/dashboard",
-                        iconScale: "105",
-                    },
+                    // {
+                    //     name: "Dashboard",
+                    //     icon: <Home className="!w-6 !h-6" />,
+                    //     route: "/admin/dashboard",
+                    //     iconScale: "105",
+                    // },
                     {
                         name: "Quizzes",
                         icon: <Gamepad2 className="!w-6 !h-6" />,
@@ -44,7 +45,12 @@ export default function AdminLayout({ children }: Props) {
                         route: "/admin/quiz-submissions",
                     },
                     {
-                        name: "User preview",
+                        name: "Users",
+                        icon: <Users2 className="!w-6 !h-6" />,
+                        route: "/admin/users",
+                    },
+                    {
+                        name: "Public view",
                         icon: <AppWindowIcon className="!w-6 !h-6" />,
                         route: "/learn",
                     },

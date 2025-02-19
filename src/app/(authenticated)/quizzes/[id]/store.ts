@@ -1,14 +1,12 @@
-import { create } from "zustand"
-import { Database } from "@/types/database.types"
+import { saveSubmission } from "@/data-access/quiz_submissions/create"
 import {
     CodeCompletionContent,
     DebugCodeContent,
     MatchingPairsContent,
     MultipleChoiceContent,
 } from "@/schemas/questions-content"
-import { createQuizSubmission } from "@/data-access/quiz_submissions/create"
-import { createQuizSubmissionAnswers } from "@/data-access/quiz_submission_answers/create"
-import { deleteQuizSubmissionById } from "@/data-access/quiz_submissions/delete"
+import { Database } from "@/types/database.types"
+import { create } from "zustand"
 
 interface State {
     startDate: Date | null
@@ -88,31 +86,46 @@ export const useQuestionsStore = create<Store>((set, get) => ({
                 }
             }),
         }
-        let quizSubmissionId: null | number = null
+        // let quizSubmissionId: null | number = null
         try {
-            quizSubmissionId = (
-                await createQuizSubmission({
-                    quiz: Number(quizData.quizId),
-                    seconds_spent: quizData.secondsSpent || 0,
-                    user: quizData.userId,
-                })
-            )[0].id
-            await createQuizSubmissionAnswers(
-                quizData.answers.map((item) => ({
+            await saveSubmission({
+                answersData: quizData.answers.map((item) => ({
                     failed_attempts: item.failedAttempts,
                     is_answered_correctly: item.isAnsweredCorrectly,
                     is_skipped: item.isSkipped,
                     question: item.questionId,
-                    quiz_submission: quizSubmissionId,
                     responses: item.responses,
                     seconds_spent: item.secondsSpent || 0,
-                }))
-            )
+                })),
+                submissionData: {
+                    quiz: Number(quizData.quizId),
+                    seconds_spent: quizData.secondsSpent || 0,
+                    user: quizData.userId,
+                },
+            })
+            // quizSubmissionId = (
+            //     await createQuizSubmission({
+            //         quiz: Number(quizData.quizId),
+            //         seconds_spent: quizData.secondsSpent || 0,
+            //         user: quizData.userId,
+            //     })
+            // )[0].id
+            // await createQuizSubmissionAnswers(
+            //     quizData.answers.map((item) => ({
+            //         failed_attempts: item.failedAttempts,
+            //         is_answered_correctly: item.isAnsweredCorrectly,
+            //         is_skipped: item.isSkipped,
+            //         question: item.questionId,
+            //         quiz_submission: quizSubmissionId,
+            //         responses: item.responses,
+            //         seconds_spent: item.secondsSpent || 0,
+            //     }))
+            // )
             return true
         } catch (error) {
-            if (quizSubmissionId) {
-                await deleteQuizSubmissionById(quizSubmissionId)
-            }
+            // if (quizSubmissionId) {
+            //     await deleteQuizSubmissionById(quizSubmissionId)
+            // }
             console.error(error)
             return false
         }

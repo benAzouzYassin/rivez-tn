@@ -103,7 +103,7 @@ export default function UserHeader() {
                         >
                             <UserMenu
                                 items={menuItems}
-                                userName={user?.identities?.[0].displayName}
+                                userName={user?.userName || ""}
                             />
                         </PopoverContent>
                     </Popover>
