@@ -92,6 +92,7 @@ export type Database = {
           quiz: number | null
           seconds_spent: number | null
           user: string | null
+          xp_gained: number | null
         }
         Insert: {
           created_at?: string
@@ -99,6 +100,7 @@ export type Database = {
           quiz?: number | null
           seconds_spent?: number | null
           user?: string | null
+          xp_gained?: number | null
         }
         Update: {
           created_at?: string
@@ -106,6 +108,7 @@ export type Database = {
           quiz?: number | null
           seconds_spent?: number | null
           user?: string | null
+          xp_gained?: number | null
         }
         Relationships: [
           {
@@ -249,24 +252,33 @@ export type Database = {
       user_profiles: {
         Row: {
           avatar_url: string | null
+          created_at: string
           email: string | null
+          is_banned: boolean
           phone: string | null
           user_id: string
           username: string | null
+          xp_points: number | null
         }
         Insert: {
           avatar_url?: string | null
+          created_at?: string
           email?: string | null
+          is_banned?: boolean
           phone?: string | null
           user_id?: string
           username?: string | null
+          xp_points?: number | null
         }
         Update: {
           avatar_url?: string | null
+          created_at?: string
           email?: string | null
+          is_banned?: boolean
           phone?: string | null
           user_id?: string
           username?: string | null
+          xp_points?: number | null
         }
         Relationships: []
       }

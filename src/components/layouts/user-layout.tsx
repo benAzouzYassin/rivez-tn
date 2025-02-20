@@ -18,7 +18,7 @@ export default function UserLayout({ children }: Props) {
                   {
                       name: "Dashboard",
                       icon: <LockIcon className="!w-6 !h-6" />,
-                      route: "/admin/dashboard",
+                      route: "/admin/quizzes",
                   },
               ]
             : []
@@ -31,10 +31,6 @@ export default function UserLayout({ children }: Props) {
                         name: "Learn",
                         icon: <Home className="!w-6 !h-6" />,
                         route: "/learn",
-                    },
-                    {
-                        name: "Ranking",
-                        icon: <ChartColumnDecreasing className="!w-6 !h-6" />,
                     },
                     ...adminItems,
                 ]}

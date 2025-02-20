@@ -1,4 +1,5 @@
 import { supabase } from "@/lib/supabase-client-side"
+import axios from "axios"
 
 export async function registerUserWithGoogle(params?: { redirectTo?: string }) {
     const { error } = await supabase.auth.signInWithOAuth({
@@ -40,12 +41,25 @@ export async function registerUserWithPassword(params: {
             phone: params.phone,
         })
         if (data.user?.id) {
-            await supabase
-                .from("user_profiles")
-                .update({
+            const {
+                data: { session },
+            } = await supabase.auth.getSession()
+            if (!session) {
+                throw new Error("Session error")
+            }
+
+            await axios.patch(
+                `/api/user/update-profile-phone`,
+                {
                     phone: params.phone,
-                })
-                .eq("user_id", data.user.id)
+                },
+                {
+                    headers: {
+                        "access-token": session.access_token,
+                        "refresh-token": session.refresh_token,
+                    },
+                }
+            )
         }
     }
 

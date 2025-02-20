@@ -82,7 +82,9 @@ export default function UserHeader() {
                     <TooltipWrapper content="XP Points">
                         <div className="flex items-center gap-2 rounded-full bg-orange-50 px-4 py-2 text-orange-500 hover:bg-orange-100 transition-colors">
                             <XpIcon className="h-5 w-5" />
-                            <span className="font-medium">{0}</span>
+                            <span className="font-medium">
+                                {user?.xp_points}
+                            </span>
                         </div>
                     </TooltipWrapper>
 
@@ -103,7 +105,7 @@ export default function UserHeader() {
                         >
                             <UserMenu
                                 items={menuItems}
-                                userName={user?.identities?.[0].displayName}
+                                userName={user?.userName || ""}
                             />
                         </PopoverContent>
                     </Popover>

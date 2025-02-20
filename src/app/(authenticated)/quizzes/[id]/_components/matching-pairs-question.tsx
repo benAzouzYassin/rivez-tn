@@ -103,8 +103,11 @@ export default function MatchingPairsQuestion(props: Props) {
                         if (success) {
                             queryClient.invalidateQueries({
                                 predicate: (query) =>
-                                    query.queryKey.some(
-                                        (key) => key === "quiz_submissions"
+                                    query.queryKey.some((key) =>
+                                        [
+                                            "quiz_submissions",
+                                            "current-user",
+                                        ].includes(key as string)
                                     ),
                             })
                         } else {
@@ -127,6 +130,8 @@ export default function MatchingPairsQuestion(props: Props) {
     }
 
     const handleWrongAnswer = () => {
+        handleFailedQuestions([props.question.id])
+
         addAnswerToState({
             questionId: props.question.id,
             questionType: "MATCHING_PAIRS",
@@ -141,8 +146,11 @@ export default function MatchingPairsQuestion(props: Props) {
                         if (success) {
                             queryClient.invalidateQueries({
                                 predicate: (query) =>
-                                    query.queryKey.some(
-                                        (key) => key === "quiz_submissions"
+                                    query.queryKey.some((key) =>
+                                        [
+                                            "quiz_submissions",
+                                            "current-user",
+                                        ].includes(key as string)
                                     ),
                             })
                         } else {
@@ -155,7 +163,6 @@ export default function MatchingPairsQuestion(props: Props) {
             }
         }
 
-        handleFailedQuestions([props.question.id])
         setRightSelectedOption(null)
         setLeftSelectedOption(null)
         incrementQuestionIndex()
@@ -271,6 +278,7 @@ export default function MatchingPairsQuestion(props: Props) {
 
             <ConfirmationBanner
                 onSkip={() => {
+                    handleSkippedQuestions([props.question.id])
                     addAnswerToState({
                         questionId: props.question.id,
                         questionType: "MATCHING_PAIRS",
@@ -284,7 +292,6 @@ export default function MatchingPairsQuestion(props: Props) {
                             1000,
                     })
                     handleNextQuestion()
-                    handleSkippedQuestions([props.question.id])
                 }}
                 actionType={"skip"}
                 onConfirm={() => {}}

@@ -15,6 +15,13 @@ export async function readCurrentUser() {
         .select("user_role")
         .eq("user_id", userResponse.data.user.id)
         .single()
+
+    const userProfileResponse = await supabase
+        .from("user_profiles")
+        .select("username,xp_points")
+        .eq("user_id", userResponse.data.user.id)
+        .single()
+
     if (userRoleResponse.error) {
         return {
             data: {},
@@ -22,10 +29,10 @@ export async function readCurrentUser() {
             error: userResponse.error,
         }
     }
-    const userData = userRoleResponse.data
     return {
         data: {
-            user_role: userData.user_role,
+            user_role: userRoleResponse.data.user_role,
+            xp_points: userProfileResponse.data?.xp_points || 0,
             id: userResponse.data.user?.id,
             email: userResponse.data.user?.email,
             emailConfirmedAt: userResponse.data.user?.email_confirmed_at,
@@ -37,8 +44,10 @@ export async function readCurrentUser() {
                 avatar: identity?.identity_data?.avatar_url,
                 displayName:
                     identity?.identity_data?.displayName ||
+                    identity?.identity_data?.username ||
                     identity?.identity_data?.name,
             })),
+            userName: userProfileResponse.data?.username,
             createdAt: userResponse.data.user?.created_at,
         },
         success: true,
@@ -58,4 +67,88 @@ export async function readCurrentSession() {
             stack: error?.stack,
         },
     }
+}
+export async function readUsersProfilesWithDetails(config?: {
+    filters?: {
+        userSearch?: string
+    }
+    pagination?: {
+        currentPage: number
+        itemsPerPage: number
+    }
+}) {
+    const isFiltering = !!config?.filters?.userSearch
+    let query = supabase
+        .from("user_profiles")
+        .select(
+            `*,quiz_submissions(*,quiz_submission_answers(is_answered_correctly,is_skipped))`,
+            {
+                count: "exact",
+            }
+        )
+        .order("created_at", { ascending: false })
+
+    if (isFiltering) {
+        query = query.or(
+            `username.ilike.%${config?.filters?.userSearch}%,email.ilike.%${config?.filters?.userSearch}%,phone.ilike.%${config?.filters?.userSearch}%`
+        )
+    }
+
+    if (config?.pagination && !isFiltering) {
+        const { currentPage, itemsPerPage } = config.pagination
+        query = query.range(
+            (currentPage - 1) * itemsPerPage,
+            currentPage * itemsPerPage - 1
+        )
+    }
+
+    const response = await query.throwOnError()
+
+    const formatUserData = (user: (typeof response.data)[number]) => ({
+        ...user,
+        quiz_submissions: user.quiz_submissions.reduce(
+            (acc, curr) => {
+                const answersCount = {
+                    skipped: curr.quiz_submission_answers.filter(
+                        (answer) => answer.is_skipped === true
+                    ).length,
+                    wrong: curr.quiz_submission_answers.filter(
+                        (answer) =>
+                            !answer.is_answered_correctly && !answer.is_skipped
+                    ).length,
+                    correct: curr.quiz_submission_answers.filter(
+                        (answer) => answer.is_answered_correctly === true
+                    ).length,
+                }
+
+                return {
+                    correctAnswers: answersCount.correct + acc.correctAnswers,
+                    skippedAnswers: answersCount.skipped + acc.skippedAnswers,
+                    wrongAnswers: answersCount.wrong + acc.wrongAnswers,
+                    submissionsCount: acc.submissionsCount + 1,
+                }
+            },
+            {
+                submissionsCount: 0,
+                correctAnswers: 0,
+                skippedAnswers: 0,
+                wrongAnswers: 0,
+            }
+        ),
+    })
+
+    const formattedData = response.data.map(formatUserData)
+    return { data: formattedData, count: response.count }
+}
+
+export async function readUserProfileWithData(params: { user_id: string }) {
+    const response = await supabase
+        .from("user_profiles")
+        .select(
+            `*,quiz_submissions(*,quiz(name,image),quiz_submission_answers(is_answered_correctly,is_skipped))`
+        )
+        .eq("user_id", params.user_id)
+        .single()
+        .throwOnError()
+    return response.data
 }

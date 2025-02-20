@@ -67,7 +67,7 @@ export function QuestionsBarChart() {
                     config={chartConfig}
                 >
                     <BarChart
-                        barGap={100}
+                        barGap={10}
                         data={
                             isDataNotEnough
                                 ? chartData?.map((item) => ({
@@ -87,13 +87,7 @@ export function QuestionsBarChart() {
                             tickLine={false}
                             tickMargin={10}
                             axisLine={false}
-                            tickFormatter={(value) =>
-                                value.slice(0, 10) + "...."
-                            }
-                            tick={{
-                                fontSize: 14,
-                                fontWeight: 700,
-                            }}
+                            tick={false}
                         />
                         <YAxis
                             tickLine={false}

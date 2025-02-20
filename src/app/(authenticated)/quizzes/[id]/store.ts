@@ -1,21 +1,29 @@
-import { create } from "zustand"
-import { Database } from "@/types/database.types"
+import { saveSubmission } from "@/data-access/quiz_submissions/create"
 import {
     CodeCompletionContent,
     DebugCodeContent,
     MatchingPairsContent,
     MultipleChoiceContent,
 } from "@/schemas/questions-content"
-import { createQuizSubmission } from "@/data-access/quiz_submissions/create"
-import { createQuizSubmissionAnswers } from "@/data-access/quiz_submission_answers/create"
-import { deleteQuizSubmissionById } from "@/data-access/quiz_submissions/delete"
+import { Database } from "@/types/database.types"
+import { wait } from "@/utils/wait"
+import { create } from "zustand"
 
 interface State {
+    savedResult: {
+        correctAnswers: number
+        xpGained: number
+        secondsSpent: number
+    } | null
+    isSavingResults: boolean
+    isSavingError: boolean
+    isSavingSuccess: boolean
     startDate: Date | null
     currentQuestionIndex: number
     failedQuestionsIds: number[]
     questions: QuestionType[]
     skippedQuestionsIds: number[]
+
     answers: {
         secondsSpent: number
         questionId: number
@@ -43,6 +51,11 @@ interface Actions {
 
 type Store = Actions & State
 const initialState: State = {
+    savedResult: null,
+    isSavingResults: false,
+    isSavingError: false,
+    isSavingSuccess: false,
+
     currentQuestionIndex: 0,
     failedQuestionsIds: [],
     questions: [],
@@ -56,6 +69,7 @@ export const useQuestionsStore = create<Store>((set, get) => ({
     addAnswer: (answer) =>
         set((state) => ({ answers: [...state.answers, answer] })),
     handleQuizFinish: async (params: { quizId: string; userId: string }) => {
+        set({ isSavingResults: true, isSavingError: false })
         const startDate = get().startDate?.getTime()
         const secondsSpent = startDate
             ? (new Date().getTime() - startDate) / 1000
@@ -88,31 +102,43 @@ export const useQuestionsStore = create<Store>((set, get) => ({
                 }
             }),
         }
-        let quizSubmissionId: null | number = null
+        const correctAnswersCount = quizData.answers.filter(
+            (item) => item.isAnsweredCorrectly
+        ).length
         try {
-            quizSubmissionId = (
-                await createQuizSubmission({
-                    quiz: Number(quizData.quizId),
-                    seconds_spent: quizData.secondsSpent || 0,
-                    user: quizData.userId,
-                })
-            )[0].id
-            await createQuizSubmissionAnswers(
-                quizData.answers.map((item) => ({
+            const xpGained = await saveSubmission({
+                answersData: quizData.answers.map((item) => ({
                     failed_attempts: item.failedAttempts,
                     is_answered_correctly: item.isAnsweredCorrectly,
                     is_skipped: item.isSkipped,
                     question: item.questionId,
-                    quiz_submission: quizSubmissionId,
                     responses: item.responses,
                     seconds_spent: item.secondsSpent || 0,
-                }))
-            )
+                })),
+                submissionData: {
+                    quiz: Number(quizData.quizId),
+                    seconds_spent: quizData.secondsSpent || 0,
+                    user: quizData.userId,
+                },
+            })
+            set({
+                isSavingResults: false,
+                isSavingSuccess: true,
+                isSavingError: false,
+                savedResult: {
+                    correctAnswers: correctAnswersCount,
+                    secondsSpent,
+                    xpGained,
+                },
+            })
             return true
         } catch (error) {
-            if (quizSubmissionId) {
-                await deleteQuizSubmissionById(quizSubmissionId)
-            }
+            set({
+                isSavingError: true,
+                savedResult: null,
+                isSavingResults: false,
+                isSavingSuccess: false,
+            })
             console.error(error)
             return false
         }

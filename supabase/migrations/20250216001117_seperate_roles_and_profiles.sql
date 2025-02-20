@@ -95,7 +95,8 @@ alter table "public"."user_profiles" enable row level security;
 
 create table "public"."user_roles" (
     "user_id" uuid not null default gen_random_uuid(),
-    "user_role" user_role_types default 'ADMIN'::user_role_types
+    "user_role" user_role_types default 'USER'::user_role_types,
+    "email" text
 );
 
 
