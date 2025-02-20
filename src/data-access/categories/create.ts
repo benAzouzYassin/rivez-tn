@@ -6,6 +6,7 @@ export async function createCategoryWithQuizzes(params: {
     quizzes: number[]
 }) {
     try {
+        // TODO make this implemented inside a transaction
         const { data } = await supabase
             .from("quizzes_categories")
             .insert(params.category)
@@ -23,7 +24,7 @@ export async function createCategoryWithQuizzes(params: {
                 .from("quizzes_categories")
                 .delete()
                 .eq("id", categoryId)
-            throw new Error("Error while update the quizzes.")
+            throw new Error("Error while updating the quizzes.")
         }
 
         return categoryId

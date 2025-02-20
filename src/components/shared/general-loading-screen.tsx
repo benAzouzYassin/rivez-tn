@@ -1,0 +1,106 @@
+"use client"
+
+import { motion } from "framer-motion"
+type Props = {
+    text?: string
+}
+export default function GeneralLoadingScreen(props: Props) {
+    const containerVariants = {
+        hidden: { opacity: 0 },
+        visible: {
+            opacity: 1,
+            transition: {
+                staggerChildren: 0.2,
+            },
+        },
+    }
+
+    const pulseVariants = {
+        hidden: { opacity: 0, scale: 0.8 },
+        visible: {
+            opacity: [0.3, 0.6, 0.3],
+            scale: [0.8, 1, 0.8],
+            transition: {
+                duration: 2.5,
+                repeat: Infinity,
+                ease: "easeInOut",
+            },
+        },
+    }
+
+    const circleVariants = {
+        hidden: { opacity: 0, y: 20 },
+        visible: {
+            opacity: 1,
+            y: 0,
+            transition: {
+                duration: 0.6,
+                ease: "easeOut",
+            },
+        },
+    }
+
+    return (
+        <motion.main
+            className="min-h-[70vh] flex items-center justify-center  bg-white"
+            initial="hidden"
+            animate="visible"
+            variants={containerVariants}
+        >
+            <motion.div
+                className="flex flex-col -translate-y-20  items-center justify-center"
+                variants={containerVariants}
+            >
+                <motion.h2
+                    className="text-5xl pb-1 flex  items-end font-black text-transparent bg-clip-text bg-gradient-to-r from-neutral-600 to-neutral-800"
+                    variants={circleVariants}
+                >
+                    {props.text || "Loading "}{" "}
+                    <div className="flex items-center gap-1 -translate-y-2 ml-1">
+                        <div className="w-3 h-3 bg-neutral-700 rounded-full"></div>
+                        <div className="w-3 h-3 bg-neutral-700 rounded-full"></div>
+                        <div className="w-3 h-3 bg-neutral-700 rounded-full"></div>
+                    </div>
+                </motion.h2>
+                <motion.div
+                    className="mt-5 flex flex-col items-center gap-3"
+                    variants={containerVariants}
+                >
+                    <motion.div
+                        className=" relative  w-screen  flex items-center justify-center gap-2"
+                        variants={containerVariants}
+                        initial="hidden"
+                        animate="visible"
+                    >
+                        <motion.div
+                            className="relative"
+                            initial={{ scale: 0 }}
+                            animate={{ scale: 1 }}
+                            transition={{
+                                type: "spring",
+                                stiffness: 260,
+                                damping: 20,
+                            }}
+                        >
+                            {/* Pulsing circles with neutral colors */}
+                            <motion.div
+                                className="absolute left-1/2 -translate-x-1/2 -translatye top-0 w-24 h-24 bg-gradient-to-r from-blue-300 to-blue-300 rounded-full blur-sm"
+                                variants={pulseVariants}
+                            />
+                            <motion.div
+                                className="absolute left-1/2 -translate-x-1/2 top-0 w-24 h-24 bg-gradient-to-r from-blue-300 to-blue-400 rounded-full blur-sm"
+                                variants={pulseVariants}
+                                style={{ animationDelay: "0.3s" }}
+                            />
+                            <motion.div
+                                className="absolute left-1/2 -translate-x-1/2 top-0 w-24 h-24 bg-gradient-to-r from-blue-400 to-blue-500 rounded-full blur-sm"
+                                variants={pulseVariants}
+                                style={{ animationDelay: "0.6s" }}
+                            />
+                        </motion.div>
+                    </motion.div>
+                </motion.div>
+            </motion.div>
+        </motion.main>
+    )
+}

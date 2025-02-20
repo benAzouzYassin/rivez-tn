@@ -5,7 +5,7 @@ import DashboardPagination from "@/components/ui/dashboard-pagination"
 import { DataTable } from "@/components/ui/data-table"
 import {
     QuizWithCategory,
-    readQuizzesWithCategory,
+    readQuizzesWithDetails,
 } from "@/data-access/quizzes/read"
 
 import { useQuery } from "@tanstack/react-query"
@@ -47,7 +47,7 @@ export default function Page() {
             searchValue,
         ],
         queryFn: () =>
-            readQuizzesWithCategory({
+            readQuizzesWithDetails({
                 filters: {
                     name: searchValue || undefined,
                 },

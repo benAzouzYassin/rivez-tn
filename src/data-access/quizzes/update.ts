@@ -142,3 +142,93 @@ interface DbMatchingPairsContent {
     leftSideOptions: string[]
     correct: string[][]
 }
+
+export async function updateQuizQuestions(
+    questions: {
+        id: number
+        quizId: number
+        content:
+            | AddQuestionToQuizContentTypes["MatchingPairs"]
+            | AddQuestionToQuizContentTypes["MultipleChoice"]
+        image: string
+        question: string
+        type: "MULTIPLE_CHOICE" | "MATCHING_PAIRS"
+        layout: "vertical" | "horizontal"
+    }[]
+) {
+    const formattedData = questions.map((q) => {
+        if (q.type === "MULTIPLE_CHOICE") {
+            const content = q.content as
+                | AddQuestionToQuizContentTypes["MultipleChoice"]
+                | undefined
+
+            const correct =
+                content?.options
+                    .filter((opt) => opt.isCorrect === true)
+                    .map((opt) => opt.text) || []
+            const options = content?.options.map((opt) => opt.text) || []
+
+            return {
+                quiz: q.quizId,
+                id: q.id,
+                image: q.image,
+                type: q.type,
+                question: q.question,
+                layout: q.layout,
+                content: {
+                    correct,
+                    options,
+                } satisfies DbMultipleChoiceContent,
+            }
+        }
+        if (q.type === "MATCHING_PAIRS") {
+            const content = q.content as
+                | AddQuestionToQuizContentTypes["MatchingPairs"]
+                | undefined
+            const correct =
+                content?.rightOptions
+                    .map((opt) => {
+                        return [
+                            opt.text,
+                            content.leftOptions.find(
+                                (leftOpt) =>
+                                    leftOpt.localId === opt.leftOptionLocalId
+                            )?.text,
+                        ]
+                    })
+                    .filter((item) =>
+                        item.every(
+                            (item) => item !== null && item !== undefined
+                        )
+                    ) || []
+
+            return {
+                quiz: q.quizId,
+                id: q.id,
+                image: q.image,
+                type: q.type,
+                question: q.question,
+                layout: q.layout,
+                content: {
+                    correct,
+                    leftSideOptions:
+                        content?.leftOptions.map((opt) => opt.text) || [],
+                    rightSideOptions:
+                        content?.rightOptions.map((opt) => opt.text) || [],
+                } satisfies DbMatchingPairsContent,
+            }
+        }
+        return null
+    })
+    if (formattedData.some((q) => !q)) {
+        throw new Error("Some questions content is not valid")
+    }
+    const response = await supabase
+        .from("quizzes_questions")
+        .upsert(formattedData as any, {
+            onConflict: "id",
+            ignoreDuplicates: false,
+        })
+        .throwOnError()
+    return response
+}
