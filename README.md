@@ -1,3 +1,5 @@
+## Supabase useful commands
+
 ### generate migrations
 
 `bunx supabase db diff -f <file_name>`
@@ -13,7 +15,3 @@
 ### reset && seed local database
 
 `bunx supabase db reset --local`
-
-## Assets management
-
-![](/public/readme/assets-management.png)

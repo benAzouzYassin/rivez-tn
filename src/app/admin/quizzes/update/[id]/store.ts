@@ -1,12 +1,21 @@
+import { readQuizQuestions } from "@/data-access/quizzes/read"
+import {
+    MatchingPairsContent,
+    MultipleChoiceContent,
+    PossibleQuestionTypes,
+} from "@/schemas/questions-content"
 import { create } from "zustand"
-import { PossibleQuestionTypes } from "@/schemas/questions-content"
 
 interface State {
     allQuestions: QuizQuestionType[]
     selectedQuestionLocalId: string | null
+    isLoadingData: boolean
+    isLoadingError: boolean
+    deletedQuestionsIds: number[]
 }
 
 interface Actions {
+    loadQuizData: (quizId: number) => void
     setSelectedQuestion: (localId: string | null) => void
     setAllQuestions: (questions: QuizQuestionType[]) => void
     getQuestion: (localId: string) => QuizQuestionType | undefined
@@ -29,7 +38,7 @@ interface Actions {
 
     updateMultipleChoiceQuestionOption: (
         question: Partial<
-            Omit<MultipleChoiceOptions["options"][number], "localId">
+            Omit<StateMultipleChoiceOptions["options"][number], "localId">
         >,
         questionLocalId: string,
         optionLocalId: string
@@ -41,28 +50,14 @@ interface Actions {
 type Store = State & Actions
 
 const initialState: State = {
-    allQuestions: [
-        {
-            content: {
-                options: [
-                    {
-                        isCorrect: true,
-                        localId: crypto.randomUUID(),
-                        text: "",
-                    },
-                ],
-            },
-            imageUrl: null,
-            localId: "1",
-            questionText: "",
-            type: "MULTIPLE_CHOICE",
-            layout: "horizontal",
-        },
-    ],
-    selectedQuestionLocalId: "1",
+    deletedQuestionsIds: [],
+    isLoadingData: true,
+    isLoadingError: false,
+    allQuestions: [],
+    selectedQuestionLocalId: null,
 }
 
-const useQuizStore = create<Store>((set, get) => ({
+const useUpdateQuizStore = create<Store>((set, get) => ({
     ...initialState,
 
     setAllQuestions: (allQuestions) => set({ allQuestions }),
@@ -73,6 +68,9 @@ const useQuizStore = create<Store>((set, get) => ({
     removeQuestion: (localId: string) => {
         set((state) => {
             const isSelected = state.selectedQuestionLocalId === localId
+            const questionId = state.allQuestions.find(
+                (q) => q.localId === localId
+            )?.questionId
             const updated = state.allQuestions.filter(
                 (q) => q.localId !== localId
             )
@@ -81,6 +79,9 @@ const useQuizStore = create<Store>((set, get) => ({
                 selectedQuestionLocalId: isSelected
                     ? updated[updated.length - 1]?.localId || null
                     : state.selectedQuestionLocalId,
+                deletedQuestionsIds: questionId
+                    ? [...state.deletedQuestionsIds, questionId]
+                    : state.deletedQuestionsIds,
             }
         })
     },
@@ -111,7 +112,7 @@ const useQuizStore = create<Store>((set, get) => ({
                             q.type == "MATCHING_PAIRS"
                         ) {
                             const content = q.content as
-                                | MatchingPairsOptions
+                                | StateMatchingPairsOptions
                                 | undefined
                             return {
                                 ...q,
@@ -142,7 +143,7 @@ const useQuizStore = create<Store>((set, get) => ({
                             q.type == "MATCHING_PAIRS"
                         ) {
                             const content = q.content as
-                                | MatchingPairsOptions
+                                | StateMatchingPairsOptions
                                 | undefined
                             return {
                                 ...q,
@@ -171,7 +172,7 @@ const useQuizStore = create<Store>((set, get) => ({
                 allQuestions: state.allQuestions.map((q) => {
                     if (q.localId === state.selectedQuestionLocalId) {
                         const content = q.content as
-                            | MatchingPairsOptions
+                            | StateMatchingPairsOptions
                             | undefined
 
                         if (side === "left") {
@@ -231,7 +232,7 @@ const useQuizStore = create<Store>((set, get) => ({
             allQuestions: state.allQuestions.map((q) => {
                 if (q.localId === state.selectedQuestionLocalId) {
                     const content = q.content as
-                        | MatchingPairsOptions
+                        | StateMatchingPairsOptions
                         | undefined
                     if (side === "right") {
                         return {
@@ -269,7 +270,7 @@ const useQuizStore = create<Store>((set, get) => ({
             allQuestions: state.allQuestions.map((question) => {
                 if (question.localId !== questionLocalId) return question
                 if (question.type !== "MULTIPLE_CHOICE") return question
-                const content = question.content as MultipleChoiceOptions
+                const content = question.content as StateMultipleChoiceOptions
                 const updatedOptions = content.options.map((option) =>
                     option.localId === optionLocalId
                         ? { ...option, ...updatedOption }
@@ -290,13 +291,90 @@ const useQuizStore = create<Store>((set, get) => ({
     setSelectedQuestion: (selectedQuestionLocalId: string | null) =>
         set({ selectedQuestionLocalId }),
 
+    loadQuizData: async (quizId: number) => {
+        set(initialState)
+        try {
+            const data = await readQuizQuestions({
+                quizId,
+            })
+            const formattedQuestions = data
+                .map((q) => {
+                    let contentForState = null as
+                        | StateMatchingPairsOptions
+                        | StateMultipleChoiceOptions
+                        | null
+
+                    if (q.type === "MATCHING_PAIRS") {
+                        const content = q.content as MatchingPairsContent
+                        const leftOptions = content.leftSideOptions.map(
+                            (opt) => ({
+                                localId: crypto.randomUUID(),
+                                text: opt,
+                            })
+                        )
+                        const rightOptions = content.rightSideOptions.map(
+                            (opt) => {
+                                const pairedLeftOption = content.correct
+                                    .find((pair) => pair.includes(opt))
+                                    ?.filter((item) => item !== opt)[0]
+                                const pairedLeftOptionLocalId =
+                                    leftOptions.find(
+                                        (item) => item.text === pairedLeftOption
+                                    )?.localId
+                                return {
+                                    localId: crypto.randomUUID(),
+                                    text: opt,
+                                    leftOptionLocalId:
+                                        pairedLeftOptionLocalId || null,
+                                }
+                            }
+                        )
+                        contentForState = {
+                            leftOptions,
+                            rightOptions,
+                        } satisfies StateMatchingPairsOptions
+                    }
+                    if (q.type === "MULTIPLE_CHOICE") {
+                        const content = q.content as MultipleChoiceContent
+                        contentForState = {
+                            options: content.options.map((opt) => ({
+                                isCorrect: content.correct.includes(opt),
+                                localId: crypto.randomUUID(),
+                                text: opt,
+                            })),
+                        } satisfies StateMultipleChoiceOptions
+                    }
+                    if (!contentForState) return null
+                    return {
+                        content: contentForState,
+                        imageUrl: q.image,
+                        layout: (q.layout as any) || "horizontal",
+                        localId: String(q.id),
+                        questionId: q.id,
+                        questionText: q.question,
+                        type: q.type as any,
+                    } satisfies QuizQuestionType
+                })
+                .filter((q) => q !== null)
+            set({
+                isLoadingData: false,
+                isLoadingError: false,
+                allQuestions: formattedQuestions,
+                selectedQuestionLocalId: formattedQuestions[0].localId,
+            })
+        } catch (error) {
+            set({ isLoadingData: false, isLoadingError: true })
+        }
+    },
+
     reset: () => set(initialState),
 }))
 
-export default useQuizStore
+export default useUpdateQuizStore
 
 export interface QuizQuestionType {
-    content: MultipleChoiceOptions | MatchingPairsOptions
+    questionId: number | null
+    content: StateMultipleChoiceOptions | StateMatchingPairsOptions
     localId: string
     questionText: string
     imageUrl: string | null
@@ -304,10 +382,10 @@ export interface QuizQuestionType {
     layout: "horizontal" | "vertical"
 }
 
-export interface MultipleChoiceOptions {
+export interface StateMultipleChoiceOptions {
     options: { text: string; localId: string; isCorrect: boolean | null }[]
 }
-export interface MatchingPairsOptions {
+export interface StateMatchingPairsOptions {
     leftOptions: {
         text: string
         localId: string

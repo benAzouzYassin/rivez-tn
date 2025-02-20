@@ -19,3 +19,12 @@ export async function softDeleteQuizById(id: number) {
         .throwOnError()
     return response
 }
+
+export async function deleteQuizQuestions(params: { questionIds: number[] }) {
+    const response = await supabase
+        .from("quizzes_questions")
+        .delete()
+        .in("id", params.questionIds)
+        .throwOnError()
+    return response
+}

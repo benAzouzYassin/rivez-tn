@@ -3,7 +3,6 @@
 import { motion } from "framer-motion"
 import { useRouter } from "nextjs-toploader/app"
 import { Button } from "../ui/button"
-import Link from "next/link"
 
 interface ErrorDisplayProps {
     message?: string
@@ -50,7 +49,7 @@ export const ErrorDisplay: React.FC<ErrorDisplayProps> = ({
 
     return (
         <motion.section
-            className="h-screen flex flex-col items-center justify-center bg-gray-50"
+            className="h-fit pt-20 pb-4 flex flex-col items-center justify-center bg-white"
             initial="hidden"
             animate="visible"
             variants={containerVariants}
@@ -81,14 +80,12 @@ export const ErrorDisplay: React.FC<ErrorDisplayProps> = ({
                 className="mt-8 w-full max-w-[300px]"
                 variants={itemVariants}
             >
-                <Link href={"/learn"} className="col-span-3">
-                    <Button
-                        variant={"green"}
-                        className="w-full col-span-3 text-xl h-14 bg-neutral-800 border-neutral-500 shadow-neutral-500"
-                    >
-                        Back to home
-                    </Button>
-                </Link>
+                <Button
+                    onClick={router.back}
+                    className="w-full col-span-3 text-xl h-14 bg-neutral-800 border-neutral-500 shadow-neutral-500"
+                >
+                    Go back
+                </Button>
             </motion.div>
         </motion.section>
     )

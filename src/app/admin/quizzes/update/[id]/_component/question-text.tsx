@@ -1,14 +1,14 @@
 import { cn } from "@/lib/ui-utils"
-import useQuizStore from "../store"
+import useUpdateQuizStore from "../store"
 interface Props {
     localId: string
     text: string
     className?: string
 }
 export function QuestionText(props: Props) {
-    const updateQuestion = useQuizStore((s) => s.updateQuestion)
+    const updateQuestion = useUpdateQuizStore((s) => s.updateQuestion)
     return (
-        <div className=" w-fit">
+        <div className=" w-fit ">
             <input
                 value={props.text}
                 onChange={(e) => {
