@@ -49,7 +49,7 @@ export const columns: ColumnDef<AnswerTableItem>[] = [
         header: "Time spent",
         cell: ({ row }) => (
             <div className="flex items-center text-base justify-center font-bold">
-                {row.original.timeSpent}
+                {row.original.timeSpent?.toFixed(1)} Seconds
             </div>
         ),
     },

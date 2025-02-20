@@ -15,6 +15,7 @@ import { useState } from "react"
 
 interface Props {
     userId: string
+    isBanned: boolean
 }
 export default function MoreButton(props: Props) {
     const [isDeleting, setIsDeleting] = useState(false)
@@ -63,6 +64,30 @@ export default function MoreButton(props: Props) {
             toastError("Something went wrong.")
         }
     }
+    const conditionalItems = props.isBanned
+        ? [
+              {
+                  icon: <LucideUnlock className="w-5 h-5" />,
+                  label: "Remove Ban",
+                  onClick: handleUnBan,
+              },
+          ]
+        : [
+              {
+                  icon: <Ban className="w-5 h-5" />,
+                  label: "Ban",
+                  className: "focus:bg-red-200",
+                  isDanger: true,
+                  onClick: () => setIsBanning(true),
+              },
+              {
+                  icon: <Trash2 className="w-5 h-5" />,
+                  label: "Delete data",
+                  className: "focus:bg-red-200",
+                  isDanger: true,
+                  onClick: () => setIsDeleting(true),
+              },
+          ]
     return (
         <>
             <PopoverList
@@ -74,25 +99,7 @@ export default function MoreButton(props: Props) {
                         onClick: () =>
                             router.push(`/admin/users/details/${props.userId}`),
                     },
-                    {
-                        icon: <LucideUnlock className="w-5 h-5" />,
-                        label: "Remove Ban",
-                        onClick: handleUnBan,
-                    },
-                    {
-                        icon: <Ban className="w-5 h-5" />,
-                        label: "Ban",
-                        className: "focus:bg-red-200",
-                        isDanger: true,
-                        onClick: () => setIsBanning(true),
-                    },
-                    {
-                        icon: <Trash2 className="w-5 h-5" />,
-                        label: "Delete data",
-                        className: "focus:bg-red-200",
-                        isDanger: true,
-                        onClick: () => setIsDeleting(true),
-                    },
+                    ...conditionalItems,
                 ]}
             >
                 <button

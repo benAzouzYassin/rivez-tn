@@ -77,7 +77,7 @@ export const columns: ColumnDef<TableItem>[] = [
         cell: ({ row }) => {
             return (
                 <div className="flex items-center  min-w-[200px] !text-base font-semibold justify-center">
-                    {row.original?.duration?.toFixed(1)} Second
+                    {row.original?.duration?.toFixed(1)} Seconds
                 </div>
             )
         },

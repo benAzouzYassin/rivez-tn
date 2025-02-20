@@ -92,6 +92,7 @@ export type Database = {
           quiz: number | null
           seconds_spent: number | null
           user: string | null
+          xp_gained: number | null
         }
         Insert: {
           created_at?: string
@@ -99,6 +100,7 @@ export type Database = {
           quiz?: number | null
           seconds_spent?: number | null
           user?: string | null
+          xp_gained?: number | null
         }
         Update: {
           created_at?: string
@@ -106,6 +108,7 @@ export type Database = {
           quiz?: number | null
           seconds_spent?: number | null
           user?: string | null
+          xp_gained?: number | null
         }
         Relationships: [
           {

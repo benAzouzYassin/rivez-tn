@@ -7,6 +7,8 @@ import { formatDate } from "@/utils/date"
 import MoreButton from "./_components/more-button"
 import { Badge } from "@/components/ui/badge"
 import TooltipWrapper from "@/components/ui/tooltip"
+import XpIcon from "@/components/icons/xp"
+import { Plus } from "lucide-react"
 
 export const columns: ColumnDef<Item>[] = [
     {
@@ -79,7 +81,24 @@ export const columns: ColumnDef<Item>[] = [
         cell: ({ row }) => {
             return (
                 <div className="flex items-center  min-w-[200px] !text-base font-semibold justify-center">
-                    {row.original?.seconds_spent?.toFixed(1)} Second
+                    {row.original?.seconds_spent?.toFixed(1)} Seconds
+                </div>
+            )
+        },
+    },
+    {
+        id: "Gained XP",
+        header: () => <div className="text-sm scale-110 "> Gained Xp</div>,
+        cell: ({ row }) => {
+            return (
+                <div className="flex items-center  !text-base font-semibold justify-center">
+                    <Badge
+                        variant={"orange"}
+                        className=" bg-amber-100/30 h-8 min-w-7 gap-1 text-center flex items-center justify-center border text-amber-500 rounded-full "
+                    >
+                        {row.original?.xp_gained}{" "}
+                        <XpIcon className="h-4  w-4" />
+                    </Badge>
                 </div>
             )
         },
