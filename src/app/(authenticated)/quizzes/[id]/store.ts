@@ -6,7 +6,6 @@ import {
     MultipleChoiceContent,
 } from "@/schemas/questions-content"
 import { Database } from "@/types/database.types"
-import { wait } from "@/utils/wait"
 import { create } from "zustand"
 
 interface State {

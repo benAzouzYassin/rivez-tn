@@ -10,7 +10,17 @@ export async function readQuizWithQuestionsById(id: number) {
     return response.data
 }
 
-export async function readQuizzesWithCategory(config?: {
+export async function readQuizById(id: number) {
+    const response = await supabase
+        .from("quizzes")
+        .select(`*`)
+        .eq(`id`, id)
+        .single()
+        .throwOnError()
+    return response.data
+}
+
+export async function readQuizzesWithDetails(config?: {
     filters?: {
         name?: string | null
     }
@@ -57,7 +67,7 @@ export async function readQuizzesWithCategory(config?: {
 }
 
 export type QuizWithCategory = Awaited<
-    ReturnType<typeof readQuizzesWithCategory>
+    ReturnType<typeof readQuizzesWithDetails>
 >["data"][number]
 
 export async function readQuizzesWithEmptyCategory() {
@@ -182,4 +192,15 @@ export async function readQuizQuestionsDetails(params: { quizId: number }) {
         }
     })
     return formattedData
+}
+export async function readQuizQuestions(params: { quizId: number }) {
+    const response = await supabase
+        .from("quizzes_questions")
+        .select(`*`)
+        .eq("quiz", params.quizId)
+        .order("id", {
+            ascending: true,
+        })
+        .throwOnError()
+    return response.data
 }

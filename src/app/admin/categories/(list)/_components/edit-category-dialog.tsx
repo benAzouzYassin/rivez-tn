@@ -14,7 +14,7 @@ import SearchSelectMultiple from "@/components/ui/search-select-multiple"
 import { Textarea } from "@/components/ui/textarea"
 import { readCategoryWithQuizzesFields } from "@/data-access/categories/read"
 import { updateCategory } from "@/data-access/categories/update"
-import { readQuizzesWithCategory } from "@/data-access/quizzes/read"
+import { readQuizzesWithDetails } from "@/data-access/quizzes/read"
 import { updateManyQuizzes, updateQuiz } from "@/data-access/quizzes/update"
 import { PublishingStatusType } from "@/data-access/types"
 import {
@@ -307,7 +307,7 @@ function QuizzesSelect({
 }: QuizzesSelectProps) {
     const { data: response, isLoading } = useQuery({
         queryKey: ["quizzes"],
-        queryFn: () => readQuizzesWithCategory(),
+        queryFn: () => readQuizzesWithDetails(),
     })
 
     return (
