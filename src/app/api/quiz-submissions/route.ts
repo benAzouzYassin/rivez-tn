@@ -2,7 +2,17 @@ import { SaveSubmissionType } from "@/data-access/quiz_submissions/create"
 import { supabaseAdminServerSide } from "@/lib/supabase-server-side"
 import { NextRequest, NextResponse } from "next/server"
 import { verify } from "jsonwebtoken"
+import { negativeToZero } from "@/utils/numbers"
+
 export async function POST(req: NextRequest) {
+    const wrongAnswerXp = Number(process.env.NEXT_PUBLIC_WRONG_ANSWER_XP || 0)
+    const correctAnswerXp = Number(
+        process.env.NEXT_PUBLIC_CORRECT_ANSWER_XP || 0
+    )
+    const skippedAnswerXp = Number(
+        process.env.NEXT_PUBLIC_SKIPPED_ANSWER_XP || 0
+    )
+
     const userPerQuizSubmissionLimit = Number(
         process.env.USER_SUBMISSION_PER_QUIZ_LIMIT
     )
@@ -23,14 +33,11 @@ export async function POST(req: NextRequest) {
             await supabase
                 .from("quiz_submissions")
                 .select(
-                    "id,quiz_submission_answers(is_answered_correctly,is_skipped)",
+                    "id,xp_gained,quiz_submission_answers(is_answered_correctly,is_skipped)",
                     { count: "exact" }
                 )
                 .eq("quiz", quizId)
                 .eq("user", String(userId))
-                .order("created_at", {
-                    ascending: false,
-                })
                 .throwOnError()
 
         if ((oldSubmissionCount || 0) >= userPerQuizSubmissionLimit) {
@@ -61,35 +68,32 @@ export async function POST(req: NextRequest) {
             .eq("user_id", userId)
             .single()
             .throwOnError()
-        const submissionXp = submissionData.answersData.reduce((acc, curr) => {
-            if (curr.is_skipped) {
-                return acc - 2
-            }
-            if (curr.is_answered_correctly) {
-                return acc + 2
-            }
-            if (!curr.is_answered_correctly && !curr.is_skipped) {
-                return acc - 1
-            }
-            return acc
-        }, 0)
+        const submissionXp = negativeToZero(
+            submissionData.answersData.reduce((acc, curr) => {
+                if (curr.is_skipped) {
+                    return acc + skippedAnswerXp
+                }
+                if (curr.is_answered_correctly) {
+                    return acc + correctAnswerXp
+                }
+                if (!curr.is_answered_correctly && !curr.is_skipped) {
+                    return acc + wrongAnswerXp
+                }
+                return acc
+            }, 0)
+        )
         if ((oldSubmissionCount || 0) > 0) {
-            const oldXp = oldSubmissionsData[0].quiz_submission_answers.reduce(
-                (acc, curr) => {
-                    if (curr.is_skipped) {
-                        return acc - 2
-                    }
-                    if (curr.is_answered_correctly) {
-                        return acc + 2
-                    }
-                    if (!curr.is_answered_correctly && !curr.is_skipped) {
-                        return acc - 1
-                    }
-                    return acc
-                },
-                0
+            const oldSubmissionXp = Number(
+                oldSubmissionsData.reduce(
+                    (total, curr) =>
+                        total + negativeToZero(curr.xp_gained || 0),
+                    0
+                )
             )
-            const xpGained = submissionXp - oldXp > 0 ? submissionXp - oldXp : 0
+            const xpGained =
+                submissionXp - oldSubmissionXp > 0
+                    ? submissionXp - oldSubmissionXp
+                    : 0
             const newXp = Number(xp_points || 0) + xpGained
             await supabase
                 .from("user_profiles")
@@ -98,7 +102,18 @@ export async function POST(req: NextRequest) {
                 })
                 .eq("user_id", userId)
                 .throwOnError()
-            return NextResponse.json({ success: true, newXp }, { status: 200 })
+
+            await supabase
+                .from("quiz_submissions")
+                .update({
+                    xp_gained: xpGained,
+                })
+                .eq("id", insertedSubmissionId)
+                .throwOnError()
+            return NextResponse.json(
+                { success: true, xpGained },
+                { status: 200 }
+            )
         }
 
         const newXp =
@@ -112,7 +127,17 @@ export async function POST(req: NextRequest) {
             })
             .eq("user_id", userId)
             .throwOnError()
-        return NextResponse.json({ success: true, newXp }, { status: 200 })
+        await supabase
+            .from("quiz_submissions")
+            .update({
+                xp_gained: submissionXp,
+            })
+            .eq("id", insertedSubmissionId)
+            .throwOnError()
+        return NextResponse.json(
+            { success: true, xpGained: submissionXp },
+            { status: 200 }
+        )
     } catch (error) {
         console.error("Error creating submission:", error)
         return NextResponse.json({ success: false }, { status: 500 })

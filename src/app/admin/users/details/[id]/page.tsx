@@ -10,6 +10,9 @@ import { Check, ClipboardCheck, SkipForward, X } from "lucide-react"
 import { useParams } from "next/navigation"
 import { columns } from "./table-columns"
 import { SubmissionsChart } from "./_components/submissions-chart"
+import TooltipWrapper from "@/components/ui/tooltip"
+import XpIcon from "@/components/icons/xp"
+import { Badge } from "@/components/ui/badge"
 
 export default function Page() {
     const params = useParams()
@@ -111,6 +114,16 @@ export default function Page() {
                     </h1>
                     <p className="font-semibold">{data?.email}</p>
                     <p className="font-semibold">{data?.phone}</p>
+                </div>
+                <div className="ml-auto scale-125 mr-4">
+                    <TooltipWrapper content="XP Points">
+                        <Badge
+                            variant={"orange"}
+                            className=" bg-amber-100/30  h-8 min-w-7 gap-1 text-center flex items-center justify-center border text-amber-500 rounded-full "
+                        >
+                            {data?.xp_points} <XpIcon className="h-4  w-4" />
+                        </Badge>
+                    </TooltipWrapper>
                 </div>
             </div>
             <section className="grid gap-5 mt-10 grid-cols-4">

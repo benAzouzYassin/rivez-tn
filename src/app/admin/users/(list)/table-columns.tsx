@@ -8,6 +8,7 @@ import MoreButton from "./_components/more-button"
 import { Badge } from "@/components/ui/badge"
 import TooltipWrapper from "@/components/ui/tooltip"
 import { CircleSlash2 } from "lucide-react"
+import XpIcon from "@/components/icons/xp"
 
 export const columns: ColumnDef<Item>[] = [
     {
@@ -81,6 +82,23 @@ export const columns: ColumnDef<Item>[] = [
         },
     },
     {
+        id: "XP",
+        header: () => <div className="text-sm scale-110 ">XP</div>,
+        cell: ({ row }) => {
+            return (
+                <div className="flex items-center  !text-base font-semibold justify-center">
+                    <Badge
+                        variant={"orange"}
+                        className=" bg-amber-100/30 h-8 min-w-7 gap-1 text-center flex items-center justify-center border text-amber-500 rounded-full "
+                    >
+                        {row.original.xp_points} <XpIcon className="h-4  w-4" />
+                    </Badge>
+                </div>
+            )
+        },
+    },
+
+    {
         id: "Email",
         header: () => <div className="text-sm scale-110 ">Email</div>,
         cell: ({ row }) => {
@@ -100,21 +118,6 @@ export const columns: ColumnDef<Item>[] = [
                     {row.original?.phone || (
                         <CircleSlash2 className="opacity-40" />
                     )}
-                </div>
-            )
-        },
-    },
-    {
-        id: "Submissions count",
-        header: () => (
-            <div className="text-sm scale-110 ">Submissions count</div>
-        ),
-        cell: ({ row }) => {
-            return (
-                <div className="flex items-center  !text-base font-semibold justify-center">
-                    <div className="bg-white  text-base font-bold border-2 flex items-center justify-center border-neutral-200 min-w-10 h-10 rounded-lg ">
-                        {row.original?.quiz_submissions.submissionsCount}
-                    </div>
                 </div>
             )
         },
@@ -191,7 +194,10 @@ export const columns: ColumnDef<Item>[] = [
                 <div className="min-w-[70px] flex items-center  justify-center">
                     <div className="">
                         {row.original?.user_id ? (
-                            <MoreButton userId={row.original?.user_id} />
+                            <MoreButton
+                                isBanned={row.original.is_banned}
+                                userId={row.original?.user_id}
+                            />
                         ) : (
                             <></>
                         )}

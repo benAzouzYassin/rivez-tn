@@ -1,6 +1,6 @@
 "use client"
-import YellowStar from "@/components/icons/yellow-star"
 import BackButton from "@/components/shared/back-button"
+import { ErrorDisplay } from "@/components/shared/error-display"
 import ProgressBar from "@/components/shared/progress-bar"
 import AnimatedLoader from "@/components/ui/animated-loader"
 import { readQuizWithQuestionsById } from "@/data-access/quizzes/read"
@@ -10,14 +10,18 @@ import { useParams } from "next/navigation"
 import { useEffect } from "react"
 import Questions from "./_components/questions"
 import Result from "./_components/result"
+import ResultLoadingPage from "./_components/result-loading-page"
 import { useQuestionsStore } from "./store"
-import { ErrorDisplay } from "@/components/shared/error-display"
 
 export default function Page() {
     const params = useParams()
     const id = Number(params.id)
 
-    const { data, isLoading } = useQuery({
+    const {
+        data,
+        isLoading: isLoadingQuestions,
+        isError: isQuestionsError,
+    } = useQuery({
         queryFn: () => readQuizWithQuestionsById(id),
         queryKey: ["quizzes", "quizzes_questions", id],
     })
@@ -28,10 +32,12 @@ export default function Page() {
     const setQuestions = useQuestionsStore((s) => s.setQuestions)
     const reset = useQuestionsStore((s) => s.reset)
     const setStartDate = useQuestionsStore((s) => s.setStartDate)
+    const isSavingResults = useQuestionsStore((s) => s.isSavingResults)
+    const isSavingError = useQuestionsStore((s) => s.isSavingError)
+    const isSavingSuccess = useQuestionsStore((s) => s.isSavingSuccess)
 
     const percentage = (currentQuestionIndex * 100) / questions.length + 5
-    const isFinished = currentQuestionIndex >= questions.length
-    const isEmpty = questions.length === 0
+    const isFinished = isSavingSuccess || isSavingError
 
     useEffect(() => {
         // resets the store when the user enter the
@@ -40,7 +46,7 @@ export default function Page() {
         setStartDate(new Date())
     }, [data?.quizzes_questions, reset, setQuestions, setStartDate])
 
-    if (isEmpty && !isLoading) {
+    if (isQuestionsError) {
         return <ErrorDisplay />
     }
 
@@ -50,9 +56,7 @@ export default function Page() {
                 <header className="w-full fixed top-0 z-50  flex items-center border-b h-24 px-20  bg-white/95 backdrop-blur-sm supports-backdrop-filter:bg-white/60">
                     <BackButton className="ml-auto mr-2 opacity-50" />
                     <ProgressBar className="w-[65%]" percentage={percentage} />
-                    <div className="mr-auto">
-                        <YellowStar className="w-6 opacity-80 ml-2 -mt-2 h-6" />
-                    </div>
+                    <div className="mr-auto"></div>
                 </header>
             )}
             <main
@@ -60,12 +64,24 @@ export default function Page() {
                     "overflow-x-hidden mt-0": isFinished,
                 })}
             >
-                {isLoading && (
+                {isLoadingQuestions && (
                     <div className=" h-[100vh] flex items-center justify-center">
                         <AnimatedLoader />
                     </div>
                 )}
-                {isFinished && !isLoading ? <Result /> : <Questions />}
+                {isSavingResults && <ResultLoadingPage />}
+                {isSavingError && <ErrorDisplay />}
+
+                {isFinished &&
+                    !isSavingError &&
+                    !isLoadingQuestions &&
+                    isSavingSuccess && <Result />}
+
+                {!isSavingResults &&
+                    !isFinished &&
+                    !isSavingError &&
+                    !isLoadingQuestions &&
+                    !isSavingSuccess && <Questions />}
             </main>
         </>
     )

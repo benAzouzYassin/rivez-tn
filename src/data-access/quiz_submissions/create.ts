@@ -19,8 +19,8 @@ export async function saveSubmission(data?: SaveSubmissionType) {
             },
         }
     )
-    console.log(response)
-    return response.data
+    const xpGained = Number(response.data.xpGained || 0)
+    return xpGained
 }
 export type SaveSubmissionType = {
     submissionData: Database["public"]["Tables"]["quiz_submissions"]["Insert"]

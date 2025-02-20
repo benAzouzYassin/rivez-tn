@@ -79,7 +79,7 @@ export const columns: ColumnDef<SubmissionType>[] = [
         cell: ({ row }) => {
             return (
                 <div className="flex items-center  min-w-[200px] !text-base font-semibold justify-center">
-                    {row.original?.seconds_spent?.toFixed(1)} Second
+                    {row.original?.seconds_spent?.toFixed(1)} Seconds
                 </div>
             )
         },

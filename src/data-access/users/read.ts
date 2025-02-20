@@ -18,7 +18,7 @@ export async function readCurrentUser() {
 
     const userProfileResponse = await supabase
         .from("user_profiles")
-        .select("username")
+        .select("username,xp_points")
         .eq("user_id", userResponse.data.user.id)
         .single()
 
@@ -32,6 +32,7 @@ export async function readCurrentUser() {
     return {
         data: {
             user_role: userRoleResponse.data.user_role,
+            xp_points: userProfileResponse.data?.xp_points || 0,
             id: userResponse.data.user?.id,
             email: userResponse.data.user?.email,
             emailConfirmedAt: userResponse.data.user?.email_confirmed_at,
@@ -103,20 +104,20 @@ export async function readUsersProfilesWithDetails(config?: {
 
     const response = await query.throwOnError()
 
-    const formatUserData = (user: any) => ({
+    const formatUserData = (user: (typeof response.data)[number]) => ({
         ...user,
         quiz_submissions: user.quiz_submissions.reduce(
-            (acc: any, curr: any) => {
+            (acc, curr) => {
                 const answersCount = {
                     skipped: curr.quiz_submission_answers.filter(
-                        (answer: any) => answer.is_skipped === true
+                        (answer) => answer.is_skipped === true
                     ).length,
                     wrong: curr.quiz_submission_answers.filter(
-                        (answer: any) =>
+                        (answer) =>
                             !answer.is_answered_correctly && !answer.is_skipped
                     ).length,
                     correct: curr.quiz_submission_answers.filter(
-                        (answer: any) => answer.is_answered_correctly === true
+                        (answer) => answer.is_answered_correctly === true
                     ).length,
                 }
 
