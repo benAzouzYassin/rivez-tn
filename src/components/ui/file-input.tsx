@@ -163,7 +163,8 @@ export function FileInput({
                                 className={cn(
                                     "absolute -top-2 -right-2 p-1",
                                     "bg-red-500 rounded-full text-white",
-                                    "hover:bg-red-600 transition-colors"
+                                    "hover:bg-red-600 transition-colors",
+                                    { "-top-10": previewAsDocument }
                                 )}
                             >
                                 <X className="h-4 w-4" />
