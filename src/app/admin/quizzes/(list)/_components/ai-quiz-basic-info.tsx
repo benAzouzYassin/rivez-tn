@@ -15,6 +15,7 @@ import {
 import { ChevronLeft, ImageIcon } from "lucide-react"
 import { Controller, UseFormReturn } from "react-hook-form"
 import { FormValues } from "./ai-quiz-dialog-content"
+import useQuizStore from "../../add/[id]/store"
 
 type Props = {
     form: UseFormReturn<FormValues>
@@ -43,7 +44,6 @@ export default function AiQuizBasicInfo({
         handleSubmit,
         formState: { errors },
     } = form
-
     return (
         <>
             <div className="flex items-center  h-0">

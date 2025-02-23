@@ -4,6 +4,7 @@ import { cn } from "@/lib/ui-utils"
 import { ColumnDef } from "@tanstack/react-table"
 import QuestionResponses from "./_components/question-responses"
 import { AnswerTableItem } from "./page"
+import { formatSeconds } from "@/utils/date"
 
 export const columns: ColumnDef<AnswerTableItem>[] = [
     {
@@ -49,7 +50,7 @@ export const columns: ColumnDef<AnswerTableItem>[] = [
         header: "Time spent",
         cell: ({ row }) => (
             <div className="flex items-center text-base justify-center font-bold">
-                {row.original.timeSpent?.toFixed(1)} Seconds
+                {formatSeconds(row.original?.timeSpent || 0)} Min
             </div>
         ),
     },

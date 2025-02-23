@@ -195,7 +195,7 @@ export default function MultipleAnswerQuestion(props: Props) {
                                                     )
                                                 }
                                                 className={cn(
-                                                    "min-h-[85px] text-lg hover:bg-sky-100 hover:shadow-sky-300/50 hover:border-sky-300/45 text-neutral-700 font-bold max-h-24",
+                                                    "min-h-[85px]  text-lg overflow-auto small-scroll-bar hover:bg-sky-100 text-wrap hover:shadow-sky-300/50 hover:border-sky-300/45 text-neutral-700 font-bold max-h-48",
                                                     {
                                                         "hover:bg-red-200/50 bg-red-200/50 text-red-500 font-extrabold hover:shadow-red-300 shadow-red-300 hover:border-red-300 border-red-300":
                                                             !isCorrect &&
@@ -215,7 +215,10 @@ export default function MultipleAnswerQuestion(props: Props) {
                                                 )}
                                                 variant="secondary"
                                             >
-                                                {opt}
+                                                <p className="max-w-[80%] text-wrap h-fit ">
+                                                    {" "}
+                                                    {opt}
+                                                </p>
                                             </Button>
                                         )
                                     }

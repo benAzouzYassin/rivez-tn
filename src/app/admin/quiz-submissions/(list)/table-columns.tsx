@@ -3,7 +3,7 @@ import ImageWithPreview from "@/components/ui/img-with-preview"
 import { cn } from "@/lib/ui-utils"
 import { ColumnDef } from "@tanstack/react-table"
 import { Item } from "./page"
-import { formatDate } from "@/utils/date"
+import { formatDate, formatSeconds } from "@/utils/date"
 import MoreButton from "./_components/more-button"
 import { Badge } from "@/components/ui/badge"
 import TooltipWrapper from "@/components/ui/tooltip"
@@ -81,7 +81,7 @@ export const columns: ColumnDef<Item>[] = [
         cell: ({ row }) => {
             return (
                 <div className="flex items-center  min-w-[200px] !text-base font-semibold justify-center">
-                    {row.original?.seconds_spent?.toFixed(1)} Seconds
+                    {formatSeconds(row.original?.seconds_spent || 0)} Min
                 </div>
             )
         },

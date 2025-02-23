@@ -67,8 +67,8 @@ export default function AiQuizOtherInfo({
                 />
 
                 <Textarea
-                    {...register("description")}
-                    placeholder="Description"
+                    {...register("rules")}
+                    placeholder="Rules you want the ai to follow"
                     className="min-h-[100px]"
                 />
                 <PdfUpload
@@ -100,7 +100,7 @@ export default function AiQuizOtherInfo({
                 <Button
                     isLoading={isLoading}
                     type="button"
-                    onClick={handleSubmit(onSubmit)}
+                    onClick={() => handleSubmit(onSubmit)()}
                     className="font-extrabold uppercase text-sm"
                     variant="blue"
                 >

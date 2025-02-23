@@ -1,10 +1,14 @@
 "use client"
 
+import { createQuiz } from "@/data-access/quizzes/create"
+import { useCurrentUser } from "@/hooks/use-current-user"
 import { toastError } from "@/lib/toasts"
 import { zodResolver } from "@hookform/resolvers/zod"
+import { useRouter } from "nextjs-toploader/app"
 import { useMemo, useState } from "react"
 import { useForm } from "react-hook-form"
 import { z } from "zod"
+import useQuizStore from "../../add/[id]/store"
 import AiQuizBasicInfo from "./ai-quiz-basic-info"
 import AiQuizDialogTabs from "./ai-quiz-dialog-tabs"
 import AiQuizOtherInfo from "./ai-quiz-other-info"
@@ -16,7 +20,7 @@ export type FormValues = {
     language: string | null
     maxQuestions: number | null
     minQuestions: number | null
-    description: string | null
+    rules: string | null
     pdfName: string | null
 }
 
@@ -32,7 +36,9 @@ export default function AiQuizDialogContent(props: Props) {
     const [isUploadingImage, setIsUploadingImage] = useState(false)
     const [isUploadingPdf, setIsUploadingPdf] = useState(false)
     const [isLoading, setIsLoading] = useState(false)
-
+    const user = useCurrentUser()
+    const router = useRouter()
+    const generateQuizWithAi = useQuizStore((s) => s.generateQuizWithAi)
     const formSchema = useMemo(
         () =>
             z.object({
@@ -44,12 +50,19 @@ export default function AiQuizDialogContent(props: Props) {
                     .string()
                     .min(1, "Main topic is required")
                     .max(100, "Input exceeds maximum length"),
-                category: z.string().nullable(),
-                language: z.string().nullable(),
-                description: z.string().nullable(),
-                maxQuestions: z.coerce.number().max(999).nullable(),
-                minQuestions: z.coerce.number().max(20).nullable(),
-                pdfName: z.string().nullable(),
+                category: z.string().nullable().optional(),
+                language: z.string().nullable().optional(),
+                rules: z.string().nullable(),
+                maxQuestions: z.coerce.number().max(999).nullable().optional(),
+                minQuestions: z.coerce
+                    .number()
+                    .max(
+                        Number(process.env.NEXT_PUBLIC_MAX_QUESTION_PER_QUIZ!) -
+                            1
+                    )
+                    .nullable()
+                    .optional(),
+                pdfName: z.string().nullable().optional(),
             }),
         []
     )
@@ -57,7 +70,7 @@ export default function AiQuizDialogContent(props: Props) {
         resolver: zodResolver(formSchema),
         defaultValues: {
             name: "",
-            description: "",
+            rules: "",
             category: "",
             language: null,
             mainTopic: "",
@@ -68,11 +81,18 @@ export default function AiQuizDialogContent(props: Props) {
 
     const onSubmit = async (data: FormValues) => {
         try {
-            setIsLoading(true)
-            setIsLoading(true)
-            console.log(data)
-            // router.push(`/admin/quizzes/add/${quizId}`)
-            // form.reset()
+            const result = await createQuiz({
+                name: data.name,
+                category: data.category ? Number(data.category) : null,
+                image: imageUrl,
+                description: "",
+                author_id: user.data?.id,
+            })
+            const quizId = result[0].id
+            router.push(`/admin/quizzes/add/${quizId}?isGeneratingWithAi=true`)
+            generateQuizWithAi({ ...data, pdfUrl })
+
+            form.reset()
             setImageUrl(null)
         } catch (error) {
             toastError("Something wrong happened.")
