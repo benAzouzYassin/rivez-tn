@@ -1,38 +1,72 @@
-import axios from "axios"
+import {
+    GeneratedQuizResponse,
+    GenerateQuizBodyType,
+} from "@/app/api/quiz/generate-quiz/route"
+import { partialParseJson } from "@/utils/json"
+import { readStream } from "@/utils/stream"
 import { z } from "zod"
 import { readCurrentSession } from "../users/read"
-import { GeneratedQuizResponse } from "@/app/api/quiz/generate-quiz/route"
 
-export async function generateQuiz(data: z.infer<typeof bodySchema>) {
+export const generateQuiz = async (
+    data: GenerateQuizBodyType,
+    onChange: (newValue: GeneratedQuizResponse | null) => void
+) => {
     const {
         data: { session },
     } = await readCurrentSession()
     if (!session) {
         throw new Error("Session error")
     }
-    const response = await axios.post(`/api/quiz/generate-quiz`, data, {
+    const response = await fetch(`/api/quiz/generate-quiz`, {
+        method: "POST",
         headers: {
+            "Content-Type": "application/json",
             "access-token": session.access_token,
             "refresh-token": session.refresh_token,
         },
+        body: JSON.stringify(data),
     })
 
-    return response.data as GeneratedQuizResponse
+    const reader = response?.body?.getReader()
+    let rawResult = ""
+    if (reader) {
+        readStream(reader, (chunk) => {
+            rawResult += chunk
+            try {
+                const questions = quizQuestionSchema.parse(
+                    partialParseJson(rawResult)
+                )
+                onChange(questions)
+            } catch (error) {
+                console.error(error)
+            }
+        })
+    } else {
+        throw new Error("no stream to read data")
+    }
 }
 
-const bodySchema = z.object({
-    name: z
-        .string()
-        .min(1, "Name is required")
-        .max(100, "Input exceeds maximum length"),
-    mainTopic: z
-        .string()
-        .min(1, "Main topic is required")
-        .max(100, "Input exceeds maximum length"),
-    language: z.string().nullable().optional(),
-    rules: z.string().nullable().optional(),
-    maxQuestions: z.coerce.number().max(999).nullable().optional(),
-    minQuestions: z.coerce.number().max(20).nullable().optional(),
-    pdfName: z.string().nullable().optional(),
-    pdfUrl: z.string().nullable().optional(),
+const quizQuestionSchema = z.object({
+    questionsCount: z.number(),
+    questions: z.array(
+        z.union([
+            z.object({
+                questionText: z.string(),
+                type: z.literal("MATCHING_PAIRS"),
+                content: z.object({
+                    correct: z.array(z.array(z.string())),
+                    leftSideOptions: z.array(z.string()),
+                    rightSideOptions: z.array(z.string()),
+                }),
+            }),
+            z.object({
+                questionText: z.string(),
+                type: z.literal("MULTIPLE_CHOICE"),
+                content: z.object({
+                    correct: z.array(z.string()),
+                    options: z.array(z.string()),
+                }),
+            }),
+        ])
+    ),
 })

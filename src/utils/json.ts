@@ -1,0 +1,6 @@
+import { parseJSON } from "partial-json"
+
+// we use this function instead of the library in case we needed to change the behavior
+export function partialParseJson(str: string) {
+    return parseJSON(str)
+}

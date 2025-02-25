@@ -18,7 +18,6 @@ import { toastError } from "@/lib/toasts"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useQueryClient } from "@tanstack/react-query"
 import { Loader2 } from "lucide-react"
-import { useRouter } from "nextjs-toploader/app"
 import { useEffect, useMemo, useState } from "react"
 import { Controller, useForm } from "react-hook-form"
 import { z } from "zod"
@@ -62,22 +61,25 @@ export default function UpdateQuizDialog(props: Props) {
     })
 
     useEffect(() => {
-        readQuizById(props.quizId)
-            .then((data) => {
-                setValue("name", data.name)
-                setValue("description", data.description || "")
-                if (data.category) setValue("category", String(data.category))
-                setImageUrl(data.image)
-                setCreatedAt(data.created_at)
-            })
-            .catch((err) => {
-                console.error(err)
-                toastError("Something went wrong.")
-            })
-            .finally(() => {
-                setIsLoading(false)
-            })
-    }, [props.quizId, setValue])
+        if (props.isOpen) {
+            readQuizById(props.quizId)
+                .then((data) => {
+                    setValue("name", data.name)
+                    setValue("description", data.description || "")
+                    if (data.category)
+                        setValue("category", String(data.category))
+                    setImageUrl(data.image)
+                    setCreatedAt(data.created_at)
+                })
+                .catch((err) => {
+                    console.error(err)
+                    toastError("Something went wrong.")
+                })
+                .finally(() => {
+                    setIsLoading(false)
+                })
+        }
+    }, [props.quizId, setValue, props.isOpen])
     const onSubmit = async (data: z.infer<typeof formSchema>) => {
         try {
             await updateQuiz(props.quizId, {

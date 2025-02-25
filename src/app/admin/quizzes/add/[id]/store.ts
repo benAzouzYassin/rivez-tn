@@ -8,6 +8,7 @@ interface State {
     selectedQuestionLocalId: string | null
     isGeneratingWithAi: boolean
     isGenerationError: boolean
+    shadowQuestionsCount: number
 }
 
 interface Actions {
@@ -56,6 +57,7 @@ interface Actions {
 type Store = State & Actions
 
 const initialState: State = {
+    shadowQuestionsCount: 0,
     isGeneratingWithAi: false,
     isGenerationError: false,
     allQuestions: [
@@ -83,60 +85,94 @@ const useQuizStore = create<Store>((set, get) => ({
     ...initialState,
     generateQuizWithAi: async (data) => {
         try {
-            set({ ...initialState, isGeneratingWithAi: true })
-            const { questions } = await generateQuiz(data)
-            const questionsForState = questions.map((q) => {
-                const leftOptions =
-                    q.type === "MATCHING_PAIRS"
-                        ? q.content.leftSideOptions.map((opt) => ({
-                              text: opt,
-                              localId: crypto.randomUUID(),
-                          }))
-                        : []
+            set({
+                ...initialState,
+                allQuestions: [],
+                isGeneratingWithAi: true,
+                selectedQuestionLocalId: null,
+            })
+            generateQuiz(data, (result) => {
+                const questionsCount = result?.questionsCount
 
-                const rightOptions =
-                    q.type === "MATCHING_PAIRS"
-                        ? q.content.rightSideOptions.map((opt) => ({
-                              text: opt,
-                              localId: crypto.randomUUID(),
-                              leftOptionLocalId: getRightOptionPairLocalId(
-                                  q.content.correct,
-                                  leftOptions,
-                                  opt
-                              ),
-                          }))
-                        : []
-                const options =
-                    q.type === "MULTIPLE_CHOICE"
-                        ? q.content.options.map((opt) => ({
-                              text: opt,
-                              localId: crypto.randomUUID(),
-                              isCorrect: q.content.correct.includes(opt),
-                          }))
-                        : []
-                return {
-                    content:
+                const generatedQuestions = result?.questions || []
+
+                const formattedGenerated = generatedQuestions.map((q) => {
+                    const leftOptions =
+                        q.type === "MATCHING_PAIRS"
+                            ? q.content.leftSideOptions.map((opt) => ({
+                                  text: opt,
+                                  localId: crypto.randomUUID(),
+                              }))
+                            : []
+
+                    const rightOptions =
+                        q.type === "MATCHING_PAIRS"
+                            ? q.content.rightSideOptions.map((opt) => ({
+                                  text: opt,
+                                  localId: crypto.randomUUID(),
+                                  leftOptionLocalId: getRightOptionPairLocalId(
+                                      q.content.correct,
+                                      leftOptions,
+                                      opt
+                                  ),
+                              }))
+                            : []
+                    const options =
                         q.type === "MULTIPLE_CHOICE"
-                            ? {
-                                  options,
-                              }
-                            : {
-                                  leftOptions,
-                                  rightOptions,
-                              },
-                    localId: crypto.randomUUID(),
-                    questionText: q.questionText,
-                    imageUrl: null,
-                    type: q.type,
-                    layout: "horizontal",
+                            ? q.content.options.map((opt) => ({
+                                  text: opt,
+                                  localId: crypto.randomUUID(),
+                                  isCorrect: q.content.correct.includes(opt),
+                              }))
+                            : []
+                    return {
+                        content:
+                            q.type === "MULTIPLE_CHOICE"
+                                ? {
+                                      options,
+                                  }
+                                : {
+                                      leftOptions,
+                                      rightOptions,
+                                  },
+                        localId: crypto.randomUUID(),
+                        questionText: q.questionText,
+                        imageUrl: null,
+                        type: q.type,
+                        layout: "horizontal",
+                    }
+                })
+
+                if (generatedQuestions.length > 0) {
+                    set((state) => {
+                        const existingQuestionsTexts = state.allQuestions.map(
+                            (item) => item.questionText
+                        )
+                        const addedQuestions = formattedGenerated.filter(
+                            (item) =>
+                                !existingQuestionsTexts.includes(
+                                    item.questionText
+                                )
+                        )
+                        const questionsForState = [
+                            ...state.allQuestions,
+                            ...addedQuestions,
+                        ]
+                        return {
+                            shadowQuestionsCount:
+                                Number(questionsCount || 0) -
+                                questionsForState.length,
+                            selectedQuestionLocalId:
+                                state.selectedQuestionLocalId ||
+                                questionsForState[0].localId,
+                            isGeneratingWithAi: false,
+                            allQuestions: questionsForState as any,
+                        }
+                    })
                 }
             })
-            set({
-                selectedQuestionLocalId: questionsForState[0].localId,
-                isGeneratingWithAi: false,
-                allQuestions: questionsForState as any,
-            })
         } catch (error) {
+            console.error(error)
             set({ isGeneratingWithAi: false, isGenerationError: true })
         }
     },
@@ -394,3 +430,7 @@ export interface MatchingPairsOptions {
         leftOptionLocalId: string | null
     }[]
 }
+
+// TODO make the quizzes come with the stream
+// TODO a loading for each page
+// TODO make sure if you change something and a new question is generated the changes persist

@@ -56,10 +56,7 @@ export default function AiQuizDialogContent(props: Props) {
                 maxQuestions: z.coerce.number().max(999).nullable().optional(),
                 minQuestions: z.coerce
                     .number()
-                    .max(
-                        Number(process.env.NEXT_PUBLIC_MAX_QUESTION_PER_QUIZ!) -
-                            1
-                    )
+                    .max(Number(process.env.NEXT_PUBLIC_MAX_QUESTION_PER_QUIZ!))
                     .nullable()
                     .optional(),
                 pdfName: z.string().nullable().optional(),
@@ -105,7 +102,15 @@ export default function AiQuizDialogContent(props: Props) {
         <>
             <AiQuizDialogTabs
                 currentTab={currentTab}
-                onTabChange={setCurrentTab}
+                onTabChange={(tab) => {
+                    if (tab === "Other information") {
+                        form.handleSubmit(() => {
+                            setCurrentTab("Other information")
+                        })()
+                    } else {
+                        setCurrentTab(tab)
+                    }
+                }}
             />
             {currentTab === "Basic information" && (
                 <AiQuizBasicInfo

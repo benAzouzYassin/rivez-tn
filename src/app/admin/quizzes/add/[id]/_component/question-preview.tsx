@@ -23,7 +23,7 @@ function QuestionPreview(props: Props) {
     return (
         <div
             className={cn(
-                "relative group w-[150px] h-[78px] transform transition-all duration-300 ease-in-out",
+                "relative group w-[150px] h-[100px] pb-3 transform transition-all duration-300 ease-in-out",
                 {
                     "opacity-0 scale-95 -translate-y-2": isDeleting,
                     "opacity-100 scale-100 translate-y-0": !isDeleting,
@@ -32,7 +32,7 @@ function QuestionPreview(props: Props) {
         >
             <button
                 onClick={handleRemove}
-                className="absolute -right-2 hover:cursor-pointer active:scale-95 -top-2 p-[2px] bg-red-100 border-2 border-red-400 rounded-full text-red-500/90 opacity-0 group-hover:opacity-100 transition-all duration-200 hover:bg-red-200 hover:border-red-500 hover:text-red-600"
+                className="absolute -right-1 hover:cursor-pointer active:scale-95 -top-2 p-[2px] bg-red-100 border-2 border-red-400 rounded-full text-red-500/90 opacity-0 group-hover:opacity-100 transition-all duration-200 hover:bg-red-200 hover:border-red-500 hover:text-red-600"
             >
                 <X className="w-4 h-4 stroke-3" />
             </button>

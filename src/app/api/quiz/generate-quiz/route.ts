@@ -1,6 +1,6 @@
 import { isCurrentUserAdmin } from "@/data-access/users/is-admin"
 import { llm } from "@/lib/ai"
-import { generateObject } from "ai"
+import { streamText } from "ai"
 import { NextRequest, NextResponse } from "next/server"
 import { z } from "zod"
 
@@ -52,13 +52,11 @@ export async function POST(req: NextRequest) {
             pdfUrl: data.pdfUrl,
         })
 
-        const { object: aiResponse } = await generateObject({
+        const llmResponse = streamText({
             model: llm,
             prompt,
-            schema: quizQuestionSchema,
         })
-
-        return NextResponse.json(aiResponse, { status: 200 })
+        return llmResponse.toTextStreamResponse()
     } catch (error) {
         console.log(error)
         return NextResponse.json({ error }, { status: 500 })
@@ -94,7 +92,6 @@ interface PromptParams {
 }
 function generateQuizPrompt(params: PromptParams): string {
     const {
-        name,
         mainTopic,
         language,
         rules,
@@ -126,7 +123,6 @@ QUESTION DISTRIBUTION:
 - Minimum number of questions is ${minQuestions}
 
 QUESTION TYPES AND STRUCTURES:
-zodSchema
 1. MATCHING_PAIRS Questions:
 {
     questionText: string     // Clear instruction for matching the pairs
@@ -177,11 +173,10 @@ ${
    - Reference widely accepted knowledge in the field`
 }
 
-Please generate the quiz in JSON format, with each question object strictly following the provided type definitions.`
-    return prompt
-}
-
-const quizQuestionSchema = z.object({
+Please generate the quiz in JSON format, with each question object strictly following the provided type definitions.
+IMPORTANT : 
+- Your response should follow this zod schema :  z.object({
+    questionsCount: z.number(),
     questions: z.array(
         z.union([
             z.object({
@@ -204,5 +199,34 @@ const quizQuestionSchema = z.object({
         ])
     ),
 })
+`
+    return prompt
+}
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const quizQuestionSchema = z.object({
+    questionsCount: z.number(),
+    questions: z.array(
+        z.union([
+            z.object({
+                questionText: z.string(),
+                type: z.literal("MATCHING_PAIRS"),
+                content: z.object({
+                    correct: z.array(z.array(z.string())),
+                    leftSideOptions: z.array(z.string()),
+                    rightSideOptions: z.array(z.string()),
+                }),
+            }),
+            z.object({
+                questionText: z.string(),
+                type: z.literal("MULTIPLE_CHOICE"),
+                content: z.object({
+                    correct: z.array(z.string()),
+                    options: z.array(z.string()),
+                }),
+            }),
+        ])
+    ),
+})
 export type GeneratedQuizResponse = z.infer<typeof quizQuestionSchema>
+export type GenerateQuizBodyType = z.infer<typeof bodySchema>

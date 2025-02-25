@@ -1,11 +1,11 @@
 import { Button } from "@/components/ui/button"
 import WarningDialog from "@/components/ui/warning-dialog"
+import { deleteQuizQuestions } from "@/data-access/quizzes/delete"
 import {
     addQuestionsToQuiz,
     updateQuizQuestions,
 } from "@/data-access/quizzes/update"
 import { toastError, toastSuccess } from "@/lib/toasts"
-import { wait } from "@/utils/wait"
 import { useQueryClient } from "@tanstack/react-query"
 import { useParams } from "next/navigation"
 import { useRouter } from "nextjs-toploader/app"
@@ -14,7 +14,6 @@ import useUpdateQuizStore, {
     StateMatchingPairsOptions,
     StateMultipleChoiceOptions,
 } from "../store"
-import { deleteQuizQuestions } from "@/data-access/quizzes/delete"
 export default function Buttons() {
     const params = useParams()
     const quizId = parseInt(params["id"] as string)
@@ -116,6 +115,7 @@ export default function Buttons() {
             )
             return true
         } catch (error) {
+            console.error(error)
             return false
         }
     }
@@ -167,6 +167,7 @@ export default function Buttons() {
             )
             return true
         } catch (error) {
+            console.error(error)
             return false
         }
     }
@@ -175,6 +176,7 @@ export default function Buttons() {
             await deleteQuizQuestions({ questionIds: removedQuestionsIds })
             return true
         } catch (error) {
+            console.error(error)
             return false
         }
     }

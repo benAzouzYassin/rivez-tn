@@ -32,6 +32,8 @@ export default function MoreButton(props: Props) {
             dismissToasts("loading")
             toastSuccess("Deleted successfully.")
         } catch (error) {
+            console.error(error)
+
             dismissToasts("loading")
             toastError("Something went wrong.")
         }
@@ -46,6 +48,7 @@ export default function MoreButton(props: Props) {
             dismissToasts("loading")
             toastSuccess("Banned user successfully.")
         } catch (error) {
+            console.error(error)
             dismissToasts("loading")
             toastError("Something went wrong.")
         }
@@ -60,6 +63,8 @@ export default function MoreButton(props: Props) {
             dismissToasts("loading")
             toastSuccess("Removed user ban successfully.")
         } catch (error) {
+            console.error(error)
+
             dismissToasts("loading")
             toastError("Something went wrong.")
         }

@@ -363,6 +363,7 @@ const useUpdateQuizStore = create<Store>((set, get) => ({
                 selectedQuestionLocalId: formattedQuestions[0].localId,
             })
         } catch (error) {
+            console.error(error)
             set({ isLoadingData: false, isLoadingError: true })
         }
     },

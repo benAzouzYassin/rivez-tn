@@ -15,7 +15,6 @@ import {
 import { ChevronLeft, ImageIcon } from "lucide-react"
 import { Controller, UseFormReturn } from "react-hook-form"
 import { FormValues } from "./ai-quiz-dialog-content"
-import useQuizStore from "../../add/[id]/store"
 
 type Props = {
     form: UseFormReturn<FormValues>

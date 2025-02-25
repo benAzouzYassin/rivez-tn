@@ -2,7 +2,7 @@
 
 import { FileInput } from "@/components/ui/file-input"
 import { deleteFile, uploadFile } from "@/utils/file-management"
-import { ReactNode, useRef, useState } from "react"
+import { ReactNode, useRef } from "react"
 
 interface Props {
     pdfUrl: string | null
