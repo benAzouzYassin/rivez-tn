@@ -11,14 +11,15 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select"
-import { ChevronLeft, ImageIcon } from "lucide-react"
+import { ChevronLeft, FileTextIcon, ImageIcon } from "lucide-react"
 import { Controller } from "react-hook-form"
 
-import { Textarea } from "@/components/ui/textarea"
+import { FileInput } from "@/components/ui/file-input"
 import { createQuiz } from "@/data-access/quizzes/create"
 import { useCurrentUser } from "@/hooks/use-current-user"
 import { toastError } from "@/lib/toasts"
 import { zodResolver } from "@hookform/resolvers/zod"
+import { parsePdf } from "client-side-pdf-parser"
 import { useRouter } from "nextjs-toploader/app"
 import { useMemo, useState } from "react"
 import { useForm } from "react-hook-form"
@@ -36,8 +37,11 @@ export type FormValues = {
     pdfName: string | null
 }
 
-export default function SubjectForm() {
+export default function Document() {
+    const [isUploadingPdf, setIsUploadingPdf] = useState(false)
     const [imageUrl, setImageUrl] = useState<string | null>(null)
+    const [pdfPages, setPdfPages] = useState<string[]>([])
+    const [fileName, setFileName] = useState("")
     const [isUploadingImage, setIsUploadingImage] = useState(false)
     const [isLoading, setIsLoading] = useState(false)
     const user = useCurrentUser()
@@ -49,10 +53,6 @@ export default function SubjectForm() {
                 name: z
                     .string()
                     .min(1, "Name is required")
-                    .max(100, "Input exceeds maximum length"),
-                mainTopic: z
-                    .string()
-                    .min(1, "The quiz subject is required")
                     .max(100, "Input exceeds maximum length"),
                 category: z.string().nullable().optional(),
                 language: z.string().nullable().optional(),
@@ -91,7 +91,7 @@ export default function SubjectForm() {
             })
             const quizId = result[0].id
             router.push(`/admin/quizzes/add/${quizId}?isGeneratingWithAi=true`)
-            generateQuizWithAi(data, "subject")
+            generateQuizWithAi({ ...data, pdfPages }, "pdf")
 
             setImageUrl(null)
         } catch (error) {
@@ -104,7 +104,7 @@ export default function SubjectForm() {
     return (
         <main className="flex relative items-center pb-20  flex-col">
             <h1 className="mt-10 text-neutral-600 text-3xl font-extrabold">
-                Generate from subject
+                Generate from pdf
             </h1>
             <div className="flex items-center  h-0">
                 <Button
@@ -123,13 +123,49 @@ export default function SubjectForm() {
                     className="w-full"
                     errorMessage={form.formState.errors.name?.message}
                 />
-                <Textarea
-                    {...form.register("mainTopic")}
-                    placeholder="Subject"
-                    className="w-full"
-                    errorMessage={form.formState.errors.mainTopic?.message}
+                <FileInput
+                    fileName={fileName}
+                    isLoading={isUploadingPdf}
+                    onChange={async (file) => {
+                        setIsUploadingPdf(true)
+                        try {
+                            if (file) {
+                                const content = await parsePdf(file)
+                                setPdfPages(content || [])
+                                setFileName(file.name)
+                            } else {
+                                setFileName("")
+                                setPdfPages([])
+                            }
+                        } catch (error) {
+                            toastError("Something went wrong...")
+                        }
+                        setIsUploadingPdf(false)
+                    }}
+                    allowDocument
+                    previewAsDocument
+                    previewAsImage={false}
+                    allowImage={false}
+                    renderEmptyContent={() => (
+                        <>
+                            <FileTextIcon className="w-10 h-10 mb-2 mx-auto text-red-400" />
+                            <p className="text-neutral-600 mb-2">
+                                Drag & drop a pdf file here
+                            </p>
+                            <p className="text-sm text-neutral-500">
+                                or click to select a file
+                            </p>
+                            <p className="text-xs text-neutral-400 mt-2">
+                                Images (PNG, JPG, GIF) or Documents (PDF, DOC,
+                                DOCX, XLS, XLSX)
+                            </p>
+                            <p className="text-xs text-neutral-400">
+                                up to 10MB
+                            </p>
+                        </>
+                    )}
                 />
-                <div className="grid grid-cols-2 -mt-1 gap-8">
+                <div className="grid grid-cols-2 mt-4 gap-8">
                     <Controller
                         control={form.control}
                         name="category"

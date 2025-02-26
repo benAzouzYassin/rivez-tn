@@ -8,7 +8,6 @@ import {
     Video,
 } from "lucide-react"
 import QuizType from "./_components/quiz-type"
-
 export default function Page() {
     return (
         <main className="flex relative flex-col items-center w-full min-h-screen p-6 bg-white">
@@ -33,6 +32,7 @@ export default function Page() {
 }
 const items = [
     {
+        disabled: false,
         value: "subject",
         text: "Subject Based",
         icon: <LetterTextIcon className="!w-8 text-blue-400 !h-8" />,
@@ -40,13 +40,15 @@ const items = [
             "Create a custom quiz from any topic or subject area you specify.",
     },
     {
+        disabled: false,
         value: "document",
-        text: "Document Upload",
+        text: "PDF Document Upload",
         icon: <FileTextIcon className="!w-8 !h-8 text-blue-400" />,
         description:
-            "Upload PDF, Word, or text files to generate questions from your own materials.",
+            "Upload PDF files to generate questions from your own materials.",
     },
     {
+        disabled: true,
         value: "youtube",
         text: "YouTube Video",
         icon: <Video className="!w-8 text-blue-400 !h-8" />,
@@ -54,6 +56,7 @@ const items = [
             "Transform any YouTube video into a comprehensive quiz by providing a URL.",
     },
     {
+        disabled: true,
         value: "link",
         text: "Website Content",
         icon: <Link className="!w-8 text-blue-400 !h-8" />,
@@ -61,6 +64,7 @@ const items = [
             "Generate questions from any webpage by simply pasting a URL.",
     },
     {
+        disabled: false,
         value: "custom-quiz",
         text: "Custom quiz",
         icon: <Edit className="!w-8 text-blue-400 !h-8" />,
@@ -68,8 +72,9 @@ const items = [
             "Write your own questions and answers for complete control over quiz content.",
     },
     {
+        disabled: true,
         value: "image",
-        text: "Images Analysis",
+        text: "From Images",
         icon: <ImageIcon className="!w-8 text-blue-400 !h-8" />,
         description:
             "Upload images containing text, diagrams, or visual information to create visual quizzes.",

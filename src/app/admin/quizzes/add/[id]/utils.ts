@@ -6,7 +6,7 @@ export const getRightOptionPairLocalId = (
     const pair = correctOptions?.find((item) =>
         item.includes(rightOpt)
     ) as string[]
-    const leftOption = pair.filter((item) => item !== rightOpt)[0]
+    const leftOption = pair?.filter((item) => item !== rightOpt)[0]
     if (!leftOption || !pair) {
         return null
     }

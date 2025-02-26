@@ -1,6 +1,6 @@
 import {
     GeneratedQuizResponse,
-    GenerateQuizBodyType,
+    GenerateQuizBodyType as GenerateFromSubjectBody,
 } from "@/app/api/quiz/generate-quiz/from-topic/route"
 import { partialParseJson } from "@/utils/json"
 import { readStream } from "@/utils/stream"
@@ -8,7 +8,8 @@ import { z } from "zod"
 import { readCurrentSession } from "../users/read"
 
 export const generateQuiz = async (
-    data: GenerateQuizBodyType,
+    method: "subject" | "pdf",
+    data: GenerateFromSubjectBody,
     onChange: (newValue: GeneratedQuizResponse | null) => void
 ) => {
     const {
@@ -17,7 +18,14 @@ export const generateQuiz = async (
     if (!session) {
         throw new Error("Session error")
     }
-    const response = await fetch(`/api/quiz/generate-quiz/from-topic`, {
+    let endpoint = ""
+    if (method === "subject") {
+        endpoint = "/api/quiz/generate-quiz/from-topic"
+    }
+    if (method === "pdf") {
+        endpoint = "/api/quiz/generate-quiz/from-pdf"
+    }
+    const response = await fetch(endpoint, {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
@@ -33,9 +41,8 @@ export const generateQuiz = async (
         readStream(reader, (chunk) => {
             rawResult += chunk
             try {
-                const questions = quizQuestionSchema.parse(
-                    partialParseJson(rawResult)
-                )
+                const partialData = partialParseJson(rawResult)
+                const questions = quizQuestionSchema.parse(partialData)
                 onChange(questions)
             } catch {}
         })

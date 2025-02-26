@@ -132,7 +132,7 @@ export function FileInput({
                             )}
                         </div>
                     </div>
-                ) : preview ? (
+                ) : preview || fileName ? (
                     <div className="relative min-w-[350px] w-full h-full">
                         {(previewAsImage ||
                             (previewAsImage === undefined &&
@@ -148,7 +148,7 @@ export function FileInput({
                         )}
                         {previewAsDocument && (
                             <div className="flex flex-col items-center justify-center h-full">
-                                <FileTextIcon className="w-16 h-16 text-neutral-500 mb-2" />
+                                <FileTextIcon className="w-16 h-16 text-red-400 mb-2" />
                                 <p className="text-base text-neutral-700 text-center font-semibold break-all">
                                     {fileName}
                                 </p>

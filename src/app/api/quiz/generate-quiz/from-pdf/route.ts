@@ -1,10 +1,11 @@
 import { isCurrentUserAdmin } from "@/data-access/users/is-admin"
 import { llm } from "@/lib/ai"
-import { streamText } from "ai"
+import { generateObject, streamText } from "ai"
 import { NextRequest, NextResponse } from "next/server"
 import { z } from "zod"
 
 // TODO make rate limiting for each user
+const MAX_CHARS_PER_PDF = 100_000
 export async function POST(req: NextRequest) {
     try {
         const accessToken = req.headers.get("access-token") || ""
@@ -41,19 +42,39 @@ export async function POST(req: NextRequest) {
                 ? Math.min(data.minQuestions, maxQuestionsFromConfig)
                 : 1
 
+        const charCount = data.pdfPages.join("").length
+        if (charCount > MAX_CHARS_PER_PDF) {
+            return NextResponse.json(
+                { error: "PDF is too large" },
+                { status: 400 }
+            )
+        }
+        const pdfPrompt = generatePdfFormatPrompt(data.pdfPages, quizLanguage)
+        const pdfFormatResponse = await generateObject({
+            model: llm,
+            schema: z.object({
+                mainTopic: z.string(),
+                pages: z.array(z.string()),
+            }),
+            prompt: pdfPrompt,
+            temperature: 0,
+        })
+        const mainTopic = pdfFormatResponse.object.mainTopic
+        const formattedPdfPages = pdfFormatResponse.object.pages
         const prompt = generateQuizPrompt({
             name: data.name,
-            mainTopic: data.mainTopic,
             language: quizLanguage,
             rules: rules,
             minQuestions,
             maxQuestions,
+            mainTopic,
+            pdfPages: formattedPdfPages,
         })
 
         const llmResponse = streamText({
             model: llm,
             prompt,
-            temperature: 0.1,
+            temperature: 0,
         })
         return llmResponse.toTextStreamResponse()
     } catch (error) {
@@ -67,28 +88,29 @@ const bodySchema = z.object({
         .string()
         .min(1, "Name is required")
         .max(100, "Input exceeds maximum length"),
-    mainTopic: z
-        .string()
-        .min(1, "Main topic is required")
-        .max(100, "Input exceeds maximum length"),
+    pdfPages: z.array(z.string()),
     language: z.string().nullable().optional(),
     rules: z.string().nullable().optional(),
     maxQuestions: z.coerce.number().max(999).nullable().optional(),
     minQuestions: z.coerce.number().max(20).nullable().optional(),
 })
 
-interface PromptParams {
+interface FinalPromptParams {
     name: string
     mainTopic: string
     language: string
     rules: string | null
     minQuestions: number
     maxQuestions: number
+    pdfPages: string[]
 }
-function generateQuizPrompt(params: PromptParams): string {
-    const { mainTopic, language, rules, minQuestions, maxQuestions } = params
+function generateQuizPrompt(params: FinalPromptParams): string {
+    const { mainTopic, language, rules, minQuestions, maxQuestions, pdfPages } =
+        params
 
-    const prompt = `Generate an educational quiz with the following specifications:
+    const prompt = `
+    
+    Generate an educational quiz with the following specifications:
 
 QUIZ METADATA:
 - Main Topic: ${mainTopic}
@@ -115,8 +137,8 @@ QUESTION TYPES AND STRUCTURES:
     type: "MATCHING_PAIRS"
     content: {
         correct: string[][]  // Array of correct pairs, e.g. [["term1", "definition1"], ["term2", "definition2"]]
-        leftSideOptions: string[]   // List of all terms/concepts
-        rightSideOptions: string[]  // List of all definitions/descriptions
+        leftSideOptions: string[]   // List of all terms/concepts (should be more than 3)
+        rightSideOptions: string[]  // List of all definitions/descriptions (should be more than 3)
     }
 }
 
@@ -126,7 +148,7 @@ QUESTION TYPES AND STRUCTURES:
     type: "MULTIPLE_CHOICE"
     content: {
         correct: string[]    // Array of correct option(s)
-        options: string[]    // Array of 4 total options
+        options: string[]    // Array of strictly 4 options
     }
 }
 
@@ -150,7 +172,15 @@ QUALITY REQUIREMENTS:
    - Use proper grammar and punctuation
    - Avoid colloquialisms unless relevant to the topic
 
+4. Content accuracy:
+   - Base all questions strictly on the content from the provided PDF bellow
+   - Use exact terminology and concepts as presented in the source material
+   - Ensure factual accuracy and current information
+   - Reference widely accepted knowledge in the field
+   - If no pdf content provided generate the quiz based on the main topic
+
 Please generate the quiz in JSON format, with each question object strictly following the provided type definitions.
+
 IMPORTANT : 
 - Your response should follow this zod schema :  z.object({
     questionsCount: z.number(),
@@ -161,8 +191,8 @@ IMPORTANT :
                 type: z.literal("MATCHING_PAIRS"),
                 content: z.object({
                     correct: z.array(z.array(z.string())),
-                    leftSideOptions: z.array(z.string()),
-                    rightSideOptions: z.array(z.string()),
+                    leftSideOptions: z.array(z.string()).min(3),
+                    rightSideOptions: z.array(z.string()).min(3),
                 }),
             }),
             z.object({
@@ -170,15 +200,44 @@ IMPORTANT :
                 type: z.literal("MULTIPLE_CHOICE"),
                 content: z.object({
                     correct: z.array(z.string()),
-                    options: z.array(z.string()),
+                    options: z.array(z.string()).min(4),
                 }),
             }),
         ])
     ),
 })
+
+PDF CONTENT  : 
+${pdfPages.reduce((acc, curr, i) => {
+    return acc + `\n page ${i + 1}: ${curr}`
+}, "")}
 `
     return prompt
 }
+
+const generatePdfFormatPrompt = (pages: string[], language: string) => {
+    return `
+    
+    You are given an array of PDF document pages. Each item in the array contains a page content. Your task is to analyze each page and generate a topic description summarizing what the page is about.
+    the result you are going to give should match this typescript type :  
+    Ensure that your response follows this TypeScript type:
+    type Result= {
+        mainTopic :string 
+        pages : string[]
+    }
+
+    Guidelines:
+      - The pages count should be ${pages.length}
+      - Extract the main subject of each page.
+      - Output should be in ${language} language.
+      - Don't return any empty or blank page.
+      
+    The pdf document pages are : ${pages.reduce((acc, curr, i) => {
+        return acc + `\n page ${i + 1}: ${curr}`
+    }, "")}
+     `
+}
+
 const quizQuestionSchema = z.object({
     questionsCount: z.number(),
     questions: z.array(

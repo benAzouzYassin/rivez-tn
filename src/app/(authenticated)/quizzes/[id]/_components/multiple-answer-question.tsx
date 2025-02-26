@@ -96,7 +96,6 @@ export default function MultipleAnswerQuestion(props: Props) {
             failedAttempts: null,
             secondsSpent: (new Date().getTime() - renderDate.getTime()) / 1000,
         })
-        console.log("saving the data.....")
         if (areArraysEqual(correctAnswers, selectedOptions)) {
             setIsCorrectBannerOpen(true)
         } else {

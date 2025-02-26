@@ -21,6 +21,7 @@ interface Actions {
             maxQuestions: number | null
             minQuestions: number | null
             rules: string | null
+            pdfPages?: string[]
         },
         method: "subject" | "pdf"
     ) => void
@@ -84,7 +85,7 @@ const initialState: State = {
 
 const useQuizStore = create<Store>((set, get) => ({
     ...initialState,
-    generateQuizWithAi: async (data) => {
+    generateQuizWithAi: async (data, method) => {
         try {
             set({
                 ...initialState,
@@ -92,7 +93,7 @@ const useQuizStore = create<Store>((set, get) => ({
                 isGeneratingWithAi: true,
                 selectedQuestionLocalId: null,
             })
-            generateQuiz(data, (result) => {
+            generateQuiz(method, data, (result) => {
                 const questionsCount = result?.questionsCount
 
                 const generatedQuestions = result?.questions || []
@@ -136,7 +137,10 @@ const useQuizStore = create<Store>((set, get) => ({
                                       leftOptions,
                                       rightOptions,
                                   },
-                        localId: crypto.randomUUID(),
+                        localId:
+                            get().allQuestions.find(
+                                (item) => item.questionText === q.questionText
+                            )?.localId || crypto.randomUUID(),
                         questionText: q.questionText,
                         imageUrl: null,
                         type: q.type,
@@ -144,28 +148,53 @@ const useQuizStore = create<Store>((set, get) => ({
                     }
                 })
 
-                if (generatedQuestions.length > 0) {
+                if (generatedQuestions.length > 0 && questionsCount) {
                     set((state) => {
-                        const existingQuestionsTexts = state.allQuestions.map(
+                        // here we are incrementally adding the questions
+                        // each questions is not displayed in the ui unless it is fully generated
+                        // also we track the user updates and keep them while we are adding the new questions (that is why the logic bellow is kind of complicated)
+
+                        const isGenerating =
+                            generatedQuestions.length < questionsCount
+
+                        const oldQuestions = [
+                            ...state.allQuestions.slice(
+                                0,
+                                state.allQuestions.length - 1
+                            ),
+                        ]
+
+                        const existingQuestionsTexts = oldQuestions.map(
                             (item) => item.questionText
                         )
-                        const addedQuestions = formattedGenerated.filter(
+
+                        const newQuestions = formattedGenerated.filter(
                             (item) =>
                                 !existingQuestionsTexts.includes(
                                     item.questionText
                                 )
                         )
+
+                        // making sure that the last item is generated correctly
+                        const questionsToAdd = isGenerating
+                            ? newQuestions
+                            : [
+                                  ...newQuestions.slice(0, -1),
+                                  formattedGenerated[
+                                      formattedGenerated.length - 1
+                                  ],
+                              ]
                         const questionsForState = [
-                            ...state.allQuestions,
-                            ...addedQuestions,
+                            ...oldQuestions,
+                            ...questionsToAdd,
                         ]
+
                         return {
                             shadowQuestionsCount:
                                 Number(questionsCount || 0) -
                                 questionsForState.length,
                             selectedQuestionLocalId:
-                                state.selectedQuestionLocalId ||
-                                questionsForState[0].localId,
+                                state.selectedQuestionLocalId,
                             isGeneratingWithAi: false,
                             allQuestions: questionsForState as any,
                         }
@@ -431,7 +460,3 @@ export interface MatchingPairsOptions {
         leftOptionLocalId: string | null
     }[]
 }
-
-// TODO make the quizzes come with the stream
-// TODO a loading for each page
-// TODO make sure if you change something and a new question is generated the changes persist
