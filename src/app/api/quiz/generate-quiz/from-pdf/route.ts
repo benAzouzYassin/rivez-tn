@@ -121,7 +121,7 @@ ${
     ${rules}`
         : ""
 }
-- Maximum questions count : is ${maxQuestions} zodSchema
+- Maximum questions count : is ${maxQuestions > 1 ? maxQuestions : 2}
 - Minimum questions count : is ${minQuestions} 
 
 QUESTION DISTRIBUTION:
@@ -159,7 +159,7 @@ QUALITY REQUIREMENTS:
    - Use proper terminology relevant to ${mainTopic}
    - Avoid obvious patterns in correct answers
    - In MATCHING_PAIRS questions avoid putting the leftSideOptions and the matching rightSideOptions in the same array index
-   - In MULTIPLE_CHOICE questions avoid grouping the correct answers together
+   - In MULTIPLE_CHOICE questions never group the correct options together
 
 2. Answer options should:
    - Be mutually exclusive
@@ -182,6 +182,8 @@ QUALITY REQUIREMENTS:
 Please generate the quiz in JSON format, with each question object strictly following the provided type definitions.
 
 IMPORTANT : 
+- Your response should be valid JSON that can be used like this : JSON.parse(response)
+- Your response should not be markdown. 
 - Your response should follow this zod schema :  z.object({
     questionsCount: z.number(),
     questions: z.array(

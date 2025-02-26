@@ -2,6 +2,8 @@ import { generateQuiz } from "@/data-access/quizzes/generate"
 import { PossibleQuestionTypes } from "@/schemas/questions-content"
 import { create } from "zustand"
 import { getRightOptionPairLocalId } from "./utils"
+import { wait } from "@/utils/wait"
+import { shuffleArray } from "@/utils/array"
 
 interface State {
     allQuestions: QuizQuestionType[]
@@ -99,15 +101,16 @@ const useQuizStore = create<Store>((set, get) => ({
                 const generatedQuestions = result?.questions || []
 
                 const formattedGenerated = generatedQuestions.map((q) => {
-                    const leftOptions =
+                    const leftOptions = shuffleArray(
                         q.type === "MATCHING_PAIRS"
                             ? q.content.leftSideOptions.map((opt) => ({
                                   text: opt,
                                   localId: crypto.randomUUID(),
                               }))
                             : []
+                    )
 
-                    const rightOptions =
+                    const rightOptions = shuffleArray(
                         q.type === "MATCHING_PAIRS"
                             ? q.content.rightSideOptions.map((opt) => ({
                                   text: opt,
@@ -119,7 +122,8 @@ const useQuizStore = create<Store>((set, get) => ({
                                   ),
                               }))
                             : []
-                    const options =
+                    )
+                    const options = shuffleArray(
                         q.type === "MULTIPLE_CHOICE"
                             ? q.content.options.map((opt) => ({
                                   text: opt,
@@ -127,6 +131,7 @@ const useQuizStore = create<Store>((set, get) => ({
                                   isCorrect: q.content.correct.includes(opt),
                               }))
                             : []
+                    )
                     return {
                         content:
                             q.type === "MULTIPLE_CHOICE"
@@ -194,13 +199,23 @@ const useQuizStore = create<Store>((set, get) => ({
                                 Number(questionsCount || 0) -
                                 questionsForState.length,
                             selectedQuestionLocalId:
-                                state.selectedQuestionLocalId,
-                            isGeneratingWithAi: false,
+                                state.selectedQuestionLocalId ||
+                                questionsForState.at(0)?.localId,
+                            isGeneratingWithAi: !(
+                                generatedQuestions.length > 1
+                            ),
                             allQuestions: questionsForState as any,
                         }
                     })
                 }
             })
+
+            await wait(20_000)
+            const didGenerate = get().allQuestions.length > 1
+
+            if (!didGenerate) {
+                throw new Error("Error while generating the questions.")
+            }
         } catch (error) {
             console.error(error)
             set({ isGeneratingWithAi: false, isGenerationError: true })
