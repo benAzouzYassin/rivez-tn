@@ -1,11 +1,12 @@
 import type { NextConfig } from "next"
 
 const nextConfig: NextConfig = {
-    target: "serverless",
-    future: { webpack5: true },
-    webpack: (config, { buildId, dev, isServer, defaultLoaders, webpack }) => {
-        config.resolve.alias.canvas = false
-        config.resolve.alias.encoding = false
+    webpack: (config) => {
+        config.resolve.alias = {
+            ...config.resolve.alias,
+            canvas: false,
+            encoding: false,
+        }
         return config
     },
     images: {
