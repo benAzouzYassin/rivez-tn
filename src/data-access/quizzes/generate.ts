@@ -1,7 +1,7 @@
 import {
     GeneratedQuizResponse,
     GenerateQuizBodyType,
-} from "@/app/api/quiz/generate-quiz/route"
+} from "@/app/api/quiz/generate-quiz/from-topic/route"
 import { partialParseJson } from "@/utils/json"
 import { readStream } from "@/utils/stream"
 import { z } from "zod"
@@ -17,7 +17,7 @@ export const generateQuiz = async (
     if (!session) {
         throw new Error("Session error")
     }
-    const response = await fetch(`/api/quiz/generate-quiz`, {
+    const response = await fetch(`/api/quiz/generate-quiz/from-topic`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
@@ -37,9 +37,7 @@ export const generateQuiz = async (
                     partialParseJson(rawResult)
                 )
                 onChange(questions)
-            } catch (error) {
-                console.error(error)
-            }
+            } catch {}
         })
     } else {
         throw new Error("no stream to read data")

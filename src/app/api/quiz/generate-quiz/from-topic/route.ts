@@ -48,13 +48,12 @@ export async function POST(req: NextRequest) {
             rules: rules,
             minQuestions,
             maxQuestions,
-            pdfName: data.pdfName,
-            pdfUrl: data.pdfUrl,
         })
 
         const llmResponse = streamText({
             model: llm,
             prompt,
+            temperature: 0.1,
         })
         return llmResponse.toTextStreamResponse()
     } catch (error) {
@@ -76,8 +75,6 @@ const bodySchema = z.object({
     rules: z.string().nullable().optional(),
     maxQuestions: z.coerce.number().max(999).nullable().optional(),
     minQuestions: z.coerce.number().max(20).nullable().optional(),
-    pdfName: z.string().nullable().optional(),
-    pdfUrl: z.string().nullable().optional(),
 })
 
 interface PromptParams {
@@ -87,19 +84,9 @@ interface PromptParams {
     rules: string | null
     minQuestions: number
     maxQuestions: number
-    pdfName: string | null | undefined
-    pdfUrl: string | null | undefined
 }
 function generateQuizPrompt(params: PromptParams): string {
-    const {
-        mainTopic,
-        language,
-        rules,
-        minQuestions,
-        maxQuestions,
-        pdfName,
-        pdfUrl,
-    } = params
+    const { mainTopic, language, rules, minQuestions, maxQuestions } = params
 
     const prompt = `Generate an educational quiz with the following specifications:
 
@@ -112,7 +99,6 @@ ${
     ${rules}`
         : ""
 }
-${pdfName && pdfUrl ? `- Source Material: PDF document "${pdfName}"` : ""}
 - Maximum questions count : is ${maxQuestions} zodSchema
 - Minimum questions count : is ${minQuestions} 
 
@@ -163,15 +149,6 @@ QUALITY REQUIREMENTS:
    - Maintain consistent terminology
    - Use proper grammar and punctuation
    - Avoid colloquialisms unless relevant to the topic
-
-4. Content accuracy:
-${
-    pdfName && pdfUrl
-        ? `   - Base all questions strictly on the content from the provided PDF
-   - Use exact terminology and concepts as presented in the source material`
-        : `- Ensure factual accuracy and current information
-   - Reference widely accepted knowledge in the field`
-}
 
 Please generate the quiz in JSON format, with each question object strictly following the provided type definitions.
 IMPORTANT : 

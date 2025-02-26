@@ -12,17 +12,18 @@ interface State {
 }
 
 interface Actions {
-    generateQuizWithAi: (data: {
-        category: string | null
-        name: string
-        mainTopic: string
-        language: string | null
-        maxQuestions: number | null
-        minQuestions: number | null
-        rules: string | null
-        pdfName: string | null
-        pdfUrl: string | null
-    }) => void
+    generateQuizWithAi: (
+        data: {
+            category: string | null
+            name: string
+            mainTopic: string
+            language: string | null
+            maxQuestions: number | null
+            minQuestions: number | null
+            rules: string | null
+        },
+        method: "subject" | "pdf"
+    ) => void
     setSelectedQuestion: (localId: string | null) => void
     setAllQuestions: (questions: QuizQuestionType[]) => void
     getQuestion: (localId: string) => QuizQuestionType | undefined

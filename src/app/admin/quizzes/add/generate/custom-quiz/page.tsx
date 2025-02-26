@@ -1,24 +1,21 @@
 "use client"
 
+import { Button } from "@/components/ui/button"
+import { ChevronLeft } from "lucide-react"
+import { useRouter } from "nextjs-toploader/app"
+
 import CategorySelect from "@/components/shared/category-select"
 import ImageUpload from "@/components/shared/image-upload"
-import { Button } from "@/components/ui/button"
-import { DialogDescription, DialogTitle } from "@/components/ui/dialog"
 import { Input } from "@/components/ui/input"
 import { createQuiz } from "@/data-access/quizzes/create"
 import { useCurrentUser } from "@/hooks/use-current-user"
 import { toastError } from "@/lib/toasts"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { ChevronLeft, Upload } from "lucide-react"
-import { useRouter } from "nextjs-toploader/app"
+import { Upload } from "lucide-react"
 import { useMemo, useState } from "react"
 import { Controller, useForm } from "react-hook-form"
 import { z } from "zod"
-
-type Props = {
-    onBackClick: () => void
-}
-export default function SimpleQuizDialogContent(props: Props) {
+export default function Page() {
     const [imageUrl, setImageUrl] = useState<string | null>(null)
     const [isUploadingImage, setIsUploadingImage] = useState(false)
     const [isLoading, setIsLoading] = useState(false)
@@ -69,23 +66,22 @@ export default function SimpleQuizDialogContent(props: Props) {
             setIsLoading(false)
         }
     }
-
     return (
-        <>
-            <div className="flex items-center">
+        <main className="flex relative items-center pb-10  flex-col">
+            <h1 className="mt-10 text-neutral-600 text-3xl font-extrabold">
+                Create custom quiz
+            </h1>
+            <div className="flex items-center  h-0">
                 <Button
-                    onClick={props.onBackClick}
-                    className="rounded-full w-10 h-10 p-0 absolute top-4"
-                    variant={"outline"}
+                    onClick={() => router.back()}
+                    className=" text-sm gap-1   absolute top-4 left-5"
+                    variant="secondary"
                 >
-                    <ChevronLeft className="stroke-3 text-neutral-500 !w-5 !h-5" />
+                    <ChevronLeft className="stroke-3 -ml-1 text-neutral-500 !w-4 !h-4" />
+                    Go back
                 </Button>
-                <DialogTitle className="text-2xl font-bold text-center grow text-[#3C3C3C]">
-                    Create New Quiz
-                </DialogTitle>
             </div>
-            <DialogDescription></DialogDescription>
-            <section className="flex flex-col  gap-4">
+            <section className="flex flex-col w-full mt-8 gap-1 max-w-[900px]">
                 <Input
                     {...register("name")}
                     placeholder="Quiz Name"
@@ -135,7 +131,7 @@ export default function SimpleQuizDialogContent(props: Props) {
                     displayCancelBtn
                     isLoading={isUploadingImage}
                     onLoadingChange={setIsUploadingImage}
-                    className="-mt-3"
+                    className=""
                     imageUrl={imageUrl}
                     onImageUrlChange={setImageUrl}
                 />
@@ -144,12 +140,12 @@ export default function SimpleQuizDialogContent(props: Props) {
                     disabled={isUploadingImage}
                     type="button"
                     onClick={handleSubmit(onSubmit)}
-                    className="font-extrabold uppercase text-sm"
+                    className="font-extrabold mt-4 uppercase text-sm"
                     variant="blue"
                 >
                     Create Quiz
                 </Button>
             </section>
-        </>
+        </main>
     )
 }

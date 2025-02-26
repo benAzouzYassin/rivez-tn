@@ -10,13 +10,13 @@ import {
 
 import { useQuery } from "@tanstack/react-query"
 import { Filter, Plus } from "lucide-react"
+import { useRouter } from "nextjs-toploader/app"
 import { parseAsInteger, parseAsString, useQueryState } from "nuqs"
-import { useState } from "react"
-import AddQuizDialog from "./_components/add-quiz-dialog"
 import Search from "./_components/search"
 import { columns } from "./table-columns"
 
 export default function Page() {
+    const router = useRouter()
     const [searchValue, setSearchValue] = useQueryState(
         "search-value",
         parseAsString.withDefault("")
@@ -30,8 +30,6 @@ export default function Page() {
         "page",
         parseAsInteger.withDefault(1)
     )
-    const [isAddingQuiz, setIsAddingQuiz] = useState(false)
-
     const {
         data: response,
         isError,
@@ -88,7 +86,7 @@ export default function Page() {
                         className="text-base "
                         variant={"blue"}
                         onClick={() => {
-                            setIsAddingQuiz(true)
+                            router.push("/admin/quizzes/add/generate")
                         }}
                     >
                         <Plus />
@@ -107,10 +105,6 @@ export default function Page() {
                 onPageChange={setCurrentPage}
                 itemsPerPage={itemsPerPage}
                 onItemsPerPageChange={setItemsPerPage}
-            />
-            <AddQuizDialog
-                isOpen={isAddingQuiz}
-                onOpenChange={setIsAddingQuiz}
             />
         </section>
     )

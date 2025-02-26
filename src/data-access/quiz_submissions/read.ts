@@ -16,7 +16,9 @@ export async function readSubmissionsWithAllData(config?: {
         .select(`*, quiz_submission_answers(*), quiz(*), user(*)`, {
             count: "exact",
         })
-        .order("created_at", { ascending: false })
+        .order("created_at", {
+            ascending: false,
+        })
 
     const userSearch = config?.filters?.userSearch || ""
     const quizSearch = config?.filters?.quizSearch || ""
@@ -43,7 +45,9 @@ export async function readSubmissionsWithAllData(config?: {
             .select(
                 `*, quiz_submission_answers(*), quiz!inner(*), user!inner(*)`
             )
-            .order("created_at", { ascending: false })
+            .order("created_at", {
+                ascending: false,
+            })
             .ilike("quiz.name", `%${quizSearch}%`)
             .throwOnError()
         quizFilterResult = response.data || []
@@ -55,7 +59,9 @@ export async function readSubmissionsWithAllData(config?: {
             .select(
                 `*, quiz_submission_answers(*), quiz!inner(*), user!inner(*)`
             )
-            .order("created_at", { ascending: false })
+            .order("created_at", {
+                ascending: false,
+            })
             .or(`username.ilike.%${userSearch}%,email.ilike.%${userSearch}%`, {
                 referencedTable: "user",
             })

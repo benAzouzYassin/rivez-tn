@@ -86,7 +86,9 @@ export async function readUsersProfilesWithDetails(config?: {
                 count: "exact",
             }
         )
-        .order("created_at", { ascending: false })
+        .order("created_at", {
+            ascending: false,
+        })
 
     if (isFiltering) {
         query = query.or(
