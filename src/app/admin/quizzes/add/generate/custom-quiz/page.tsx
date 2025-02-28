@@ -15,7 +15,10 @@ import { Upload } from "lucide-react"
 import { useMemo, useState } from "react"
 import { Controller, useForm } from "react-hook-form"
 import { z } from "zod"
+import { useSidenav } from "@/providers/sidenav-provider"
 export default function Page() {
+    const sideNav = useSidenav()
+
     const [imageUrl, setImageUrl] = useState<string | null>(null)
     const [isUploadingImage, setIsUploadingImage] = useState(false)
     const [isLoading, setIsLoading] = useState(false)
@@ -57,6 +60,9 @@ export default function Page() {
                 author_id: user.data?.id,
             })
             const quizId = result[0].id
+            if (sideNav.isSidenavOpen) {
+                sideNav.toggleSidenav()
+            }
             router.push(`/admin/quizzes/add/${quizId}`)
             reset()
             setImageUrl(null)

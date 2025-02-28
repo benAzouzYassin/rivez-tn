@@ -141,7 +141,7 @@ export default function MultipleAnswerQuestion(props: Props) {
                             className={cn(
                                 "h-[400px] rounded-xl overflow-hidden  flex items-center justify-center relative  mx-auto  border bg-neutral-50 w-[800px]! ",
                                 {
-                                    "max-w-[600px]  mr-10 h-[500px] ":
+                                    "w-[700px]  mr-10 h-[500px] ":
                                         props.question.layout === "horizontal",
                                 }
                             )}
@@ -169,7 +169,7 @@ export default function MultipleAnswerQuestion(props: Props) {
                                 className={cn(
                                     "max-w-[1000px] mx-auto mt-10 gap-5 w-full grid grid-cols-2",
                                     {
-                                        "flex max-w-[600px] mr-0 flex-col ml-auto":
+                                        "flex w-[700px] mr-0 flex-col ml-auto":
                                             props.question.layout ===
                                             "horizontal",
                                     }

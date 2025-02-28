@@ -1,11 +1,11 @@
 "use client"
+import { ErrorDisplay } from "@/components/shared/error-display"
+import GeneralLoadingScreen from "@/components/shared/general-loading-screen"
+import { useSearchParams } from "next/navigation"
 import { useEffect } from "react"
 import AllQuestionsPreviews from "./_component/all-questions-preview"
 import SelectedQuestionContent from "./_component/selected-question-content"
 import useQuizStore from "./store"
-import { useSearchParams } from "next/navigation"
-import GeneralLoadingScreen from "@/components/shared/general-loading-screen"
-import { ErrorDisplay } from "@/components/shared/error-display"
 
 export default function Page() {
     const searchParams = useSearchParams()

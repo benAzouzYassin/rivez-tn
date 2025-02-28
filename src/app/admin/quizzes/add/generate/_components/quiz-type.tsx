@@ -1,4 +1,5 @@
 import { Button } from "@/components/ui/button"
+import { useSidenav } from "@/providers/sidenav-provider"
 import { useRouter } from "nextjs-toploader/app"
 import { ReactNode } from "react"
 
@@ -18,10 +19,17 @@ export default function QuizType({
     disabled,
 }: Props) {
     const router = useRouter()
+    const sideNav = useSidenav()
+
     return (
         <Button
             disabled={disabled}
-            onClick={() => router.push(`/admin/quizzes/add/generate/${value}`)}
+            onClick={() => {
+                if (sideNav.isSidenavOpen) {
+                    sideNav.toggleSidenav()
+                }
+                router.push(`/admin/quizzes/add/generate/${value}`)
+            }}
             variant={"secondary"}
             className="!p-3 h-28 flex items-center justify-start  disabled:opacity-80 disabled:bg-neutral-200/70 w-full max-h-fit text-start rounded-xl hover:border-blue-300 hover:bg-blue-100/70 hover:shadow-blue-300 transition-all  "
         >

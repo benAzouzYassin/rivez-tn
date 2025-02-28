@@ -24,6 +24,7 @@ import { useMemo, useState } from "react"
 import { useForm } from "react-hook-form"
 import { z } from "zod"
 import useQuizStore from "../../[id]/store"
+import { useSidenav } from "@/providers/sidenav-provider"
 
 export type FormValues = {
     category: string | null
@@ -37,6 +38,8 @@ export type FormValues = {
 }
 
 export default function SubjectForm() {
+    const sideNav = useSidenav()
+
     const [imageUrl, setImageUrl] = useState<string | null>(null)
     const [isUploadingImage, setIsUploadingImage] = useState(false)
     const [isLoading, setIsLoading] = useState(false)
@@ -90,6 +93,9 @@ export default function SubjectForm() {
                 author_id: user.data?.id,
             })
             const quizId = result[0].id
+            if (sideNav.isSidenavOpen) {
+                sideNav.toggleSidenav()
+            }
             router.push(`/admin/quizzes/add/${quizId}?isGeneratingWithAi=true`)
             generateQuizWithAi(data, "subject")
 

@@ -11,20 +11,25 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select"
-import { ChevronLeft, FileTextIcon, ImageIcon } from "lucide-react"
+import { ChevronLeft, ImageIcon } from "lucide-react"
 import { Controller } from "react-hook-form"
 
-import { FileInput } from "@/components/ui/file-input"
 import { createQuiz } from "@/data-access/quizzes/create"
 import { useCurrentUser } from "@/hooks/use-current-user"
 import { toastError } from "@/lib/toasts"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { parsePdf } from "client-side-pdf-parser"
 import { useRouter } from "nextjs-toploader/app"
 import { useMemo, useState } from "react"
 import { useForm } from "react-hook-form"
 import { z } from "zod"
 import useQuizStore from "../../[id]/store"
+import dynamic from "next/dynamic"
+import { PdfInputLoading } from "./_components/pdf-input-loading"
+import { useSidenav } from "@/providers/sidenav-provider"
+
+const PdfInput = dynamic(() => import("./_components/pdf-input"), {
+    loading: () => <PdfInputLoading />,
+})
 
 export type FormValues = {
     category: string | null
@@ -38,10 +43,10 @@ export type FormValues = {
 }
 
 export default function Document() {
-    const [isUploadingPdf, setIsUploadingPdf] = useState(false)
+    const sideNav = useSidenav()
+
     const [imageUrl, setImageUrl] = useState<string | null>(null)
     const [pdfPages, setPdfPages] = useState<string[]>([])
-    const [fileName, setFileName] = useState("")
     const [isUploadingImage, setIsUploadingImage] = useState(false)
     const [isLoading, setIsLoading] = useState(false)
     const user = useCurrentUser()
@@ -90,6 +95,9 @@ export default function Document() {
                 author_id: user.data?.id,
             })
             const quizId = result[0].id
+            if (sideNav.isSidenavOpen) {
+                sideNav.toggleSidenav()
+            }
             router.push(`/admin/quizzes/add/${quizId}?isGeneratingWithAi=true`)
             generateQuizWithAi({ ...data, pdfPages }, "pdf")
 
@@ -123,48 +131,7 @@ export default function Document() {
                     className="w-full"
                     errorMessage={form.formState.errors.name?.message}
                 />
-                <FileInput
-                    fileName={fileName}
-                    isLoading={isUploadingPdf}
-                    onChange={async (file) => {
-                        setIsUploadingPdf(true)
-                        try {
-                            if (file) {
-                                const content = await parsePdf(file)
-                                setPdfPages(content || [])
-                                setFileName(file.name)
-                            } else {
-                                setFileName("")
-                                setPdfPages([])
-                            }
-                        } catch (error) {
-                            toastError("Something went wrong...")
-                        }
-                        setIsUploadingPdf(false)
-                    }}
-                    allowDocument
-                    previewAsDocument
-                    previewAsImage={false}
-                    allowImage={false}
-                    renderEmptyContent={() => (
-                        <>
-                            <FileTextIcon className="w-10 h-10 mb-2 mx-auto text-red-400" />
-                            <p className="text-neutral-600 mb-2">
-                                Drag & drop a pdf file here
-                            </p>
-                            <p className="text-sm text-neutral-500">
-                                or click to select a file
-                            </p>
-                            <p className="text-xs text-neutral-400 mt-2">
-                                Images (PNG, JPG, GIF) or Documents (PDF, DOC,
-                                DOCX, XLS, XLSX)
-                            </p>
-                            <p className="text-xs text-neutral-400">
-                                up to 10MB
-                            </p>
-                        </>
-                    )}
-                />
+                <PdfInput onPDFPagesChanges={setPdfPages} />
                 <div className="grid grid-cols-2 mt-4 gap-8">
                     <Controller
                         control={form.control}

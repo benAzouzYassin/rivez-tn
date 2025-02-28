@@ -45,7 +45,7 @@ export default function MultipleChoiceContent() {
                         <div
                             className={cn(
                                 "w-[800px] mt-5 h-[400px] mx-auto rounded-xl",
-                                { "mx-0 w-[600px]": layout === "horizontal" }
+                                { "mx-0 w-[700px]": layout === "horizontal" }
                             )}
                         >
                             <ImageUpload
