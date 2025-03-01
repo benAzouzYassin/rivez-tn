@@ -2,10 +2,11 @@ import {
     GeneratedQuizResponse,
     GenerateQuizBodyType as GenerateFromSubjectBody,
 } from "@/app/api/quiz/generate-quiz/from-topic/route"
-import { partialParseJson } from "@/utils/json"
+import { partialParseJson, cleanJsonStream } from "@/utils/json"
 import { readStream } from "@/utils/stream"
 import { z } from "zod"
 import { readCurrentSession } from "../users/read"
+import { CodeSnippetsResponse } from "@/app/api/quiz/generate-code-snippets/route"
 
 export const generateQuiz = async (
     method: "subject" | "pdf",
@@ -40,6 +41,8 @@ export const generateQuiz = async (
     if (reader) {
         readStream(reader, (chunk) => {
             rawResult += chunk
+            rawResult = cleanJsonStream(rawResult)
+
             try {
                 const partialData = partialParseJson(rawResult)
                 const questions = quizQuestionSchema.parse(partialData)
@@ -75,3 +78,54 @@ const quizQuestionSchema = z.object({
         ])
     ),
 })
+
+export const generateCodeSnippets = async (
+    data: {
+        language: string
+        concepts: string
+        framework?: string | undefined
+        notes?: string | undefined
+        fileCount: number
+    },
+    onChange: (newValue: CodeSnippetsResponse | null) => void
+) => {
+    const {
+        data: { session },
+    } = await readCurrentSession()
+    if (!session) {
+        throw new Error("Session error")
+    }
+    const response = await fetch("/api/quiz/generate-code-snippets", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            "access-token": session.access_token,
+            "refresh-token": session.refresh_token,
+        },
+        body: JSON.stringify(data),
+    })
+
+    const reader = response?.body?.getReader()
+    let rawResult = ""
+    if (reader) {
+        readStream(reader, (chunk) => {
+            rawResult += chunk
+            rawResult = cleanJsonStream(rawResult)
+
+            try {
+                const partialData = partialParseJson(rawResult)
+                const data = codeSnippetsResponse.parse(partialData)
+                onChange(data)
+            } catch {}
+        })
+    } else {
+        throw new Error("no stream to read data")
+    }
+}
+const codeSnippetsResponse = z.array(
+    z.object({
+        filename: z.string(),
+        programmingLanguage: z.string(),
+        code: z.string(),
+    })
+)

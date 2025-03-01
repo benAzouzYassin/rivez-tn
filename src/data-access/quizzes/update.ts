@@ -1,4 +1,5 @@
 import { supabase } from "@/lib/supabase-client-side"
+import { MultipleChoiceContent } from "@/schemas/questions-content"
 import { Database } from "@/types/database.types"
 
 export async function addQuestionsToQuiz(
@@ -11,6 +12,7 @@ export async function addQuestionsToQuiz(
         question: string
         type: "MULTIPLE_CHOICE" | "MATCHING_PAIRS"
         layout: "vertical" | "horizontal"
+        imageType: Database["public"]["Tables"]["quizzes_questions"]["Insert"]["image_type"]
     }[]
 ) {
     const formattedData = questions.map((q) => {
@@ -24,6 +26,7 @@ export async function addQuestionsToQuiz(
                     .filter((opt) => opt.isCorrect === true)
                     .map((opt) => opt.text) || []
             const options = content?.options.map((opt) => opt.text) || []
+            const codeSnippets = content?.codeSnippets
 
             return {
                 image: q.image,
@@ -31,9 +34,11 @@ export async function addQuestionsToQuiz(
                 quiz: quizId,
                 question: q.question,
                 layout: q.layout,
+                image_type: q.imageType,
                 content: {
                     correct,
                     options,
+                    codeSnippets,
                 } satisfies DbMultipleChoiceContent,
             }
         }
@@ -64,6 +69,7 @@ export async function addQuestionsToQuiz(
                 quiz: quizId,
                 question: q.question,
                 layout: q.layout,
+                image_type: q.imageType,
                 content: {
                     correct,
                     leftSideOptions:
@@ -120,6 +126,7 @@ type AddQuestionToQuizContentTypes = {
             localId: string
             isCorrect: boolean | null
         }[]
+        codeSnippets: MultipleChoiceContent["codeSnippets"]
     }
     MatchingPairs: {
         leftOptions: {
@@ -136,6 +143,7 @@ type AddQuestionToQuizContentTypes = {
 interface DbMultipleChoiceContent {
     correct: string[]
     options: string[]
+    codeSnippets: MultipleChoiceContent["codeSnippets"]
 }
 interface DbMatchingPairsContent {
     rightSideOptions: string[]
@@ -154,6 +162,7 @@ export async function updateQuizQuestions(
         question: string
         type: "MULTIPLE_CHOICE" | "MATCHING_PAIRS"
         layout: "vertical" | "horizontal"
+        imageType: Database["public"]["Tables"]["quizzes_questions"]["Insert"]["image_type"]
     }[]
 ) {
     const formattedData = questions.map((q) => {
@@ -167,6 +176,7 @@ export async function updateQuizQuestions(
                     .filter((opt) => opt.isCorrect === true)
                     .map((opt) => opt.text) || []
             const options = content?.options.map((opt) => opt.text) || []
+            const codeSnippets = content?.codeSnippets
 
             return {
                 quiz: q.quizId,
@@ -175,9 +185,11 @@ export async function updateQuizQuestions(
                 type: q.type,
                 question: q.question,
                 layout: q.layout,
+                image_type: q.imageType,
                 content: {
                     correct,
                     options,
+                    codeSnippets,
                 } satisfies DbMultipleChoiceContent,
             }
         }
@@ -203,6 +215,7 @@ export async function updateQuizQuestions(
                     ) || []
 
             return {
+                image_type: q.imageType,
                 quiz: q.quizId,
                 id: q.id,
                 image: q.image,

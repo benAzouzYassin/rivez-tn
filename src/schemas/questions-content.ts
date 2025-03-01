@@ -9,6 +9,17 @@ export const possibleQuestionTypes = [
 const PossibleQuestionTypesEnum = z.enum(possibleQuestionTypes)
 
 const MultipleChoiceContentSchema = z.object({
+    codeSnippets: z
+        .array(
+            z.object({
+                name: z.string(),
+                code: z.string(),
+                localId: z.string(),
+                type: z.string(),
+            })
+        )
+        .optional()
+        .nullable(),
     correct: z.array(z.string()),
     options: z.array(z.string()),
 })

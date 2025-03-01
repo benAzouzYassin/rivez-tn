@@ -7,20 +7,25 @@ import {
     DialogDescription,
     DialogTitle,
 } from "@/components/ui/dialog"
-import { toastSuccess } from "@/lib/toasts"
+import {
+    dismissToasts,
+    toastError,
+    toastLoading,
+    toastSuccess,
+} from "@/lib/toasts"
 import { cn } from "@/lib/ui-utils"
-import { uploadFile } from "@/utils/file-management"
+import { maxFileSize, uploadFile } from "@/utils/file-management"
 import { exportToCanvas } from "@excalidraw/excalidraw"
 import { ExcalidrawInitialDataState } from "@excalidraw/excalidraw/types/types"
 import { Loader2 } from "lucide-react"
 import dynamic from "next/dynamic"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 
 const ExcalidrawPrimitive = dynamic(
     async () => (await import("@excalidraw/excalidraw")).Excalidraw,
     {
         loading: () => (
-            <div className="w-full h-[70vh] flex items-center justify-center">
+            <div className="w-full h-[100px] flex items-center justify-center">
                 <Loader2 className="w-10 h-10 animate-spin text-white/50" />
             </div>
         ),
@@ -71,6 +76,7 @@ export default function Excalidraw(props: Props) {
             setIsModalOpen(true)
         } catch (error) {
             console.error("Error exporting canvas:", error)
+            toastError("Something went wrong.")
         }
     }
 
@@ -81,20 +87,31 @@ export default function Excalidraw(props: Props) {
         try {
             const response = await fetch(canvasUrl)
             const blob = await response.blob()
+            if (blob.size > maxFileSize) {
+                toastError("Image is too large.")
+                return
+            }
+            toastLoading("Uploading your image...")
             const url = await uploadFile(blob)
             props.onSave(url)
-            toastSuccess("Saved successfully")
+            dismissToasts("loading")
+            toastSuccess("Uploaded your image successfully.")
             setIsModalOpen(false)
         } catch (error) {
+            dismissToasts("loading")
+            toastError("Something went wrong.")
         } finally {
             setIsSubmitting(false)
         }
     }
+
     return (
         <div className="relative flex flex-col -mt-5 pb-5 items-center justify-center overflow-hidden">
             <div className="w-[1050px] border rounded-2xl overflow-hidden relative h-[550px] mx-auto">
                 <ExcalidrawPrimitive
-                    excalidrawAPI={(api: any) => setExcalidrawAPI(api)}
+                    excalidrawAPI={(api) => {
+                        setExcalidrawAPI(api)
+                    }}
                     autoFocus
                     initialData={initialData}
                     theme="dark"
@@ -104,6 +121,7 @@ export default function Excalidraw(props: Props) {
                             loadScene: false,
                             saveToActiveFile: false,
                             saveAsImage: false,
+                            clearCanvas: true,
                         },
                     }}
                 />

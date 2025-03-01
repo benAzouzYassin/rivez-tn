@@ -1,6 +1,8 @@
 import { readCurrentSession } from "@/data-access/users/read"
 import axios from "axios"
 
+export const maxFileSize =
+    Number(process.env.NEXT_PUBLIC_FILE_SIZE_LIMIT! || 0) * 1024 * 1024
 export async function uploadFile(
     fileObject: File | Blob,
     abortController?: AbortController

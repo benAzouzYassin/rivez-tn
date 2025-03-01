@@ -19,6 +19,8 @@ export default function SelectedQuestionContent() {
                 <button
                     onClick={() => {
                         addQuestion({
+                            codeSnippets: null,
+                            imageType: "normal-image",
                             content: { options: [] },
                             imageUrl: null,
                             localId: crypto.randomUUID(),

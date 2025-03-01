@@ -1,5 +1,5 @@
 import { isCurrentUserAdmin } from "@/data-access/users/is-admin"
-import { llm } from "@/lib/ai"
+import { anthropicHaiku } from "@/lib/ai"
 import { generateObject, streamText } from "ai"
 import { NextRequest, NextResponse } from "next/server"
 import { z } from "zod"
@@ -51,7 +51,7 @@ export async function POST(req: NextRequest) {
         }
         const pdfPrompt = generatePdfFormatPrompt(data.pdfPages, quizLanguage)
         const pdfFormatResponse = await generateObject({
-            model: llm,
+            model: anthropicHaiku,
             schema: z.object({
                 mainTopic: z.string(),
                 pages: z.array(z.string()),
@@ -72,7 +72,7 @@ export async function POST(req: NextRequest) {
         })
 
         const llmResponse = streamText({
-            model: llm,
+            model: anthropicHaiku,
             prompt,
             temperature: 0,
         })

@@ -7,33 +7,48 @@ import {
     DialogDescription,
     DialogHeader,
     DialogTitle,
-    DialogTrigger,
 } from "@/components/ui/dialog"
+import { toastError, toastLoading, toastSuccess } from "@/lib/toasts"
 import { cn } from "@/lib/ui-utils"
+import { maxFileSize, uploadFile } from "@/utils/file-management"
 import {
     ChevronLeft,
     Code2Icon,
+    Loader2,
     PencilLine,
     UploadCloud,
-    Wand2,
 } from "lucide-react"
+import dynamic from "next/dynamic"
 import { ReactNode, useRef, useState } from "react"
 import CodeSnippets from "./code-snippets"
-import dynamic from "next/dynamic"
-const DrawImage = dynamic(() => import("./draw-image"))
+const DrawImage = dynamic(() => import("./draw-image"), {
+    loading: () => {
+        return (
+            <div className="w-full h-[100px] flex items-center justify-center">
+                <Loader2 className="w-10 h-10 animate-spin text-blue-400" />
+            </div>
+        )
+    },
+    ssr: false,
+})
 
 type Props = {
-    selectedType:
-        | "image-upload"
-        | "image-ai-generation"
-        | "image-draw"
-        | "code-snippets"
-        | null
+    isOpen: boolean
+    onOpenChange: (value: boolean) => void
+    selectedType: "image-upload" | "image-draw" | "code-snippets" | null
     onTypeChange: (type: Props["selectedType"]) => void
     onImageUpload: (url: string) => void
-    onCodeSnippetsSave: (snippets: any[]) => void
+    onCodeSnippetsSave: (
+        snippets: {
+            name: string
+            code: string
+            localId: string
+            type: string
+        }[],
+        shouldClose: boolean
+    ) => void
 }
-export default function ImageDialog() {
+export default function QuizImageDialog(props: Props) {
     const [selectedType, setSelectedType] =
         useState<Props["selectedType"]>(null)
 
@@ -52,24 +67,18 @@ export default function ImageDialog() {
 
     return (
         <Dialog
+            open={props.isOpen}
             onOpenChange={(value) => {
                 if (!value) {
                     setSelectedType(null)
                 }
+                props.onOpenChange(value)
             }}
             modal={false}
         >
-            <DialogTrigger asChild>
-                <Button variant="outline" size="lg" className="font-medium">
-                    Select Image Source
-                </Button>
-            </DialogTrigger>
             <DialogContent
                 className={cn(
-                    "sm:max-w-[1100px] border-2 border-black/50 shadow-black/50 shadow-[0px_4px_0px_0px] overflow-x-hidden pb-12",
-                    {
-                        "sm:max-w-[1200px]": selectedType === "image-draw",
-                    }
+                    "sm:max-w-[1200px] border-2 border-black/50 items-start  shadow-black/50 shadow-[0px_4px_0px_0px] min-h-[450px] overflow-x-hidden pb-12"
                 )}
             >
                 {!!selectedType && (
@@ -90,6 +99,9 @@ export default function ImageDialog() {
                 </DialogHeader>
                 {selectedType === "code-snippets" && (
                     <CodeSnippets
+                        onSave={(shouldClose) => {
+                            props.onCodeSnippetsSave(codeSnippets, shouldClose)
+                        }}
                         className="h-[320px] "
                         onSelectedTabChange={setSelectedSnippetTab}
                         onThemeChange={setCodeSnippetTheme}
@@ -99,20 +111,25 @@ export default function ImageDialog() {
                         theme={codeSnippetTheme}
                     />
                 )}
-                {selectedType === "image-ai-generation" && (
-                    <div>image generattion</div>
-                )}
+
                 {selectedType === "image-draw" && (
                     <DrawImage
                         onSave={(url) => {
-                            // TODO use the url
+                            props.onImageUpload(url)
+                            props.onOpenChange(false)
+                            setSelectedType(null)
                         }}
                     />
                 )}
                 {!selectedType && (
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3">
+                    <div className="grid grid-cols-1 md:grid-cols-2 mt-0 lg:grid-cols-3 gap-3 px-20">
                         {items.map((item, index) => (
                             <Item
+                                onImageUpload={(url) => {
+                                    props.onImageUpload(url)
+                                    props.onOpenChange(false)
+                                    setSelectedType(null)
+                                }}
                                 onSelect={setSelectedType}
                                 key={index}
                                 {...item}
@@ -126,56 +143,95 @@ export default function ImageDialog() {
 }
 function Item(props: ItemProps) {
     const fileInputRef = useRef<HTMLInputElement>(null)
+    const [isLoading, setIsLoading] = useState(false)
+    const abortController = new AbortController()
     return (
         <div className="relative w-auto flex ">
             {props.id == "image-upload" && (
                 <input
+                    accept="image/*"
+                    onChange={async (e) => {
+                        try {
+                            setIsLoading(true)
+                            const file = Array.from(e.target.files || []).at(0)
+                            if (file) {
+                                if (file.size > maxFileSize) {
+                                    return toastError("Image is too large.")
+                                }
+                                const url = await uploadFile(
+                                    file,
+                                    abortController
+                                )
+                                props.onImageUpload(url)
+                                toastSuccess("Image uploaded sccessfully.")
+                            }
+                        } catch (err) {
+                            console.error(err)
+                            toastError("Something went wrong.")
+                        }
+                    }}
                     ref={fileInputRef}
                     type="file"
                     className="file-input w-0 h-0 cursor-pointer  border-red-500 border top-0 left-0 right-0"
                 />
             )}
-            <Button
-                onClick={() => {
-                    if (props.id == "image-upload") {
-                        return fileInputRef.current?.click()
-                    }
-                    props.onSelect?.(props.id)
-                }}
-                variant={"secondary"}
-                className={cn(
-                    `h-48 flex flex-col grow  relative overflow-hidden group border-2  transition-all  `,
-                    props.buttonClassName,
-                    props.borderClassName
+
+            <div className="flex grow relative">
+                <Button
+                    isLoading={isLoading}
+                    onMouseDown={() => {
+                        if (props.id == "image-upload") {
+                            return fileInputRef.current?.click()
+                        }
+                        props.onSelect?.(props.id)
+                    }}
+                    variant={"secondary"}
+                    className={cn(
+                        `h-48 flex grow flex-col  w-full  relative overflow-hidden group border-2  transition-all  `,
+                        props.buttonClassName,
+                        props.borderClassName
+                    )}
+                >
+                    <div
+                        className={cn(
+                            "absolute inset-0 transition-opacity duration-300",
+                            props.BgClassName
+                        )}
+                    ></div>
+
+                    <div className={cn(props.iconClassName)}>{props.icon}</div>
+
+                    <p
+                        className={cn(
+                            `text-lg text-wrap  translate-y-2 font-bold text-neutral-800 transition-colors duration-300 relative z-10`,
+                            props.titleClassName
+                        )}
+                    >
+                        {props.title}
+                    </p>
+
+                    <span
+                        className={cn(
+                            `text-sm mt-1 transition-all duration-300 relative z-10`,
+                            props.descriptionClassName
+                        )}
+                    >
+                        {props.description}
+                    </span>
+                </Button>
+                {isLoading && (
+                    <Button
+                        onClick={() => {
+                            abortController.abort()
+                            setIsLoading(false)
+                        }}
+                        variant={"outline-red"}
+                        className=" absolute  top-3 right-3 bg-red-50 hover:bg-red-100 h-[38px] "
+                    >
+                        Cancel
+                    </Button>
                 )}
-            >
-                <div
-                    className={cn(
-                        "absolute inset-0 transition-opacity duration-300",
-                        props.BgClassName
-                    )}
-                ></div>
-
-                <div className={cn(props.iconClassName)}>{props.icon}</div>
-
-                <p
-                    className={cn(
-                        `text-lg text-wrap translate-y-2 font-bold text-neutral-800 transition-colors duration-300 relative z-10`,
-                        props.titleClassName
-                    )}
-                >
-                    {props.title}
-                </p>
-
-                <span
-                    className={cn(
-                        `text-sm mt-1 transition-all duration-300 relative z-10`,
-                        props.descriptionClassName
-                    )}
-                >
-                    {props.description}
-                </span>
-            </Button>
+            </div>
         </div>
     )
 }
@@ -193,9 +249,10 @@ interface ItemProps {
     borderClassName: string
     shadowClassName: string
     onSelect?: (id: ItemProps["id"]) => void
+    onImageUpload: (url: string) => void
 }
 
-const items: ItemProps[] = [
+const items: Omit<ItemProps, "onImageUpload">[] = [
     {
         id: "image-upload",
         icon: (
@@ -210,21 +267,6 @@ const items: ItemProps[] = [
         BgClassName: "bg-green-50 hover:bg-green-100 opacity-0 opacity-100",
         borderClassName: " border-green-400",
         shadowClassName: "shadow-green-100",
-    },
-    {
-        id: "image-ai-generation",
-        icon: (
-            <Wand2 className="!w-12 !h-12  stroke-[1.7] group-hover:scale-125 transition-all duration-300 relative z-10" />
-        ),
-        title: "Generate with AI",
-        description: "Create custom images",
-        buttonClassName: " border-purple-400  shadow-purple-400",
-        titleClassName: "text-purple-800",
-        descriptionClassName: "text-purple-500  opacity-100",
-        iconClassName: "text-purple-500 text-purple-600",
-        BgClassName: "bg-purple-50 hover:bg-purple-100  opacity-100",
-        borderClassName: " border-purple-400",
-        shadowClassName: "shadow-purple-100",
     },
     {
         id: "image-draw",

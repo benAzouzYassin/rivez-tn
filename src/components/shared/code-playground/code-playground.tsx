@@ -19,7 +19,7 @@ import {
 import { toastError } from "@/lib/toasts"
 import { cn } from "@/lib/ui-utils"
 import Editor, { useMonaco } from "@monaco-editor/react"
-import { Loader2, Plus, X } from "lucide-react"
+import { Loader2, Pencil, Plus, X } from "lucide-react"
 import monaco from "monaco-editor"
 import { useCallback, useEffect, useRef, useState } from "react"
 import { EDITOR_LANGUAGES } from "./constants/languages"
@@ -42,6 +42,7 @@ type Props = {
     onSelectedTabChange: (id: string) => void
     onCodeChange: (code: string) => void
     onTabRemove: (id: string) => void
+    onTabRename: (id: string, newName: string) => void
     theme:
         | "nightOwl"
         | "light"
@@ -52,6 +53,7 @@ type Props = {
         | "monokaiOneDarkVivid"
     onThemeChange: (theme: string) => void
     className?: string
+    onBlur?: () => void
 }
 
 export default function CodePlayground({
@@ -63,14 +65,23 @@ export default function CodePlayground({
     theme,
     onTabRemove,
     onAdd,
+    onTabRename,
     className,
+    onBlur,
 }: Props) {
     const monacoJSXHighlighterRef = useRef<any>(null)
+    const [editingTabId, setEditingTabId] = useState<string | null>(null)
+    const [editingTabName, setEditingTabName] = useState("")
+
     const handleEditorDidMount = useCallback(
         (
             monacoEditor: monaco.editor.IStandaloneCodeEditor,
             monaco: typeof import("monaco-editor")
         ) => {
+            const disposable = monacoEditor.onDidBlurEditorWidget(() => {
+                onBlur?.()
+            })
+
             activateMonacoJSXHighlighter(monacoEditor, monaco)
                 .then((monacoJSXHighlighterRefCurrent) => {
                     monacoJSXHighlighterRef.current =
@@ -79,9 +90,43 @@ export default function CodePlayground({
                     monacoJSXHighlighterRefCurrent.isToggleJSXCommentingOn()
                 })
                 .catch((e) => console.log(e))
+            return () => {
+                disposable.dispose()
+                if (monacoJSXHighlighterRef.current) {
+                    monacoJSXHighlighterRef.current.dispose()
+                }
+            }
         },
-        []
+        [onBlur]
     )
+
+    const handleTabNameEdit = (tabId: string) => {
+        const tab = tabs.find((t) => t.localId === tabId)
+        if (tab) {
+            setEditingTabId(tabId)
+            setEditingTabName(tab.name)
+        }
+    }
+
+    const handleTabNameSave = () => {
+        if (editingTabId && editingTabName.trim()) {
+            onTabRename?.(editingTabId, editingTabName.trim())
+            setEditingTabId(null)
+            setEditingTabName("")
+        } else if (!editingTabName.trim()) {
+            toastError("Tab name cannot be empty")
+        }
+    }
+
+    const handleTabNameKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+        if (e.key === "Enter") {
+            handleTabNameSave()
+        } else if (e.key === "Escape") {
+            setEditingTabId(null)
+            setEditingTabName("")
+        }
+    }
+
     const selectedTab = tabs.find((t) => t.localId === selectedTabId) || tabs[0]
     const code = selectedTab?.code || ""
     let language = selectedTab?.type || ""
@@ -113,6 +158,7 @@ export default function CodePlayground({
 
     useEffect(() => {
         if (monaco) {
+            // removes language syntax validations
             monaco.languages.typescript.typescriptDefaults.setDiagnosticsOptions(
                 {
                     diagnosticCodesToIgnore: [6385, 7027, 7028, 6133],
@@ -233,11 +279,13 @@ export default function CodePlayground({
                             {tabs.map((tab) => {
                                 const tabIcon =
                                     VS_ICONS?.[tab.type || "plaintext"]
+                                const isEditing = editingTabId === tab.localId
+
                                 return (
                                     <div
                                         key={tab.localId}
                                         className={cn(
-                                            "flex items-center px-4 py-2  cursor-pointer border-b-2 min-w-[120px] transition-all",
+                                            "flex items-center px-4 py-2 cursor-pointer border-b-2 min-w-[120px] transition-all",
                                             selectedTabId === tab.localId
                                                 ? cn(
                                                       "",
@@ -252,9 +300,11 @@ export default function CodePlayground({
                                                           : "text-gray-600 rounded-t-md  border-black/10 hover:!bg-black/10 "
                                                   )
                                         )}
-                                        onClick={() =>
-                                            onSelectedTabChange(tab.localId)
-                                        }
+                                        onClick={() => {
+                                            if (!isEditing) {
+                                                onSelectedTabChange(tab.localId)
+                                            }
+                                        }}
                                         style={{
                                             backgroundColor:
                                                 selectedTabId === tab.localId
@@ -267,33 +317,81 @@ export default function CodePlayground({
                                         <span className="rounded-full w-fit h-fit overflow-hidden">
                                             {tabIcon}
                                         </span>
-                                        <span
-                                            className={cn(
-                                                "truncate  ml-1 flex-1 text-sm",
-                                                {
-                                                    "text-white/80":
-                                                        isDarkTheme(theme),
-                                                }
-                                            )}
-                                        >
-                                            {tab.name}
-                                        </span>
-                                        {tabs.length > 1 && (
-                                            <button
+                                        {isEditing ? (
+                                            <input
                                                 className={cn(
-                                                    "ml-4 translate-x-1 rounded-full p-0.5 hover:bg-opacity-20",
+                                                    "ml-1 flex-1 text-sm bg-transparent outline-none border-b",
                                                     isDarkTheme(theme)
-                                                        ? "hover:bg-red-500/30 text-gray-400 hover:text-white/70"
-                                                        : "hover:bg-red-500/30 text-gray-500 hover:text-gray-700"
+                                                        ? "text-white/80 border-white/30"
+                                                        : "text-gray-800 border-gray-500"
                                                 )}
-                                                onClick={(e) => {
+                                                value={editingTabName}
+                                                onChange={(e) =>
+                                                    setEditingTabName(
+                                                        e.target.value
+                                                    )
+                                                }
+                                                onBlur={handleTabNameSave}
+                                                onKeyDown={handleTabNameKeyDown}
+                                                onClick={(e) =>
                                                     e.stopPropagation()
-                                                    onTabRemove(tab.localId)
-                                                }}
+                                                }
+                                                autoFocus
+                                            />
+                                        ) : (
+                                            <span
+                                                className={cn(
+                                                    "truncate ml-1 flex-1 text-sm",
+                                                    {
+                                                        "text-white/80":
+                                                            isDarkTheme(theme),
+                                                    }
+                                                )}
+                                                onDoubleClick={() =>
+                                                    handleTabNameEdit(
+                                                        tab.localId
+                                                    )
+                                                }
                                             >
-                                                <X size={14} />
-                                            </button>
+                                                {tab.name}
+                                            </span>
                                         )}
+                                        <div className="flex items-center ml-2">
+                                            {!isEditing && (
+                                                <button
+                                                    className={cn(
+                                                        "p-1 rounded-full hover:bg-opacity-20",
+                                                        isDarkTheme(theme)
+                                                            ? "hover:bg-white/20 text-gray-400 hover:text-white/70"
+                                                            : "hover:bg-gray-200 text-gray-500 hover:text-gray-700"
+                                                    )}
+                                                    onClick={(e) => {
+                                                        e.stopPropagation()
+                                                        handleTabNameEdit(
+                                                            tab.localId
+                                                        )
+                                                    }}
+                                                >
+                                                    <Pencil size={12} />
+                                                </button>
+                                            )}
+                                            {tabs.length > 1 && (
+                                                <button
+                                                    className={cn(
+                                                        "ml-1 rounded-full p-0.5 hover:bg-opacity-20",
+                                                        isDarkTheme(theme)
+                                                            ? "hover:bg-red-500/30 text-gray-400 hover:text-white/70"
+                                                            : "hover:bg-red-500/30 text-gray-500 hover:text-gray-700"
+                                                    )}
+                                                    onClick={(e) => {
+                                                        e.stopPropagation()
+                                                        onTabRemove(tab.localId)
+                                                    }}
+                                                >
+                                                    <X size={14} />
+                                                </button>
+                                            )}
+                                        </div>
                                     </div>
                                 )
                             })}
@@ -346,7 +444,7 @@ export default function CodePlayground({
                             </Select>
                         </div>
                     </div>
-                    <div className={cn(className || "h-[300px]")}>
+                    <div className={cn(className || "h-[300px] z-0")}>
                         {/* Editor */}
                         <Editor
                             loading={
@@ -371,7 +469,7 @@ export default function CodePlayground({
                             options={{
                                 cursorSmoothCaretAnimation: "on",
                                 cursorBlinking: "smooth",
-                                fontSize: 18,
+                                fontSize: 16,
                                 minimap: { enabled: false },
                                 scrollbar: { vertical: "auto" },
                                 lineNumbers: "off",

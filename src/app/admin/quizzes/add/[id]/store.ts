@@ -1,9 +1,13 @@
 import { generateQuiz } from "@/data-access/quizzes/generate"
-import { PossibleQuestionTypes } from "@/schemas/questions-content"
+import {
+    PossibleQuestionTypes,
+    MultipleChoiceContent,
+} from "@/schemas/questions-content"
 import { create } from "zustand"
 import { getRightOptionPairLocalId } from "./utils"
 import { wait } from "@/utils/wait"
 import { shuffleArray } from "@/utils/array"
+import { Database } from "@/types/database.types"
 
 interface State {
     allQuestions: QuizQuestionType[]
@@ -66,6 +70,8 @@ const initialState: State = {
     isGenerationError: false,
     allQuestions: [
         {
+            codeSnippets: null,
+            imageType: "normal-image",
             content: {
                 options: [
                     {
@@ -458,6 +464,8 @@ export interface QuizQuestionType {
     imageUrl: string | null
     type: PossibleQuestionTypes
     layout: "horizontal" | "vertical"
+    imageType: Database["public"]["Tables"]["quizzes_questions"]["Insert"]["image_type"]
+    codeSnippets: MultipleChoiceContent["codeSnippets"] | null
 }
 
 export interface MultipleChoiceOptions {

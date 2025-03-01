@@ -345,7 +345,6 @@
 
 
 /* excalidraw customizations */
-
 .layer-ui__wrapper__top-right {
   display: none !important;
 }
@@ -361,6 +360,12 @@
 }
 
 .layer-ui__wrapper__footer-right {
+  display: none !important;
+
+}
+
+/* monaco-editor customizations */
+.slider {
   display: none !important;
 
 }

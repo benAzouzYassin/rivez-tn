@@ -18,7 +18,7 @@ export default function AllQuestionsPreviews() {
     return (
         <footer
             className={cn(
-                "h-[140px] bg-white pb-4 transition-all duration-300 fixed left-0 bottom-0 w-full",
+                "h-[140px]  bg-white pb-4 transition-all duration-300 fixed left-0 bottom-0 w-full",
                 {
                     "pl-[256px]": isSidenavOpen,
                     "pl-[100px]": !isSidenavOpen,
@@ -47,6 +47,8 @@ export default function AllQuestionsPreviews() {
                 <button
                     onClick={() => {
                         addQuestion({
+                            codeSnippets: null,
+                            imageType: "normal-image",
                             content: { options: [] },
                             imageUrl: null,
                             localId: crypto.randomUUID(),

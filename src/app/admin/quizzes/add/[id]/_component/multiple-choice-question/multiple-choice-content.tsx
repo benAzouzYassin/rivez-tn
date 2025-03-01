@@ -1,14 +1,12 @@
-import ImageUpload from "@/components/shared/image-upload"
 import { cn } from "@/lib/ui-utils"
-import { ImageIcon, PlusCircle } from "lucide-react"
-import { useState } from "react"
+import { PlusCircle } from "lucide-react"
 import useQuizStore, { MultipleChoiceOptions } from "../../store"
-import MultipleChoiceOption from "./multiple-choice-option"
 import { QuestionText } from "../question-text"
+import DialogImage from "./image-dialog"
+import MultipleChoiceOption from "./multiple-choice-option"
 
 export default function MultipleChoiceContent() {
     const selectedQuestionId = useQuizStore((s) => s.selectedQuestionLocalId)
-    const [isImageUploading, setIsImageUploading] = useState(false)
     const selectedQuestion = useQuizStore((s) => s.allQuestions).find(
         (q) => q.localId === selectedQuestionId
     )
@@ -36,43 +34,20 @@ export default function MultipleChoiceContent() {
                 </div>
                 <div className={cn({ "flex ": layout === "horizontal" })}>
                     <div
-                        className={cn("flex w-full h-fit", {
-                            "w-fit": layout === "horizontal",
-                        })}
+                        className={cn(
+                            "flex items-center justify-center w-full h-fit",
+                            {
+                                "w-fit": layout === "horizontal",
+                            }
+                        )}
                     >
-                        <div
-                            className={cn(
-                                "w-[800px] mt-5 h-[400px] mx-auto rounded-xl",
-                                { "mx-0 w-[650px]": layout === "horizontal" }
-                            )}
-                        >
-                            <ImageUpload
-                                displayCancelBtn
-                                imageClassName={cn("h-[350px]", {
-                                    "!h-[400px] ": layout === "horizontal",
-                                })}
-                                containerClassName={cn(
-                                    "bg-white w-[800px] h-[400px] overflow-scroll border-blue-200 hover:bg-blue-50/50 group",
-                                    { "!h-[450px]": layout === "horizontal" }
-                                )}
-                                imageUrl={selectedQuestion.imageUrl}
-                                onImageUrlChange={(imageUrl) => {
-                                    if (selectedQuestionId) {
-                                        updateQuestion(
-                                            { imageUrl },
-                                            selectedQuestionId
-                                        )
-                                    }
-                                }}
-                                isLoading={isImageUploading}
-                                onLoadingChange={setIsImageUploading}
-                                renderEmptyContent={() => (
-                                    <div className="flex text-blue-500 items-center justify-center flex-col">
-                                        <ImageIcon className="w-36 stroke-[1.5] h-36 mb-2 mx-auto text-neutral-300 group-active:scale-95 transition-transform" />
-                                    </div>
-                                )}
-                            />
-                        </div>
+                        <DialogImage
+                            codeSnippets={selectedQuestion.codeSnippets}
+                            imageType={selectedQuestion.imageType}
+                            imageUrl={selectedQuestion.imageUrl}
+                            selectedQuestionId={selectedQuestionId || ""}
+                            layout={layout || ""}
+                        />
                     </div>
                     <div
                         className={cn("grid grid-cols-2 pt-9 gap-5", {

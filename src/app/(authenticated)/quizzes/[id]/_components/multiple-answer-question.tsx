@@ -13,6 +13,7 @@ import WrongAnswerBanner from "./wrong-answer-banner"
 import { useCurrentUser } from "@/hooks/use-current-user"
 import { toastError } from "@/lib/toasts"
 import { useQueryClient } from "@tanstack/react-query"
+import CodeSnippets from "./code-snippets"
 
 type Props = {
     question: { content: MultipleChoiceContent } & QuestionType
@@ -47,6 +48,7 @@ export default function MultipleAnswerQuestion(props: Props) {
 
     const [selectedOptions, setSelectedOptions] = useState<string[]>([])
     const correctAnswers = props.question.content.correct
+    const imageType = props.question.image_type
 
     const handleOptionClick = (opt: string, isSelected: boolean) => {
         setSelectedOptions((prev) =>
@@ -146,16 +148,28 @@ export default function MultipleAnswerQuestion(props: Props) {
                                 }
                             )}
                         >
-                            <ImageIcon className="w-32 text-neutral-300 h-32" />
-                            {!!props.question.image && (
-                                <img
-                                    className={cn(
-                                        "h-full mx-auto absolute top-0 left-0 w-full object-contain"
-                                    )}
-                                    src={props.question.image}
-                                    alt=""
+                            {imageType === "code-snippets" && (
+                                <CodeSnippets
+                                    snippets={
+                                        props.question.content.codeSnippets
+                                    }
                                 />
                             )}
+                            {imageType === "normal-image" && (
+                                <>
+                                    {" "}
+                                    <ImageIcon className="w-32 text-neutral-300 h-32" />
+                                    {!!props.question.image && (
+                                        <img
+                                            className={cn(
+                                                "h-full mx-auto absolute top-0 left-0 w-full object-contain"
+                                            )}
+                                            src={props.question.image}
+                                            alt=""
+                                        />
+                                    )}
+                                </>
+                            )}{" "}
                         </div>
 
                         <AnimatePresence mode="wait">
