@@ -51,6 +51,10 @@ export async function POST(req: NextRequest) {
         })
 
         const llmResponse = streamText({
+            system: `- your answers should not include any template strings.
+            - you should escape special characters for the special characters since your response will be parse with JSON.parse()
+            `,
+
             model: anthropicHaiku,
             prompt,
             temperature: 0.1,

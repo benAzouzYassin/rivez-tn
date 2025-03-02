@@ -53,6 +53,7 @@ export default function MultipleChoiceContent() {
                         className={cn("grid grid-cols-2 pt-9 gap-5", {
                             "flex flex-col mt-4 grow ml-10":
                                 layout === "horizontal",
+                            "mt-5 gap-8": selectedQuestion.imageType === "none",
                         })}
                     >
                         {questionContent?.options?.map((opt) => (

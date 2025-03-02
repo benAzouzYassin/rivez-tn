@@ -4,6 +4,7 @@ import {
     MultipleChoiceContent,
     PossibleQuestionTypes,
 } from "@/schemas/questions-content"
+import { Database } from "@/types/database.types"
 import { create } from "zustand"
 
 interface State {
@@ -334,8 +335,10 @@ const useUpdateQuizStore = create<Store>((set, get) => ({
                             rightOptions,
                         } satisfies StateMatchingPairsOptions
                     }
+                    let codeSnippets: QuizQuestionType["codeSnippets"]
                     if (q.type === "MULTIPLE_CHOICE") {
                         const content = q.content as MultipleChoiceContent
+                        codeSnippets = content.codeSnippets
                         contentForState = {
                             options: content.options.map((opt) => ({
                                 isCorrect: content.correct.includes(opt),
@@ -353,6 +356,8 @@ const useUpdateQuizStore = create<Store>((set, get) => ({
                         questionId: q.id,
                         questionText: q.question,
                         type: q.type as any,
+                        codeSnippets,
+                        imageType: q.image_type,
                     } satisfies QuizQuestionType
                 })
                 .filter((q) => q !== null)
@@ -360,7 +365,7 @@ const useUpdateQuizStore = create<Store>((set, get) => ({
                 isLoadingData: false,
                 isLoadingError: false,
                 allQuestions: formattedQuestions,
-                selectedQuestionLocalId: formattedQuestions[0].localId,
+                selectedQuestionLocalId: formattedQuestions?.[0]?.localId,
             })
         } catch (error) {
             console.error(error)
@@ -381,6 +386,8 @@ export interface QuizQuestionType {
     imageUrl: string | null
     type: PossibleQuestionTypes
     layout: "horizontal" | "vertical"
+    imageType: Database["public"]["Tables"]["quizzes_questions"]["Insert"]["image_type"]
+    codeSnippets: MultipleChoiceContent["codeSnippets"] | null
 }
 
 export interface StateMultipleChoiceOptions {

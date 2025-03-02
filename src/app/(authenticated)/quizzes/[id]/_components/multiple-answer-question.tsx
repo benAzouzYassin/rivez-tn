@@ -141,10 +141,12 @@ export default function MultipleAnswerQuestion(props: Props) {
                     >
                         <div
                             className={cn(
-                                "h-[400px] rounded-xl overflow-hidden  flex items-center justify-center relative  mx-auto  border bg-neutral-50 w-[800px]! ",
+                                "h-[400px] rounded-xl min-w-[700px] overflow-hidden  flex items-center justify-center relative  mx-auto  border bg-neutral-50 w-[800px]! ",
                                 {
                                     "w-[700px]  mr-10 h-[500px] ":
                                         props.question.layout === "horizontal",
+                                    hidden:
+                                        props.question.image_type === "none",
                                 }
                             )}
                         >
@@ -181,11 +183,14 @@ export default function MultipleAnswerQuestion(props: Props) {
                                 exit="exit"
                                 transition={{ duration: 0.4 }}
                                 className={cn(
-                                    "max-w-[1000px] mx-auto mt-10 gap-5 w-full grid grid-cols-2",
+                                    "max-w-[1000px]  mx-auto mt-10 gap-5 w-full grid grid-cols-2",
                                     {
                                         "flex w-[700px] mr-0 flex-col ml-auto":
                                             props.question.layout ===
                                             "horizontal",
+                                        "min-w-[70vw] gap-10":
+                                            props.question.image_type ===
+                                            "none",
                                     }
                                 )}
                             >

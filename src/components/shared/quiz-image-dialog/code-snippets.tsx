@@ -33,11 +33,15 @@ export default function CodeSnippets({
             <div className="  -mt-10 items-center">
                 <div className="w-[700px] mx-auto">
                     <CodePlayground
-                        onTabRename={(id, newName) => {
+                        onTabRename={(id, newName, fileType) => {
                             setTabs(
                                 tabs.map((t) => {
                                     if (t.localId === id) {
-                                        return { ...t, name: newName }
+                                        return {
+                                            ...t,
+                                            name: newName,
+                                            type: fileType,
+                                        }
                                     }
                                     return t
                                 })

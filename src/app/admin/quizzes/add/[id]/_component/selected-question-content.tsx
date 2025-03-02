@@ -52,6 +52,7 @@ export default function SelectedQuestionContent() {
                         layout={selectedQuestion.layout}
                         selectedType={selectedQuestion.type}
                         questionLocalId={selectedQuestion.localId}
+                        imageType={selectedQuestion.imageType}
                         className=""
                     />
                 </div>

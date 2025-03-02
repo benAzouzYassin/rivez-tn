@@ -80,11 +80,15 @@ export default function Buttons() {
                             return {
                                 quizId,
                                 id: Number(q.questionId),
-                                content: { options: filteredOptions },
+                                content: {
+                                    options: filteredOptions,
+                                    codeSnippets: q.codeSnippets,
+                                },
                                 type: q.type as any,
                                 image: q.imageUrl || "",
                                 question: q.questionText,
                                 layout: q.layout,
+                                imageType: q.imageType,
                             }
                         }
                         if (q.type === "MATCHING_PAIRS") {
@@ -107,6 +111,7 @@ export default function Buttons() {
                                 image: q.imageUrl || "",
                                 question: q.questionText,
                                 layout: q.layout,
+                                imageType: q.imageType,
                             }
                         }
                         return null
@@ -134,11 +139,15 @@ export default function Buttons() {
                                 (opt) => !!opt.text
                             )
                             return {
-                                content: { options: filteredOptions },
+                                content: {
+                                    options: filteredOptions,
+                                    codeSnippets: q.codeSnippets,
+                                },
                                 type: q.type as any,
                                 image: q.imageUrl || "",
                                 question: q.questionText,
                                 layout: q.layout,
+                                imageType: q.imageType,
                             }
                         }
                         if (q.type === "MATCHING_PAIRS") {
@@ -159,6 +168,7 @@ export default function Buttons() {
                                 image: q.imageUrl || "",
                                 question: q.questionText,
                                 layout: q.layout,
+                                imageType: q.imageType,
                             }
                         }
                         return null

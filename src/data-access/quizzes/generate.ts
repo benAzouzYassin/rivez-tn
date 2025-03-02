@@ -110,12 +110,10 @@ export const generateCodeSnippets = async (
     if (reader) {
         readStream(reader, (chunk) => {
             rawResult += chunk
-            rawResult = cleanJsonStream(rawResult)
-
             try {
                 const partialData = partialParseJson(rawResult)
                 const data = codeSnippetsResponse.parse(partialData)
-                onChange(data)
+                onChange(data as any)
             } catch {}
         })
     } else {

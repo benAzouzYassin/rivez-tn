@@ -52,6 +52,7 @@ export default function Page() {
 
     const onSubmit = async (data: z.infer<typeof formSchema>) => {
         try {
+            setIsLoading(true)
             const result = await createQuiz({
                 name: data.name,
                 category: data.category ? Number(data.category) : null,
@@ -64,7 +65,6 @@ export default function Page() {
                 sideNav.toggleSidenav()
             }
             router.push(`/admin/quizzes/add/${quizId}`)
-            reset()
             setImageUrl(null)
         } catch (error) {
             toastError("Something wrong happened.")

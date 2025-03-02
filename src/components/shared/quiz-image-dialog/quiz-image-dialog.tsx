@@ -64,7 +64,6 @@ export default function QuizImageDialog(props: Props) {
             type: "typescript",
         },
     ])
-
     return (
         <Dialog
             open={props.isOpen}

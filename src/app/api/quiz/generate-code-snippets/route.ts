@@ -1,5 +1,5 @@
 import { isCurrentUserAdmin } from "@/data-access/users/is-admin"
-import { googleGemini } from "@/lib/ai"
+import { anthropicHaiku, googleGemini } from "@/lib/ai"
 import { streamText } from "ai"
 import { NextRequest, NextResponse } from "next/server"
 import { z } from "zod"
@@ -26,12 +26,13 @@ export async function POST(req: NextRequest) {
         }
         const prompt = generatePrompt(data)
         const llmResponse = streamText({
-            model: googleGemini,
+            model: anthropicHaiku,
             prompt,
             temperature: 0,
             system: `
-            - never use markdown
-            - use json only
+            - you only answer with arrays. 
+            - you should escape special characters for the special characters since your response will be parse with JSON.parse()
+
             `,
         })
         return llmResponse.toTextStreamResponse()

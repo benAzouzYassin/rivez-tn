@@ -11,14 +11,14 @@ function CodeSnippets({ selectedQuestionId, isReadonly }: Props) {
     const getQuestion = useQuizStore((s) => s.getQuestion)
     const [theme, setTheme] = useState("monokaiOneDarkVivid")
     const [selectedTab, setSelectedTab] = useState("1")
-    const [codeSnippets, setCodeSnippets] = useState([
+    const [codeSnippets, setCodeSnippets] = useState<
         {
-            name: "hello.ts",
-            code: 'console.log("hello world")',
-            localId: "1",
-            type: "typescript",
-        },
-    ])
+            name: string
+            code: string
+            localId: string
+            type: string
+        }[]
+    >([])
 
     useEffect(() => {
         setCodeSnippets(getQuestion(selectedQuestionId)?.codeSnippets || [])

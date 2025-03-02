@@ -129,7 +129,7 @@ function DialogImage({
                                             />
                                         </div>
                                     )}
-                                {imageType === "code-snippets" && (
+                                {!!codeSnippets?.length && (
                                     <CodeSnippets
                                         isReadonly
                                         selectedQuestionId={selectedQuestionId}

@@ -22,6 +22,7 @@ import Editor, { useMonaco } from "@monaco-editor/react"
 import { Loader2, Pencil, Plus, X } from "lucide-react"
 import monaco from "monaco-editor"
 import { useCallback, useEffect, useRef, useState } from "react"
+import { VS_ICONS } from "./constants/icons"
 import { EDITOR_LANGUAGES } from "./constants/languages"
 import {
     draculaTheme,
@@ -33,7 +34,6 @@ import {
     oneDarkTheme,
 } from "./constants/themes"
 import { activateMonacoJSXHighlighter } from "./utils/editor-jsx-support"
-import { VS_ICONS } from "./constants/icons"
 
 type Props = {
     tabs: Tab[]
@@ -42,7 +42,7 @@ type Props = {
     onSelectedTabChange: (id: string) => void
     onCodeChange: (code: string) => void
     onTabRemove: (id: string) => void
-    onTabRename: (id: string, newName: string) => void
+    onTabRename: (id: string, newName: string, fileType: string) => void
     theme:
         | "nightOwl"
         | "light"
@@ -54,6 +54,7 @@ type Props = {
     onThemeChange: (theme: string) => void
     className?: string
     onBlur?: () => void
+    isReadonly?: boolean
 }
 
 export default function CodePlayground({
@@ -68,16 +69,19 @@ export default function CodePlayground({
     onTabRename,
     className,
     onBlur,
+    isReadonly,
 }: Props) {
     const monacoJSXHighlighterRef = useRef<any>(null)
     const [editingTabId, setEditingTabId] = useState<string | null>(null)
     const [editingTabName, setEditingTabName] = useState("")
+    const editorRef = useRef<any>(null)
 
     const handleEditorDidMount = useCallback(
         (
             monacoEditor: monaco.editor.IStandaloneCodeEditor,
             monaco: typeof import("monaco-editor")
         ) => {
+            editorRef.current = monacoEditor
             const disposable = monacoEditor.onDidBlurEditorWidget(() => {
                 onBlur?.()
             })
@@ -89,7 +93,7 @@ export default function CodePlayground({
                     monacoJSXHighlighterRefCurrent.isToggleJSXHighlightingOn()
                     monacoJSXHighlighterRefCurrent.isToggleJSXCommentingOn()
                 })
-                .catch((e) => console.log(e))
+                .catch((e) => console.error(e))
             return () => {
                 disposable.dispose()
                 if (monacoJSXHighlighterRef.current) {
@@ -107,10 +111,15 @@ export default function CodePlayground({
             setEditingTabName(tab.name)
         }
     }
+    const monaco = useMonaco()
 
     const handleTabNameSave = () => {
         if (editingTabId && editingTabName.trim()) {
-            onTabRename?.(editingTabId, editingTabName.trim())
+            onTabRename?.(
+                editingTabId,
+                editingTabName.trim(),
+                tabs.find((t) => t.localId == editingTabId)?.type || "plaintext"
+            )
             setEditingTabId(null)
             setEditingTabName("")
         } else if (!editingTabName.trim()) {
@@ -136,8 +145,6 @@ export default function CodePlayground({
     if (language === "jsx") {
         language = "javascript"
     }
-
-    const monaco = useMonaco()
 
     useEffect(() => {
         if (monaco) {
@@ -357,7 +364,7 @@ export default function CodePlayground({
                                             </span>
                                         )}
                                         <div className="flex items-center ml-2">
-                                            {!isEditing && (
+                                            {!isEditing && !isReadonly && (
                                                 <button
                                                     className={cn(
                                                         "p-1 rounded-full hover:bg-opacity-20",
@@ -375,7 +382,7 @@ export default function CodePlayground({
                                                     <Pencil size={12} />
                                                 </button>
                                             )}
-                                            {tabs.length > 1 && (
+                                            {!isReadonly && (
                                                 <button
                                                     className={cn(
                                                         "ml-1 rounded-full p-0.5 hover:bg-opacity-20",
@@ -395,17 +402,19 @@ export default function CodePlayground({
                                     </div>
                                 )
                             })}
-                            <AddTabDialog
-                                isDarkTheme={isDarkTheme(theme)}
-                                onSubmit={(fileName, language) => {
-                                    onAdd({
-                                        code: "",
-                                        localId: crypto.randomUUID(),
-                                        name: fileName,
-                                        type: language,
-                                    })
-                                }}
-                            />
+                            {!isReadonly && (
+                                <AddTabDialog
+                                    isDarkTheme={isDarkTheme(theme)}
+                                    onSubmit={(fileName, language) => {
+                                        onAdd({
+                                            code: "",
+                                            localId: crypto.randomUUID(),
+                                            name: fileName,
+                                            type: language,
+                                        })
+                                    }}
+                                />
+                            )}
                         </div>
 
                         <div className="flex items-center gap-2 mr-2 ml-auto min-w-36">
@@ -480,7 +489,16 @@ export default function CodePlayground({
                                 renderValidationDecorations: "off",
                                 renderLineHighlight: "all",
                             }}
-                            onChange={(value) => onCodeChange(value || "")}
+                            onChange={(value) => {
+                                if (isReadonly) {
+                                    return editorRef.current.setValue(code)
+                                }
+                                if (tabs.length < 1) {
+                                    editorRef.current.setValue("")
+                                    return toastError("Please add a file.")
+                                }
+                                onCodeChange(value || "")
+                            }}
                         />
                     </div>
                 </div>

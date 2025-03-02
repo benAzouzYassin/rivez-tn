@@ -1,17 +1,15 @@
 import { Plus } from "lucide-react"
-import useUpdateQuizStore from "../store"
+import useQuizStore from "../store"
 import Buttons from "./buttons"
 import LayoutSelect from "./layout-select"
 import MultipleChoiceContent from "./multiple-choice-question/multiple-choice-content"
 import MatchingPairsContent from "./pair-matchint-question/pair-matching-content"
 
 export default function SelectedQuestionContent() {
-    const selectedQuestionId = useUpdateQuizStore(
-        (s) => s.selectedQuestionLocalId
-    )
-    const allQuestions = useUpdateQuizStore((s) => s.allQuestions)
+    const selectedQuestionId = useQuizStore((s) => s.selectedQuestionLocalId)
+    const allQuestions = useQuizStore((s) => s.allQuestions)
 
-    const addQuestion = useUpdateQuizStore((s) => s.addQuestion)
+    const addQuestion = useQuizStore((s) => s.addQuestion)
     const selectedQuestion = allQuestions.find(
         (q) => q.localId === selectedQuestionId
     )
@@ -22,6 +20,8 @@ export default function SelectedQuestionContent() {
                     onClick={() => {
                         addQuestion({
                             questionId: null,
+                            codeSnippets: null,
+                            imageType: "normal-image",
                             content: { options: [] },
                             imageUrl: null,
                             localId: crypto.randomUUID(),
@@ -53,6 +53,7 @@ export default function SelectedQuestionContent() {
                         layout={selectedQuestion.layout}
                         selectedType={selectedQuestion.type}
                         questionLocalId={selectedQuestion.localId}
+                        imageType={selectedQuestion.imageType}
                         className=""
                     />
                 </div>
