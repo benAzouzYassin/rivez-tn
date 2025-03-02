@@ -129,3 +129,5 @@ const codeSnippetsResponse = z.array(
 )
 
 export type CodeSnippetsResponse = z.infer<typeof codeSnippetsResponse>
+
+export const maxDuration = 60

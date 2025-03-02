@@ -5,6 +5,7 @@ import { Database } from "@/types/database.types"
 export async function addQuestionsToQuiz(
     quizId: number,
     questions: {
+        displayOrder: number
         content:
             | AddQuestionToQuizContentTypes["MatchingPairs"]
             | AddQuestionToQuizContentTypes["MultipleChoice"]
@@ -35,6 +36,7 @@ export async function addQuestionsToQuiz(
                 question: q.question,
                 layout: q.layout,
                 image_type: q.imageType,
+                display_order: q.displayOrder,
                 content: {
                     correct,
                     options,
@@ -70,6 +72,7 @@ export async function addQuestionsToQuiz(
                 question: q.question,
                 layout: q.layout,
                 image_type: q.imageType,
+                display_order: q.displayOrder,
                 content: {
                     correct,
                     leftSideOptions:
@@ -153,6 +156,7 @@ interface DbMatchingPairsContent {
 
 export async function updateQuizQuestions(
     questions: {
+        displayOrder: number
         id: number
         quizId: number
         content:
@@ -186,6 +190,7 @@ export async function updateQuizQuestions(
                 question: q.question,
                 layout: q.layout,
                 image_type: q.imageType,
+                display_order: q.displayOrder,
                 content: {
                     correct,
                     options,
@@ -222,6 +227,7 @@ export async function updateQuizQuestions(
                 type: q.type,
                 question: q.question,
                 layout: q.layout,
+                display_order: q.displayOrder,
                 content: {
                     correct,
                     leftSideOptions:

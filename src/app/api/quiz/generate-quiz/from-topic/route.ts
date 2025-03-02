@@ -213,3 +213,5 @@ const quizQuestionSchema = z.object({
 
 export type GeneratedQuizResponse = z.infer<typeof quizQuestionSchema>
 export type GenerateQuizBodyType = z.infer<typeof bodySchema>
+
+export const maxDuration = 60

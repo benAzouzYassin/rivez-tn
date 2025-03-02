@@ -212,6 +212,7 @@ export type Database = {
         Row: {
           content: Json | null
           created_at: string
+          display_order: number | null
           id: number
           image: string | null
           image_type:
@@ -225,6 +226,7 @@ export type Database = {
         Insert: {
           content?: Json | null
           created_at?: string
+          display_order?: number | null
           id?: number
           image?: string | null
           image_type?:
@@ -238,6 +240,7 @@ export type Database = {
         Update: {
           content?: Json | null
           created_at?: string
+          display_order?: number | null
           id?: number
           image?: string | null
           image_type?:

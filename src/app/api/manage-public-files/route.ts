@@ -111,3 +111,5 @@ export const config = {
         bodyParser: false,
     },
 }
+
+export const maxDuration = 60

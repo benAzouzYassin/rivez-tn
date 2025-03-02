@@ -298,6 +298,7 @@ const useUpdateQuizStore = create<Store>((set, get) => ({
             const data = await readQuizQuestions({
                 quizId,
             })
+
             const formattedQuestions = data
                 .map((q) => {
                     let contentForState = null as
@@ -358,9 +359,11 @@ const useUpdateQuizStore = create<Store>((set, get) => ({
                         type: q.type as any,
                         codeSnippets,
                         imageType: q.image_type,
+                        displayOrder: q.display_order || 0,
                     } satisfies QuizQuestionType
                 })
                 .filter((q) => q !== null)
+                .sort((a, b) => (a.displayOrder || 0) - (b.displayOrder || 0))
             set({
                 isLoadingData: false,
                 isLoadingError: false,
@@ -388,6 +391,7 @@ export interface QuizQuestionType {
     layout: "horizontal" | "vertical"
     imageType: Database["public"]["Tables"]["quizzes_questions"]["Insert"]["image_type"]
     codeSnippets: MultipleChoiceContent["codeSnippets"] | null
+    displayOrder: number
 }
 
 export interface StateMultipleChoiceOptions {

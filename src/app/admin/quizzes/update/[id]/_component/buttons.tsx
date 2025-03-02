@@ -70,7 +70,7 @@ export default function Buttons() {
             await updateQuizQuestions(
                 questions
                     .filter((q) => !!q.questionId)
-                    .map((q) => {
+                    .map((q, index) => {
                         if (q.type === "MULTIPLE_CHOICE") {
                             const content =
                                 q.content as StateMultipleChoiceOptions
@@ -78,6 +78,7 @@ export default function Buttons() {
                                 (opt) => !!opt.text
                             )
                             return {
+                                displayOrder: index,
                                 quizId,
                                 id: Number(q.questionId),
                                 content: {
@@ -101,6 +102,7 @@ export default function Buttons() {
                                 content.leftOptions.filter((opt) => !!opt.text)
 
                             return {
+                                displayOrder: index,
                                 quizId,
                                 id: Number(q.questionId),
                                 content: {
@@ -127,11 +129,12 @@ export default function Buttons() {
 
     const saveNewQuestions = async () => {
         const newQuestions = questions.filter((q) => !q.questionId)
+        const oldQuestionsLength = questions.length - newQuestions.length
         try {
             await addQuestionsToQuiz(
                 quizId,
                 newQuestions
-                    .map((q) => {
+                    .map((q, index) => {
                         if (q.type === "MULTIPLE_CHOICE") {
                             const content =
                                 q.content as StateMultipleChoiceOptions
@@ -139,6 +142,7 @@ export default function Buttons() {
                                 (opt) => !!opt.text
                             )
                             return {
+                                displayOrder: index + oldQuestionsLength,
                                 content: {
                                     options: filteredOptions,
                                     codeSnippets: q.codeSnippets,
@@ -160,6 +164,7 @@ export default function Buttons() {
                                 content.leftOptions.filter((opt) => !!opt.text)
 
                             return {
+                                displayOrder: index + oldQuestionsLength,
                                 content: {
                                     leftOptions: filteredLeftOptions,
                                     rightOptions: filteredRightOptions,

@@ -34,7 +34,7 @@ export default function Buttons() {
                 await addQuestionsToQuiz(
                     quizId,
                     questions
-                        .map((q) => {
+                        .map((q, index) => {
                             if (q.type === "MULTIPLE_CHOICE") {
                                 const content =
                                     q.content as MultipleChoiceOptions
@@ -42,6 +42,7 @@ export default function Buttons() {
                                     (opt) => !!opt.text
                                 )
                                 return {
+                                    displayOrder: index,
                                     content: {
                                         options: filteredOptions,
                                         codeSnippets: q.codeSnippets,
@@ -67,6 +68,7 @@ export default function Buttons() {
                                     )
 
                                 return {
+                                    displayOrder: index,
                                     content: {
                                         leftOptions: filteredLeftOptions,
                                         rightOptions: filteredRightOptions,

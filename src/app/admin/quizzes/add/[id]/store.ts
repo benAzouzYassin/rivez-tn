@@ -216,7 +216,7 @@ const useQuizStore = create<Store>((set, get) => ({
                 }
             })
 
-            await wait(20_000)
+            await wait(100_000)
             const didGenerate = get().allQuestions.length > 1
 
             if (!didGenerate) {

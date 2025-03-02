@@ -40,9 +40,12 @@ export default function Page() {
     const isFinished = isSavingSuccess || isSavingError
 
     useEffect(() => {
-        // resets the store when the user enter the
         reset()
-        setQuestions(data?.quizzes_questions || [])
+        setQuestions(
+            data?.quizzes_questions.sort(
+                (a, b) => (a.display_order || 0) - (b.display_order || 0)
+            ) || []
+        )
         setStartDate(new Date())
     }, [data?.quizzes_questions, reset, setQuestions, setStartDate])
 
