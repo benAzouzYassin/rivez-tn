@@ -188,6 +188,7 @@ Please generate the quiz in JSON format, with each question object strictly foll
 IMPORTANT : 
 - Your response should be valid JSON that can be used like this : JSON.parse(response)
 - Your response should not be markdown. 
+- In the "MATCHING_PAIRS" the correct array should utilize all leftSideOptions
 - Your response should follow this zod schema :  z.object({
     questionsCount: z.number(),
     questions: z.array(
@@ -196,9 +197,9 @@ IMPORTANT :
                 questionText: z.string(),
                 type: z.literal("MATCHING_PAIRS"),
                 content: z.object({
-                    correct: z.array(z.array(z.string())),
-                    leftSideOptions: z.array(z.string()).min(3),
-                    rightSideOptions: z.array(z.string()).min(3),
+                    correct: z.array(z.array(z.string())).min(4), 
+                    leftSideOptions: z.array(z.string()).min(4),
+                    rightSideOptions: z.array(z.string()).min(4),
                 }),
             }),
             z.object({

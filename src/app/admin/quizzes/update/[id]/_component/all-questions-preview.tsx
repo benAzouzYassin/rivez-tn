@@ -38,6 +38,7 @@ export default function AllQuestionsPreviews() {
                 <button
                     onClick={() => {
                         addQuestion({
+                            displayOrder: questions.length,
                             codeSnippets: null,
                             imageType: "normal-image",
                             questionId: null,

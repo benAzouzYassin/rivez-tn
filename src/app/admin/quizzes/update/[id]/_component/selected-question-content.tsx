@@ -19,6 +19,7 @@ export default function SelectedQuestionContent() {
                 <button
                     onClick={() => {
                         addQuestion({
+                            displayOrder: allQuestions.length,
                             questionId: null,
                             codeSnippets: null,
                             imageType: "normal-image",
