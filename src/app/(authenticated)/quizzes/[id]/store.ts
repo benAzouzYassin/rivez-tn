@@ -2,6 +2,7 @@ import { saveSubmission } from "@/data-access/quiz_submissions/create"
 import {
     CodeCompletionContent,
     DebugCodeContent,
+    FillInTheBlankContent,
     MatchingPairsContent,
     MultipleChoiceContent,
 } from "@/schemas/questions-content"
@@ -168,4 +169,5 @@ export type QuestionType = {
         | MatchingPairsContent
         | DebugCodeContent
         | CodeCompletionContent
+        | FillInTheBlankContent
 } & Omit<Database["public"]["Tables"]["quizzes_questions"]["Row"], "content">

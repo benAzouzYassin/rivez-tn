@@ -324,6 +324,7 @@ export type Database = {
         | "MATCHING_PAIRS"
         | "DEBUG_CODE"
         | "CODE_COMPLETION"
+        | "FILL_IN_THE_BLANK"
       user_role_types: "ADMIN" | "USER"
     }
     CompositeTypes: {

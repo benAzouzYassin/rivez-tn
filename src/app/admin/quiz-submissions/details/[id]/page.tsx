@@ -8,6 +8,7 @@ import { cn } from "@/lib/ui-utils"
 import {
     MatchingPairsContent,
     MultipleChoiceContent,
+    PossibleQuestionTypes,
 } from "@/schemas/questions-content"
 import { formatDate } from "@/utils/date"
 import { useQuery } from "@tanstack/react-query"
@@ -223,13 +224,7 @@ export default function Page() {
 
 export type AnswerTableItem = {
     question: string | undefined
-    questionType:
-        | "MULTIPLE_CHOICE"
-        | "MATCHING_PAIRS"
-        | "DEBUG_CODE"
-        | "CODE_COMPLETION"
-        | null
-        | undefined
+    questionType: PossibleQuestionTypes | null | undefined
     timeSpent: number | null
     failedAttempts: number | null
     status: "skipped" | "failed" | "succeeded"

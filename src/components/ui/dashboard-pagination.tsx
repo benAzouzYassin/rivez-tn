@@ -137,7 +137,7 @@ export default function DashboardPagination({
                                         : "secondary"
                                 }
                                 className={cn(
-                                    "min-w-12 p-0 transition-all duration-300 text-sm ease-in-out text-black",
+                                    "min-w-12 p-0 transition-all text-sm  text-black",
                                     {
                                         "text-white h-[44px]  bg-neutral-700":
                                             page === currentPage,

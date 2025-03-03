@@ -115,7 +115,6 @@ const useQuizStore = create<Store>((set, get) => ({
                               }))
                             : []
                     )
-
                     const rightOptions = shuffleArray(
                         q.type === "MATCHING_PAIRS"
                             ? q.content.rightSideOptions.map((opt) => ({
@@ -129,6 +128,7 @@ const useQuizStore = create<Store>((set, get) => ({
                               }))
                             : []
                     )
+
                     const options = shuffleArray(
                         q.type === "MULTIPLE_CHOICE"
                             ? q.content.options.map((opt) => ({
