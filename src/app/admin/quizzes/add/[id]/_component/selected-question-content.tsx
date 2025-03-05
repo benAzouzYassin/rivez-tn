@@ -4,6 +4,7 @@ import Buttons from "./buttons"
 import LayoutSelect from "./layout-select"
 import MultipleChoiceContent from "./multiple-choice-question/multiple-choice-content"
 import MatchingPairsContent from "./pair-matchint-question/pair-matching-content"
+import FillInTheBlankContent from "./fill-in-the-blank/fill-in-the-blank-content"
 
 export default function SelectedQuestionContent() {
     const selectedQuestionId = useQuizStore((s) => s.selectedQuestionLocalId)
@@ -67,6 +68,9 @@ export default function SelectedQuestionContent() {
 
             {selectedQuestion.type === "MATCHING_PAIRS" && (
                 <MatchingPairsContent />
+            )}
+            {selectedQuestion.type === "FILL_IN_THE_BLANK" && (
+                <FillInTheBlankContent />
             )}
         </section>
     )

@@ -2,6 +2,7 @@ import { generateQuiz } from "@/data-access/quizzes/generate"
 import {
     PossibleQuestionTypes,
     MultipleChoiceContent,
+    FillInTheBlankContent,
 } from "@/schemas/questions-content"
 import { create } from "zustand"
 import { getRightOptionPairLocalId } from "./utils"
@@ -457,8 +458,11 @@ const useQuizStore = create<Store>((set, get) => ({
 
 export default useQuizStore
 
-export interface QuizQuestionType {
-    content: MultipleChoiceOptions | MatchingPairsOptions
+export type QuizQuestionType = {
+    content:
+        | FillInTheBlankStoreContent
+        | MultipleChoiceOptions
+        | MatchingPairsOptions
     localId: string
     questionText: string
     imageUrl: string | null
@@ -468,6 +472,17 @@ export interface QuizQuestionType {
     codeSnippets: MultipleChoiceContent["codeSnippets"] | null
 }
 
+export type FillInTheBlankStoreContent = Omit<
+    Omit<FillInTheBlankContent, "correct">,
+    "options"
+> & {
+    options: { text: string; localId: string }[]
+    correct: {
+        option: string
+        index: number
+        optionId: string
+    }[]
+}
 export interface MultipleChoiceOptions {
     options: { text: string; localId: string; isCorrect: boolean | null }[]
 }

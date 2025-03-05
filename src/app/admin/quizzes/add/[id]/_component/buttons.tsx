@@ -7,10 +7,12 @@ import { useParams } from "next/navigation"
 import { useRouter } from "nextjs-toploader/app"
 import { useRef, useState } from "react"
 import useQuizStore, {
+    FillInTheBlankStoreContent,
     MatchingPairsOptions,
     MultipleChoiceOptions,
 } from "../store"
 import { useQueryClient } from "@tanstack/react-query"
+import { shuffleArray } from "@/utils/array"
 export default function Buttons() {
     const params = useParams()
     const quizId = parseInt(params["id"] as string)
@@ -49,6 +51,33 @@ export default function Buttons() {
                                     },
                                     type: q.type as any,
                                     image: q.imageUrl || "",
+                                    question: q.questionText,
+                                    layout: q.layout,
+                                    imageType: q.imageType,
+                                }
+                            }
+                            if (q.type === "FILL_IN_THE_BLANK") {
+                                const content =
+                                    q.content as FillInTheBlankStoreContent
+                                const notSelectedOptions = content.options.map(
+                                    (opt) => opt.text
+                                )
+                                const selectedOptions = content.correct.map(
+                                    (opt) => opt.option
+                                )
+                                const allOptions = [
+                                    ...notSelectedOptions,
+                                    ...selectedOptions,
+                                ]
+                                return {
+                                    displayOrder: index,
+                                    content: {
+                                        options: shuffleArray(allOptions),
+                                        correct: content.correct,
+                                        parts: content.parts,
+                                    },
+                                    type: q.type as any,
+                                    image: "",
                                     question: q.questionText,
                                     layout: q.layout,
                                     imageType: q.imageType,
@@ -135,6 +164,22 @@ export default function Buttons() {
                     content.leftOptions.length > 0
 
                 return isLeftOptionsValid && isRightOptionsValid
+            }
+            if (q.type === "FILL_IN_THE_BLANK") {
+                const content = q.content as
+                    | FillInTheBlankStoreContent
+                    | undefined
+                if (
+                    !content ||
+                    !content.parts.length ||
+                    !content.correct.length
+                ) {
+                    return false
+                }
+                const isAllBlankFilled =
+                    content.correct.length === content.parts.length - 1
+
+                return isAllBlankFilled
             }
             return false
         })

@@ -65,6 +65,7 @@ export default function Page() {
             | MatchingPairsContent
             | MultipleChoiceContent
         return {
+            questionContent: answer.question?.content,
             question: answer.question?.question,
             questionType: answer.question?.type,
             timeSpent: answer.seconds_spent,
@@ -231,4 +232,5 @@ export type AnswerTableItem = {
     responseContent: string[] | string[][]
     correctAnswers: string[] | string[][]
     questionImage?: string
+    questionContent: any
 }

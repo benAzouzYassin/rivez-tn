@@ -149,14 +149,14 @@ export default function Page() {
                 </Card>
             </section>
 
-            <div className="mt-10  border-red-500 min-h-56 w-full">
-                <QuestionsBarChart />
-            </div>
-            <div className=" pb-20 mt-10">
+            <div className="  mt-10">
                 <h2 className="text-2xl mb-4 text-black/80 font-extrabold">
                     Quiz submissions :{" "}
                 </h2>
                 <Submissions />
+            </div>
+            <div className="mt-10 pb-20 min-h-56 w-full">
+                <QuestionsBarChart />
             </div>
         </main>
     )

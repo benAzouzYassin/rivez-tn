@@ -80,6 +80,7 @@ export const columns: ColumnDef<AnswerTableItem>[] = [
         cell: ({ row }) => (
             <div className="min-w-[100px] flex items-center justify-center">
                 <QuestionResponses
+                    questionContent={row.original.questionContent}
                     questionImage={row.original.questionImage}
                     question={row.original.question || ""}
                     questionType={

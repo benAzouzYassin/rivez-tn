@@ -1,14 +1,16 @@
 import { cn } from "@/lib/ui-utils"
 import { useDroppable } from "@dnd-kit/core"
 import { memo, ReactNode } from "react"
-import { OptionId, PositionIndex } from "./fill-in-the-blank-question"
+import { OptionIndex, PositionIndex } from "./fill-in-the-blank-question"
 import FillInTheBlankItem from "./fill-in-the-blank-item"
 
 interface TextWithBlanksProps {
     parts: string[]
-    selected: Record<PositionIndex, OptionId | undefined>
+    selected: Record<PositionIndex, OptionIndex | undefined>
     allOptions: { text: string; id: number }[]
     unselectOption: (id: number) => void
+    incorrectItems: PositionIndex[]
+    correctItems: PositionIndex[]
 }
 
 function TextWithBlanks({
@@ -16,10 +18,29 @@ function TextWithBlanks({
     selected,
     allOptions,
     unselectOption,
+    incorrectItems,
+    correctItems,
 }: TextWithBlanksProps) {
     const BLANK_SEPARATOR = "........."
 
     const paragraphs = parts.join(BLANK_SEPARATOR).split("\n")
+
+    const segments = paragraphs.map((paragraph, paragraphIndex) => ({
+        paragraphIndex,
+        segments: paragraph.split(BLANK_SEPARATOR),
+    }))
+    const geDropZoneIndex = (paragraphIndex: number, segmentIndex: number) => {
+        let result = 0
+        segments.forEach((item) => {
+            if (item.paragraphIndex < paragraphIndex) {
+                result += item.segments.length
+            }
+            if (item.paragraphIndex === paragraphIndex) {
+                result += segmentIndex
+            }
+        })
+        return result
+    }
     return (
         <>
             {paragraphs.map((paragraph, paragraphIndex) => {
@@ -31,26 +52,38 @@ function TextWithBlanks({
                         className="max-w-[900px] "
                     >
                         {segments.map((segment, segmentIndex) => {
+                            const dropZoneIndex = geDropZoneIndex(
+                                paragraphIndex,
+                                segmentIndex
+                            )
                             const selectedItem = allOptions.find(
-                                (opt) => opt.id === selected[segmentIndex]
+                                (opt) => opt.id === selected[dropZoneIndex]
                             )
                             return (
                                 <span
                                     className="text-4xl font-bold text-neutral-600"
                                     key={`segment-${paragraphIndex}-${segmentIndex}`}
                                 >
-                                    <span className="h-12 inline-flex"></span>
+                                    <span className="h-16 !w-0 inline-flex opacity-0">
+                                        .
+                                    </span>
                                     {segment}
                                     {segmentIndex < segments.length - 1 && (
-                                        <BlankField index={segmentIndex}>
+                                        <BlankField index={dropZoneIndex}>
                                             {selectedItem && (
                                                 <FillInTheBlankItem
+                                                    isCorrect={correctItems.includes(
+                                                        dropZoneIndex
+                                                    )}
+                                                    isInCorrect={incorrectItems.includes(
+                                                        dropZoneIndex
+                                                    )}
                                                     isSelected={true}
                                                     id={selectedItem?.id}
                                                     text={selectedItem?.text}
                                                     handleRemoveBtn={() => {
                                                         unselectOption(
-                                                            segmentIndex
+                                                            dropZoneIndex
                                                         )
                                                     }}
                                                 />
@@ -75,7 +108,7 @@ function BlankField(props: { index: number; children: ReactNode }) {
         <span
             ref={setNodeRef}
             className={cn(
-                "h-14  border-b-4 mx-2 border-neutral-300 rounded-md mt-auto  min-w-24 inline-flex",
+                "h-14  border-b-4 mx-2  border-neutral-300 rounded-md mt-auto  min-w-24 inline-flex",
                 {
                     "border-[3px]  rounded border-blue-400/40": isOver,
                     "border-white -translate-y-2": !!props.children,

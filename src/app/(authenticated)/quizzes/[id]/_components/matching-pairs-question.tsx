@@ -177,7 +177,7 @@ export default function MatchingPairsQuestion(props: Props) {
             <div className="flex flex-col relative h-fit items-center justify-center">
                 <div>
                     <p className="max-w-[1200px] mb-1 text-3xl font-extrabold top-0 text-neutral-700 text-left w-full left-0">
-                        {props.question?.question || "Match the items "} :
+                        {props.question?.question || "Match the items :"}
                     </p>
                     <div className="relative">
                         <AnimatePresence mode="wait">

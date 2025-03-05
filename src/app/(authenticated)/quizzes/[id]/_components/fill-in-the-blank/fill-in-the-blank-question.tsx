@@ -1,10 +1,7 @@
 import ConfirmationBanner from "../confirmation-banner"
 import CorrectAnswerBanner from "../correct-answer-banner"
 import WrongAnswerBanner from "../wrong-answer-banner"
-import {
-    QuestionType,
-    useQuestionsStore,
-} from "@/app/(authenticated)/quizzes/[id]/store"
+import { QuestionType, useQuestionsStore } from "../../store"
 import { useCurrentUser } from "@/hooks/use-current-user"
 import { toastError } from "@/lib/toasts"
 import { FillInTheBlankContent } from "@/schemas/questions-content"
@@ -33,8 +30,12 @@ type Props = {
 }
 
 export default function FillInTheBlankQuestion(props: Props) {
+    const [results, setResults] = useState({
+        wrong: [] as { index: number; option: string | null }[],
+        correct: [] as { index: number; option: string | null }[],
+    })
     const [selected, setSelected] = useState<
-        Record<PositionIndex, OptionId | undefined>
+        Record<PositionIndex, OptionIndex | undefined>
     >({})
     const sensors = useSensors(
         useSensor(PointerSensor),
@@ -49,7 +50,6 @@ export default function FillInTheBlankQuestion(props: Props) {
         setRenderDate(new Date())
     }, [props.question])
     const user = useCurrentUser()
-    const incorrectAttempts = useRef(0)
     const params = useParams()
     const quizId = params["id"] as string
     const currentQuestionIndex = useQuestionsStore(
@@ -69,19 +69,6 @@ export default function FillInTheBlankQuestion(props: Props) {
 
     const [isCorrectBannerOpen, setIsCorrectBannerOpen] = useState(false)
     const [isWrongBannerOpen, setIsWrongBannerOpen] = useState(false)
-
-    const [correctSelections, setCorrectSelections] = useState<string[][]>([])
-    const [incorrectSelections, setIncorrectSelections] = useState<string[][]>(
-        []
-    )
-    const questionAnimations = {
-        initial: { opacity: 0, x: 0 },
-        animate: { opacity: 1, x: 0 },
-        exit: { opacity: 0, x: -50 },
-    }
-
-    // const rightSection = props.question.content.rightSideOptions
-    // const leftSection = props.question.content.leftSideOptions
 
     const handleNextQuestion = () => {
         if (currentQuestionIndex === props.questionsCount - 1) {
@@ -108,25 +95,25 @@ export default function FillInTheBlankQuestion(props: Props) {
             }
         }
 
-        // setRightSelectedOption(null)
-        // setLeftSelectedOption(null)
-        incorrectAttempts.current = 0
+        setSelected([])
         incrementQuestionIndex()
         setIsCorrectBannerOpen(false)
-        setCorrectSelections([])
-        setIncorrectSelections([])
+        setResults({
+            wrong: [],
+            correct: [],
+        })
     }
 
     const handleWrongAnswer = () => {
         handleFailedQuestions([props.question.id])
 
-        // addAnswerToState({
-        //     questionId: props.question.id,
-        //     questionType: "MATCHING_PAIRS",
-        //     responses: [...incorrectSelections, ...correctSelections],
-        //     failedAttempts: incorrectAttempts.current || null,
-        //     secondsSpent: (new Date().getTime() - renderDate.getTime()) / 1000,
-        // })
+        addAnswerToState({
+            questionId: props.question.id,
+            questionType: "FILL_IN_THE_BLANK",
+            responses: results,
+            failedAttempts: null,
+            secondsSpent: (new Date().getTime() - renderDate.getTime()) / 1000,
+        })
         if (currentQuestionIndex === props.questionsCount - 1) {
             if (user.data?.id) {
                 handleQuizFinish({ quizId, userId: user.data.id }).then(
@@ -150,14 +137,13 @@ export default function FillInTheBlankQuestion(props: Props) {
                 return toastError("Something went wrong.")
             }
         }
-
-        // setRightSelectedOption(null)
-        // setLeftSelectedOption(null)
+        setSelected([])
         incrementQuestionIndex()
         setIsWrongBannerOpen(false)
-        incorrectAttempts.current = 0
-        setCorrectSelections([])
-        setIncorrectSelections([])
+        setResults({
+            wrong: [],
+            correct: [],
+        })
     }
     const allOptions = props.question.content.options.map((opt, i) => {
         return { text: opt, id: i }
@@ -169,7 +155,8 @@ export default function FillInTheBlankQuestion(props: Props) {
             <div className="flex flex-col relative h-fit items-center justify-center">
                 <div>
                     <p className="max-w-[1200px] mb-1 pt-5 text-4xl text-center font-extrabold top-0 text-neutral-700  w-full left-0">
-                        {props.question?.question || "Match the items "} :
+                        {props.question?.question ||
+                            "Fill in the blank with the correct options :"}{" "}
                     </p>
                     <div className="  transition-all ">
                         <DndContext
@@ -180,8 +167,28 @@ export default function FillInTheBlankQuestion(props: Props) {
                             }
                             onDragEnd={(event) => {
                                 setActiveDraggedId(null)
-                                const dropZoneId = Number(event.over?.id)
                                 const optionId = Number(event.active.id)
+
+                                if (event.over?.id === "non-selected-options") {
+                                    // we unselect th item if it is returned to the list of non selected options
+                                    const positionToRemove = Object.entries(
+                                        selected
+                                    ).find(
+                                        ([, opt]) =>
+                                            !isNaN(optionId) && opt === optionId
+                                    )?.[0]
+
+                                    if (!isNaN(Number(positionToRemove))) {
+                                        setSelected({
+                                            ...selected,
+                                            [Number(positionToRemove)]:
+                                                undefined,
+                                        })
+                                    }
+                                    return
+                                }
+
+                                const dropZoneId = Number(event.over?.id)
                                 if (!isNaN(dropZoneId) && !isNaN(optionId)) {
                                     const isDropZoneEmpty =
                                         selected[Number(dropZoneId)] ===
@@ -217,7 +224,7 @@ export default function FillInTheBlankQuestion(props: Props) {
                         >
                             <div
                                 key={currentQuestionIndex}
-                                className="max-w-[900px] min-h-[70px]  transition-all min-w-[700px] flex-wrap justify-start items-center mt-20 gap-4 pb-5 w-full flex"
+                                className="max-w-[900px] min-h-[70px]  transition-all min-w-[700px] flex-wrap justify-start items-center mt-12  w-full flex"
                             >
                                 <FillInTheBlankOptions
                                     options={allOptions.filter(
@@ -230,6 +237,12 @@ export default function FillInTheBlankQuestion(props: Props) {
                             </div>
                             <div className="max-w-[900px] transition-all pb-56  min-w-[700px] flex-wrap justify-start items-center mt-2  w-full">
                                 <FillInTheBlankParts
+                                    incorrectItems={results.wrong.map(
+                                        (item) => item.index
+                                    )}
+                                    correctItems={results.correct.map(
+                                        (item) => item.index
+                                    )}
                                     unselectOption={(position) => {
                                         setSelected({
                                             ...selected,
@@ -263,38 +276,86 @@ export default function FillInTheBlankQuestion(props: Props) {
             <ConfirmationBanner
                 onSkip={() => {
                     handleSkippedQuestions([props.question.id])
-                    // addAnswerToState({
-                    //     questionId: props.question.id,
-                    //     questionType: "MATCHING_PAIRS",
-                    //     responses: [
-                    //         ...incorrectSelections,
-                    //         ...correctSelections,
-                    //     ],
-                    //     failedAttempts: incorrectAttempts.current || null,
-                    //     secondsSpent:
-                    //         (new Date().getTime() - renderDate.getTime()) /
-                    //         1000,
-                    // })
+                    addAnswerToState({
+                        questionId: props.question.id,
+                        questionType: "FILL_IN_THE_BLANK",
+                        responses: {
+                            correct: [],
+                            wrong: [],
+                        },
+                        failedAttempts: null,
+                        secondsSpent:
+                            (new Date().getTime() - renderDate.getTime()) /
+                            1000,
+                    })
                     handleNextQuestion()
                 }}
-                actionType={"skip"}
-                onConfirm={() => {}}
+                actionType={
+                    Object.values(selected).filter((item) => item !== undefined)
+                        .length === props.question.content.correct.length
+                        ? "confirm"
+                        : "skip"
+                }
+                onConfirm={() => {
+                    const correctContent = props.question.content.correct
+                    const populatedSelected = Object.entries(selected).map(
+                        ([position, optionIndex]) => {
+                            return {
+                                index: Number(position),
+                                option:
+                                    optionIndex !== undefined
+                                        ? props.question.content.options[
+                                              optionIndex
+                                          ]
+                                        : null,
+                            }
+                        }
+                    )
+
+                    const groupedItems = populatedSelected.reduce(
+                        (acc, curr) => {
+                            const correctOption = correctContent.find(
+                                (item) => item.index === curr.index
+                            )?.option
+                            if (curr.option === correctOption) {
+                                return {
+                                    wrong: acc.wrong,
+                                    correct: [...acc.correct, curr],
+                                }
+                            }
+                            return {
+                                wrong: [...acc.wrong, curr],
+                                correct: acc.correct,
+                            }
+                        },
+                        {
+                            correct: [] as typeof populatedSelected,
+                            wrong: [] as typeof populatedSelected,
+                        }
+                    )
+                    setResults(groupedItems)
+                    const isAllCorrect =
+                        groupedItems.correct.length ===
+                        props.question.content.correct.length
+                    if (isAllCorrect) {
+                        return setIsCorrectBannerOpen(true)
+                    } else {
+                        return setIsWrongBannerOpen(true)
+                    }
+                }}
                 isOpen={true}
             />
             <CorrectAnswerBanner
                 onNextClick={() => {
-                    // addAnswerToState({
-                    //     questionId: props.question.id,
-                    //     questionType: "MATCHING_PAIRS",
-                    //     responses: [
-                    //         ...incorrectSelections,
-                    //         ...correctSelections,
-                    //     ],
-                    //     failedAttempts: incorrectAttempts.current || null,
-                    //     secondsSpent:
-                    //         (new Date().getTime() - renderDate.getTime()) /
-                    //         1000,
-                    // })
+                    addAnswerToState({
+                        questionId: props.question.id,
+                        questionType: "FILL_IN_THE_BLANK",
+                        responses: results,
+                        failedAttempts: null,
+                        secondsSpent:
+                            (new Date().getTime() - renderDate.getTime()) /
+                            1000,
+                    })
                     handleNextQuestion()
                 }}
                 isOpen={isCorrectBannerOpen}
@@ -307,5 +368,5 @@ export default function FillInTheBlankQuestion(props: Props) {
     )
 }
 
-export type OptionId = number
+export type OptionIndex = number
 export type PositionIndex = number

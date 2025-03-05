@@ -1,5 +1,9 @@
 import { supabase } from "@/lib/supabase-client-side"
-import { MultipleChoiceContent } from "@/schemas/questions-content"
+import {
+    FillInTheBlankContent,
+    MultipleChoiceContent,
+    PossibleQuestionTypes,
+} from "@/schemas/questions-content"
 import { Database } from "@/types/database.types"
 
 export async function addQuestionsToQuiz(
@@ -9,9 +13,10 @@ export async function addQuestionsToQuiz(
         content:
             | AddQuestionToQuizContentTypes["MatchingPairs"]
             | AddQuestionToQuizContentTypes["MultipleChoice"]
+            | FillInTheBlankContent
         image: string
         question: string
-        type: "MULTIPLE_CHOICE" | "MATCHING_PAIRS"
+        type: PossibleQuestionTypes
         layout: "vertical" | "horizontal"
         imageType: Database["public"]["Tables"]["quizzes_questions"]["Insert"]["image_type"]
     }[]
@@ -42,6 +47,20 @@ export async function addQuestionsToQuiz(
                     options,
                     codeSnippets,
                 } satisfies DbMultipleChoiceContent,
+            }
+        }
+        if (q.type === "FILL_IN_THE_BLANK") {
+            const content = q.content as FillInTheBlankContent | undefined
+
+            return {
+                image: q.image,
+                type: q.type,
+                quiz: quizId,
+                question: q.question,
+                layout: q.layout,
+                image_type: q.imageType,
+                display_order: q.displayOrder,
+                content: content,
             }
         }
         if (q.type === "MATCHING_PAIRS") {
@@ -85,6 +104,7 @@ export async function addQuestionsToQuiz(
         return null
     })
     if (formattedData.some((q) => !q)) {
+        console.log(formattedData)
         throw new Error("Some questions content is not valid")
     }
     const result = await supabase
