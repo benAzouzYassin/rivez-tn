@@ -10,7 +10,7 @@ import { Textarea } from "@/components/ui/textarea"
 import { cn } from "@/lib/ui-utils"
 import { PenLine } from "lucide-react"
 import { ButtonHTMLAttributes, useEffect, useState } from "react"
-import useQuizStore, { FillInTheBlankStoreContent } from "../../store"
+import useUpdateQuizStore, { FillInTheBlankStoreContent } from "../../store"
 type Props = {
     questionId: string
     questionContent: FillInTheBlankStoreContent
@@ -26,7 +26,7 @@ export default function EditText({
     ...props
 }: Props) {
     const [isOpen, setIsOpen] = useState(false)
-    const updateQuestion = useQuizStore((s) => s.updateQuestion)
+    const updateQuestion = useUpdateQuizStore((s) => s.updateQuestion)
     const [inputValue, setInputValue] = useState(parts.join(BLANK_SEPARATOR))
     const [isError, setIsError] = useState(false)
     useEffect(() => {

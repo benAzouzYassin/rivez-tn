@@ -1,5 +1,6 @@
 import { readQuizQuestions } from "@/data-access/quizzes/read"
 import {
+    FillInTheBlankContent,
     MatchingPairsContent,
     MultipleChoiceContent,
     PossibleQuestionTypes,
@@ -304,6 +305,7 @@ const useUpdateQuizStore = create<Store>((set, get) => ({
                     let contentForState = null as
                         | StateMatchingPairsOptions
                         | StateMultipleChoiceOptions
+                        | FillInTheBlankStoreContent
                         | null
 
                     if (q.type === "MATCHING_PAIRS") {
@@ -348,6 +350,55 @@ const useUpdateQuizStore = create<Store>((set, get) => ({
                             })),
                         } satisfies StateMultipleChoiceOptions
                     }
+                    if (q.type === "FILL_IN_THE_BLANK") {
+                        const content = q.content as FillInTheBlankContent
+                        const optionsOccurrencesInCOrrect = {} as Record<
+                            string,
+                            number
+                        >
+
+                        content.correct.forEach((opt) => {
+                            if (
+                                optionsOccurrencesInCOrrect[opt.option] !==
+                                undefined
+                            ) {
+                                optionsOccurrencesInCOrrect[opt.option] =
+                                    optionsOccurrencesInCOrrect[opt.option] + 1
+                            } else {
+                                optionsOccurrencesInCOrrect[opt.option] = 1
+                            }
+                        })
+                        // we filter the options that are already marked as correct
+                        const optionsForState = content.options.reduce(
+                            (acc, currentOpt) => {
+                                const numberOfOccurrencesInCorrect =
+                                    optionsOccurrencesInCOrrect[currentOpt] || 0
+                                if (numberOfOccurrencesInCorrect > 0) {
+                                    optionsOccurrencesInCOrrect[currentOpt] =
+                                        numberOfOccurrencesInCorrect - 1
+                                    return acc
+                                } else {
+                                    return [...acc, currentOpt]
+                                }
+                            },
+                            [] as string[]
+                        )
+
+                        contentForState = {
+                            options: optionsForState.map((opt) => ({
+                                localId: crypto.randomUUID(),
+                                text: opt,
+                            })),
+                            parts: content.parts,
+                            correct: content.correct.map((item) => {
+                                return {
+                                    option: item.option,
+                                    index: item.index,
+                                    optionId: crypto.randomUUID(),
+                                }
+                            }),
+                        } satisfies FillInTheBlankStoreContent
+                    }
                     if (!contentForState) return null
                     return {
                         content: contentForState,
@@ -383,7 +434,11 @@ export default useUpdateQuizStore
 
 export interface QuizQuestionType {
     questionId: number | null
-    content: StateMultipleChoiceOptions | StateMatchingPairsOptions
+    content:
+        | StateMultipleChoiceOptions
+        | StateMatchingPairsOptions
+        | FillInTheBlankStoreContent
+
     localId: string
     questionText: string
     imageUrl: string | null
@@ -407,5 +462,16 @@ export interface StateMatchingPairsOptions {
         text: string
         localId: string
         leftOptionLocalId: string | null
+    }[]
+}
+export type FillInTheBlankStoreContent = Omit<
+    Omit<FillInTheBlankContent, "correct">,
+    "options"
+> & {
+    options: { text: string; localId: string }[]
+    correct: {
+        option: string
+        index: number
+        optionId: string
     }[]
 }

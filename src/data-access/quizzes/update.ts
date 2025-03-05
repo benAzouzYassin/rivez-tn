@@ -182,9 +182,11 @@ export async function updateQuizQuestions(
         content:
             | AddQuestionToQuizContentTypes["MatchingPairs"]
             | AddQuestionToQuizContentTypes["MultipleChoice"]
+            | FillInTheBlankContent
+
         image: string
         question: string
-        type: "MULTIPLE_CHOICE" | "MATCHING_PAIRS"
+        type: PossibleQuestionTypes
         layout: "vertical" | "horizontal"
         imageType: Database["public"]["Tables"]["quizzes_questions"]["Insert"]["image_type"]
     }[]
@@ -255,6 +257,20 @@ export async function updateQuizQuestions(
                     rightSideOptions:
                         content?.rightOptions.map((opt) => opt.text) || [],
                 } satisfies DbMatchingPairsContent,
+            }
+        }
+        if (q.type === "FILL_IN_THE_BLANK") {
+            const content = q.content as FillInTheBlankContent | undefined
+            return {
+                id: q.id,
+                image: q.image,
+                type: "FILL_IN_THE_BLANK",
+                quiz: q.quizId,
+                question: q.question,
+                layout: q.layout,
+                image_type: q.imageType,
+                display_order: q.displayOrder,
+                content: content,
             }
         }
         return null

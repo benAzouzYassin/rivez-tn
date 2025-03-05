@@ -11,9 +11,11 @@ import { useParams } from "next/navigation"
 import { useRouter } from "nextjs-toploader/app"
 import { useState } from "react"
 import useUpdateQuizStore, {
+    FillInTheBlankStoreContent,
     StateMatchingPairsOptions,
     StateMultipleChoiceOptions,
 } from "../store"
+import { shuffleArray } from "@/utils/array"
 export default function Buttons() {
     const params = useParams()
     const quizId = parseInt(params["id"] as string)
@@ -92,6 +94,7 @@ export default function Buttons() {
                                 imageType: q.imageType,
                             }
                         }
+
                         if (q.type === "MATCHING_PAIRS") {
                             const content =
                                 q.content as StateMatchingPairsOptions
@@ -116,6 +119,35 @@ export default function Buttons() {
                                 imageType: q.imageType,
                             }
                         }
+                        if (q.type === "FILL_IN_THE_BLANK") {
+                            const content =
+                                q.content as FillInTheBlankStoreContent
+                            const notSelectedOptions = content.options.map(
+                                (opt) => opt.text
+                            )
+                            const selectedOptions = content.correct.map(
+                                (opt) => opt.option
+                            )
+                            const allOptions = [
+                                ...notSelectedOptions,
+                                ...selectedOptions,
+                            ]
+                            return {
+                                displayOrder: index,
+                                id: Number(q.questionId),
+                                quizId,
+                                content: {
+                                    options: shuffleArray(allOptions),
+                                    correct: content.correct,
+                                    parts: content.parts,
+                                },
+                                type: q.type as any,
+                                image: "",
+                                question: q.questionText,
+                                layout: q.layout,
+                                imageType: q.imageType,
+                            }
+                        }
                         return null
                     })
                     .filter((q) => !!q)
@@ -128,7 +160,9 @@ export default function Buttons() {
     }
 
     const saveNewQuestions = async () => {
-        const newQuestions = questions.filter((q) => !q.questionId)
+        const newQuestions = questions.filter(
+            (q) => q.questionId === undefined || q.questionId === null
+        )
         const oldQuestionsLength = questions.length - newQuestions.length
         try {
             await addQuestionsToQuiz(
@@ -149,6 +183,33 @@ export default function Buttons() {
                                 },
                                 type: q.type as any,
                                 image: q.imageUrl || "",
+                                question: q.questionText,
+                                layout: q.layout,
+                                imageType: q.imageType,
+                            }
+                        }
+                        if (q.type === "FILL_IN_THE_BLANK") {
+                            const content =
+                                q.content as FillInTheBlankStoreContent
+                            const notSelectedOptions = content.options.map(
+                                (opt) => opt.text
+                            )
+                            const selectedOptions = content.correct.map(
+                                (opt) => opt.option
+                            )
+                            const allOptions = [
+                                ...notSelectedOptions,
+                                ...selectedOptions,
+                            ]
+                            return {
+                                displayOrder: index,
+                                content: {
+                                    options: shuffleArray(allOptions),
+                                    correct: content.correct,
+                                    parts: content.parts,
+                                },
+                                type: q.type as any,
+                                image: "",
                                 question: q.questionText,
                                 layout: q.layout,
                                 imageType: q.imageType,
@@ -230,6 +291,9 @@ export default function Buttons() {
                     content.leftOptions.length > 0
 
                 return isLeftOptionsValid && isRightOptionsValid
+            }
+            if (q.type === "FILL_IN_THE_BLANK") {
+                return true
             }
             return false
         })

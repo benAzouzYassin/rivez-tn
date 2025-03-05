@@ -166,20 +166,7 @@ export default function Buttons() {
                 return isLeftOptionsValid && isRightOptionsValid
             }
             if (q.type === "FILL_IN_THE_BLANK") {
-                const content = q.content as
-                    | FillInTheBlankStoreContent
-                    | undefined
-                if (
-                    !content ||
-                    !content.parts.length ||
-                    !content.correct.length
-                ) {
-                    return false
-                }
-                const isAllBlankFilled =
-                    content.correct.length === content.parts.length - 1
-
-                return isAllBlankFilled
+                return true
             }
             return false
         })
