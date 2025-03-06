@@ -1,18 +1,15 @@
 import { cn } from "@/lib/ui-utils"
 import { useSidenav } from "@/providers/sidenav-provider"
-import { Loader2, Plus } from "lucide-react"
-import QuestionPreview from "./question-preview"
+import { Loader2 } from "lucide-react"
 import useQuizStore from "../store"
-import { wait } from "@/utils/wait"
-import { useRef } from "react"
+import AddQuestionButton from "./add-question-button"
+import QuestionPreview from "./question-preview"
 export default function AllQuestionsPreviews() {
     const { isSidenavOpen } = useSidenav()
     const questions = useQuizStore((state) => state.allQuestions)
-    const addQuestion = useQuizStore((state) => state.addQuestion)
     const selectedQuestionId = useQuizStore(
         (state) => state.selectedQuestionLocalId
     )
-    const containerRef = useRef<HTMLDivElement>(null)
     const shadowQuestions = useQuizStore((s) => s.shadowQuestionsCount)
 
     return (
@@ -44,33 +41,7 @@ export default function AllQuestionsPreviews() {
                         <Loader2 className="w-5 h-5 animate-spin text-neutral-400/70 duration-500" />
                     </div>
                 ))}
-                <button
-                    onClick={() => {
-                        addQuestion({
-                            codeSnippets: null,
-                            imageType: "normal-image",
-                            content: { options: [] },
-                            imageUrl: null,
-                            localId: crypto.randomUUID(),
-                            questionText: "",
-                            type: "MULTIPLE_CHOICE" as const,
-                            layout: "horizontal",
-                        })
-                        window.scrollTo({
-                            behavior: "smooth",
-                            top: 0,
-                        })
-                        wait(0).then(() =>
-                            containerRef.current?.scrollTo({
-                                left: 100_000,
-                                behavior: "smooth",
-                            })
-                        )
-                    }}
-                    className="h-full flex items-center justify-center min-w-32 hover:cursor-pointer hover:bg-neutral-50 active:scale-95 transition-all border-dashed border-neutral-300 border-2 rounded-lg"
-                >
-                    <Plus className="w-16 h-16 text-neutral-300 stroke-1" />
-                </button>
+                <AddQuestionButton />
             </section>
         </footer>
     )
