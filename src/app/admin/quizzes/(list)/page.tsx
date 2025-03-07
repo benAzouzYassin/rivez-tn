@@ -14,10 +14,8 @@ import { useRouter } from "nextjs-toploader/app"
 import { parseAsInteger, parseAsString, useQueryState } from "nuqs"
 import Search from "./_components/search"
 import { columns } from "./table-columns"
-import { useSidenav } from "@/providers/sidenav-provider"
 
 export default function Page() {
-    const sideNav = useSidenav()
     const router = useRouter()
     const [searchValue, setSearchValue] = useQueryState(
         "search-value",
@@ -87,9 +85,6 @@ export default function Page() {
                         className="text-base "
                         variant={"blue"}
                         onClick={() => {
-                            if (sideNav.isSidenavOpen) {
-                                sideNav.toggleSidenav()
-                            }
                             router.push("/admin/quizzes/add/generate")
                         }}
                     >

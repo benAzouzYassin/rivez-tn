@@ -27,7 +27,6 @@ export default function SelectedQuestionContent() {
             </section>
         )
     }
-
     return (
         <section className="mt-10 h-full px-20 w-full">
             <section className="flex justify-between">

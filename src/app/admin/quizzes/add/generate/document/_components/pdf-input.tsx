@@ -3,7 +3,7 @@
 import { FileTextIcon } from "lucide-react"
 
 import { FileInput } from "@/components/ui/file-input"
-import { toastError } from "@/lib/toasts"
+import { dismissToasts, toastError, toastLoading } from "@/lib/toasts"
 import { parsePdf } from "client-side-pdf-parser"
 import { useState } from "react"
 
@@ -19,6 +19,7 @@ export default function PdfInput(props: Props) {
             isLoading={isUploadingPdf}
             onChange={async (file) => {
                 setIsUploadingPdf(true)
+                toastLoading("Uploading your pdf...")
                 try {
                     if (file) {
                         const content = await parsePdf(file)
@@ -30,6 +31,8 @@ export default function PdfInput(props: Props) {
                     }
                 } catch (error) {
                     toastError("Something went wrong...")
+                } finally {
+                    dismissToasts("loading")
                 }
                 setIsUploadingPdf(false)
             }}

@@ -5,16 +5,20 @@ import ImageUpload from "@/components/shared/image-upload"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import {
+    Collapsible,
+    CollapsibleContent,
+    CollapsibleTrigger,
+} from "@/components/ui/collapsible"
+import {
     Select,
     SelectContent,
     SelectItem,
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select"
-import { ChevronLeft, ImageIcon } from "lucide-react"
+import { ChevronDown, ChevronLeft, ImageIcon } from "lucide-react"
 import { Controller } from "react-hook-form"
 
-import { Textarea } from "@/components/ui/textarea"
 import { createQuiz } from "@/data-access/quizzes/create"
 import { useCurrentUser } from "@/hooks/use-current-user"
 import { toastError } from "@/lib/toasts"
@@ -25,7 +29,11 @@ import { useForm } from "react-hook-form"
 import { z } from "zod"
 import useQuizStore from "../../[id]/store"
 import { useSidenav } from "@/providers/sidenav-provider"
+import SearchSelectMultiple from "@/components/ui/search-select-multiple"
+import { Textarea } from "@/components/ui/textarea"
+import { POSSIBLE_QUESTIONS } from "@/app/api/quiz/generate-quiz/constants"
 
+const POSSIBLE_QUESTIONS_TYPES = Object.keys(POSSIBLE_QUESTIONS)
 export type FormValues = {
     category: string | null
     name: string
@@ -33,8 +41,9 @@ export type FormValues = {
     language: string | null
     maxQuestions: number | null
     minQuestions: number | null
-    rules: string | null
     pdfName: string | null
+    notes: string | null
+    allowedQuestions?: string[] | null
 }
 
 export default function SubjectForm() {
@@ -49,6 +58,15 @@ export default function SubjectForm() {
     const formSchema = useMemo(
         () =>
             z.object({
+                allowedQuestions: z
+                    .array(
+                        z.string().refine((arg) => {
+                            return POSSIBLE_QUESTIONS_TYPES.includes(arg)
+                        })
+                    )
+                    .optional()
+                    .nullable(),
+                notes: z.string().nullable(),
                 name: z
                     .string()
                     .min(1, "Name is required")
@@ -59,7 +77,6 @@ export default function SubjectForm() {
                     .max(100, "Input exceeds maximum length"),
                 category: z.string().nullable().optional(),
                 language: z.string().nullable().optional(),
-                rules: z.string().nullable(),
                 maxQuestions: z.coerce.number().max(999).nullable().optional(),
                 minQuestions: z.coerce
                     .number()
@@ -73,12 +90,13 @@ export default function SubjectForm() {
         resolver: zodResolver(formSchema),
         defaultValues: {
             name: "",
-            rules: "",
+            notes: "",
             category: "",
             language: null,
             mainTopic: "",
             maxQuestions: null,
             minQuestions: null,
+            allowedQuestions: null,
         },
     })
 
@@ -129,7 +147,7 @@ export default function SubjectForm() {
                     className="w-full"
                     errorMessage={form.formState.errors.name?.message}
                 />
-                <Textarea
+                <Input
                     {...form.register("mainTopic")}
                     placeholder="Subject"
                     className="w-full"
@@ -183,26 +201,87 @@ export default function SubjectForm() {
                         </SelectContent>
                     </Select>
                 </div>
-                <div className="grid grid-cols-2 gap-8">
-                    <Input
-                        {...form.register("maxQuestions")}
-                        placeholder="Max questions"
-                        className="w-full"
-                        type="number"
-                        errorMessage={
-                            form.formState.errors.maxQuestions?.message
-                        }
-                    />
-                    <Input
-                        {...form.register("minQuestions")}
-                        placeholder="Min questions"
-                        className="w-full"
-                        type="number"
-                        errorMessage={
-                            form.formState.errors.minQuestions?.message
-                        }
-                    />
-                </div>
+                <Collapsible className="group ">
+                    <CollapsibleTrigger className="w-full data-[state=open]:font-bold  data-[state=open]:text-neutral-500 data-[state=open]:bg-blue-300/80 data-[state=open]:border-transparent   mb-4 hover:bg-neutral-100 flex justify-between items-center rounded-xl transition-all duration-200 bg-[#F7F7F7]/50 font-medium border-2 p-3 h-12 border-[#E5E5E5] text-[#AFAFAF] cursor-pointer">
+                        <span>Advanced options</span>
+                        <ChevronDown className="group-data-[state=open]:rotate-180 transition-transform duration-500" />
+                    </CollapsibleTrigger>
+                    <CollapsibleContent className="bg-white data  mt-2 border-neutral-200">
+                        <div className=" -translate-y-7 p-2   border-blue-300/80  border-b-[6px]  border-x-[3px] rounded-b-2xl">
+                            <div className=" mt-5">
+                                <Textarea
+                                    {...form.register("notes")}
+                                    placeholder="Any notes for the ai..."
+                                    className="w-full"
+                                    errorMessage={
+                                        form.formState.errors.notes?.message
+                                    }
+                                />
+                            </div>
+                            <div className=" -mt-1 gap-8">
+                                <div className="pb-3">
+                                    <Controller
+                                        control={form.control}
+                                        name="allowedQuestions"
+                                        render={({
+                                            field: { onChange, value, onBlur },
+                                        }) => (
+                                            <SearchSelectMultiple
+                                                items={POSSIBLE_QUESTIONS_TYPES.map(
+                                                    (questionType) => {
+                                                        return {
+                                                            id: questionType,
+                                                            label: questionType
+                                                                .split("_")
+                                                                .join(" ")
+                                                                .toLowerCase(),
+                                                        }
+                                                    }
+                                                )}
+                                                placeholder="Allowed questions"
+                                                inputClassName="w-full mb-2"
+                                                onSelect={onChange}
+                                                onUnselect={(unselectedId) => {
+                                                    onChange(
+                                                        value?.filter(
+                                                            (questionType) =>
+                                                                questionType !==
+                                                                unselectedId
+                                                        )
+                                                    )
+                                                }}
+                                                selectedIds={value || []}
+                                            />
+                                        )}
+                                    />
+                                </div>
+                            </div>
+
+                            <div className="grid grid-cols-2 gap-8">
+                                <Input
+                                    {...form.register("maxQuestions")}
+                                    placeholder="Max questions"
+                                    className="w-full"
+                                    type="number"
+                                    errorMessage={
+                                        form.formState.errors.maxQuestions
+                                            ?.message
+                                    }
+                                />
+                                <Input
+                                    {...form.register("minQuestions")}
+                                    placeholder="Min questions"
+                                    className="w-full"
+                                    type="number"
+                                    errorMessage={
+                                        form.formState.errors.minQuestions
+                                            ?.message
+                                    }
+                                />
+                            </div>
+                        </div>
+                    </CollapsibleContent>
+                </Collapsible>
                 <ImageUpload
                     renderEmptyContent={() => (
                         <>

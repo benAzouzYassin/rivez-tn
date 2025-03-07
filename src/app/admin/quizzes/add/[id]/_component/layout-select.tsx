@@ -32,17 +32,28 @@ function LayoutSelect(props: Props) {
                         )
                         break
                     case "multiple-choice-without-image":
-                        updateQuestion(
-                            {
-                                imageType: "none",
-                                layout: "vertical",
-                                type: "MULTIPLE_CHOICE",
-                                content: {
-                                    options: [],
+                        if (props.selectedQuestion.type === "MULTIPLE_CHOICE") {
+                            updateQuestion(
+                                {
+                                    imageType: "none",
+                                    layout: "vertical",
+                                    type: "MULTIPLE_CHOICE",
                                 },
-                            },
-                            props.selectedQuestion.localId
-                        )
+                                props.selectedQuestion.localId
+                            )
+                        } else {
+                            updateQuestion(
+                                {
+                                    imageType: "none",
+                                    layout: "vertical",
+                                    type: "MULTIPLE_CHOICE",
+                                    content: {
+                                        options: [],
+                                    },
+                                },
+                                props.selectedQuestion.localId
+                            )
+                        }
                         break
                     case "matching-pairs":
                         updateQuestion(
@@ -57,44 +68,54 @@ function LayoutSelect(props: Props) {
                             props.selectedQuestion.localId
                         )
                         break
-                    case "matching-pairs":
-                        updateQuestion(
-                            {
-                                layout: "vertical",
-                                type: "MATCHING_PAIRS",
-                                content: {
-                                    leftOptions: [],
-                                    rightOptions: [],
-                                },
-                            },
-                            props.selectedQuestion.localId
-                        )
-                        break
+
                     case "vertical-multiple-choice":
-                        updateQuestion(
-                            {
-                                imageType: "normal-image",
-                                layout: "vertical",
-                                type: "MULTIPLE_CHOICE",
-                                content: {
-                                    options: [],
+                        if (props.selectedQuestion.type === "MULTIPLE_CHOICE") {
+                            updateQuestion(
+                                {
+                                    imageType: "normal-image",
+                                    layout: "vertical",
+                                    type: "MULTIPLE_CHOICE",
                                 },
-                            },
-                            props.selectedQuestion.localId
-                        )
+                                props.selectedQuestion.localId
+                            )
+                        } else {
+                            updateQuestion(
+                                {
+                                    imageType: "normal-image",
+                                    layout: "vertical",
+                                    type: "MULTIPLE_CHOICE",
+                                    content: {
+                                        options: [],
+                                    },
+                                },
+                                props.selectedQuestion.localId
+                            )
+                        }
                         break
                     case "horizontal-multiple-choice":
-                        updateQuestion(
-                            {
-                                imageType: "normal-image",
-                                layout: "horizontal",
-                                type: "MULTIPLE_CHOICE",
-                                content: {
-                                    options: [],
+                        if (props.selectedQuestion.type === "MULTIPLE_CHOICE") {
+                            updateQuestion(
+                                {
+                                    imageType: "normal-image",
+                                    layout: "horizontal",
+                                    type: "MULTIPLE_CHOICE",
                                 },
-                            },
-                            props.selectedQuestion.localId
-                        )
+                                props.selectedQuestion.localId
+                            )
+                        } else {
+                            updateQuestion(
+                                {
+                                    imageType: "normal-image",
+                                    layout: "horizontal",
+                                    type: "MULTIPLE_CHOICE",
+                                    content: {
+                                        options: [],
+                                    },
+                                },
+                                props.selectedQuestion.localId
+                            )
+                        }
                         break
                     default:
                         break

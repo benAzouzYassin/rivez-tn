@@ -5,7 +5,7 @@ import {
     FillInTheBlankContent,
 } from "@/schemas/questions-content"
 import { create } from "zustand"
-import { getRightOptionPairLocalId } from "./utils"
+import { formatGeneratedQuestions, getRightOptionPairLocalId } from "./utils"
 import { wait } from "@/utils/wait"
 import { shuffleArray } from "@/utils/array"
 import { Database } from "@/types/database.types"
@@ -27,8 +27,9 @@ interface Actions {
             language: string | null
             maxQuestions: number | null
             minQuestions: number | null
-            rules: string | null
+            notes: string | null
             pdfPages?: string[]
+            allowedQuestions?: string[] | null
         },
         method: "subject" | "pdf"
     ) => void
@@ -63,7 +64,7 @@ interface Actions {
     reset: () => void
 }
 
-type Store = State & Actions
+export type Store = State & Actions
 
 const initialState: State = {
     shadowQuestionsCount: 0,
@@ -104,62 +105,14 @@ const useQuizStore = create<Store>((set, get) => ({
             })
             generateQuiz(method, data, (result) => {
                 const questionsCount = result?.questionsCount
-
                 const generatedQuestions = result?.questions || []
+                const formattedGenerated = formatGeneratedQuestions(result, get)
+                    .filter((item) => !!item)
+                    .map((item) => {
+                        return { ...item, type: item?.questionType }
+                    })
 
-                const formattedGenerated = generatedQuestions.map((q) => {
-                    const leftOptions = shuffleArray(
-                        q.type === "MATCHING_PAIRS"
-                            ? q.content.leftSideOptions.map((opt) => ({
-                                  text: opt,
-                                  localId: crypto.randomUUID(),
-                              }))
-                            : []
-                    )
-                    const rightOptions = shuffleArray(
-                        q.type === "MATCHING_PAIRS"
-                            ? q.content.rightSideOptions.map((opt) => ({
-                                  text: opt,
-                                  localId: crypto.randomUUID(),
-                                  leftOptionLocalId: getRightOptionPairLocalId(
-                                      q.content.correct,
-                                      leftOptions,
-                                      opt
-                                  ),
-                              }))
-                            : []
-                    )
-
-                    const options = shuffleArray(
-                        q.type === "MULTIPLE_CHOICE"
-                            ? q.content.options.map((opt) => ({
-                                  text: opt,
-                                  localId: crypto.randomUUID(),
-                                  isCorrect: q.content.correct.includes(opt),
-                              }))
-                            : []
-                    )
-                    return {
-                        content:
-                            q.type === "MULTIPLE_CHOICE"
-                                ? {
-                                      options,
-                                  }
-                                : {
-                                      leftOptions,
-                                      rightOptions,
-                                  },
-                        localId:
-                            get().allQuestions.find(
-                                (item) => item.questionText === q.questionText
-                            )?.localId || crypto.randomUUID(),
-                        questionText: q.questionText,
-                        imageUrl: null,
-                        type: q.type,
-                        layout: "horizontal",
-                    }
-                })
-
+                console.log("formattedGenerated", formattedGenerated)
                 if (generatedQuestions.length > 0 && questionsCount) {
                     set((state) => {
                         // here we are incrementally adding the questions
@@ -200,7 +153,6 @@ const useQuizStore = create<Store>((set, get) => ({
                             ...oldQuestions,
                             ...questionsToAdd,
                         ]
-
                         return {
                             shadowQuestionsCount:
                                 Number(questionsCount || 0) -

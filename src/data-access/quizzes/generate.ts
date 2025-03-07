@@ -1,7 +1,4 @@
-import {
-    GeneratedQuizResponse,
-    GenerateQuizBodyType as GenerateFromSubjectBody,
-} from "@/app/api/quiz/generate-quiz/from-topic/route"
+import { GenerateQuizBodyType as GenerateFromSubjectBody } from "@/app/api/quiz/generate-quiz/from-topic/route"
 import { partialParseJson, cleanJsonStream } from "@/utils/json"
 import { readStream } from "@/utils/stream"
 import { z } from "zod"
@@ -11,7 +8,7 @@ import { CodeSnippetsResponse } from "@/app/api/quiz/generate-code-snippets/rout
 export const generateQuiz = async (
     method: "subject" | "pdf",
     data: GenerateFromSubjectBody,
-    onChange: (newValue: GeneratedQuizResponse | null) => void
+    onChange: (newValue: z.infer<typeof quizQuestionSchema> | null) => void
 ) => {
     const {
         data: { session },
@@ -60,6 +57,20 @@ const quizQuestionSchema = z.object({
         z.union([
             z.object({
                 questionText: z.string(),
+                type: z.literal("FILL_IN_THE_BLANK"),
+                content: z.object({
+                    parts: z.array(z.string()), // will be joined with this string to represent an blank fields "___"
+                    options: z.array(z.string()),
+                    correct: z.array(
+                        z.object({
+                            option: z.string(),
+                            index: z.number(),
+                        })
+                    ),
+                }),
+            }),
+            z.object({
+                questionText: z.string(),
                 type: z.literal("MATCHING_PAIRS"),
                 content: z.object({
                     correct: z.array(z.array(z.string())),
@@ -67,9 +78,26 @@ const quizQuestionSchema = z.object({
                     rightSideOptions: z.array(z.string()),
                 }),
             }),
+
             z.object({
                 questionText: z.string(),
-                type: z.literal("MULTIPLE_CHOICE"),
+                type: z.literal("MULTIPLE_CHOICE_WITHOUT_IMAGE"),
+                content: z.object({
+                    correct: z.array(z.string()),
+                    options: z.array(z.string()),
+                }),
+            }),
+            z.object({
+                questionText: z.string(),
+                type: z.literal("MULTIPLE_CHOICE_WITH_IMAGE"),
+                content: z.object({
+                    correct: z.array(z.string()),
+                    options: z.array(z.string()),
+                }),
+            }),
+            z.object({
+                questionText: z.string(),
+                type: z.literal("TRUE_OR_FALSE"),
                 content: z.object({
                     correct: z.array(z.string()),
                     options: z.array(z.string()),
