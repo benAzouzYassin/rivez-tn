@@ -131,6 +131,10 @@ export default function SearchSelect<OptionData>(props: Props<OptionData>) {
                                                     }
                                                 }}
                                             >
+                                                {/* makes sure every CommandItem content is unique */}
+                                                <span className="w-0 opacity-0 overflow-hidden">
+                                                    {item.id}
+                                                </span>{" "}
                                                 {item.label}
                                             </CommandItem>
                                         ))}
