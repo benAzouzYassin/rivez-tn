@@ -7,7 +7,7 @@ interface Props {
 }
 function CodeSnippets({ snippets }: Props) {
     const [theme, setTheme] = useState("monokaiOneDarkVivid")
-    const [selectedTab, setSelectedTab] = useState(snippets?.[0].localId)
+    const [selectedTab, setSelectedTab] = useState(snippets?.[0]?.localId)
 
     return (
         <CodePlayground

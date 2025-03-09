@@ -7,7 +7,7 @@ const S3_BUCKET_NAME = "public_files"
 
 export async function POST(req: NextRequest) {
     const maxFileSize =
-        Number(process.env.NEXT_PUBLIC_FILE_SIZE_LIMIT! || 0) * 1024 * 1024
+        Number(process.env.NEXT_PUBLIC_FILE_SIZE_LIMIT! || 10) * 1024 * 1024
     try {
         const accessToken = req.headers.get("access-token")
         const refreshToken = req.headers.get("refresh-token")

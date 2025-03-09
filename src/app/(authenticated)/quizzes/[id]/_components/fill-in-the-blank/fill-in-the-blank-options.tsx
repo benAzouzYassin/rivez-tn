@@ -23,7 +23,7 @@ function FillInTheBlankOptions(props: Props) {
                 <FillInTheBlankItem
                     id={opt.id}
                     text={opt.text}
-                    key={opt + String(index)}
+                    key={`option-${opt.id}-${index}`}
                 />
             ))}
         </div>

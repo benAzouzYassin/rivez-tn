@@ -222,7 +222,12 @@ export const POSSIBLE_QUESTIONS = {
                 questionText: "Fill in the missing parts of the definition:",
                 type: "FILL_IN_THE_BLANK",
                 content: {
-                    parts: ["Water is a compound made up of ", " and ", "."],
+                    parts: [
+                        "Water is a compound made up of ",
+                        " and ",
+                        ".",
+                        "have no color",
+                    ],
                     options: ["carbon", "nitrogen"],
                     correct: [
                         {
@@ -232,6 +237,10 @@ export const POSSIBLE_QUESTIONS = {
                         {
                             option: "oxygen",
                             index: 1,
+                        },
+                        {
+                            option: "Water",
+                            index: 2,
                         },
                     ],
                 },
