@@ -155,16 +155,27 @@ export async function readQuizWithCategory(params: { id: number }) {
     return { quizData, avgSkipped, avgCorrect, avgFailed, avgTimeSpent }
 }
 
-export async function readQuizSubmissions(params: { quizId: number }) {
+export async function readQuizSubmissions(params: {
+    quizId: number
+    pagination: {
+        currentPage: number
+        itemsPerPage: number
+    }
+}) {
     const response = await supabase
         .from("quiz_submissions")
-        .select(`*,user(*),quiz_submission_answers(*)`)
+        .select(`*,user(*),quiz_submission_answers(*)`, { count: "exact" })
         .eq("quiz", params.quizId)
+        .range(
+            (params.pagination.currentPage - 1) *
+                params.pagination.itemsPerPage,
+            params.pagination.currentPage * params?.pagination?.itemsPerPage - 1
+        )
         .order("created_at", {
             ascending: false,
         })
         .throwOnError()
-    return response.data
+    return { items: response.data, count: response.count }
 }
 
 export async function readQuizQuestionsDetails(params: { quizId: number }) {
@@ -174,6 +185,9 @@ export async function readQuizQuestionsDetails(params: { quizId: number }) {
         .eq("quiz", params.quizId)
         .order("created_at", {
             ascending: false,
+        })
+        .limit(100, {
+            referencedTable: "quiz_submission_answers",
         })
         .throwOnError()
     const formattedData = response.data.map((question) => {
