@@ -1,10 +1,10 @@
 import { isCurrentUserAdmin } from "@/data-access/users/is-admin"
 import { anthropicHaiku } from "@/lib/ai"
-import { generateObject, streamText } from "ai"
+import { streamText } from "ai"
 import { NextRequest, NextResponse } from "next/server"
 import { z } from "zod"
-import { generatePdfFormatPrompt, generateQuizPrompt } from "./utils"
 import { POSSIBLE_QUESTIONS } from "../constants"
+import { generateQuizPrompt } from "./utils"
 
 // TODO make rate limiting for each user
 const MAX_CHARS_PER_PDF = 100_000
@@ -51,18 +51,7 @@ export async function POST(req: NextRequest) {
                 { status: 400 }
             )
         }
-        const pdfPrompt = generatePdfFormatPrompt(data.pdfPages, quizLanguage)
-        const pdfFormatResponse = await generateObject({
-            model: anthropicHaiku,
-            schema: z.object({
-                mainTopic: z.string(),
-                pages: z.array(z.string()),
-            }),
-            prompt: pdfPrompt,
-            temperature: 0,
-        })
-        const mainTopic = pdfFormatResponse.object.mainTopic
-        const formattedPdfPages = pdfFormatResponse.object.pages
+        const formattedPdfPages = data.pdfPages
         const prompt = generateQuizPrompt({
             name: data.name,
             language: quizLanguage,
@@ -70,10 +59,8 @@ export async function POST(req: NextRequest) {
             allowQuestions: (data.allowedQuestions as any) || "ALL",
             minQuestions,
             maxQuestions,
-            mainTopic,
             pdfPages: formattedPdfPages,
         })
-        console.log(prompt)
         const llmResponse = streamText({
             system: `
             - your answers should not include any template strings.
@@ -82,6 +69,7 @@ export async function POST(req: NextRequest) {
             - Your responses shouldn't include any example content provided to you. 
             - You should follow any user notes when generating quiz questions.
             - The quiz questions should always be base on the pdf content.
+            - The content of the questions options should and the question should be simple and clear.
             `,
             model: anthropicHaiku,
             prompt,

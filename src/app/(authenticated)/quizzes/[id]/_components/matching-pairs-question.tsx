@@ -23,7 +23,14 @@ export default function MatchingPairsQuestion(props: Props) {
     const queryClient = useQueryClient()
     useEffect(() => {
         setRenderDate(new Date())
+        if (window !== undefined) {
+            window.scroll({
+                behavior: "smooth",
+                top: 0,
+            })
+        }
     }, [props.question])
+
     const user = useCurrentUser()
     const incorrectAttempts = useRef(0)
     const params = useParams()

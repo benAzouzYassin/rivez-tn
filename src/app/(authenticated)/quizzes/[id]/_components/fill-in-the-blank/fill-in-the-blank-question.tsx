@@ -48,6 +48,12 @@ export default function FillInTheBlankQuestion(props: Props) {
     const queryClient = useQueryClient()
     useEffect(() => {
         setRenderDate(new Date())
+        if (window !== undefined) {
+            window.scroll({
+                behavior: "smooth",
+                top: 0,
+            })
+        }
     }, [props.question])
     const user = useCurrentUser()
     const params = useParams()

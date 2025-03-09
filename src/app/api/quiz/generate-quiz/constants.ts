@@ -270,7 +270,7 @@ export const POSSIBLE_QUESTIONS = {
                     correct: z.array(
                         z.object({
                             option: z.string(),
-                            index: z.number(),
+                            index: z.number(), // index always stars from 0
                         })
                     ),
                 }),

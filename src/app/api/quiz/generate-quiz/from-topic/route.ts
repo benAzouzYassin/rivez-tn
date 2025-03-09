@@ -61,6 +61,7 @@ export async function POST(req: NextRequest) {
             - Your response should not be markdown. 
             - Your responses shouldn't include any example content provided to you. 
             - You should follow any user notes when generating quiz questions.
+            - The content of the questions options should and the question should be simple and clear.
             `,
 
             model: anthropicHaiku,

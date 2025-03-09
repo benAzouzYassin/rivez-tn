@@ -28,6 +28,12 @@ export default function MultipleAnswerQuestion(props: Props) {
 
     useEffect(() => {
         setRenderDate(new Date())
+        if (window !== undefined) {
+            window.scroll({
+                behavior: "smooth",
+                top: 0,
+            })
+        }
     }, [props.question])
     const user = useCurrentUser()
     const questionIndex = useQuestionsStore((s) => s.currentQuestionIndex)
