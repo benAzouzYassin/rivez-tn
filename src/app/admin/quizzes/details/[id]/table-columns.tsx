@@ -2,7 +2,7 @@ import { Checkbox } from "@/components/ui/checkbox"
 import ImageWithPreview from "@/components/ui/img-with-preview"
 import { cn } from "@/lib/ui-utils"
 import { ColumnDef } from "@tanstack/react-table"
-import { formatDate } from "@/utils/date"
+import { formatDate, formatSeconds } from "@/utils/date"
 import { Badge } from "@/components/ui/badge"
 import TooltipWrapper from "@/components/ui/tooltip"
 import { SubmissionType } from "./_components/submissions"
@@ -79,7 +79,7 @@ export const columns: ColumnDef<SubmissionType>[] = [
         cell: ({ row }) => {
             return (
                 <div className="flex items-center  min-w-[200px] !text-base font-semibold justify-center">
-                    {row.original?.seconds_spent?.toFixed(1)} Seconds
+                    {formatSeconds(row.original?.seconds_spent || 0)} Min
                 </div>
             )
         },

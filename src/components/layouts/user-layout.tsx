@@ -3,7 +3,7 @@ import UserHeader from "@/components/shared/user-header"
 import { useCurrentUser } from "@/hooks/use-current-user"
 import { cn } from "@/lib/ui-utils"
 import { useSidenav } from "@/providers/sidenav-provider"
-import { ChartColumnDecreasing, Home, LockIcon, Settings } from "lucide-react"
+import { Home, LockIcon, Settings } from "lucide-react"
 import { ReactNode } from "react"
 
 type Props = {

@@ -198,8 +198,8 @@ export async function readQuizQuestions(params: { quizId: number }) {
         .from("quizzes_questions")
         .select(`*`)
         .eq("quiz", params.quizId)
-        .order("id", {
-            ascending: true,
+        .order("created_at", {
+            ascending: false,
         })
         .throwOnError()
     return response.data

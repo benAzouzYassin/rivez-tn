@@ -30,6 +30,7 @@ export default function MoreButton(props: Props) {
             dismissToasts("loading")
             toastSuccess("Deleted successfully.")
         } catch (error) {
+            console.error(error)
             dismissToasts("loading")
             toastError("Something went wrong.")
         }

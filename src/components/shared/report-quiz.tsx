@@ -1,4 +1,5 @@
 import { Button } from "@/components/ui/button"
+import { Checkbox } from "@/components/ui/checkbox"
 import {
     Dialog,
     DialogContent,
@@ -6,10 +7,9 @@ import {
     DialogTitle,
     DialogTrigger,
 } from "@/components/ui/dialog"
-import { Flag } from "lucide-react"
-import { Checkbox } from "@/components/ui/checkbox"
-import { useState } from "react"
 import { Textarea } from "@/components/ui/textarea"
+import { Flag } from "lucide-react"
+import { useState } from "react"
 
 type ReportOption = {
     id: string

@@ -16,7 +16,9 @@ export async function readSubmissionsWithAllData(config?: {
         .select(`*, quiz_submission_answers(*), quiz(*), user(*)`, {
             count: "exact",
         })
-        .order("created_at", { ascending: false })
+        .order("created_at", {
+            ascending: false,
+        })
 
     const userSearch = config?.filters?.userSearch || ""
     const quizSearch = config?.filters?.quizSearch || ""
@@ -43,10 +45,12 @@ export async function readSubmissionsWithAllData(config?: {
             .select(
                 `*, quiz_submission_answers(*), quiz!inner(*), user!inner(*)`
             )
-            .order("created_at", { ascending: false })
+            .order("created_at", {
+                ascending: false,
+            })
             .ilike("quiz.name", `%${quizSearch}%`)
             .throwOnError()
-        quizFilterResult = response.data || []
+        quizFilterResult = (response.data as any) || []
     }
 
     if (!!userSearch) {
@@ -55,12 +59,14 @@ export async function readSubmissionsWithAllData(config?: {
             .select(
                 `*, quiz_submission_answers(*), quiz!inner(*), user!inner(*)`
             )
-            .order("created_at", { ascending: false })
+            .order("created_at", {
+                ascending: false,
+            })
             .or(`username.ilike.%${userSearch}%,email.ilike.%${userSearch}%`, {
                 referencedTable: "user",
             })
             .throwOnError()
-        userFilterResult = response.data || []
+        userFilterResult = (response.data as any) || []
     }
 
     const filterResult = [...userFilterResult, ...quizFilterResult]
@@ -89,7 +95,16 @@ type SubmissionType =
         user: Database["public"]["Tables"]["user_profiles"]["Row"] | null
         quiz: Database["public"]["Tables"]["quizzes"]["Row"] | null
         quiz_submission_answers:
-            | Database["public"]["Tables"]["quiz_submission_answers"]["Row"][]
+            | (Database["public"]["Tables"]["quiz_submission_answers"]["Row"] & {
+                  responses:
+                      | string[]
+                      | string[][]
+                      | {
+                            wrong: { index: number; option: string | null }
+                            correct: { index: number; option: string | null }
+                        }
+                      | null
+              })[]
             | null
     }
 type SubmissionTypeWithQuestions =
@@ -100,6 +115,15 @@ type SubmissionTypeWithQuestions =
             | (Database["public"]["Tables"]["quiz_submission_answers"]["Row"] & {
                   question?:
                       | Database["public"]["Tables"]["quizzes_questions"]["Row"]
+                      | null
+
+                  responses:
+                      | string[]
+                      | string[][]
+                      | {
+                            wrong: { index: number; option: string | null }
+                            correct: { index: number; option: string | null }
+                        }
                       | null
               })[]
             | null

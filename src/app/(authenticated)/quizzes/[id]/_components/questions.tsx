@@ -4,6 +4,8 @@ import { QuestionType, useQuestionsStore } from "../store"
 
 import { ErrorDisplay } from "@/components/shared/error-display"
 import {
+    FillInTheBlankContent,
+    FillInTheBlankContentSchema,
     MatchingPairsContent,
     MatchingPairsContentSchema,
     MultipleChoiceContent,
@@ -11,6 +13,7 @@ import {
 } from "@/schemas/questions-content"
 import MatchingPairsQuestion from "./matching-pairs-question"
 import MultipleAnswerQuestion from "./multiple-answer-question"
+import FillInTheBlankQuestion from "./fill-in-the-blank/fill-in-the-blank-question"
 
 export default function Questions() {
     const questionIndex = useQuestionsStore((s) => s.currentQuestionIndex)
@@ -34,6 +37,15 @@ export default function Questions() {
         case "MATCHING_PAIRS":
             return isMatchingPairs(currentQuestion) ? (
                 <MatchingPairsQuestion
+                    questionsCount={questions.length}
+                    question={currentQuestion}
+                />
+            ) : (
+                <ErrorDisplay />
+            )
+        case "FILL_IN_THE_BLANK":
+            return isFillInTheBlank(currentQuestion) ? (
+                <FillInTheBlankQuestion
                     questionsCount={questions.length}
                     question={currentQuestion}
                 />
@@ -70,6 +82,14 @@ function isMatchingPairs(
     currentQuestion: QuestionType
 ): currentQuestion is QuestionType & { content: MatchingPairsContent } {
     const { success } = MatchingPairsContentSchema.safeParse(
+        currentQuestion.content
+    )
+    return success
+}
+function isFillInTheBlank(
+    currentQuestion: QuestionType
+): currentQuestion is QuestionType & { content: FillInTheBlankContent } {
+    const { success } = FillInTheBlankContentSchema.safeParse(
         currentQuestion.content
     )
     return success

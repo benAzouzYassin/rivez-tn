@@ -13,6 +13,7 @@ import WrongAnswerBanner from "./wrong-answer-banner"
 import { useCurrentUser } from "@/hooks/use-current-user"
 import { toastError } from "@/lib/toasts"
 import { useQueryClient } from "@tanstack/react-query"
+import CodeSnippets from "./code-snippets"
 
 type Props = {
     question: { content: MultipleChoiceContent } & QuestionType
@@ -27,6 +28,12 @@ export default function MultipleAnswerQuestion(props: Props) {
 
     useEffect(() => {
         setRenderDate(new Date())
+        if (window !== undefined) {
+            window.scroll({
+                behavior: "smooth",
+                top: 0,
+            })
+        }
     }, [props.question])
     const user = useCurrentUser()
     const questionIndex = useQuestionsStore((s) => s.currentQuestionIndex)
@@ -47,6 +54,7 @@ export default function MultipleAnswerQuestion(props: Props) {
 
     const [selectedOptions, setSelectedOptions] = useState<string[]>([])
     const correctAnswers = props.question.content.correct
+    const imageType = props.question.image_type
 
     const handleOptionClick = (opt: string, isSelected: boolean) => {
         setSelectedOptions((prev) =>
@@ -96,7 +104,6 @@ export default function MultipleAnswerQuestion(props: Props) {
             failedAttempts: null,
             secondsSpent: (new Date().getTime() - renderDate.getTime()) / 1000,
         })
-        console.log("saving the data.....")
         if (areArraysEqual(correctAnswers, selectedOptions)) {
             setIsCorrectBannerOpen(true)
         } else {
@@ -140,23 +147,37 @@ export default function MultipleAnswerQuestion(props: Props) {
                     >
                         <div
                             className={cn(
-                                "h-[400px] rounded-xl overflow-hidden  flex items-center justify-center relative  mx-auto  border bg-neutral-50 w-[800px]! ",
+                                "h-[400px] rounded-xl min-w-[700px] overflow-hidden  flex items-center justify-center relative  mx-auto  border bg-neutral-50 w-[800px]! ",
                                 {
-                                    "max-w-[600px]  mr-10 h-[500px] ":
+                                    "w-[700px]  mr-10 h-[500px] ":
                                         props.question.layout === "horizontal",
+                                    hidden:
+                                        props.question.image_type === "none",
                                 }
                             )}
                         >
-                            <ImageIcon className="w-32 text-neutral-300 h-32" />
-                            {!!props.question.image && (
-                                <img
-                                    className={cn(
-                                        "h-full mx-auto absolute top-0 left-0 w-full object-contain"
-                                    )}
-                                    src={props.question.image}
-                                    alt=""
+                            {imageType === "code-snippets" && (
+                                <CodeSnippets
+                                    snippets={
+                                        props.question.content.codeSnippets
+                                    }
                                 />
                             )}
+                            {imageType === "normal-image" && (
+                                <>
+                                    {" "}
+                                    <ImageIcon className="w-32 text-neutral-300 h-32" />
+                                    {!!props.question.image && (
+                                        <img
+                                            className={cn(
+                                                "h-full mx-auto absolute top-0 left-0 w-full object-contain"
+                                            )}
+                                            src={props.question.image}
+                                            alt=""
+                                        />
+                                    )}
+                                </>
+                            )}{" "}
                         </div>
 
                         <AnimatePresence mode="wait">
@@ -168,11 +189,14 @@ export default function MultipleAnswerQuestion(props: Props) {
                                 exit="exit"
                                 transition={{ duration: 0.4 }}
                                 className={cn(
-                                    "max-w-[1000px] mx-auto mt-10 gap-5 w-full grid grid-cols-2",
+                                    "max-w-[1000px]  mx-auto mt-10 gap-5 w-full grid grid-cols-2",
                                     {
-                                        "flex max-w-[600px] mr-0 flex-col ml-auto":
+                                        "flex w-[700px] mr-0 flex-col ml-auto":
                                             props.question.layout ===
                                             "horizontal",
+                                        "min-w-[70vw] gap-10":
+                                            props.question.image_type ===
+                                            "none",
                                     }
                                 )}
                             >
@@ -195,7 +219,7 @@ export default function MultipleAnswerQuestion(props: Props) {
                                                     )
                                                 }
                                                 className={cn(
-                                                    "min-h-[85px] text-lg hover:bg-sky-100 hover:shadow-sky-300/50 hover:border-sky-300/45 text-neutral-700 font-bold max-h-24",
+                                                    "min-h-[85px]  text-lg overflow-auto small-scroll-bar hover:bg-sky-100 text-wrap hover:shadow-sky-300/50 hover:border-sky-300/45 text-neutral-700 font-bold max-h-48",
                                                     {
                                                         "hover:bg-red-200/50 bg-red-200/50 text-red-500 font-extrabold hover:shadow-red-300 shadow-red-300 hover:border-red-300 border-red-300":
                                                             !isCorrect &&
@@ -215,7 +239,10 @@ export default function MultipleAnswerQuestion(props: Props) {
                                                 )}
                                                 variant="secondary"
                                             >
-                                                {opt}
+                                                <p className="max-w-[80%] text-wrap h-fit ">
+                                                    {" "}
+                                                    {opt}
+                                                </p>
                                             </Button>
                                         )
                                     }

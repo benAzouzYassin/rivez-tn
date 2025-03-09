@@ -5,10 +5,22 @@ export const possibleQuestionTypes = [
     "MATCHING_PAIRS",
     "DEBUG_CODE",
     "CODE_COMPLETION",
+    "FILL_IN_THE_BLANK",
 ] as const
 const PossibleQuestionTypesEnum = z.enum(possibleQuestionTypes)
 
 const MultipleChoiceContentSchema = z.object({
+    codeSnippets: z
+        .array(
+            z.object({
+                name: z.string(),
+                code: z.string(),
+                localId: z.string(),
+                type: z.string(),
+            })
+        )
+        .optional()
+        .nullable(),
     correct: z.array(z.string()),
     options: z.array(z.string()),
 })
@@ -17,6 +29,17 @@ const MatchingPairsContentSchema = z.object({
     rightSideOptions: z.array(z.string()),
     leftSideOptions: z.array(z.string()),
     correct: z.array(z.array(z.string())),
+})
+
+const FillInTheBlankContentSchema = z.object({
+    parts: z.array(z.string()), //example : this__fill in the example. ==> ["this" , "fill in the blank example."]
+    options: z.array(z.string()),
+    correct: z.array(
+        z.object({
+            option: z.string(),
+            index: z.number(),
+        })
+    ),
 })
 
 const DebugCodeContentSchema = z.unknown()
@@ -49,6 +72,7 @@ export {
     DebugCodeContentSchema,
     CodeCompletionContentSchema,
     QuestionContentSchema,
+    FillInTheBlankContentSchema,
 }
 
 export type PossibleQuestionTypes = (typeof possibleQuestionTypes)[number]
@@ -57,3 +81,4 @@ export type MatchingPairsContent = z.infer<typeof MatchingPairsContentSchema>
 export type DebugCodeContent = z.infer<typeof DebugCodeContentSchema>
 export type CodeCompletionContent = z.infer<typeof CodeCompletionContentSchema>
 export type QuestionContent = z.infer<typeof QuestionContentSchema>
+export type FillInTheBlankContent = z.infer<typeof FillInTheBlankContentSchema>

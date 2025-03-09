@@ -3,10 +3,11 @@ import { NextRequest, NextResponse } from "next/server"
 import { s3Client } from "@/lib/s3"
 import { DeleteObjectCommand, PutObjectCommand } from "@aws-sdk/client-s3"
 
-const MAX_FILE_SIZE = 10 * 1024 * 1024 //10mb
 const S3_BUCKET_NAME = "public_files"
 
 export async function POST(req: NextRequest) {
+    const maxFileSize =
+        Number(process.env.NEXT_PUBLIC_FILE_SIZE_LIMIT! || 10) * 1024 * 1024
     try {
         const accessToken = req.headers.get("access-token")
         const refreshToken = req.headers.get("refresh-token")
@@ -36,7 +37,7 @@ export async function POST(req: NextRequest) {
             )
         }
 
-        if (file.size > MAX_FILE_SIZE) {
+        if (file.size > maxFileSize) {
             return NextResponse.json(
                 { message: "File size exceeds limit" },
                 { status: 400 }
@@ -110,3 +111,5 @@ export const config = {
         bodyParser: false,
     },
 }
+
+export const maxDuration = 60

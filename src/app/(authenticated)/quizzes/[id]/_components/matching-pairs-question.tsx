@@ -23,7 +23,14 @@ export default function MatchingPairsQuestion(props: Props) {
     const queryClient = useQueryClient()
     useEffect(() => {
         setRenderDate(new Date())
+        if (window !== undefined) {
+            window.scroll({
+                behavior: "smooth",
+                top: 0,
+            })
+        }
     }, [props.question])
+
     const user = useCurrentUser()
     const incorrectAttempts = useRef(0)
     const params = useParams()
@@ -177,7 +184,7 @@ export default function MatchingPairsQuestion(props: Props) {
             <div className="flex flex-col relative h-fit items-center justify-center">
                 <div>
                     <p className="max-w-[1200px] mb-1 text-3xl font-extrabold top-0 text-neutral-700 text-left w-full left-0">
-                        {props.question?.question || "Match the items "} :
+                        {props.question?.question || "Match the items :"}
                     </p>
                     <div className="relative">
                         <AnimatePresence mode="wait">

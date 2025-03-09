@@ -1,4 +1,3 @@
-import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import {
     Dialog,
@@ -7,17 +6,35 @@ import {
     DialogTitle,
     DialogTrigger,
 } from "@/components/ui/dialog"
-import { cn } from "@/lib/ui-utils"
-import { areArraysEqual } from "@/utils/array"
-import { ArrowRight, Eye } from "lucide-react"
+import {
+    FillInTheBlankContent,
+    MatchingPairsContent,
+    MultipleChoiceContent,
+    PossibleQuestionTypes,
+} from "@/schemas/questions-content"
+import { Eye } from "lucide-react"
 import { useState } from "react"
+import FillInTheBlankResponses from "./fill-in-the-blank-responses"
+import MatchingPairsResponses from "./matching-pairs-responses"
+import MultipleChoiceResponses from "./multiple-choice-responses"
 
 type Props = {
     question: string
-    questionType: "MATCHING_PAIRS" | "MULTIPLE_CHOICE"
-    responses: string[] | string[][]
+    questionType: PossibleQuestionTypes
+    responses:
+        | string[]
+        | string[][]
+        | {
+              wrong: { index: number; option: string | null }[]
+              correct: { index: number; option: string | null }[]
+          }
     correctAnswers: string[] | string[][]
     questionImage?: string
+    questionContent:
+        | MatchingPairsContent
+        | MultipleChoiceContent
+        | FillInTheBlankContent
+        | null
 }
 
 const QuestionResponses = ({
@@ -26,6 +43,7 @@ const QuestionResponses = ({
     responses,
     correctAnswers,
     questionImage,
+    questionContent,
 }: Props) => {
     const [isOpen, setIsOpen] = useState(false)
 
@@ -67,93 +85,24 @@ const QuestionResponses = ({
                                     User Answers
                                 </h3>
                                 <div className="bg-neutral-50 p-6 rounded-xl border border-neutral-200">
-                                    {questionType === "MULTIPLE_CHOICE" ? (
-                                        <div className="space-y-4">
-                                            {(responses as string[]).map(
-                                                (response, index) => {
-                                                    const isCorrect =
-                                                        correctAnswers.includes(
-                                                            response as any
-                                                        )
-                                                    return (
-                                                        <div
-                                                            key={index}
-                                                            className="p-4 bg-white border border-neutral-200 rounded-xl shadow-sm hover:shadow-md transition-all duration-200 group"
-                                                        >
-                                                            <div className="flex items-center gap-4">
-                                                                <span className="text-neutral-700 text-lg font-bold group-hover:text-neutral-900">
-                                                                    {response}{" "}
-                                                                </span>
-                                                                <Badge
-                                                                    className="rounded-full ml-auto"
-                                                                    variant={
-                                                                        isCorrect
-                                                                            ? "green"
-                                                                            : "red"
-                                                                    }
-                                                                >
-                                                                    {" "}
-                                                                    {isCorrect
-                                                                        ? "Correct"
-                                                                        : "Not correct"}
-                                                                </Badge>
-                                                            </div>
-                                                        </div>
-                                                    )
-                                                }
-                                            )}
-                                        </div>
-                                    ) : (
-                                        <div className="space-y-6">
-                                            {(responses as string[][]).map(
-                                                (pair, index) => {
-                                                    const isCorrect =
-                                                        correctAnswers.find(
-                                                            (item) =>
-                                                                areArraysEqual(
-                                                                    item as string[],
-                                                                    pair
-                                                                )
-                                                        )
-                                                    return (
-                                                        <div
-                                                            key={index}
-                                                            className="flex items-center gap-4"
-                                                        >
-                                                            <div className="flex-1 p-4 bg-gradient-to-r from-blue-50 to-blue-100/50 rounded-xl border border-blue-200  transition-all duration-200">
-                                                                <span className="text-blue-500 font-bold">
-                                                                    {pair[0]}
-                                                                </span>
-                                                            </div>
-                                                            <div className="flex items-center justify-center">
-                                                                <ArrowRight className="w-6 h-6 text-neutral-400" />
-                                                            </div>
-                                                            <div
-                                                                className={cn(
-                                                                    "flex-1 p-4 bg-gradient-to-r  from-green-50 to-green-100/80 rounded-xl border border-green-200 transition-all duration-200",
-                                                                    {
-                                                                        "from-red-50 to-red-100/80 rounded-xl border border-red-200 ":
-                                                                            !isCorrect,
-                                                                    }
-                                                                )}
-                                                            >
-                                                                <span
-                                                                    className={cn(
-                                                                        "text-green-600 font-bold",
-                                                                        {
-                                                                            "text-red-600":
-                                                                                !isCorrect,
-                                                                        }
-                                                                    )}
-                                                                >
-                                                                    {pair[1]}
-                                                                </span>
-                                                            </div>
-                                                        </div>
-                                                    )
-                                                }
-                                            )}
-                                        </div>
+                                    {questionType === "MULTIPLE_CHOICE" && (
+                                        <MultipleChoiceResponses
+                                            correctAnswers={correctAnswers}
+                                            responses={responses as any}
+                                        />
+                                    )}
+                                    {questionType === "MATCHING_PAIRS" && (
+                                        <MatchingPairsResponses
+                                            correctAnswers={correctAnswers}
+                                            responses={responses as any}
+                                        />
+                                    )}
+                                    {questionType === "FILL_IN_THE_BLANK" && (
+                                        <FillInTheBlankResponses
+                                            content={questionContent as any}
+                                            correctAnswers={correctAnswers}
+                                            responses={responses as any}
+                                        />
                                     )}
                                 </div>
                             </div>

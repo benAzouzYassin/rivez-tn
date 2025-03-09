@@ -1,17 +1,16 @@
+import Sidenav from "@/components/shared/sidenav"
+import UserHeader from "@/components/shared/user-header"
 import { cn } from "@/lib/ui-utils"
 import { useSidenav } from "@/providers/sidenav-provider"
-import { ReactNode } from "react"
-import UserHeader from "@/components/shared/user-header"
-import Sidenav from "@/components/shared/sidenav"
 import {
     AppWindowIcon,
     BookCopy,
     Gamepad2,
-    Home,
     Settings,
     SquareMousePointer,
     Users2,
 } from "lucide-react"
+import { ReactNode } from "react"
 
 type Props = {
     children?: Readonly<ReactNode>
