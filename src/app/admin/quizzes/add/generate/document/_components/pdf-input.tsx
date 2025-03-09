@@ -1,11 +1,10 @@
 "use client"
 
 import { FileTextIcon } from "lucide-react"
-
 import { FileInput } from "@/components/ui/file-input"
 import { dismissToasts, toastError, toastLoading } from "@/lib/toasts"
-import { parsePdf } from "client-side-pdf-parser"
 import { useState } from "react"
+import { z } from "zod"
 
 type Props = {
     onPDFPagesChanges: (value: string[]) => void
@@ -18,23 +17,45 @@ export default function PdfInput(props: Props) {
             fileName={fileName}
             isLoading={isUploadingPdf}
             onChange={async (file) => {
-                setIsUploadingPdf(true)
                 toastLoading("Uploading your pdf...")
                 try {
                     if (file) {
-                        const content = await parsePdf(file)
-                        props.onPDFPagesChanges(content || [])
-                        setFileName(file.name)
+                        const workerInstance = new window.Worker(
+                            "/pdfjs/pdf-parser-worker.js",
+                            { type: "module" }
+                        )
+                        setIsUploadingPdf(true)
+                        workerInstance.postMessage({
+                            file,
+                        })
+                        workerInstance.onmessage = (event) => {
+                            if (event.data.result) {
+                                const content = event.data.result
+                                setIsUploadingPdf(false)
+                                const { data, success } = z
+                                    .array(z.string())
+                                    .safeParse(content)
+                                if (success) {
+                                    props.onPDFPagesChanges(data || [])
+                                    setFileName(file.name)
+                                } else {
+                                    throw new Error(
+                                        "Error while parsing the pdf."
+                                    )
+                                }
+                                workerInstance.terminate()
+                            }
+                        }
                     } else {
                         setFileName("")
                         props.onPDFPagesChanges([])
                     }
                 } catch (error) {
                     toastError("Something went wrong...")
+                    setIsUploadingPdf(false)
                 } finally {
                     dismissToasts("loading")
                 }
-                setIsUploadingPdf(false)
             }}
             allowDocument
             previewAsDocument
