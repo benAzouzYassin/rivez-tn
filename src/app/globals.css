@@ -401,3 +401,35 @@
     opacity: 0;
   }
 }
+
+
+
+
+
+.bounce-vertical {
+  animation: bounce-vertical 1s infinite alternate;
+}
+
+@keyframes bounce-vertical {
+  from {
+    transform: translateY(0);
+  }
+
+  to {
+    transform: translateY(-20px);
+  }
+}
+
+.bounce-horizontal {
+  animation: bounce-horizontal 1s infinite alternate;
+}
+
+@keyframes bounce-horizontal {
+  from {
+    transform: translateX(0);
+  }
+
+  to {
+    transform: translateX(-15px);
+  }
+}

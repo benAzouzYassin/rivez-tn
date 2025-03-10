@@ -16,7 +16,7 @@ export default function AllQuestionsPreviews() {
             className={cn(
                 "h-[120px] bg-white pb-2 transition-all duration-300 fixed left-0 bottom-0 w-full",
                 {
-                    "pl-[256px]": isSidenavOpen,
+                    "pl-[300px]": isSidenavOpen,
                     "pl-[100px]": !isSidenavOpen,
                 }
             )}
