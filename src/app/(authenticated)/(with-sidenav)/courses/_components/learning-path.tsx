@@ -1,4 +1,4 @@
-import FloatingSection from "./floating-section"
+import FloatingSection from "@/components/shared/floating-section"
 import LearningPathSection from "./learning-path-section"
 
 interface Props {
@@ -7,8 +7,8 @@ interface Props {
 }
 export default function LearningPath(props: Props) {
     return (
-        <div className="container relative  pt-20 z-10 mx-auto px-4 grid grid-cols-12 py-8">
-            <section className="min-h-[400px] pl-8 flex flex-col gap-5 col-span-8">
+        <div className="container  relative  pt-10 z-10  mx-auto px-4 grid grid-cols-13 py-8">
+            <section className="min-h-[400px] pl-8 flex flex-col gap-5 col-span-9">
                 <LearningPathSection
                     content="01. Basics"
                     title="React-js"
@@ -25,7 +25,7 @@ export default function LearningPath(props: Props) {
                     variant="sky"
                 />
             </section>
-            <FloatingSection />
+            <FloatingSection fixed />
         </div>
     )
 }

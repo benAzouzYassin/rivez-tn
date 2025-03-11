@@ -4,12 +4,18 @@ import { useCurrentUser } from "@/hooks/use-current-user"
 import { cn } from "@/lib/ui-utils"
 import { useSidenav } from "@/providers/sidenav-provider"
 import {
+    BookOpen,
+    Brain,
     ClockIcon,
     CopyIcon,
     FileTextIcon,
     Home,
+    LayoutGrid,
+    LayoutListIcon,
     LockIcon,
+    LucidePresentation,
     PlusCircle,
+    Search,
     WandSparklesIcon,
 } from "lucide-react"
 import { ReactNode } from "react"
@@ -41,24 +47,62 @@ export default function UserLayout({ children }: Props) {
                         route: "/home",
                     },
                     {
-                        name: "Generate a quiz",
+                        name: "Courses",
+                        icon: <BookOpen className="!w-6 !h-6" />,
+                        route: "/courses",
+                        subItems: [
+                            {
+                                icon: <LayoutListIcon className="!w-6 !h-6" />,
+                                name: "All courses",
+                                iconScale: "",
+                                route: "/courses/all",
+                            },
+                            {
+                                icon: (
+                                    <LucidePresentation className="!w-6 !h-6" />
+                                ),
+                                name: "My courses",
+                                iconScale: "",
+                                route: "/courses/my-courses",
+                            },
+                        ],
+                    },
+                    {
+                        name: "Quizzes",
                         icon: <WandSparklesIcon className="!w-6 !h-6" />,
                         route: "/generate-quiz",
                     },
                     {
-                        name: "Flash cards",
+                        name: "Flashcards",
                         icon: <CopyIcon className="!w-6 !h-6" />,
                         route: "/flash-cards",
-                    },
-                    {
-                        name: "Spaced repetition",
-                        icon: <ClockIcon className="!w-6 !h-6" />,
-                        route: "/spaced-repetition",
+                        subItems: [
+                            {
+                                icon: <LayoutGrid className="!w-6 !h-6" />,
+                                name: "Flashcard List",
+                                route: "/flash-cards/list",
+                            },
+                            {
+                                icon: <PlusCircle className="!w-6 !h-6" />,
+                                name: "Generate",
+                                route: "/flash-cards/add",
+                            },
+                            {
+                                icon: <Search className="!w-6 !h-6" />,
+                                name: "Discover",
+                                route: "/flash-cards/discover",
+                            },
+                        ],
                     },
                     {
                         name: "Summarize PDF",
                         icon: <FileTextIcon className="!w-6 !h-6" />,
                         route: "/summarize-pdf",
+                    },
+                    {
+                        name: "Mindmaps",
+                        icon: <Brain className="!w-6 !h-6" />,
+                        route: "/mind-map",
                     },
                     ...adminItems,
                 ]}

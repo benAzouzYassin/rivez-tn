@@ -3,9 +3,11 @@ import { cn } from "@/lib/ui-utils"
 export default function ProgressBar({
     percentage,
     className,
+    filledClassName,
 }: {
     className?: string
     percentage: number
+    filledClassName?: string
 }) {
     const getBarColor = (percentage: number): string => {
         if (percentage <= 33) {
@@ -29,7 +31,10 @@ export default function ProgressBar({
                     backgroundColor: getBarColor(percentage),
                     width: `${Math.min(100, Math.max(0, percentage))}%`,
                 }}
-                className="relative rounded-full h-[14px] transition-all"
+                className={cn(
+                    "relative rounded-full h-[14px] transition-all",
+                    filledClassName
+                )}
             >
                 <div className="from-white/25 to-white/20 bg-linear-to-r h-1 absolute top-1 left-2 rounded-full w-[90%]" />
             </div>

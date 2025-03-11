@@ -10,8 +10,8 @@ import { useQuery } from "@tanstack/react-query"
 import { Filter, Plus } from "lucide-react"
 import { parseAsInteger, parseAsString, useQueryState } from "nuqs"
 import { useState } from "react"
-import Search from "./_components/search"
 import { columns } from "./table-columns"
+import SearchInput from "@/components/shared/search-input"
 
 export default function Page() {
     // const [viewMode, setViewMode] = useLocalStorage("view-mode", "list")
@@ -66,7 +66,7 @@ export default function Page() {
                 </div>
             </div>
             <section className=" flex justify-between my-5 min-h-10">
-                <Search
+                <SearchInput
                     searchValue={searchValue}
                     onSearchChange={setSearchValue}
                 />
