@@ -134,10 +134,7 @@ function Page() {
                             />
                         </div>
 
-                        <Button
-                            variant={"blue"}
-                            className="text-base h-[3.2rem]"
-                        >
+                        <Button className="text-base h-[3.2rem]">
                             <Plus className="-mr-1 !w-5 stroke-2 !h-5" /> Create
                             New
                         </Button>
@@ -145,8 +142,8 @@ function Page() {
                 </div>
 
                 <div className="w-full border-2 rounded-2xl p-5">
-                    <div className="mb-8 ">
-                        <div className="flex border-2 rounded-2xl px-5 py-4 w-full flex-wrap gap-2 mb-2">
+                    <div className="mb-4 ">
+                        <div className="flex border-2 rounded-2xl ml-auto px-2 py-2 w-fit flex-wrap gap-2 mb-2">
                             {tabs.map((tab) => (
                                 <div
                                     key={tab.id}
@@ -155,7 +152,7 @@ function Page() {
                                 >
                                     <div
                                         className={cn(
-                                            ` relative  bg-white  border-2 hover:bg-indigo-100/80 transition-all  border-blue-500/30  flex items-center px-10 py-3 rounded-lg`,
+                                            ` relative  bg-white  border-2  transition-all  hover:bg-neutral-100  flex items-center px-10 py-3 rounded-lg`,
                                             {
                                                 "border-transparent":
                                                     activeTab === tab.id,
@@ -165,14 +162,14 @@ function Page() {
                                         {activeTab === tab.id && (
                                             <motion.div
                                                 layoutId="background"
-                                                className="bg-gradient-to-r rounded-lg z-10 from-blue-500 to-indigo-600 text-white shadow-lg absolute top-0 left-0 w-full h-full"
+                                                className="bg-gradient-to-r rounded-lg z-10 bg-blue-50 border-blue-300 border-2 text-white absolute top-0 left-0 w-full h-full"
                                             ></motion.div>
                                         )}
                                         <div className="flex  z-20 items-center">
                                             <span
                                                 className={`mr-2  transition-all duration-0  ${
                                                     activeTab === tab.id
-                                                        ? "text-white"
+                                                        ? "text-blue-400"
                                                         : "text-blue-500"
                                                 }`}
                                             >
@@ -180,12 +177,7 @@ function Page() {
                                             </span>
                                             <span
                                                 className={cn(
-                                                    "font-semibold transition-all duration-0 ",
-                                                    {
-                                                        "text-white":
-                                                            activeTab ===
-                                                            tab.id,
-                                                    }
+                                                    "font-semibold transition-all duration-0 "
                                                 )}
                                             >
                                                 {tab.label}
@@ -198,7 +190,7 @@ function Page() {
                     </div>
 
                     {/* Tab content */}
-                    <div className="relative min-h-[70vh]">
+                    <div className="relative min-h-[70vh] ">
                         {activeTab === "all" && (
                             <div
                                 className={cn(

@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card"
 import { BookOpen, PlayCircle, StarIcon } from "lucide-react"
 import MoreButton from "./more-button"
+import { shuffleArray } from "@/utils/array"
 
 interface Props {
     item: {
@@ -52,7 +53,9 @@ export default function ListItem({ item }: Props) {
                                 {item.tags.map((tag, index) => (
                                     <Badge
                                         variant={
-                                            possibleTagColors[index % 4] as any
+                                            shuffleArray(possibleTagColors)[
+                                                index % 4
+                                            ] as any
                                         }
                                         key={index}
                                         className="text-xs h-7"
