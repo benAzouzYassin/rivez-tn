@@ -7,6 +7,7 @@ import { TextStyle } from "@tiptap/extension-text-style"
 import { TextAlign } from "@tiptap/extension-text-align"
 import { Image } from "@tiptap/extension-image"
 import { Link } from "@tiptap/extension-link"
+import { Placeholder } from "@tiptap/extension-placeholder"
 import { ImageResize } from "tiptap-extension-resize-image"
 
 import {
@@ -21,7 +22,7 @@ import js from "highlight.js/lib/languages/javascript"
 import ts from "highlight.js/lib/languages/typescript"
 import html from "highlight.js/lib/languages/xml"
 import { createLowlight } from "lowlight"
-import { memo } from "react"
+import { memo, useEffect } from "react"
 import CodeBlockComponent from "./code-block"
 import "./styles.css"
 import Toolbar from "./toolbar"
@@ -37,6 +38,7 @@ interface Props {
     className?: string
     onChange?: (content: JSONContent) => void
     initialContent?: string
+    placeholder?: string
 }
 
 function RichTextEditor(props: Props) {
@@ -50,8 +52,11 @@ function RichTextEditor(props: Props) {
             }),
             Underline,
             Strike,
-            Image,
+            // Image,
             ImageResize,
+            Placeholder.configure({
+                placeholder: props.placeholder,
+            }),
             TextAlign.configure({
                 types: ["heading", "paragraph"],
                 alignments: ["left", "right", "center"],
@@ -159,6 +164,12 @@ function RichTextEditor(props: Props) {
             },
         },
     })
+
+    useEffect(() => {
+        if (editor !== null && props.placeholder !== "") {
+            editor.view.dispatch(editor.state.tr)
+        }
+    }, [editor, props.placeholder])
 
     return (
         <div className={props.className}>

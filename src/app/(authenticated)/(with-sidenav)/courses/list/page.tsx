@@ -1,116 +1,30 @@
 "use client"
-import SearchInput from "@/components/shared/search-input"
-import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/ui-utils"
 import { useSidenav } from "@/providers/sidenav-provider"
 import { motion } from "framer-motion"
-import { BookMarked, BookOpen, Plus, ZapIcon } from "lucide-react"
+import { BookOpen, ZapIcon } from "lucide-react"
 import { useState } from "react"
 import EmptyDisplay from "./_components/empty-display"
 import ListItem from "./_components/list-item"
-import Link from "next/link"
 
 function Page() {
-    const [activeTab, setActiveTab] = useState("popular")
-
-    const flashcardSets = [
-        {
-            id: 1,
-            title: "JavaScript Basics",
-            lastReviewed: "over 1 year ago",
-            questions: 25,
-            isFavorite: false,
-            progress: 68,
-            dueDate: "3 days",
-            tags: ["Frontend", "Beginner"],
-            createdAt: "2023-05-15",
-            studyStreak: 5,
-        },
-        {
-            id: 2,
-            title: "React Hooks",
-            lastReviewed: "over 1 year ago",
-            questions: 18,
-            isFavorite: true,
-            progress: 92,
-            dueDate: "Today",
-            tags: ["Frontend", "React", "Advanced"],
-            createdAt: "2023-06-20",
-            studyStreak: 12,
-        },
-        {
-            id: 3,
-            title: "CSS Grid & Flexbox",
-            lastReviewed: "over 1 year ago",
-            questions: 15,
-            isFavorite: false,
-            progress: 45,
-            dueDate: "Tomorrow",
-            tags: ["Frontend", "CSS", "Layout"],
-            createdAt: "2023-04-10",
-            studyStreak: 3,
-        },
-        {
-            id: 4,
-            title: "TypeScript Fundamentals",
-            lastReviewed: "over 1 year ago",
-            questions: 30,
-            isFavorite: false,
-            progress: 32,
-            dueDate: "5 days",
-            tags: ["Frontend", "TypeScript", "Intermediate"],
-            createdAt: "2023-07-05",
-            studyStreak: 0,
-        },
-        {
-            id: 5,
-            title: "Node.js Essentials",
-            lastReviewed: "over 1 year ago",
-            questions: 22,
-            isFavorite: true,
-            progress: 78,
-            dueDate: "2 days",
-            tags: ["Backend", "Node.js", "Server"],
-            createdAt: "2023-05-30",
-            studyStreak: 8,
-        },
-        {
-            id: 6,
-            title: "Data Structures",
-            lastReviewed: "over 1 year ago",
-            questions: 40,
-            isFavorite: false,
-            progress: 25,
-            dueDate: "1 week",
-            tags: ["Computer Science", "Algorithms"],
-            createdAt: "2023-03-15",
-            studyStreak: 2,
-        },
-    ]
+    const [activeTab, setActiveTab] = useState("all")
 
     // Custom tab data with icons and descriptions
     const tabs = [
         {
+            id: "all",
+            label: "My Courses",
+            icon: <BookOpen size={18} />,
+            description: "View all your flashcard decks",
+            count: courses.length,
+        },
+        {
             id: "popular",
-            label: "Popular Flashcards ",
+            label: "All Courses ",
             icon: <ZapIcon size={18} />,
             description: "Cards that need your attention",
             count: 3,
-        },
-        {
-            id: "all",
-            label: "My flashcards",
-            icon: <BookOpen size={18} />,
-            description: "View all your flashcard decks",
-            count: flashcardSets.length,
-        },
-
-        {
-            id: "recent",
-            label: "Recently Studied",
-            icon: <BookMarked size={18} />,
-            description: "Continue where you left off",
-            count: 2,
         },
     ]
     const { isSidenavOpen } = useSidenav()
@@ -121,29 +35,10 @@ function Page() {
     return (
         <div className="container mx-auto p-6 pb-20 min-h-screen isolate">
             <div className="flex flex-col gap-6">
-                <div className="flex justify-between items-center">
-                    <h1 className="text-4xl text-neutral-600 -mt-5 font-extrabold">
-                        My Flashcards
+                <div className="w-full border-2 rounded-2xl p-5 relative">
+                    <h1 className="text-4xl text-neutral-600 absolute  top-7 font-extrabold">
+                        Courses
                     </h1>
-                    <div className="flex items-center gap-2">
-                        <div className="mt-5 ">
-                            <SearchInput
-                                iconClassName="top-4"
-                                className="h-[3.2rem] !w-20"
-                                onSearchChange={() => {}}
-                                searchValue=""
-                            />
-                        </div>
-                        <Link href={"/flash-cards/add"}>
-                            <Button className="text-base h-[3.2rem]">
-                                <Plus className="-mr-1 !w-5 stroke-2 !h-5" />{" "}
-                                Add Flashcard
-                            </Button>
-                        </Link>
-                    </div>
-                </div>
-
-                <div className="w-full border-2 rounded-2xl p-5">
                     <div className="mb-4 ">
                         <div className="flex border-2 rounded-2xl ml-auto px-2 py-2 w-fit flex-wrap gap-2 mb-2">
                             {tabs.map((tab) => (
@@ -195,7 +90,7 @@ function Page() {
                     <div className="relative min-h-[70vh] ">
                         {activeTab === "all" && (
                             <EmptyDisplay
-                                title="You have no flashcards yet"
+                                title="You have no courses yet"
                                 icon={
                                     <BookOpen
                                         size={50}
@@ -206,19 +101,7 @@ function Page() {
                                 onClick={() => setActiveTab("popular")}
                             />
                         )}
-                        {/* {activeTab === "popular" && (
-                            <EmptyDisplay
-                                title="No popular flashcards yet"
-                                icon={
-                                    <ZapIcon
-                                        size={50}
-                                        className="text-indigo-500"
-                                    />
-                                }
-                                description=""
-                                onClick={() => setActiveTab("all")}
-                            />
-                        )} */}
+
                         {activeTab === "popular" && (
                             <div
                                 className={cn(
@@ -228,12 +111,12 @@ function Page() {
                                     }
                                 )}
                             >
-                                {flashcardSets.map((item) => {
+                                {courses.map((item) => {
                                     return (
                                         <ListItem item={item} key={item.id} />
                                     )
                                 })}
-                                {!flashcardSets.length && (
+                                {!courses.length && (
                                     <EmptyDisplay
                                         title="You have no flashcards yet"
                                         icon={
@@ -247,19 +130,6 @@ function Page() {
                                 )}
                             </div>
                         )}
-                        {activeTab === "recent" && (
-                            <EmptyDisplay
-                                title="No Recent studied flashcards yet."
-                                icon={
-                                    <BookMarked
-                                        size={50}
-                                        className="text-indigo-500"
-                                    />
-                                }
-                                description=" Cards will appear here when you finish them."
-                                onClick={() => setActiveTab("all")}
-                            />
-                        )}
                     </div>
                 </div>
             </div>
@@ -268,3 +138,81 @@ function Page() {
 }
 
 export default Page
+
+const courses = [
+    {
+        id: 1,
+        title: "JavaScript Basics",
+        description:
+            "Master the fundamentals of JavaScript programming including variables, functions, arrays, and objects. Perfect for beginners looking to start their web development journey.",
+        lastReviewed: "over 1 year ago",
+        sections: 25,
+        progress: 68,
+        tags: ["Frontend", "Beginner"],
+        createdAt: "2023-05-15",
+        studyStreak: 5,
+    },
+    {
+        id: 2,
+        title: "React Hooks",
+        description:
+            "Dive deep into React Hooks and transform your functional components. Learn useState, useEffect, useContext and more to build powerful, state-driven applications.",
+        lastReviewed: "over 1 year ago",
+        sections: 18,
+        isFavorite: true,
+        progress: 92,
+        tags: ["Frontend", "React", "Advanced"],
+        createdAt: "2023-06-20",
+        studyStreak: 12,
+    },
+    {
+        id: 3,
+        title: "CSS Grid & Flexbox",
+        description:
+            "Master modern CSS layout techniques with Grid and Flexbox. Learn how to create responsive, complex layouts with clean, maintainable code.",
+        lastReviewed: "over 1 year ago",
+        sections: 15,
+        progress: 45,
+        tags: ["Frontend", "CSS", "Layout"],
+        createdAt: "2023-04-10",
+        studyStreak: 3,
+    },
+    {
+        id: 4,
+        title: "TypeScript Fundamentals",
+        description:
+            "Take your JavaScript to the next level with TypeScript. Learn static typing, interfaces, generics, and how to build more robust applications with fewer bugs.",
+        lastReviewed: "over 1 year ago",
+        sections: 30,
+        progress: 32,
+        tags: ["Frontend", "TypeScript", "Intermediate"],
+        createdAt: "2023-07-05",
+        studyStreak: 0,
+    },
+    {
+        id: 5,
+        title: "Node.js Essentials",
+        description:
+            "Build scalable server-side applications with Node.js. Cover core concepts like the event loop, file system, streams, and creating RESTful APIs.",
+        lastReviewed: "over 1 year ago",
+        sections: 22,
+        progress: 78,
+        tags: ["Backend", "Node.js", "Server"],
+        createdAt: "2023-05-30",
+        studyStreak: 8,
+    },
+    {
+        id: 6,
+        title: "Data Structures",
+        description:
+            "Understand essential computer science concepts with a focus on data structures. Learn arrays, linked lists, trees, graphs, and algorithm complexity.",
+        lastReviewed: "over 1 year ago",
+        sections: 40,
+        progress: 25,
+        tags: ["Computer Science", "Algorithms"],
+        createdAt: "2023-03-15",
+        studyStreak: 2,
+    },
+]
+
+export type ItemType = (typeof courses)[number]

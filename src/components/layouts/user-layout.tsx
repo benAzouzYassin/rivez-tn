@@ -54,7 +54,7 @@ export default function UserLayout({ children }: Props) {
                                 icon: <LayoutListIcon className="!w-6 !h-6" />,
                                 name: "All courses",
                                 iconScale: "",
-                                route: "/courses/all",
+                                route: "/courses/list",
                             },
                             {
                                 icon: (
@@ -87,11 +87,6 @@ export default function UserLayout({ children }: Props) {
                                 name: "Generate",
                                 route: "/quizzes/add",
                             },
-                            {
-                                icon: <Search className="!w-6 !h-6" />,
-                                name: "Discover",
-                                route: "/quizzes/discover",
-                            },
                         ],
                     },
                     {
@@ -106,13 +101,8 @@ export default function UserLayout({ children }: Props) {
                             },
                             {
                                 icon: <PlusCircle className="!w-6 !h-6" />,
-                                name: "Generate",
+                                name: "Add",
                                 route: "/flash-cards/add",
-                            },
-                            {
-                                icon: <Search className="!w-6 !h-6" />,
-                                name: "Discover",
-                                route: "/flash-cards/discover",
                             },
                         ],
                     },

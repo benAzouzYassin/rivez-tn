@@ -20,7 +20,7 @@ export default function Question(props: Props) {
     return (
         <div
             className={cn(
-                "w-[32rem] flex flex-col relative h-[30rem] border-2 rounded-2xl border-neutral-300 border-dashed",
+                "w-[37rem] flex flex-col relative h-[30rem] border-2 rounded-2xl border-neutral-300 border-dashed",
                 props.className
             )}
         >

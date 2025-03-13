@@ -313,3 +313,11 @@ strong {
 .tiptap ol+p {
     margin-top: 1rem;
 }
+
+p.is-editor-empty:first-child::before {
+    color: rgb(194, 194, 194);
+    content: attr(data-placeholder);
+    float: left;
+    height: 0;
+    pointer-events: none;
+}
