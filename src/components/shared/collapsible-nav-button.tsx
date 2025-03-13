@@ -39,7 +39,7 @@ export default function CollapsibleNavButton(props: NavButtonProps) {
                         <span className="ml-2">{props.item.name}</span>
                     )}
                     {isSidenavOpen && (
-                        <ChevronRight className="absolute group-data-[state=open]:rotate-90 transition-transform right-3 !w-6 stroke-[2.7] !h-6 " />
+                        <ChevronRight className="absolute group-data-[state=open]:rotate-90 transition-transform opacity-70 right-3 !w-6 stroke-[2.5] !h-6 " />
                     )}{" "}
                 </Button>
             </CollapsibleTrigger>

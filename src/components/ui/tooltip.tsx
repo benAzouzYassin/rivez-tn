@@ -36,7 +36,7 @@ export default function TooltipWrapper(props: {
     duration?: number
 }) {
     return (
-        <TooltipProvider delayDuration={props.duration || 200}>
+        <TooltipProvider delayDuration={props.duration || 50}>
             <Tooltip>
                 <TooltipTrigger asChild={props.asChild}>
                     {props.children}
@@ -48,3 +48,4 @@ export default function TooltipWrapper(props: {
         </TooltipProvider>
     )
 }
+export { Tooltip, TooltipContent, TooltipTrigger }

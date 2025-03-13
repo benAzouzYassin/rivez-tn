@@ -4,11 +4,9 @@ import { useCurrentUser } from "@/hooks/use-current-user"
 import { cn } from "@/lib/ui-utils"
 import { useSidenav } from "@/providers/sidenav-provider"
 import {
+    AwardIcon,
     BookOpen,
-    Brain,
-    ClockIcon,
     CopyIcon,
-    FileTextIcon,
     Home,
     LayoutGrid,
     LayoutListIcon,
@@ -16,6 +14,7 @@ import {
     LucidePresentation,
     PlusCircle,
     Search,
+    Settings,
     WandSparklesIcon,
 } from "lucide-react"
 import { ReactNode } from "react"
@@ -68,9 +67,32 @@ export default function UserLayout({ children }: Props) {
                         ],
                     },
                     {
+                        name: "Leaderboard",
+                        icon: <AwardIcon className="!w-6 !h-6" />,
+                        route: "/leaderboard",
+                    },
+
+                    {
                         name: "Quizzes",
                         icon: <WandSparklesIcon className="!w-6 !h-6" />,
                         route: "/generate-quiz",
+                        subItems: [
+                            {
+                                icon: <LayoutGrid className="!w-6 !h-6" />,
+                                name: "Quizzes List",
+                                route: "/quizzes/list",
+                            },
+                            {
+                                icon: <PlusCircle className="!w-6 !h-6" />,
+                                name: "Generate",
+                                route: "/quizzes/add",
+                            },
+                            {
+                                icon: <Search className="!w-6 !h-6" />,
+                                name: "Discover",
+                                route: "/quizzes/discover",
+                            },
+                        ],
                     },
                     {
                         name: "Flashcards",
@@ -95,15 +117,11 @@ export default function UserLayout({ children }: Props) {
                         ],
                     },
                     {
-                        name: "Summarize PDF",
-                        icon: <FileTextIcon className="!w-6 !h-6" />,
-                        route: "/summarize-pdf",
+                        name: "Settings",
+                        icon: <Settings className="!w-6 !h-6" />,
+                        route: "/settings",
                     },
-                    {
-                        name: "Mindmaps",
-                        icon: <Brain className="!w-6 !h-6" />,
-                        route: "/mind-map",
-                    },
+
                     ...adminItems,
                 ]}
                 bottomItem={{

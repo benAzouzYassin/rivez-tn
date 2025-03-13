@@ -8,12 +8,13 @@ import {
     DialogHeader,
     DialogTitle,
 } from "@/components/ui/dialog"
-import { toastError, toastLoading, toastSuccess } from "@/lib/toasts"
+import { toastError, toastSuccess } from "@/lib/toasts"
 import { cn } from "@/lib/ui-utils"
 import { maxFileSize, uploadFile } from "@/utils/file-management"
 import {
     ChevronLeft,
     Code2Icon,
+    LinkIcon,
     Loader2,
     PencilLine,
     UploadCloud,
@@ -21,6 +22,8 @@ import {
 import dynamic from "next/dynamic"
 import { ReactNode, useRef, useState } from "react"
 import CodeSnippets from "./code-snippets"
+import { Input } from "@/components/ui/input"
+import { wait } from "@/utils/wait"
 const DrawImage = dynamic(() => import("./draw-image"), {
     loading: () => {
         return (
@@ -33,12 +36,22 @@ const DrawImage = dynamic(() => import("./draw-image"), {
 })
 
 type Props = {
+    disabledOptions?: (
+        | "image-upload"
+        | "image-draw"
+        | "code-snippets"
+        | "image-url"
+    )[]
     isOpen: boolean
     onOpenChange: (value: boolean) => void
-    selectedType: "image-upload" | "image-draw" | "code-snippets" | null
-    onTypeChange: (type: Props["selectedType"]) => void
-    onImageUpload: (url: string) => void
-    onCodeSnippetsSave: (
+    selectedType?:
+        | "image-upload"
+        | "image-draw"
+        | "code-snippets"
+        | "image-url"
+        | null
+    onImageSave: (url: string) => void
+    onCodeSnippetsSave?: (
         snippets: {
             name: string
             code: string
@@ -48,7 +61,9 @@ type Props = {
         shouldClose: boolean
     ) => void
 }
-export default function QuizImageDialog(props: Props) {
+export default function AddImageDialog(props: Props) {
+    const [imageUrl, setImageUrl] = useState("")
+    const imageUrlInputRef = useRef<HTMLInputElement>(null)
     const [selectedType, setSelectedType] =
         useState<Props["selectedType"]>(null)
 
@@ -99,7 +114,10 @@ export default function QuizImageDialog(props: Props) {
                 {selectedType === "code-snippets" && (
                     <CodeSnippets
                         onSave={(shouldClose) => {
-                            props.onCodeSnippetsSave(codeSnippets, shouldClose)
+                            props.onCodeSnippetsSave?.(
+                                codeSnippets,
+                                shouldClose
+                            )
                         }}
                         className="h-[320px] "
                         onSelectedTabChange={setSelectedSnippetTab}
@@ -114,26 +132,118 @@ export default function QuizImageDialog(props: Props) {
                 {selectedType === "image-draw" && (
                     <DrawImage
                         onSave={(url) => {
-                            props.onImageUpload(url)
+                            props.onImageSave(url)
                             props.onOpenChange(false)
                             setSelectedType(null)
                         }}
                     />
                 )}
+                {selectedType === "image-url" && (
+                    <div className="flex flex-col items-center justify-center w-full max-w-xl mx-auto space-y-2 -mt-10">
+                        <div className="w-full">
+                            <h3 className="text-lg font-semibold text-neutral-700 mb-2">
+                                Enter Image URL
+                            </h3>
+                            <div className="flex flex-col gap-2">
+                                <Input
+                                    ref={imageUrlInputRef}
+                                    id="image-url-input"
+                                    placeholder="https://example.com/image.jpg"
+                                    className="grow w-full  border-2 border-neutral-300 "
+                                    type="url"
+                                    onBlur={(e) => setImageUrl(e.target.value)}
+                                    onPaste={(e: any) => {
+                                        wait(10).then(() =>
+                                            setImageUrl(
+                                                imageUrlInputRef.current
+                                                    ?.value || ""
+                                            )
+                                        )
+                                    }}
+                                />
+                                <Button
+                                    onClick={() => {
+                                        if (imageUrl) {
+                                            props.onImageSave(imageUrl)
+                                            props.onOpenChange(false)
+                                            setSelectedType(null)
+                                            setImageUrl("")
+                                            toastSuccess(
+                                                "Image URL added successfully."
+                                            )
+                                        } else {
+                                            toastError(
+                                                "Please enter a valid image URL."
+                                            )
+                                        }
+                                    }}
+                                    variant="default"
+                                    className="text-base"
+                                >
+                                    Add Image
+                                </Button>
+                            </div>
+                            <p className="text-sm text-neutral-500 mt-2">
+                                Enter the URL of the image you want to use
+                            </p>
+                        </div>
+
+                        {imageUrl && (
+                            <div className="w-full mt-4 ">
+                                <h3 className="text-lg font-semibold text-neutral-700 mb-2">
+                                    Preview
+                                </h3>
+                                <div className="border-2 border-neutral-300 rounded-md p-2 h-60 flex items-center justify-center">
+                                    <img
+                                        src={imageUrl}
+                                        alt="Preview"
+                                        onError={() =>
+                                            toastError(
+                                                "Unable to load image from URL"
+                                            )
+                                        }
+                                        className="max-h-full max-w-full object-contain"
+                                    />
+                                </div>
+                            </div>
+                        )}
+                    </div>
+                )}
                 {!selectedType && (
-                    <div className="grid grid-cols-1 md:grid-cols-2 mt-0 lg:grid-cols-3 gap-3 px-20">
-                        {items.map((item, index) => (
-                            <Item
-                                onImageUpload={(url) => {
-                                    props.onImageUpload(url)
-                                    props.onOpenChange(false)
-                                    setSelectedType(null)
-                                }}
-                                onSelect={setSelectedType}
-                                key={index}
-                                {...item}
-                            />
-                        ))}
+                    <div
+                        className={cn(
+                            "grid grid-cols-1 md:grid-cols-2 mt-0 lg:grid-cols-4 gap-3 px-20",
+                            {
+                                "grid-cols-1 md:grid-cols-2 mt-0 lg:grid-cols-4":
+                                    props?.disabledOptions?.length === 0,
+                                "grid-cols-1 md:grid-cols-2 mt-0 lg:grid-cols-3":
+                                    props?.disabledOptions?.length === 1,
+                                "grid-cols-1 md:grid-cols-2 mt-0 lg:grid-cols-2":
+                                    props.disabledOptions?.length === 2,
+                                "grid-cols-1 md:grid-cols-1 mt-0 lg:grid-cols-1":
+                                    props.disabledOptions?.length === 3,
+                            }
+                        )}
+                    >
+                        {items
+                            .filter(
+                                (item) =>
+                                    props.disabledOptions?.includes(
+                                        item.id as any
+                                    ) === false
+                            )
+                            .map((item, index) => (
+                                <Item
+                                    onImageUpload={(url) => {
+                                        props.onImageSave(url)
+                                        props.onOpenChange(false)
+                                        setSelectedType(null)
+                                    }}
+                                    onSelect={setSelectedType}
+                                    key={index}
+                                    {...item}
+                                />
+                            ))}
                     </div>
                 )}
             </DialogContent>
@@ -281,6 +391,21 @@ const items: Omit<ItemProps, "onImageUpload">[] = [
         BgClassName: "bg-indigo-50  opacity-100 hover:bg-indigo-100",
         borderClassName: " border-indigo-400 ",
         shadowClassName: "shadow-indigo-100",
+    },
+    {
+        id: "image-url",
+        icon: (
+            <LinkIcon className="!w-12 !h-12 stroke-[1.7] group-hover:scale-125 transition-all duration-300 relative z-10" />
+        ),
+        title: "Image link",
+        description: "Use an image from a link.",
+        buttonClassName: " border-yellow-400 shadow-yellow-400",
+        titleClassName: "text-yellow-800",
+        descriptionClassName: "text-yellow-500  opacity-100",
+        iconClassName: "text-yellow-500 text-yellow-600",
+        BgClassName: "bg-yellow-50  opacity-100 hover:bg-yellow-100",
+        borderClassName: " border-yellow-400",
+        shadowClassName: "shadow-yellow-100",
     },
     {
         id: "code-snippets",

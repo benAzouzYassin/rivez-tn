@@ -51,7 +51,6 @@ export default function LatestCoursesCarousel() {
             <Carousel
                 opts={{
                     dragFree: true,
-                    loop: true,
                 }}
             >
                 <CarouselContent className="">
