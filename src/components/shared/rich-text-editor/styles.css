@@ -1,0 +1,323 @@
+/* heading */
+.tiptap h1 {
+    font-weight: 800;
+    font-size: 2.2rem;
+}
+
+.tiptap h2 {
+    font-weight: 800;
+    font-size: 1.9rem;
+}
+
+.tiptap h3 {
+    font-weight: 800;
+    font-size: 1.7rem;
+}
+
+.tiptap h4 {
+    font-weight: 800;
+    font-size: 1.3rem;
+}
+
+.tiptap p {
+    font-weight: 600;
+    font-size: 1.1rem;
+}
+
+/* code block */
+.tiptap .code-block {
+    position: relative;
+}
+
+.tiptap .code-block select {
+    position: absolute;
+    background-color: var(--white);
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="Black" d="M7 10l5 5 5-5z"/></svg>');
+    right: 0.5rem;
+    top: 0.5rem;
+}
+
+.hljs-comment,
+.hljs-quote {
+    color: #5c6370;
+    font-style: italic;
+}
+
+.hljs-doctag,
+.hljs-keyword,
+.hljs-formula {
+    color: #c678dd;
+}
+
+.hljs-section,
+.hljs-name,
+.hljs-selector-tag,
+.hljs-deletion,
+.hljs-subst {
+    color: #e06c75;
+}
+
+.hljs-literal {
+    color: #56b6c2;
+}
+
+.hljs-string,
+.hljs-regexp,
+.hljs-addition,
+.hljs-attribute,
+.hljs-meta .hljs-string {
+    color: #98c379;
+}
+
+.hljs-attr,
+.hljs-variable,
+.hljs-template-variable,
+.hljs-type,
+.hljs-selector-class,
+.hljs-selector-attr,
+.hljs-selector-pseudo,
+.hljs-number {
+    color: #d19a66;
+}
+
+.hljs-symbol,
+.hljs-bullet,
+.hljs-link,
+.hljs-meta,
+.hljs-selector-id,
+.hljs-title {
+    color: #61aeee;
+}
+
+.hljs-built_in,
+.hljs-title.class_,
+.hljs-class .hljs-title {
+    color: #e6c07b;
+}
+
+.hljs-emphasis {
+    font-style: italic;
+}
+
+.hljs-strong {
+    font-weight: bold;
+}
+
+/* bold */
+strong {
+    font-weight: 800;
+}
+
+/* image */
+.tiptap img {
+    display: block;
+    height: auto;
+    margin: 1.5rem 0;
+    max-width: 100%;
+}
+
+/* heading */
+.tiptap h1 {
+    font-weight: 800;
+    font-size: 2.2rem;
+}
+
+.tiptap h2 {
+    font-weight: 800;
+    font-size: 1.9rem;
+}
+
+.tiptap h3 {
+    font-weight: 800;
+    font-size: 1.7rem;
+}
+
+.tiptap h4 {
+    font-weight: 800;
+    font-size: 1.3rem;
+}
+
+.tiptap p {
+    font-weight: 600;
+    font-size: 1.1rem;
+}
+
+/* code block */
+.tiptap .code-block {
+    position: relative;
+}
+
+.tiptap .code-block select {
+    position: absolute;
+    background-color: var(--white);
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="Black" d="M7 10l5 5 5-5z"/></svg>');
+    right: 0.5rem;
+    top: 0.5rem;
+}
+
+.hljs-comment,
+.hljs-quote {
+    color: #5c6370;
+    font-style: italic;
+}
+
+.hljs-doctag,
+.hljs-keyword,
+.hljs-formula {
+    color: #c678dd;
+}
+
+.hljs-section,
+.hljs-name,
+.hljs-selector-tag,
+.hljs-deletion,
+.hljs-subst {
+    color: #e06c75;
+}
+
+.hljs-literal {
+    color: #56b6c2;
+}
+
+.hljs-string,
+.hljs-regexp,
+.hljs-addition,
+.hljs-attribute,
+.hljs-meta .hljs-string {
+    color: #98c379;
+}
+
+.hljs-attr,
+.hljs-variable,
+.hljs-template-variable,
+.hljs-type,
+.hljs-selector-class,
+.hljs-selector-attr,
+.hljs-selector-pseudo,
+.hljs-number {
+    color: #d19a66;
+}
+
+.hljs-symbol,
+.hljs-bullet,
+.hljs-link,
+.hljs-meta,
+.hljs-selector-id,
+.hljs-title {
+    color: #61aeee;
+}
+
+.hljs-built_in,
+.hljs-title.class_,
+.hljs-class .hljs-title {
+    color: #e6c07b;
+}
+
+.hljs-emphasis {
+    font-style: italic;
+}
+
+.hljs-strong {
+    font-weight: bold;
+}
+
+/* bold */
+strong {
+    font-weight: 800;
+}
+
+/* image */
+.tiptap img {
+    display: block;
+    height: auto;
+    margin: 1.5rem 0;
+    max-width: 100%;
+}
+
+/* LINKS - New styles */
+.tiptap a {
+    color: #2563eb;
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 2px;
+    transition: color 0.2s, text-decoration-thickness 0.2s;
+}
+
+.tiptap a:hover {
+    color: #1d4ed8;
+    text-decoration-thickness: 2px;
+}
+
+/* When a link is selected in the editor */
+.tiptap a.ProseMirror-selectednode {
+    outline: 2px solid #2563eb;
+    outline-offset: 2px;
+    border-radius: 2px;
+}
+
+/* LISTS -  styles */
+/* Bullet Lists */
+.tiptap ul {
+    list-style-type: disc;
+    margin: 1rem 0;
+    padding-left: 1.5rem;
+}
+
+.tiptap ul li {
+    font-weight: 600;
+    font-size: 1.1rem;
+    margin-bottom: 0.5rem;
+    position: relative;
+}
+
+.tiptap ul li ul {
+    list-style-type: circle;
+    margin: 0.5rem 0;
+}
+
+.tiptap ul li ul li ul {
+    list-style-type: square;
+}
+
+/* Ordered Lists */
+.tiptap ol {
+    list-style-type: decimal;
+    margin: 1rem 0;
+    padding-left: 1.5rem;
+}
+
+.tiptap ol li {
+    font-weight: 600;
+    font-size: 1.1rem;
+    margin-bottom: 0.5rem;
+    position: relative;
+}
+
+.tiptap ol li ol {
+    list-style-type: lower-alpha;
+    margin: 0;
+}
+
+.tiptap ol li ol li ol {
+    list-style-type: lower-roman;
+}
+
+/* Nested lists spacing */
+.tiptap ul li p,
+.tiptap ol li p {
+    margin: 0;
+}
+
+/* List spacing in general */
+.tiptap ul+p,
+.tiptap ol+p {
+    margin-top: 1rem;
+}
+
+p.is-editor-empty:first-child::before {
+    color: rgb(194, 194, 194);
+    content: attr(data-placeholder);
+    float: left;
+    height: 0;
+    pointer-events: none;
+}

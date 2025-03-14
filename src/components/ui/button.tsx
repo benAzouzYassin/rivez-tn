@@ -10,7 +10,7 @@ const buttonVariants = cva(
     {
         variants: {
             variant: {
-                blue: "bg-[#1CB0F6] h-[44px]   shadow-[0px_4px_0px_0px] shadow-[#1899D6]  rounded-2xl text-white   transition-all  active:shadow-transparent active:translate-y-1",
+                blue: "bg-[#3593ff] h-[44px]      shadow-[0px_4px_0px_0px] shadow-[#258dbe]  rounded-2xl text-white   transition-all  active:shadow-transparent active:translate-y-1",
                 green: "bg-[#58CC02] h-[44px]   shadow-[0px_4px_0px_0px] shadow-[#58A700]  rounded-2xl text-white   transition-all  active:shadow-transparent active:translate-y-1",
                 red: "bg-[#FF5353] h-[44px]   shadow-[0px_4px_0px_0px] shadow-[#FF2020]  rounded-2xl text-white   transition-all  active:shadow-transparent active:translate-y-1",
                 secondary:

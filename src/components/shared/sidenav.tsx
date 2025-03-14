@@ -6,12 +6,14 @@ import { useSidenav } from "@/providers/sidenav-provider"
 import { ChevronRight } from "lucide-react"
 import { ReactNode } from "react"
 import { NavButton } from "./nav-button"
+import { ScrollArea } from "../ui/scroll-area"
 
 interface NavItem {
     name: string
     icon: ReactNode
     iconScale?: string
     route?: string
+    subItems?: Omit<NavItem, "subItems">[]
 }
 
 type Props = {
@@ -25,7 +27,7 @@ export default function Sidenav(props: Props) {
     return (
         <nav
             className={cn(
-                "h-full z-10 group hover:border-r-[#8aa8fb] border-r-2 px-4 pt-10 fixed top-0 left-0 transition-all duration-300",
+                "h-full z-10 group hover:border-r-[#8aa8fb] border-r-2 px-2 pt-10 fixed top-0 left-0 transition-all duration-300",
                 {
                     "w-[300px]": isSidenavOpen,
                     "w-[100px]": !isSidenavOpen,
@@ -46,22 +48,24 @@ export default function Sidenav(props: Props) {
                     )}
                 />
             </Button>
-
-            <NavButton
-                item={props.items[0]}
-                isSidenavOpen={isSidenavOpen}
-                additionalClasses="mt-14"
-            />
-            {props.items.slice(1).map((item) => (
-                <NavButton
-                    key={item.name}
-                    item={item}
-                    isSidenavOpen={isSidenavOpen}
-                    additionalClasses="mt-1"
-                />
-            ))}
-
-            <div className="absolute bottom-10 px-3 left-0 w-full">
+            <ScrollArea className="  scale-x-[-1]  h-[calc(100vh-14.1rem)] px-2 mt-14 ">
+                <div className="scale-x-[-1]  pl-[6px]">
+                    <NavButton
+                        item={props.items[0]}
+                        isSidenavOpen={isSidenavOpen}
+                        additionalClasses=""
+                    />
+                    {props.items.slice(1).map((item) => (
+                        <NavButton
+                            key={item.name}
+                            item={item}
+                            isSidenavOpen={isSidenavOpen}
+                            additionalClasses="mt-1"
+                        />
+                    ))}
+                </div>
+            </ScrollArea>
+            <div className="absolute border-t bg-white  bottom-0 pt-6 pb-10 px-3 left-0 w-full">
                 <NavButton
                     item={props.bottomItem}
                     isSidenavOpen={isSidenavOpen}

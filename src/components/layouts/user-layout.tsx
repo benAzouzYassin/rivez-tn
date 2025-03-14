@@ -4,12 +4,18 @@ import { useCurrentUser } from "@/hooks/use-current-user"
 import { cn } from "@/lib/ui-utils"
 import { useSidenav } from "@/providers/sidenav-provider"
 import {
-    ClockIcon,
+    AwardIcon,
+    BookOpen,
     CopyIcon,
-    FileTextIcon,
+    Gamepad2Icon,
     Home,
+    LayoutGrid,
+    LayoutListIcon,
     LockIcon,
+    LucidePresentation,
     PlusCircle,
+    Search,
+    Settings,
     WandSparklesIcon,
 } from "lucide-react"
 import { ReactNode } from "react"
@@ -41,25 +47,60 @@ export default function UserLayout({ children }: Props) {
                         route: "/home",
                     },
                     {
-                        name: "Generate a quiz",
-                        icon: <WandSparklesIcon className="!w-6 !h-6" />,
-                        route: "/generate-quiz",
+                        name: "Courses",
+                        icon: <BookOpen className="!w-6 !h-6" />,
+                        route: "/courses/list",
                     },
                     {
-                        name: "Flash cards",
+                        name: "Quizzes",
+                        icon: <Gamepad2Icon className="!w-6 !h-6" />,
+                        route: "/quizzes",
+                        subItems: [
+                            {
+                                icon: <LayoutListIcon className="!w-6 !h-6" />,
+                                name: "Quizzes List",
+                                route: "/quizzes/list",
+                            },
+                            {
+                                icon: (
+                                    <WandSparklesIcon className="!w-6 !h-6" />
+                                ),
+                                name: "Generate",
+                                route: "/quizzes/add",
+                            },
+                        ],
+                    },
+                    {
+                        name: "Leaderboard",
+                        icon: <AwardIcon className="!w-6 !h-6" />,
+                        route: "/leaderboard",
+                    },
+
+                    {
+                        name: "Flashcards",
                         icon: <CopyIcon className="!w-6 !h-6" />,
                         route: "/flash-cards",
+                        subItems: [
+                            {
+                                icon: <LayoutListIcon className="!w-6 !h-6" />,
+                                name: "Flashcard List",
+                                route: "/flash-cards/list",
+                            },
+                            {
+                                icon: (
+                                    <WandSparklesIcon className="!w-6 !h-6" />
+                                ),
+                                name: "Generate",
+                                route: "/flash-cards/add",
+                            },
+                        ],
                     },
                     {
-                        name: "Spaced repetition",
-                        icon: <ClockIcon className="!w-6 !h-6" />,
-                        route: "/spaced-repetition",
+                        name: "Settings",
+                        icon: <Settings className="!w-6 !h-6" />,
+                        route: "/settings",
                     },
-                    {
-                        name: "Summarize PDF",
-                        icon: <FileTextIcon className="!w-6 !h-6" />,
-                        route: "/summarize-pdf",
-                    },
+
                     ...adminItems,
                 ]}
                 bottomItem={{

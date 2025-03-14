@@ -43,7 +43,7 @@ export default function LatestCoursesCarousel() {
 
     const router = useRouter()
     return (
-        <div className="px-10 -mt-8">
+        <div className=" mx-auto px-10 -mt-6 max-w-[1500px]">
             <h2 className="text-3xl font-extrabold text-blue-700/70 mb-4">
                 Our latest courses:
             </h2>
@@ -51,9 +51,7 @@ export default function LatestCoursesCarousel() {
             <Carousel
                 opts={{
                     dragFree: true,
-                    loop: true,
                 }}
-                className="w-[98%]"
             >
                 <CarouselContent className="">
                     {courses.map((course, index) => (
@@ -61,7 +59,7 @@ export default function LatestCoursesCarousel() {
                             <div className="p-1">
                                 <Card
                                     onClick={() => {
-                                        router.push(`/course/${1}`)
+                                        router.push(`/courses/${1}`)
                                     }}
                                     className="h-48 hover:bg-blue-50 transition-all active:translate-y-1 active:shadow-transparent cursor-pointer hover:border-blue-300 hover:shadow-blue-300 "
                                 >

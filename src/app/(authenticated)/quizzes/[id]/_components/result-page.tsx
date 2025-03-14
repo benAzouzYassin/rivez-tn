@@ -134,7 +134,7 @@ export default function ResultPage(props: Props) {
                         </p>
                     </motion.div>
                 ))}
-                <Link href={"/learn"} className="col-span-3">
+                <Link href={"/home"} className="col-span-3">
                     <Button
                         variant={"green"}
                         className="w-full col-span-3 text-xl h-14 bg-neutral-800 border-neutral-500 shadow-neutral-500"

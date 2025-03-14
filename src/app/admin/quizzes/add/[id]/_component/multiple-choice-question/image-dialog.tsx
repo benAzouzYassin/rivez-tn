@@ -1,4 +1,4 @@
-import QuizImageDialog from "@/components/shared/quiz-image-dialog/quiz-image-dialog"
+import QuizImageDialog from "@/components/shared/add-image-dialog/add-image-dialog"
 import { cn } from "@/lib/ui-utils"
 import { MultipleChoiceContent } from "@/schemas/questions-content"
 import { Database } from "@/types/database.types"
@@ -42,12 +42,11 @@ function DialogImage({
                         setIsOpen(false)
                     }
                 }}
-                onImageUpload={(imageUrl) => {
+                onImageSave={(imageUrl) => {
                     if (selectedQuestionId) {
                         updateQuestion({ imageUrl }, selectedQuestionId)
                     }
                 }}
-                onTypeChange={() => {}}
                 selectedType={null}
             />
             <div className="relative">

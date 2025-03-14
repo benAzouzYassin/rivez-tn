@@ -104,7 +104,7 @@ export default function AddCategoryDialog(props: Props) {
         <Dialog open={props.isOpen} onOpenChange={props.onOpenChange}>
             <DialogContent className="sm:max-w-[45vw] max-h-[97vh] overflow-y-auto py-10">
                 <DialogTitle className="text-2xl font-bold text-center text-[#3C3C3C]">
-                    Create New category
+                    Add New category
                 </DialogTitle>
                 <DialogDescription></DialogDescription>
                 <form className="flex flex-col gap-4">

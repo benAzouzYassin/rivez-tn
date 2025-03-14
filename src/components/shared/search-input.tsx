@@ -9,6 +9,7 @@ interface Props {
     searchValue: string
     placeholder?: string
     className?: string
+    iconClassName?: string
 }
 export default function SearchInput(props: Props) {
     const [inputValue, setInputValue] = useState("")
@@ -31,7 +32,12 @@ export default function SearchInput(props: Props) {
                 props.onSearchChange(inputValue)
             }}
         >
-            <SearchIcon className="absolute text-neutral-300 top-3 left-3" />
+            <SearchIcon
+                className={cn(
+                    "absolute text-neutral-300 top-3 left-3",
+                    props.iconClassName
+                )}
+            />
             <Input
                 onChange={(e) => {
                     if (!e.target.value) {
