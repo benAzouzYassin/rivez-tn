@@ -59,7 +59,7 @@ export default function LatestCoursesCarousel() {
                             <div className="p-1">
                                 <Card
                                     onClick={() => {
-                                        router.push(`/course/${1}`)
+                                        router.push(`/courses/${1}`)
                                     }}
                                     className="h-48 hover:bg-blue-50 transition-all active:translate-y-1 active:shadow-transparent cursor-pointer hover:border-blue-300 hover:shadow-blue-300 "
                                 >

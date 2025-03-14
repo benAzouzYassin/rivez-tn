@@ -7,6 +7,7 @@ import {
     AwardIcon,
     BookOpen,
     CopyIcon,
+    Gamepad2Icon,
     Home,
     LayoutGrid,
     LayoutListIcon,
@@ -48,21 +49,24 @@ export default function UserLayout({ children }: Props) {
                     {
                         name: "Courses",
                         icon: <BookOpen className="!w-6 !h-6" />,
-                        route: "/courses",
+                        route: "/courses/list",
+                    },
+                    {
+                        name: "Quizzes",
+                        icon: <Gamepad2Icon className="!w-6 !h-6" />,
+                        route: "/quizzes",
                         subItems: [
                             {
                                 icon: <LayoutListIcon className="!w-6 !h-6" />,
-                                name: "All courses",
-                                iconScale: "",
-                                route: "/courses/list",
+                                name: "Quizzes List",
+                                route: "/quizzes/list",
                             },
                             {
                                 icon: (
-                                    <LucidePresentation className="!w-6 !h-6" />
+                                    <WandSparklesIcon className="!w-6 !h-6" />
                                 ),
-                                name: "My courses",
-                                iconScale: "",
-                                route: "/courses/my-courses",
+                                name: "Generate",
+                                route: "/quizzes/add",
                             },
                         ],
                     },
@@ -73,35 +77,20 @@ export default function UserLayout({ children }: Props) {
                     },
 
                     {
-                        name: "Quizzes",
-                        icon: <WandSparklesIcon className="!w-6 !h-6" />,
-                        route: "/generate-quiz",
-                        subItems: [
-                            {
-                                icon: <LayoutGrid className="!w-6 !h-6" />,
-                                name: "Quizzes List",
-                                route: "/quizzes/list",
-                            },
-                            {
-                                icon: <PlusCircle className="!w-6 !h-6" />,
-                                name: "Generate",
-                                route: "/quizzes/add",
-                            },
-                        ],
-                    },
-                    {
                         name: "Flashcards",
                         icon: <CopyIcon className="!w-6 !h-6" />,
                         route: "/flash-cards",
                         subItems: [
                             {
-                                icon: <LayoutGrid className="!w-6 !h-6" />,
+                                icon: <LayoutListIcon className="!w-6 !h-6" />,
                                 name: "Flashcard List",
                                 route: "/flash-cards/list",
                             },
                             {
-                                icon: <PlusCircle className="!w-6 !h-6" />,
-                                name: "Add",
+                                icon: (
+                                    <WandSparklesIcon className="!w-6 !h-6" />
+                                ),
+                                name: "Generate",
                                 route: "/flash-cards/add",
                             },
                         ],

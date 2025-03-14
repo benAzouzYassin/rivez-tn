@@ -88,7 +88,7 @@ export default function ListItem({ item }: Props) {
                             className="grow text-lg font-bold "
                             variant={"blue"}
                         >
-                            Get started <Zap />
+                            Get started <Zap className="!w-6 opacity-80 !h-6" />
                         </Button>
                     </Link>
                 </CardFooter>

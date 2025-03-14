@@ -2,9 +2,10 @@ import ProgressBar from "@/components/shared/progress-bar"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card"
-import { BookOpen, PlayCircle, StarIcon } from "lucide-react"
+import { BookOpen, PlayCircle, StarIcon, Zap } from "lucide-react"
 import MoreButton from "./more-button"
 import { shuffleArray } from "@/utils/array"
+import Link from "next/link"
 
 interface Props {
     item: {
@@ -92,13 +93,15 @@ export default function ListItem({ item }: Props) {
                 </CardContent>
 
                 <CardFooter className="flex  pt-4 gap-2">
-                    <Button
-                        className="grow text-lg font-bold"
-                        variant={"secondary"}
-                    >
-                        <PlayCircle className="!w-6 opacity-80 !h-6" />
-                        Start now{" "}
-                    </Button>
+                    <Link href={"/flash-cards/1"} className="w-full flex">
+                        <Button
+                            className="grow text-lg font-bold"
+                            variant={"blue"}
+                        >
+                            Get started
+                            <Zap className="!w-6 opacity-80 !h-6" />
+                        </Button>
+                    </Link>
                 </CardFooter>
             </div>
         </Card>
