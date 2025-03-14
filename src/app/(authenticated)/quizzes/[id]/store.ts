@@ -2,6 +2,7 @@ import { saveSubmission } from "@/data-access/quiz_submissions/create"
 import {
     CodeCompletionContent,
     DebugCodeContent,
+    FillInTheBlankContent,
     MatchingPairsContent,
     MultipleChoiceContent,
 } from "@/schemas/questions-content"
@@ -28,8 +29,7 @@ interface State {
         questionId: number
         questionType: QuestionType["type"]
         failedAttempts: number | null // only in the "MATCHING_PAIRS"
-        //matrix when the questionType === "MATCHING_PAIRS" and string when teh questionType === "MULTIPLE_CHOICE"
-        responses: string[] | string[][]
+        responses: AnswerResponses
     }[]
 }
 
@@ -168,4 +168,15 @@ export type QuestionType = {
         | MatchingPairsContent
         | DebugCodeContent
         | CodeCompletionContent
+        | FillInTheBlankContent
 } & Omit<Database["public"]["Tables"]["quizzes_questions"]["Row"], "content">
+
+//matrix when the questionType === "MATCHING_PAIRS" or string when the questionType === "MULTIPLE_CHOICE" or {wrong  : [] , correct : []} when questionType === "FILL_IN_THE_BLANK"
+type AnswerResponses =
+    | string[]
+    | string[][]
+    | {
+          wrong: { index: number; option: string | null }[]
+          correct: { index: number; option: string | null }[]
+      }
+    | null

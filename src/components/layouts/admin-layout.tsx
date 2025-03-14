@@ -1,17 +1,16 @@
+import Sidenav from "@/components/shared/sidenav"
+import UserHeader from "@/components/shared/user-header"
 import { cn } from "@/lib/ui-utils"
 import { useSidenav } from "@/providers/sidenav-provider"
-import { ReactNode } from "react"
-import UserHeader from "@/components/shared/user-header"
-import Sidenav from "@/components/shared/sidenav"
 import {
     AppWindowIcon,
     BookCopy,
     Gamepad2,
-    Home,
     Settings,
     SquareMousePointer,
     Users2,
 } from "lucide-react"
+import { ReactNode } from "react"
 
 type Props = {
     children?: Readonly<ReactNode>
@@ -55,7 +54,7 @@ export default function AdminLayout({ children }: Props) {
                         route: "/learn",
                     },
                 ]}
-                settingsItem={{
+                bottomItem={{
                     name: "Settings",
                     icon: <Settings className="!w-6 !h-6" />,
                     iconScale: "scale-95",
@@ -65,7 +64,7 @@ export default function AdminLayout({ children }: Props) {
                 className={cn(
                     "transition-all pt-20 min-h-[100vh] duration-300",
                     {
-                        "pl-[256px]": isSidenavOpen,
+                        "pl-[300px]": isSidenavOpen,
                         "pl-[100px]": !isSidenavOpen,
                     }
                 )}

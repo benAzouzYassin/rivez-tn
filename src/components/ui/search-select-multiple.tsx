@@ -102,38 +102,49 @@ export default function SearchSelect<OptionData>(props: Props<OptionData>) {
                                         )}
                                     </CommandEmpty>
                                     <CommandGroup className="p-0 max-h-[200px] overflow-visible">
-                                        {visibleItems.map((item) => (
-                                            <CommandItem
-                                                key={item.id}
-                                                onMouseDown={(e) =>
-                                                    e.preventDefault()
-                                                }
-                                                className={`h-10 shadow-[0px_1px_0px] shadow-neutral-200 font-medium rounded-none pl-4 text-base active:scale-95 hover:cursor-pointer `}
-                                                onSelect={() => {
-                                                    setInputValue("")
-                                                    if (
-                                                        props.selectedIds.includes(
-                                                            item.id
-                                                        )
-                                                    ) {
-                                                        props.onUnselect?.(
-                                                            item.id
-                                                        )
-                                                    } else {
-                                                        props.onSelect?.([
-                                                            ...props.selectedIds,
-                                                            item.id,
-                                                        ])
+                                        {visibleItems
+                                            .filter(
+                                                (item) =>
+                                                    !props.selectedIds.includes(
+                                                        item.id
+                                                    )
+                                            )
+                                            .map((item) => (
+                                                <CommandItem
+                                                    key={item.id}
+                                                    onMouseDown={(e) =>
+                                                        e.preventDefault()
                                                     }
-                                                    if (!props.allowMultiple) {
-                                                        setIsPopoverOpen(false)
-                                                        inputRef.current?.blur()
-                                                    }
-                                                }}
-                                            >
-                                                {item.label}
-                                            </CommandItem>
-                                        ))}
+                                                    className={`h-10 shadow-[0px_1px_0px] shadow-neutral-200 font-medium rounded-none pl-4 text-base active:scale-95 hover:cursor-pointer `}
+                                                    onSelect={() => {
+                                                        setInputValue("")
+                                                        if (
+                                                            props.selectedIds.includes(
+                                                                item.id
+                                                            )
+                                                        ) {
+                                                            props.onUnselect?.(
+                                                                item.id
+                                                            )
+                                                        } else {
+                                                            props.onSelect?.([
+                                                                ...props.selectedIds,
+                                                                item.id,
+                                                            ])
+                                                        }
+                                                        if (
+                                                            !props.allowMultiple
+                                                        ) {
+                                                            setIsPopoverOpen(
+                                                                false
+                                                            )
+                                                            inputRef.current?.blur()
+                                                        }
+                                                    }}
+                                                >
+                                                    {item.label}
+                                                </CommandItem>
+                                            ))}
                                     </CommandGroup>
                                 </>
                             )}
@@ -164,7 +175,7 @@ interface Props<OptionData> {
     items: { id: string; label: string; data?: OptionData }[]
     selectedIds: string[]
     placeholder?: string
-    onSelect?: (ids: string[]) => void
+    onSelect?: (oldAndNewIds: string[]) => void
     onUnselect?: (unselectedId?: string) => void
     onAddButtonClick?: (inputValue: string) => void
     enableAddButton?: boolean

@@ -10,7 +10,7 @@ export async function saveSubmission(data?: SaveSubmissionType) {
         throw new Error("Session error")
     }
     const response = await axios.post(
-        `/api/quiz-submissions`,
+        `/api/quiz/quiz-submissions`,
         { submissionData: data },
         {
             headers: {

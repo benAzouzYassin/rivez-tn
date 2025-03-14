@@ -37,7 +37,7 @@ export async function isUserIdAdmin(params: {
 }): Promise<boolean> {
     const supabase = await supabaseServerSide()
 
-    const { data, error } = await supabase.auth.setSession({
+    const { error } = await supabase.auth.setSession({
         access_token: params.accessToken,
         refresh_token: params.refreshToken,
     })

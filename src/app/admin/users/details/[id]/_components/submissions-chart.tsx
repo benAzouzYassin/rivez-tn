@@ -52,7 +52,7 @@ export function SubmissionsChart({ data, isLoading = false }: Props) {
     return (
         <Card className=" pb-2 pt-5 w-full">
             <h2 className="pl-10 text-2xl mb-4 font-extrabold">
-                Quiz submissions chart:{" "}
+                Table Quiz submissions data :{" "}
             </h2>
             {isLoading ? (
                 <div className="h-80 flex items-center justify-center">

@@ -48,7 +48,7 @@ export function NavButton({
             )}
         >
             {item.icon}
-            {isSidenavOpen && <span className="ml-3">{item.name}</span>}
+            {isSidenavOpen && <span className="ml-2">{item.name}</span>}
         </Button>
     )
 }

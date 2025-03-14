@@ -25,7 +25,6 @@ export default function MatchingPairsContent() {
         <section className="w-full flex flex-col items-center min-h-56 mt-6  h-full  ">
             <div className="w-[1120px] flex flex-col items-center justify-center">
                 <QuestionText
-                    className="min-w-[500px]"
                     text={selectedQuestion.questionText}
                     localId={selectedQuestion?.localId}
                 />

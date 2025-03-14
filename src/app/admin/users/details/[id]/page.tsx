@@ -13,8 +13,19 @@ import { SubmissionsChart } from "./_components/submissions-chart"
 import TooltipWrapper from "@/components/ui/tooltip"
 import XpIcon from "@/components/icons/xp"
 import { Badge } from "@/components/ui/badge"
+import DashboardPagination from "@/components/ui/dashboard-pagination"
+import { parseAsInteger, useQueryState } from "nuqs"
 
 export default function Page() {
+    const [itemsPerPage, setItemsPerPage] = useQueryState(
+        "items-per-page",
+        parseAsInteger.withDefault(5)
+    )
+
+    const [currentPage, setCurrentPage] = useQueryState(
+        "page",
+        parseAsInteger.withDefault(1)
+    )
     const params = useParams()
     const id = decodeURIComponent(params["id"] as string)
     const { isLoading, isError, data } = useQuery({
@@ -24,10 +35,19 @@ export default function Page() {
             "quizzes",
             "quiz_submission_answers",
             id,
+            currentPage,
+            itemsPerPage,
         ],
-        queryFn: () => readUserProfileWithData({ user_id: id }),
+        queryFn: () =>
+            readUserProfileWithData({
+                user_id: id,
+                pagination: {
+                    currentPage,
+                    itemsPerPage,
+                },
+            }),
     })
-
+    // const submissionsCount = data?.quiz_submissions[0].count || 0
     if (isLoading) {
         return (
             <div className="h-[100vh] flex items-center absolute top-0 left-0 bg-white w-full z-50 justify-center">
@@ -136,7 +156,7 @@ export default function Page() {
                     </div>
                     <div className="space-y-1">
                         <div className="text-3xl mt-3 text-black/70 font-extrabold">
-                            {data?.quiz_submissions.length || 0}
+                            {data?.submissionsCount || 0 || 0}
                         </div>
                         <div className="text-sm first-letter:uppercase font-bold text-neutral-400">
                             {data?.username} finished{" "}
@@ -215,13 +235,20 @@ export default function Page() {
                 </Card>
             </section>
             <div className="mt-10 ">
-                <SubmissionsChart data={chartData} isLoading={isLoading} />
-            </div>
-            <div className="mt-10 pb-20">
                 <h2 className="text-2xl mb-4 font-extrabold">
                     Quiz submissions table :{" "}
                 </h2>
                 <DataTable columns={columns} data={tableData || []} />
+                <DashboardPagination
+                    currentPage={currentPage}
+                    itemsCount={data?.submissionsCount || 0}
+                    onPageChange={setCurrentPage}
+                    itemsPerPage={itemsPerPage}
+                    onItemsPerPageChange={setItemsPerPage}
+                />
+            </div>
+            <div className="mt-10 pb-20 ">
+                <SubmissionsChart data={chartData} isLoading={isLoading} />
             </div>
         </main>
     )

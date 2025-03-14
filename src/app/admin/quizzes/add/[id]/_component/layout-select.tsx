@@ -1,187 +1,161 @@
-import {
-    Command,
-    CommandGroup,
-    CommandItem,
-    CommandList,
-} from "@/components/ui/command"
-import {
-    Popover,
-    PopoverContent,
-    PopoverTrigger,
-} from "@/components/ui/popover"
-import { cn } from "@/lib/ui-utils"
-import { PossibleQuestionTypes } from "@/schemas/questions-content"
-import { ReactNode, useState } from "react"
-import useQuizStore from "../store"
+import { memo } from "react"
+import useQuizStore, { QuizQuestionType } from "../store"
+import LayoutSelectDialog from "./layout-select-dialog"
+import FillInTheBlank from "./layouts-icons/fill-in-the-blank"
+import MatchingPairs from "./layouts-icons/matching-pairs"
+import MultipleChoiceHorizontal from "./layouts-icons/multiple-choice-horizontal"
+import MultipleChoiceVertical from "./layouts-icons/multiple-choice-vertical"
 
-type Props = {
-    children?: ReactNode
-    contentClassName?: string
-    className?: string
-    selectedType: PossibleQuestionTypes
-    layout: "vertical" | "horizontal"
-    questionLocalId: string
+interface Props {
+    selectedQuestion: QuizQuestionType
 }
-export default function LayoutSelect(props: Props) {
-    const [isOpen, setIsOpen] = useState(false)
+function LayoutSelect(props: Props) {
     const updateQuestion = useQuizStore((s) => s.updateQuestion)
 
     return (
-        <Command className="bg-transparent">
-            <Popover onOpenChange={setIsOpen} open={isOpen}>
-                <PopoverTrigger asChild>
-                    <div className="flex items-center">
-                        <p className="text-center text-lg font-bold">
-                            Layout :
-                        </p>
-                        {props.layout === "vertical" &&
-                            props.selectedType === "MULTIPLE_CHOICE" && (
-                                <MultipleChoiceVertical />
-                            )}
-                        {props.layout === "horizontal" &&
-                            props.selectedType === "MULTIPLE_CHOICE" && (
-                                <MultipleChoiceHorizontal />
-                            )}
-                        {props.selectedType === "MATCHING_PAIRS" && (
-                            <MatchingPairs />
+        <LayoutSelectDialog
+            onSelect={(layoutType) => {
+                switch (layoutType) {
+                    case "fill-in-the-blank":
+                        updateQuestion(
+                            {
+                                imageType: "none",
+                                layout: "vertical",
+                                type: "FILL_IN_THE_BLANK",
+                                content: {
+                                    correct: [],
+                                    options: [],
+                                    parts: [],
+                                },
+                            },
+                            props.selectedQuestion.localId
+                        )
+                        break
+                    case "multiple-choice-without-image":
+                        if (props.selectedQuestion.type === "MULTIPLE_CHOICE") {
+                            updateQuestion(
+                                {
+                                    imageType: "none",
+                                    layout: "vertical",
+                                    type: "MULTIPLE_CHOICE",
+                                },
+                                props.selectedQuestion.localId
+                            )
+                        } else {
+                            updateQuestion(
+                                {
+                                    imageType: "none",
+                                    layout: "vertical",
+                                    type: "MULTIPLE_CHOICE",
+                                    content: {
+                                        options: [],
+                                    },
+                                },
+                                props.selectedQuestion.localId
+                            )
+                        }
+                        break
+                    case "matching-pairs":
+                        updateQuestion(
+                            {
+                                layout: "vertical",
+                                type: "MATCHING_PAIRS",
+                                content: {
+                                    leftOptions: [],
+                                    rightOptions: [],
+                                },
+                            },
+                            props.selectedQuestion.localId
+                        )
+                        break
+
+                    case "vertical-multiple-choice":
+                        if (props.selectedQuestion.type === "MULTIPLE_CHOICE") {
+                            updateQuestion(
+                                {
+                                    imageType: "normal-image",
+                                    layout: "vertical",
+                                    type: "MULTIPLE_CHOICE",
+                                },
+                                props.selectedQuestion.localId
+                            )
+                        } else {
+                            updateQuestion(
+                                {
+                                    imageType: "normal-image",
+                                    layout: "vertical",
+                                    type: "MULTIPLE_CHOICE",
+                                    content: {
+                                        options: [],
+                                    },
+                                },
+                                props.selectedQuestion.localId
+                            )
+                        }
+                        break
+                    case "horizontal-multiple-choice":
+                        if (props.selectedQuestion.type === "MULTIPLE_CHOICE") {
+                            updateQuestion(
+                                {
+                                    imageType: "normal-image",
+                                    layout: "horizontal",
+                                    type: "MULTIPLE_CHOICE",
+                                },
+                                props.selectedQuestion.localId
+                            )
+                        } else {
+                            updateQuestion(
+                                {
+                                    imageType: "normal-image",
+                                    layout: "horizontal",
+                                    type: "MULTIPLE_CHOICE",
+                                    content: {
+                                        options: [],
+                                    },
+                                },
+                                props.selectedQuestion.localId
+                            )
+                        }
+                        break
+                    default:
+                        break
+                }
+            }}
+            trigger={
+                <div className="flex items-center">
+                    <p className="text-center text-lg font-bold">Layout :</p>
+                    {props.selectedQuestion.layout === "vertical" &&
+                        props.selectedQuestion.imageType !== "none" &&
+                        props.selectedQuestion.type === "MULTIPLE_CHOICE" && (
+                            <MultipleChoiceVertical textClassName="hidden" />
                         )}
-                    </div>
-                </PopoverTrigger>
-                <PopoverContent
-                    className={cn(
-                        "!w-[210px] translate-x-10 rounded-xl overflow-hidden border  p-0",
-                        props.contentClassName
+                    {props.selectedQuestion.imageType === "none" &&
+                        props.selectedQuestion.type === "MULTIPLE_CHOICE" && (
+                            <MultipleChoiceVertical
+                                textClassName="mt-3 h-2 w-[80%]"
+                                imageClassName="hidden"
+                                itemClassName="h-5 rounded  mt-2 "
+                                className="px-2 w-[220px] pb-5"
+                            />
+                        )}
+                    {props.selectedQuestion.layout === "horizontal" &&
+                        props.selectedQuestion.imageType !== "none" &&
+                        props.selectedQuestion.type === "MULTIPLE_CHOICE" && (
+                            <MultipleChoiceHorizontal />
+                        )}
+                    {props.selectedQuestion.type === "MATCHING_PAIRS" && (
+                        <MatchingPairs />
                     )}
-                    align="center"
-                >
-                    <CommandList className="p-0">
-                        <CommandGroup className="p-0">
-                            <CommandItem
-                                onSelect={() => {
-                                    setIsOpen(false)
-                                    updateQuestion(
-                                        {
-                                            layout: "horizontal",
-                                            type: "MULTIPLE_CHOICE",
-                                        },
-                                        props.questionLocalId
-                                    )
-                                }}
-                            >
-                                <MultipleChoiceHorizontal />
-                            </CommandItem>
-                            <CommandItem
-                                onSelect={() => {
-                                    setIsOpen(false)
-                                    updateQuestion(
-                                        {
-                                            layout: "vertical",
-                                            type: "MULTIPLE_CHOICE",
-                                        },
-                                        props.questionLocalId
-                                    )
-                                }}
-                            >
-                                <MultipleChoiceVertical />
-                            </CommandItem>
-
-                            <CommandItem
-                                onSelect={() => {
-                                    setIsOpen(false)
-                                    updateQuestion(
-                                        {
-                                            layout: "vertical",
-                                            type: "MATCHING_PAIRS",
-                                        },
-                                        props.questionLocalId
-                                    )
-                                }}
-                            >
-                                <MatchingPairs />
-                            </CommandItem>
-                        </CommandGroup>
-                    </CommandList>
-                </PopoverContent>
-            </Popover>
-        </Command>
+                    {props.selectedQuestion.type === "FILL_IN_THE_BLANK" && (
+                        <FillInTheBlank
+                            questionTextClassName="mb-5 h-1"
+                            className=""
+                            isMinimized
+                        />
+                    )}
+                </div>
+            }
+        />
     )
 }
-
-function MultipleChoiceVertical(props: { className?: string }) {
-    return (
-        <div
-            className={cn(
-                "flex hover:cursor-pointer active:scale-[93%] hover:scale-[98%]  scale-95 transition-all items-center",
-                props.className
-            )}
-        >
-            <div className="border  ml-4 p-2 w-40 rounded-xl">
-                <div className="bg-neutral-200 h-12 rounded-md w-full"> </div>
-                <div className="grid mt-2 grid-cols-2  gap-y-[6px] gap-x-2">
-                    <div className="bg-neutral-200 h-4 rounded-md w-full"></div>
-                    <div className="bg-neutral-200 h-4 rounded-md w-full"></div>
-                    <div className="bg-neutral-200 h-4 rounded-md w-full"></div>
-                    <div className="bg-neutral-200 h-4 rounded-md w-full"></div>
-                </div>
-            </div>
-        </div>
-    )
-}
-function MultipleChoiceHorizontal(props: { className?: string }) {
-    return (
-        <div
-            className={cn(
-                "flex hover:cursor-pointer active:scale-[93%] hover:scale-[98%]  scale-95 transition-all items-center",
-                props.className
-            )}
-        >
-            <div className="border  ml-4 p-2 w-40 flex rounded-xl">
-                <div className="bg-neutral-200 h-22 rounded-md w-full"> </div>
-                <div className=" ml-5 w-20 flex flex-col gap-2">
-                    <div className="bg-neutral-200 h-4 rounded-md w-full"></div>
-                    <div className="bg-neutral-200 h-4 rounded-md w-full"></div>
-                    <div className="bg-neutral-200 h-4 rounded-md w-full"></div>
-                    <div className="bg-neutral-200 h-4 rounded-md w-full"></div>
-                </div>
-            </div>
-        </div>
-    )
-}
-function MatchingPairs(props: { className?: string }) {
-    return (
-        <div
-            className={cn(
-                "flex hover:cursor-pointer active:scale-[93%] hover:scale-[98%]  scale-95 transition-all items-center",
-                props.className
-            )}
-        >
-            <div className="border  ml-4 p-2 w-40 rounded-xl">
-                <div className="flex gap-4">
-                    {" "}
-                    <div className="bg-white h-4 rounded-md w-1/3"></div>
-                    <div className="bg-neutral-200 h-4 rounded-md w-2/3"></div>
-                </div>
-                <div className="flex gap-4 mt-2">
-                    {" "}
-                    <div className="bg-neutral-200 h-4 rounded-md w-1/3"></div>
-                    <div className="bg-neutral-200 h-4 rounded-md w-2/3"></div>
-                </div>
-                <div className="flex gap-4 mt-2">
-                    {" "}
-                    <div className="bg-neutral-200 h-4 rounded-md w-1/3"></div>
-                    <div className="bg-neutral-200 h-4 rounded-md w-2/3"></div>
-                </div>
-                <div className="flex gap-4 mt-2">
-                    {" "}
-                    <div className="bg-neutral-200 h-4 rounded-md w-1/3"></div>
-                    <div className="bg-neutral-200 h-4 rounded-md w-2/3"></div>
-                </div>
-                <div className="flex gap-4 mt-2">
-                    {" "}
-                    <div className="bg-white h-4 rounded-md w-1/3"></div>
-                    <div className="bg-neutral-200 h-4 rounded-md w-2/3"></div>
-                </div>
-            </div>
-        </div>
-    )
-}
+export default memo(LayoutSelect)

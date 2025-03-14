@@ -212,8 +212,12 @@ export type Database = {
         Row: {
           content: Json | null
           created_at: string
+          display_order: number | null
           id: number
           image: string | null
+          image_type:
+            | Database["public"]["Enums"]["quiz_question_image_type"]
+            | null
           layout: string | null
           question: string
           quiz: number | null
@@ -222,8 +226,12 @@ export type Database = {
         Insert: {
           content?: Json | null
           created_at?: string
+          display_order?: number | null
           id?: number
           image?: string | null
+          image_type?:
+            | Database["public"]["Enums"]["quiz_question_image_type"]
+            | null
           layout?: string | null
           question?: string
           quiz?: number | null
@@ -232,8 +240,12 @@ export type Database = {
         Update: {
           content?: Json | null
           created_at?: string
+          display_order?: number | null
           id?: number
           image?: string | null
+          image_type?:
+            | Database["public"]["Enums"]["quiz_question_image_type"]
+            | null
           layout?: string | null
           question?: string
           quiz?: number | null
@@ -306,11 +318,13 @@ export type Database = {
     }
     Enums: {
       publishing_status: "DRAFT" | "PUBLISHED" | "ARCHIVED"
+      quiz_question_image_type: "normal-image" | "code-snippets" | "none"
       quiz_question_types:
         | "MULTIPLE_CHOICE"
         | "MATCHING_PAIRS"
         | "DEBUG_CODE"
         | "CODE_COMPLETION"
+        | "FILL_IN_THE_BLANK"
       user_role_types: "ADMIN" | "USER"
     }
     CompositeTypes: {

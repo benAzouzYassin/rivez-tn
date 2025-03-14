@@ -23,7 +23,6 @@ export default function MoreButton(props: Props) {
         toastLoading("Deleting...")
         softDeleteQuizById(props.itemId)
             .then((res) => {
-                console.log(res)
                 queryClient.refetchQueries({
                     queryKey: ["quizzes"],
                 })
