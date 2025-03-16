@@ -1,12 +1,14 @@
-import Star from "@/components/icons/star"
 import ProgressBar from "@/components/shared/progress-bar"
 import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/ui-utils"
 import Link from "next/link"
+import XpIcon from "../icons/xp"
+import { useCurrentUser } from "@/hooks/use-current-user"
 interface Props {
     fixed?: boolean
 }
 export default function FloatingSection(props: Props) {
+    const { data: userData } = useCurrentUser()
     return (
         <section className="  col-span-4  py-4 pr-4 pl-5 ">
             <div className={cn({ " fixed top-30 pr-4": props.fixed })}>
@@ -61,13 +63,13 @@ export default function FloatingSection(props: Props) {
                     >
                         <div className="grow">
                             <p className="text-xl font-extrabold  text-neutral-500">
-                                Stars earned :
+                                XP Points :
                             </p>
                         </div>
-                        <div className="flex items-center text-2xl font-extrabold text-[#F5CB37] gap-1">
-                            10
+                        <div className="flex items-center text-2xl font-black text-[#f5b237] gap-1">
+                            {userData?.xp_points || 0}
                             <div className="w-8 h-8  -mt-px rounded-xl">
-                                <Star className="w-7 h-7" />
+                                <XpIcon className="w-7 h-7" />
                             </div>
                         </div>
                     </Link>

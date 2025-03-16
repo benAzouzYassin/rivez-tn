@@ -111,16 +111,12 @@ export default function UserHeader() {
                         onOpenChange={setIsUserSettingOpen}
                     >
                         <PopoverTrigger className="cursor-pointer  w-fit p-1  mt-2 rounded-2xl  flex items-center  gap-2 font-bold text-lg text-neutral-600 px-3 py-1 active:scale-95 hover:bg-neutral-100 transition-transform">
-                            <div className="flex text-nowrap">
+                            <div className="flex text-nowrap flex-col">
+                                <p className="first-letter:uppercase pr-px w-fit mx-2">
+                                    {" "}
+                                    {user?.identities?.[0].displayName}
+                                </p>
                                 <div className="text-sm w-full flex gap-2 justify-end text-neutral-500  text-left font-semibold">
-                                    <TooltipWrapper asChild content="XP Points">
-                                        <div className="flex items-center cursor-pointer gap-1 rounded-full text-lg bg-orange-100/70 border border-orange-200 pl-2 pr-3 py-[1px] scale-95 text-neutral-600/90 hover:bg-orange-100 transition-colors">
-                                            <XpIcon className="h-6 w-6 scale-95  opacity-80" />
-                                            <span className="font-extrabold pr-1">
-                                                {user?.xp_points}
-                                            </span>
-                                        </div>
-                                    </TooltipWrapper>
                                     <TooltipWrapper
                                         asChild
                                         content="Your credit balance"
@@ -133,10 +129,6 @@ export default function UserHeader() {
                                         </div>
                                     </TooltipWrapper>
                                 </div>
-                                <p className="first-letter:uppercase pr-px w-fit mx-2">
-                                    {" "}
-                                    {user?.identities?.[0].displayName}
-                                </p>
                             </div>
                             <UserProfile
                                 name={user?.identities?.[0].displayName}

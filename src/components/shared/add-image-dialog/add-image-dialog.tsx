@@ -253,7 +253,6 @@ export default function AddImageDialog(props: Props) {
 function Item(props: ItemProps) {
     const fileInputRef = useRef<HTMLInputElement>(null)
     const [isLoading, setIsLoading] = useState(false)
-    const abortController = new AbortController()
     return (
         <div className="relative w-auto flex ">
             {props.id == "image-upload" && (
@@ -267,10 +266,7 @@ function Item(props: ItemProps) {
                                 if (file.size > maxFileSize) {
                                     return toastError("Image is too large.")
                                 }
-                                const url = await uploadFile(
-                                    file,
-                                    abortController
-                                )
+                                const url = await uploadFile(file)
                                 props.onImageUpload(url)
                                 toastSuccess("Image uploaded sccessfully.")
                             }
@@ -328,18 +324,6 @@ function Item(props: ItemProps) {
                         {props.description}
                     </span>
                 </Button>
-                {isLoading && (
-                    <Button
-                        onClick={() => {
-                            abortController.abort()
-                            setIsLoading(false)
-                        }}
-                        variant={"outline-red"}
-                        className=" absolute  top-3 right-3 bg-red-50 hover:bg-red-100 h-[38px] "
-                    >
-                        Cancel
-                    </Button>
-                )}
             </div>
         </div>
     )

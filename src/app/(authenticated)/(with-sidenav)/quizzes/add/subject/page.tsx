@@ -1,7 +1,6 @@
 "use client"
 
 import CategorySelect from "@/components/shared/category-select"
-import ImageUpload from "@/components/shared/image-upload"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import {
@@ -43,6 +42,7 @@ import GeneralLoadingScreen from "@/components/shared/general-loading-screen"
 import { ErrorDisplay } from "@/components/shared/error-display"
 import { useQueryClient } from "@tanstack/react-query"
 import { DifficultySelect } from "../_components/difficulty-select"
+import ImageUpload from "../_components/image-upload"
 
 const POSSIBLE_QUESTIONS_TYPES = Object.keys(POSSIBLE_QUESTIONS)
 export type FormValues = {
@@ -360,23 +360,6 @@ export default function SubjectForm() {
                     </CollapsibleContent>
                 </Collapsible>
                 <ImageUpload
-                    renderEmptyContent={() => (
-                        <>
-                            <ImageIcon className="w-10 h-10 mb-2 mt-5 mx-auto text-neutral-400" />
-                            <p className="text-base font-semibold text-neutral-500">
-                                Drag or click to upload cover image.
-                            </p>
-                            <p className="text-xs text-neutral-400 mt-0">
-                                Images (PNG, JPG, GIF)
-                            </p>
-                            <p className="text-xs text-neutral-400">
-                                up to 10MB
-                            </p>
-                        </>
-                    )}
-                    displayCancelBtn
-                    isLoading={isUploadingImage}
-                    onLoadingChange={setIsUploadingImage}
                     className=""
                     imageUrl={imageUrl}
                     onImageUrlChange={setImageUrl}

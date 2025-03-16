@@ -5,24 +5,22 @@ import { ChevronLeft } from "lucide-react"
 import { useRouter } from "nextjs-toploader/app"
 
 import CategorySelect from "@/components/shared/category-select"
-import ImageUpload from "@/components/shared/image-upload"
 import { Input } from "@/components/ui/input"
 import { createQuiz } from "@/data-access/quizzes/create"
 import { useCurrentUser } from "@/hooks/use-current-user"
 import { toastError } from "@/lib/toasts"
 import { useSidenav } from "@/providers/sidenav-provider"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { Upload } from "lucide-react"
 import { useMemo, useState } from "react"
 import { Controller, useForm } from "react-hook-form"
 import { z } from "zod"
 import { DifficultySelect } from "../_components/difficulty-select"
+import ImageUpload from "../_components/image-upload"
 
 export default function Page() {
     const sideNav = useSidenav()
 
     const [imageUrl, setImageUrl] = useState<string | null>(null)
-    const [isUploadingImage, setIsUploadingImage] = useState(false)
     const [isLoading, setIsLoading] = useState(false)
     const router = useRouter()
     const user = useCurrentUser()
@@ -131,33 +129,12 @@ export default function Page() {
                 />
 
                 <ImageUpload
-                    renderEmptyContent={() => {
-                        return (
-                            <>
-                                <Upload className="w-10 h-10 mb-2 mx-auto text-neutral-400" />
-                                <p className="text-base font-semibold text-neutral-500">
-                                    Drag or click to upload quiz image.
-                                </p>
-
-                                <p className="text-xs text-neutral-400 mt-0">
-                                    Images (PNG, JPG, GIF)
-                                </p>
-                                <p className="text-xs text-neutral-400">
-                                    up to 10MB
-                                </p>
-                            </>
-                        )
-                    }}
-                    displayCancelBtn
-                    isLoading={isUploadingImage}
-                    onLoadingChange={setIsUploadingImage}
                     className=""
                     imageUrl={imageUrl}
                     onImageUrlChange={setImageUrl}
                 />
                 <Button
                     isLoading={isSubmitting || isLoading}
-                    disabled={isUploadingImage}
                     type="button"
                     onClick={handleSubmit(onSubmit)}
                     className="font-extrabold mt-4 uppercase text-sm"
