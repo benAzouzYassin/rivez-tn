@@ -61,7 +61,7 @@ export async function POST(req: NextRequest) {
 
             return NextResponse.json({ success: true }, { status: 200 })
         } else {
-            console.log("error while refunding ", refundError)
+            console.error("error while refunding ", refundError)
             return NextResponse.json({ error: refundError }, { status: 400 })
         }
     } catch (error) {

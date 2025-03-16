@@ -104,7 +104,10 @@ export async function POST(req: NextRequest) {
             - Your responses shouldn't include any example content provided to you. 
             - You should follow any user notes when generating quiz questions.
             - The content of the questions options should and the question should be simple and clear.
-            - any code comment that starts with "//" is important and should not be ignored.
+            - Any code comment that starts with "//" is important and should not be ignored.
+            - Difficulty of the questions should be ${
+                data.difficulty || "NORMAL"
+            }
             `,
 
             model: anthropicHaiku,
@@ -131,6 +134,7 @@ const bodySchema = z.object({
         .max(100, "Input exceeds maximum length"),
     language: z.string().nullable().optional(),
     notes: z.string().nullable().optional(),
+    difficulty: z.string().nullable().optional(),
     maxQuestions: z.coerce.number().max(999).nullable().optional(),
     minQuestions: z.coerce.number().max(20).nullable().optional(),
     allowedQuestions: z

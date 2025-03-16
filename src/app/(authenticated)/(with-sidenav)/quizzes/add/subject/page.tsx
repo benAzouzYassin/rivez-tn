@@ -42,6 +42,7 @@ import { useQuestionsStore as useViewOnlyQuizStore } from "../../../../quizzes/[
 import GeneralLoadingScreen from "@/components/shared/general-loading-screen"
 import { ErrorDisplay } from "@/components/shared/error-display"
 import { useQueryClient } from "@tanstack/react-query"
+import { DifficultySelect } from "../_components/difficulty-select"
 
 const POSSIBLE_QUESTIONS_TYPES = Object.keys(POSSIBLE_QUESTIONS)
 export type FormValues = {
@@ -54,6 +55,7 @@ export type FormValues = {
     pdfName: string | null
     notes: string | null
     allowedQuestions?: string[] | null
+    difficulty: string | null
 }
 
 export default function SubjectForm() {
@@ -104,6 +106,7 @@ export default function SubjectForm() {
                     .max(100, "Input exceeds maximum length"),
                 category: z.string().nullable().optional(),
                 language: z.string().nullable().optional(),
+                difficulty: z.string().nullable().optional(),
                 maxQuestions: z.coerce.number().max(999).nullable().optional(),
                 minQuestions: z.coerce
                     .number()
@@ -139,6 +142,7 @@ export default function SubjectForm() {
                 image: imageUrl,
                 description: "",
                 author_id: user.data?.id,
+                difficulty: (data.difficulty as any) || "NORMAL",
             })
             const quizId = result[0].id
             if (type === "generate-and-modify") {
@@ -335,6 +339,21 @@ export default function SubjectForm() {
                                         form.formState.errors.minQuestions
                                             ?.message
                                     }
+                                />
+                            </div>
+                            <div className="col-span-2">
+                                <Controller
+                                    control={form.control}
+                                    name="difficulty"
+                                    render={({
+                                        field: { onChange, value, onBlur },
+                                    }) => (
+                                        <DifficultySelect
+                                            selected={value as any}
+                                            setSelected={onChange}
+                                            className="col-span-2"
+                                        />
+                                    )}
                                 />
                             </div>
                         </div>

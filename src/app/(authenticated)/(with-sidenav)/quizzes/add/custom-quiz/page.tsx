@@ -10,12 +10,14 @@ import { Input } from "@/components/ui/input"
 import { createQuiz } from "@/data-access/quizzes/create"
 import { useCurrentUser } from "@/hooks/use-current-user"
 import { toastError } from "@/lib/toasts"
+import { useSidenav } from "@/providers/sidenav-provider"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { Upload } from "lucide-react"
 import { useMemo, useState } from "react"
 import { Controller, useForm } from "react-hook-form"
 import { z } from "zod"
-import { useSidenav } from "@/providers/sidenav-provider"
+import { DifficultySelect } from "../_components/difficulty-select"
+
 export default function Page() {
     const sideNav = useSidenav()
 
@@ -32,6 +34,7 @@ export default function Page() {
                     .min(1, "Name is required")
                     .max(100, "Input exceeds maximum length"),
                 category: z.string().nullable(),
+                difficulty: z.string().optional().nullable(),
             }),
         []
     )
@@ -59,6 +62,7 @@ export default function Page() {
                 image: imageUrl,
                 description: "",
                 author_id: user.data?.id,
+                difficulty: (data.difficulty as any) || "NORMAL",
             })
             const quizId = result[0].id
             if (sideNav.isSidenavOpen) {
@@ -112,6 +116,16 @@ export default function Page() {
                                 onChange(null)
                                 onBlur()
                             }}
+                        />
+                    )}
+                />
+                <Controller
+                    control={control}
+                    name="difficulty"
+                    render={({ field: { onChange, value, onBlur } }) => (
+                        <DifficultySelect
+                            selected={value as any}
+                            setSelected={onChange}
                         />
                     )}
                 />

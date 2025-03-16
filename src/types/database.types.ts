@@ -134,6 +134,7 @@ export type Database = {
           created_at: string
           credit_cost: number | null
           description: string | null
+          difficulty: Database["public"]["Enums"]["difficulty"] | null
           id: number
           image: string | null
           is_featured: boolean
@@ -146,6 +147,7 @@ export type Database = {
           created_at?: string
           credit_cost?: number | null
           description?: string | null
+          difficulty?: Database["public"]["Enums"]["difficulty"] | null
           id?: number
           image?: string | null
           is_featured?: boolean
@@ -158,6 +160,7 @@ export type Database = {
           created_at?: string
           credit_cost?: number | null
           description?: string | null
+          difficulty?: Database["public"]["Enums"]["difficulty"] | null
           id?: number
           image?: string | null
           is_featured?: boolean
@@ -358,6 +361,7 @@ export type Database = {
       [_ in never]: never
     }
     Enums: {
+      difficulty: "NORMAL" | "MEDIUM" | "HARD"
       publishing_status: "DRAFT" | "PUBLISHED" | "ARCHIVED"
       quiz_question_image_type: "normal-image" | "code-snippets" | "none"
       quiz_question_types:

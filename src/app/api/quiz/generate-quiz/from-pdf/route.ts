@@ -115,7 +115,10 @@ export async function POST(req: NextRequest) {
             - You should follow any user notes when generating quiz questions.
             - The quiz questions should always be base on the pdf content.
             - The content of the questions options should and the question should be simple and clear.
-            - any code comment that starts with "//" is important and should not be ignored
+            - Any code comment that starts with "//" is important and should not be ignored
+            - Difficulty of the questions should be ${
+                data.difficulty || "NORMAL"
+            }
             `,
             model: anthropicHaiku,
             prompt,
@@ -136,6 +139,7 @@ const bodySchema = z.object({
     quizId: z.number(),
     pdfPages: z.array(z.string()),
     language: z.string().nullable().optional(),
+    difficulty: z.string().nullable().optional(),
     notes: z.string().nullable().optional(),
     maxQuestions: z.coerce.number().max(999).nullable().optional(),
     minQuestions: z.coerce.number().max(20).nullable().optional(),

@@ -8,6 +8,7 @@ import MoreButton from "./_components/more-button"
 import StatusButton from "./_components/status-button"
 import { Item } from "./page"
 import IsFeaturedSwitch from "./_components/is-featured-switch"
+import { Badge } from "@/components/ui/badge"
 
 export const columns: ColumnDef<Item>[] = [
     {
@@ -78,6 +79,17 @@ export const columns: ColumnDef<Item>[] = [
                 <div className="flex items-center !text-base font-semibold justify-center">
                     {row.original.quiz_submissions?.[0]?.count}
                 </div>
+            )
+        },
+    },
+    {
+        header: "Difficulty",
+        cell: ({ row }) => {
+            const difficulty = row.original.difficulty
+            return (
+                <p className="flex items-center border text-neutral-600 p-2 rounded-xl !text-base font-bold justify-center">
+                    {difficulty}
+                </p>
             )
         },
     },
