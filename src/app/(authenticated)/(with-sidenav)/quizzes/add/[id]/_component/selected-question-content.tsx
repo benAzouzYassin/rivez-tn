@@ -1,20 +1,19 @@
-import { Plus } from "lucide-react"
-import { useState } from "react"
+import GeneralLoadingScreen from "@/components/shared/general-loading-screen"
 import useQuizStore from "../store"
+import AddQuestionButton from "./add-question-button"
 import Buttons from "./buttons"
 import FillInTheBlankContent from "./fill-in-the-blank/fill-in-the-blank-content"
 import LayoutSelect from "./layout-select"
 import MultipleChoiceContent from "./multiple-choice-question/multiple-choice-content"
 import MatchingPairsContent from "./pair-matchint-question/pair-matching-content"
-import AddQuestionButton from "./add-question-button"
 
 export default function SelectedQuestionContent() {
     const selectedQuestionId = useQuizStore((s) => s.selectedQuestionLocalId)
     const allQuestions = useQuizStore((s) => s.allQuestions)
-    const addQuestion = useQuizStore((s) => s.addQuestion)
     const selectedQuestion = allQuestions.find(
         (q) => q.localId === selectedQuestionId
     )
+    const isBeingGenerated = useQuizStore((s) => s.isAddingQuestionByAi)
     if (!selectedQuestion) {
         return (
             <section className="flex min-h-[70vh] items-center justify-center w-full h-full">
@@ -27,10 +26,13 @@ export default function SelectedQuestionContent() {
             </section>
         )
     }
+    if (isBeingGenerated) {
+        return <GeneralLoadingScreen text="Generating your question" />
+    }
     return (
         <section className="mt-10 h-full px-20 w-full">
             <section className="flex justify-between">
-                <div className="flex items-center ">
+                <div className="flex pb-3 flex-col relative  ">
                     <LayoutSelect selectedQuestion={selectedQuestion} />
                 </div>
                 <div className="flex items-center">

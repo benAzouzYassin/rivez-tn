@@ -10,6 +10,7 @@ interface Props {
     selected: Database["public"]["Tables"]["quizzes"]["Row"]["difficulty"]
     setSelected: (value: Props["selected"]) => void
     className?: string
+    errorMessage?: string
 }
 export function DifficultySelect(props: Props) {
     const possibleValues: Exclude<Props["selected"], null>[] = [
@@ -23,7 +24,10 @@ export function DifficultySelect(props: Props) {
             onValueChange={(value: any) => props.setSelected(value)}
             value={props.selected || undefined}
         >
-            <SelectTrigger className={props.className}>
+            <SelectTrigger
+                errorMessage={props.errorMessage}
+                className={props.className}
+            >
                 {props.selected || (
                     <span className="text-neutral-400/80">Difficulty</span>
                 )}

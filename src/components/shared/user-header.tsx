@@ -124,7 +124,9 @@ export default function UserHeader() {
                                         <div className="flex w-fit   items-center cursor-pointer gap-1 rounded-full text-lg bg-blue-100/70 border border-blue-200 pl-2 pr-3 py-[1px] scale-95 text-neutral-600/90 hover:bg-blue-100 transition-colors">
                                             <CreditIcon className="h-6 w-6 scale-125 opacity-80" />
                                             <span className="font-extrabold pr-1">
-                                                {user?.credit_balance}
+                                                {user?.credit_balance?.toFixed(
+                                                    1
+                                                )}
                                             </span>
                                         </div>
                                     </TooltipWrapper>

@@ -61,7 +61,10 @@ type Props = {
         shouldClose: boolean
     ) => void
 }
-export default function AddImageDialog(props: Props) {
+export default function AddImageDialog({
+    disabledOptions = [],
+    ...props
+}: Props) {
     const [imageUrl, setImageUrl] = useState("")
     const imageUrlInputRef = useRef<HTMLInputElement>(null)
     const [selectedType, setSelectedType] =
@@ -215,20 +218,20 @@ export default function AddImageDialog(props: Props) {
                             "grid grid-cols-1 md:grid-cols-2 mt-0 lg:grid-cols-4 gap-3 px-20",
                             {
                                 "grid-cols-1 md:grid-cols-2 mt-0 lg:grid-cols-4":
-                                    props?.disabledOptions?.length === 0,
+                                    disabledOptions?.length === 0,
                                 "grid-cols-1 md:grid-cols-2 mt-0 lg:grid-cols-3":
-                                    props?.disabledOptions?.length === 1,
+                                    disabledOptions?.length === 1,
                                 "grid-cols-1 md:grid-cols-2 mt-0 lg:grid-cols-2":
-                                    props.disabledOptions?.length === 2,
+                                    disabledOptions?.length === 2,
                                 "grid-cols-1 md:grid-cols-1 mt-0 lg:grid-cols-1":
-                                    props.disabledOptions?.length === 3,
+                                    disabledOptions?.length === 3,
                             }
                         )}
                     >
                         {items
                             .filter(
                                 (item) =>
-                                    props.disabledOptions?.includes(
+                                    disabledOptions?.includes(
                                         item.id as any
                                     ) === false
                             )

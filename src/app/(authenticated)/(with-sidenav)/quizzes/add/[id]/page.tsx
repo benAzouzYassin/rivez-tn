@@ -11,8 +11,8 @@ export default function Page() {
     const searchParams = useSearchParams()
     const isGeneratingWithAi = searchParams.get("isGeneratingWithAi") === "true"
     const resetState = useQuizStore((s) => s.reset)
-    const isGeneratingState = useQuizStore((s) => s.isGeneratingWithAi)
-    const isGenerationError = useQuizStore((s) => s.isGenerationError)
+    const isGeneratingState = useQuizStore((s) => s.isGeneratingQuizWithAi)
+    const isGenerationError = useQuizStore((s) => s.isGenerationQuizError)
     useEffect(() => {
         if (!isGeneratingWithAi) {
             // we reset the state only when we are not generating.

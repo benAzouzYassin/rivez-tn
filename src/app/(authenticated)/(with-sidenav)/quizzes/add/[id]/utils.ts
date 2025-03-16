@@ -1,6 +1,7 @@
 import { generateQuiz } from "@/data-access/quizzes/generate"
 import { shuffleArray } from "@/utils/array"
 import { Store } from "./store"
+import { generateQuizQuestion } from "@/data-access/quizzes/generate-question"
 
 export const getRightOptionPairLocalId = (
     correctOptions: string[][],
@@ -19,7 +20,7 @@ export const getRightOptionPairLocalId = (
     )
 }
 
-export const formatGeneratedQuestions = (
+export const formatGeneratedQuizQuestions = (
     data: Parameters<Parameters<typeof generateQuiz>["2"]>["0"],
     getState: () => Store
 ) => {
@@ -162,4 +163,127 @@ export const formatGeneratedQuestions = (
         }
     })
     return result
+}
+
+export const formatSingleQuestion = (
+    q: Awaited<ReturnType<typeof generateQuizQuestion>>
+) => {
+    // WARNING: do not try to use this function inside the previous function
+    if (q.type === "MATCHING_PAIRS") {
+        const leftOptions = shuffleArray(
+            q.content.leftSideOptions.map((opt) => ({
+                text: opt,
+                localId: crypto.randomUUID(),
+            }))
+        )
+        const rightOptions = shuffleArray(
+            q.content.rightSideOptions.map((opt) => ({
+                text: opt,
+                localId: crypto.randomUUID(),
+                leftOptionLocalId: getRightOptionPairLocalId(
+                    q.content.correct,
+                    leftOptions,
+                    opt
+                ),
+            }))
+        )
+
+        return {
+            content: {
+                leftOptions,
+                rightOptions,
+            },
+            localId: crypto.randomUUID(),
+            questionText: q.questionText,
+            imageUrl: null,
+            layout: "horizontal",
+            type: "MATCHING_PAIRS",
+            imageType: "none",
+        }
+    }
+
+    if (q.type === "TRUE_OR_FALSE") {
+        const options = q.content.options.map((opt) => ({
+            text: opt,
+            localId: crypto.randomUUID(),
+            isCorrect: q.content.correct.includes(opt),
+        }))
+
+        return {
+            content: { options },
+            localId: crypto.randomUUID(),
+            questionText: q.questionText,
+            imageUrl: null,
+            layout: "vertical",
+            type: "MULTIPLE_CHOICE",
+            imageType: "none",
+        }
+    }
+
+    if (q.type === "MULTIPLE_CHOICE_WITHOUT_IMAGE") {
+        const options = shuffleArray(
+            q.content.options.map((opt) => ({
+                text: opt,
+                localId: crypto.randomUUID(),
+                isCorrect: q.content.correct.includes(opt),
+            }))
+        )
+
+        return {
+            content: { options },
+            localId: crypto.randomUUID(),
+            questionText: q.questionText,
+            imageUrl: null,
+            layout: "vertical",
+            type: "MULTIPLE_CHOICE",
+            imageType: "none",
+        }
+    }
+
+    if (q.type === "MULTIPLE_CHOICE_WITH_IMAGE") {
+        const options = shuffleArray(
+            q.content.options.map((opt) => ({
+                text: opt,
+                localId: crypto.randomUUID(),
+                isCorrect: q.content.correct.includes(opt),
+            }))
+        )
+
+        return {
+            content: { options },
+            localId: crypto.randomUUID(),
+            questionText: q.questionText,
+            imageUrl: null,
+            layout: "horizontal",
+            type: "MULTIPLE_CHOICE",
+            imageType: "normal-image",
+        }
+    }
+
+    if (q.type === "FILL_IN_THE_BLANK") {
+        return {
+            content: {
+                parts: q.content.parts,
+                options: q.content.options.map((opt) => ({
+                    text: opt,
+                    localId: crypto.randomUUID(),
+                })),
+                correct: q.content.correct.map((item) => {
+                    return {
+                        option: item.option,
+                        index: item.index,
+                        optionId: crypto.randomUUID(),
+                    }
+                }),
+            },
+            localId: crypto.randomUUID(),
+            questionText: q.questionText,
+            imageUrl: null,
+            layout: "horizontal",
+            type: "FILL_IN_THE_BLANK",
+            imageType: "normal-image",
+        }
+    }
+
+    return null
 }

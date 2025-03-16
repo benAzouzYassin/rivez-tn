@@ -6,19 +6,25 @@ import {
 } from "@/schemas/questions-content"
 import { Database } from "@/types/database.types"
 import { create } from "zustand"
-import { formatGeneratedQuestions } from "./utils"
+import { formatGeneratedQuizQuestions, formatSingleQuestion } from "./utils"
 import { deleteQuizById } from "@/data-access/quizzes/delete"
 import { handleQuizRefund } from "@/data-access/quizzes/handle-refund"
+import { generateQuizQuestion } from "@/data-access/quizzes/generate-question"
 
 interface State {
     allQuestions: QuizQuestionType[]
     selectedQuestionLocalId: string | null
-    isGeneratingWithAi: boolean
-    isGenerationError: boolean
+    isGeneratingQuizWithAi: boolean
+    isGenerationQuizError: boolean
     shadowQuestionsCount: number
+    isAddingQuestionByAi: boolean
 }
 
 interface Actions {
+    addQuestionWithAi: (params: {
+        data: Parameters<typeof generateQuizQuestion>["0"]
+        onError: () => void
+    }) => Promise<void>
     generateQuizWithAi: (
         data: {
             quizId: number
@@ -69,9 +75,10 @@ interface Actions {
 export type Store = State & Actions
 
 const initialState: State = {
+    isAddingQuestionByAi: false,
     shadowQuestionsCount: 0,
-    isGeneratingWithAi: false,
-    isGenerationError: false,
+    isGeneratingQuizWithAi: false,
+    isGenerationQuizError: false,
     allQuestions: [
         {
             codeSnippets: null,
@@ -97,12 +104,33 @@ const initialState: State = {
 
 const useQuizStore = create<Store>((set, get) => ({
     ...initialState,
+    addQuestionWithAi: async ({ data, onError }) => {
+        set({ isAddingQuestionByAi: true })
+        try {
+            const result = await generateQuizQuestion(data)
+            const localId = crypto.randomUUID()
+            const formatted = { ...formatSingleQuestion(result), localId }
+            console.log(formatted)
+            if (!formatted) {
+                throw new Error("error while formatting question")
+            }
+            set((state) => ({
+                allQuestions: [...state.allQuestions, formatted as any],
+                selectedQuestionLocalId: localId,
+            }))
+        } catch (err) {
+            console.log("errror ", err)
+            onError()
+        } finally {
+            set({ isAddingQuestionByAi: false })
+        }
+    },
     generateQuizWithAi: async (data, method, onSuccess) => {
         try {
             set({
                 ...initialState,
                 allQuestions: [],
-                isGeneratingWithAi: true,
+                isGeneratingQuizWithAi: true,
                 selectedQuestionLocalId: null,
             })
             generateQuiz(
@@ -111,7 +139,7 @@ const useQuizStore = create<Store>((set, get) => ({
                 (result) => {
                     const questionsCount = result?.questionsCount
                     const generatedQuestions = result?.questions || []
-                    const formattedGenerated = formatGeneratedQuestions(
+                    const formattedGenerated = formatGeneratedQuizQuestions(
                         result,
                         get
                     )
@@ -167,7 +195,7 @@ const useQuizStore = create<Store>((set, get) => ({
                                 selectedQuestionLocalId:
                                     state.selectedQuestionLocalId ||
                                     questionsForState.at(0)?.localId,
-                                isGeneratingWithAi: !(
+                                isGeneratingQuizWithAi: !(
                                     generatedQuestions.length > 1
                                 ),
                                 allQuestions: questionsForState as any,
@@ -180,8 +208,9 @@ const useQuizStore = create<Store>((set, get) => ({
                     const didGenerate = get().allQuestions.length > 1
                     if (!didGenerate) {
                         set({
-                            isGeneratingWithAi: false,
-                            isGenerationError: true,
+                            isGeneratingQuizWithAi: false,
+                            isGenerationQuizError: true,
+                            shadowQuestionsCount: 0,
                         })
                         handleQuizRefund({
                             cause: "",
@@ -190,13 +219,20 @@ const useQuizStore = create<Store>((set, get) => ({
                             deleteQuizById(data.quizId).catch(console.error)
                         })
                     } else {
+                        set({
+                            shadowQuestionsCount: 0,
+                        })
                         onSuccess()
                     }
                 }
             )
         } catch (error) {
             console.error(error)
-            set({ isGeneratingWithAi: false, isGenerationError: true })
+            set({
+                isGeneratingQuizWithAi: false,
+                isGenerationQuizError: true,
+                shadowQuestionsCount: 0,
+            })
             await handleQuizRefund({
                 cause: JSON.stringify(error),
                 quizId: data.quizId,
