@@ -78,6 +78,15 @@ export async function POST(req: NextRequest) {
             )
         }
         const newBalance = userBalance - LOW_MODEL_LOW_COST_QUIZ
+
+        await supabaseAdmin
+            .from("quizzes")
+            .update({
+                credit_cost: LOW_MODEL_LOW_COST_QUIZ,
+            })
+            .eq("id", data.quizId)
+            .throwOnError()
+
         await supabaseAdmin
             .from("user_profiles")
             .update({
@@ -115,6 +124,7 @@ const bodySchema = z.object({
         .string()
         .min(1, "Name is required")
         .max(100, "Input exceeds maximum length"),
+    quizId: z.number(),
     mainTopic: z
         .string()
         .min(1, "Main topic is required")

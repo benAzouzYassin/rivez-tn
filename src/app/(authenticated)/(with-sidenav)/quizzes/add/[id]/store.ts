@@ -8,6 +8,7 @@ import { Database } from "@/types/database.types"
 import { create } from "zustand"
 import { formatGeneratedQuestions } from "./utils"
 import { deleteQuizById } from "@/data-access/quizzes/delete"
+import { handleQuizRefund } from "@/data-access/quizzes/handle-refund"
 
 interface State {
     allQuestions: QuizQuestionType[]
@@ -182,7 +183,12 @@ const useQuizStore = create<Store>((set, get) => ({
                             isGeneratingWithAi: false,
                             isGenerationError: true,
                         })
-                        // TODO handle credit refund
+                        handleQuizRefund({
+                            cause: "",
+                            quizId: data.quizId,
+                        }).then(() => {
+                            deleteQuizById(data.quizId).catch(console.error)
+                        })
                     } else {
                         onSuccess()
                     }
@@ -191,7 +197,11 @@ const useQuizStore = create<Store>((set, get) => ({
         } catch (error) {
             console.error(error)
             set({ isGeneratingWithAi: false, isGenerationError: true })
-            deleteQuizById(data.quizId).catch(console.error)
+            await handleQuizRefund({
+                cause: JSON.stringify(error),
+                quizId: data.quizId,
+            })
+            await deleteQuizById(data.quizId).catch(console.error)
         }
     },
     setAllQuestions: (allQuestions) => set({ allQuestions }),

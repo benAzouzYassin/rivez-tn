@@ -33,7 +33,9 @@ export const generateQuiz = async (
         },
         body: JSON.stringify(data),
     })
-
+    if (response.status !== 200) {
+        throw new Error("error while generating the quiz ")
+    }
     const reader = response?.body?.getReader()
 
     let rawResult = ""

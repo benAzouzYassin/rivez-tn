@@ -132,6 +132,7 @@ export type Database = {
           author_id: string | null
           category: number | null
           created_at: string
+          credit_cost: number | null
           description: string | null
           id: number
           image: string | null
@@ -143,6 +144,7 @@ export type Database = {
           author_id?: string | null
           category?: number | null
           created_at?: string
+          credit_cost?: number | null
           description?: string | null
           id?: number
           image?: string | null
@@ -154,6 +156,7 @@ export type Database = {
           author_id?: string | null
           category?: number | null
           created_at?: string
+          credit_cost?: number | null
           description?: string | null
           id?: number
           image?: string | null
@@ -261,6 +264,35 @@ export type Database = {
           {
             foreignKeyName: "quizzes-questions_quiz_fkey"
             columns: ["quiz"]
+            isOneToOne: false
+            referencedRelation: "quizzes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      quizzes_refunds: {
+        Row: {
+          cause: string | null
+          created_at: string
+          id: number
+          quiz_id: number | null
+        }
+        Insert: {
+          cause?: string | null
+          created_at?: string
+          id?: number
+          quiz_id?: number | null
+        }
+        Update: {
+          cause?: string | null
+          created_at?: string
+          id?: number
+          quiz_id?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "quizzes_refunds_quiz_id_fkey"
+            columns: ["quiz_id"]
             isOneToOne: false
             referencedRelation: "quizzes"
             referencedColumns: ["id"]

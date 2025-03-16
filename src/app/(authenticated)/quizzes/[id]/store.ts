@@ -1,6 +1,7 @@
 import { saveSubmission } from "@/data-access/quiz_submissions/create"
 import { deleteQuizById } from "@/data-access/quizzes/delete"
 import { generateQuiz } from "@/data-access/quizzes/generate"
+import { handleQuizRefund } from "@/data-access/quizzes/handle-refund"
 import { addQuestionsToQuiz } from "@/data-access/quizzes/update"
 import {
     CodeCompletionContent,
@@ -228,7 +229,11 @@ export const useQuestionsStore = create<Store>((set, get) => ({
                         onSuccess()
                     } catch (err) {
                         console.error(err)
-                        deleteQuizById(data.quizId).catch(console.error)
+                        await handleQuizRefund({
+                            cause: JSON.stringify(err),
+                            quizId: data.quizId,
+                        })
+                        await deleteQuizById(data.quizId).catch(console.error)
                         set({
                             isGeneratingWithAi: false,
                             isAiError: true,
@@ -238,6 +243,11 @@ export const useQuestionsStore = create<Store>((set, get) => ({
             )
         } catch (err) {
             console.error(err)
+            await handleQuizRefund({
+                cause: JSON.stringify(err),
+                quizId: data.quizId,
+            })
+
             deleteQuizById(data.quizId).catch(console.error)
             set({
                 isGeneratingWithAi: false,

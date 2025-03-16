@@ -69,6 +69,7 @@ export async function POST(req: NextRequest) {
             maxQuestions,
             pdfPages: formattedPdfPages,
         })
+
         const userBalance = (
             await supabaseAdmin
                 .from("user_profiles")
@@ -86,7 +87,17 @@ export async function POST(req: NextRequest) {
                 { status: 400 }
             )
         }
+
         const newBalance = userBalance - LOW_MODEL_HIGH_COST_QUIZ
+
+        await supabaseAdmin
+            .from("quizzes")
+            .update({
+                credit_cost: LOW_MODEL_HIGH_COST_QUIZ,
+            })
+            .eq("id", data.quizId)
+            .throwOnError()
+
         await supabaseAdmin
             .from("user_profiles")
             .update({
@@ -122,6 +133,7 @@ const bodySchema = z.object({
         .string()
         .min(1, "Name is required")
         .max(100, "Input exceeds maximum length"),
+    quizId: z.number(),
     pdfPages: z.array(z.string()),
     language: z.string().nullable().optional(),
     notes: z.string().nullable().optional(),
