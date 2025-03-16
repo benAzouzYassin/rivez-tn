@@ -16,9 +16,17 @@ import { toastError } from "@/lib/toasts"
 import { cn } from "@/lib/ui-utils"
 import { useSidenav } from "@/providers/sidenav-provider"
 import { useQueryClient } from "@tanstack/react-query"
-import { LogOutIcon, Settings, User2 } from "lucide-react"
+import {
+    CreditCardIcon,
+    DollarSign,
+    LogOutIcon,
+    Settings,
+    User2,
+} from "lucide-react"
 import { useRouter } from "nextjs-toploader/app"
 import { JSX, useState } from "react"
+import CreditIcon from "../icons/credit-icon"
+import Star from "../icons/star"
 
 export default function UserHeader() {
     const queryClient = useQueryClient()
@@ -26,11 +34,14 @@ export default function UserHeader() {
     const { data: user, isLoading, isError } = useCurrentUser()
     const [isUserSettingOpen, setIsUserSettingOpen] = useState(false)
     const router = useRouter()
-
+    const creditBalance = user?.credit_balance
     const handleLogout = async () => {
         setIsUserSettingOpen(false)
         try {
             await logoutUser()
+            queryClient.refetchQueries({
+                queryKey: ["current-user"],
+            })
             router.replace("/auth/login")
             queryClient.invalidateQueries()
         } catch (error) {
@@ -41,16 +52,31 @@ export default function UserHeader() {
 
     const menuItems: MenuItem[] = [
         {
-            icon: <Settings className="w-4 h-4" />,
-            label: "Settings",
-            onClick: () => router.push("/settings"),
+            icon: <CreditCardIcon className="w-6 h-6 opacity-70" />,
+            label: "Buy credits",
+            onClick: () => {
+                setIsUserSettingOpen(false)
+                router.push("/offers")
+            },
             className: "text-neutral-500",
         },
         {
-            icon: <LogOutIcon className="w-4 h-4" />,
+            icon: <Settings className="w-6 h-6 opacity-70" />,
+            label: "Settings",
+            onClick: () => {
+                setIsUserSettingOpen(false)
+                router.push("/settings")
+            },
+            className: "text-neutral-500",
+        },
+        {
+            icon: <LogOutIcon className="w-6 h-6 opacity-70" />,
             label: "Logout",
-            onClick: handleLogout,
-            className: "text-red-500 hover:bg-red-100",
+            onClick: () => {
+                setIsUserSettingOpen(false)
+                handleLogout()
+            },
+            className: "text-red-500 hover:text-red-500 hover:bg-red-100",
         },
     ]
 
@@ -77,22 +103,41 @@ export default function UserHeader() {
             )}
         >
             <div className="flex h-full border-b-2 items-center   px-8 md:px-20">
-                <div className="ml-auto flex items-center gap-6">
-                    <LanguageSelector />
-                    <TooltipWrapper content="XP Points">
-                        <div className="flex items-center gap-2 rounded-full bg-orange-50 px-4 py-2 text-orange-400 hover:bg-orange-100 transition-colors">
-                            <XpIcon className="h-5 w-5" />
-                            <span className="font-extrabold">
-                                {user?.xp_points}
-                            </span>
-                        </div>
-                    </TooltipWrapper>
+                <div className="ml-auto flex items-center gap-1">
+                    <LanguageSelector className="h-12 px-4" />
 
                     <Popover
                         open={isUserSettingOpen}
                         onOpenChange={setIsUserSettingOpen}
                     >
-                        <PopoverTrigger className="cursor-pointer hover:scale-105 transition-transform">
+                        <PopoverTrigger className="cursor-pointer  w-fit p-1  mt-2 rounded-2xl  flex items-center  gap-2 font-bold text-lg text-neutral-600 px-3 py-1 active:scale-95 hover:bg-neutral-100 transition-transform">
+                            <div className="flex text-nowrap">
+                                <div className="text-sm w-full flex gap-2 justify-end text-neutral-500  text-left font-semibold">
+                                    <TooltipWrapper asChild content="XP Points">
+                                        <div className="flex items-center cursor-pointer gap-1 rounded-full text-lg bg-orange-100/70 border border-orange-200 pl-2 pr-3 py-[1px] scale-95 text-neutral-600/90 hover:bg-orange-100 transition-colors">
+                                            <XpIcon className="h-6 w-6 scale-95  opacity-80" />
+                                            <span className="font-extrabold pr-1">
+                                                {user?.xp_points}
+                                            </span>
+                                        </div>
+                                    </TooltipWrapper>
+                                    <TooltipWrapper
+                                        asChild
+                                        content="Your credit balance"
+                                    >
+                                        <div className="flex w-fit   items-center cursor-pointer gap-1 rounded-full text-lg bg-blue-100/70 border border-blue-200 pl-2 pr-3 py-[1px] scale-95 text-neutral-600/90 hover:bg-blue-100 transition-colors">
+                                            <CreditIcon className="h-6 w-6 scale-125 opacity-80" />
+                                            <span className="font-extrabold pr-1">
+                                                {user?.credit_balance}
+                                            </span>
+                                        </div>
+                                    </TooltipWrapper>
+                                </div>
+                                <p className="first-letter:uppercase pr-px w-fit mx-2">
+                                    {" "}
+                                    {user?.identities?.[0].displayName}
+                                </p>
+                            </div>
                             <UserProfile
                                 name={user?.identities?.[0].displayName}
                                 image={user?.identities?.[0].avatar}
@@ -100,13 +145,10 @@ export default function UserHeader() {
                         </PopoverTrigger>
 
                         <PopoverContent
-                            align="center"
-                            className="w-64 -translate-x-2 p-0 rounded-xl shadow-lg border border-neutral-200"
+                            align="end"
+                            className="w-72 -translate-x-2 p-0 rounded-xl shadow-lg border border-neutral-200"
                         >
-                            <UserMenu
-                                items={menuItems}
-                                userName={user?.userName || ""}
-                            />
+                            <UserMenu items={menuItems} />
                         </PopoverContent>
                     </Popover>
                 </div>
@@ -127,28 +169,17 @@ function UserProfile({ name, image }: UserProfileProps) {
         </div>
     )
 }
-function UserMenu({
-    items,
-    userName,
-}: {
-    items: MenuItem[]
-    userName: string
-}) {
+function UserMenu({ items }: { items: MenuItem[] }) {
     return (
         <div>
-            <div className="px-4 py-3">
-                <p className="font-bold text-base  ml-1 first-letter:uppercase text-neutral-500">
-                    {userName}
-                </p>
-            </div>
             <div className=" ">
                 {items.map((item, index) => (
                     <button
                         key={index}
                         onClick={item.onClick}
                         className={cn(
-                            "flex w-full items-center gap-3 px-4 py-3 text-sm font-bold",
-                            "transition-colors hover:bg-neutral-100 last:border-b active:bg-neutral-100",
+                            "flex w-full cursor-pointer items-center gap-3 px-4 py-3 text-base font-bold",
+                            "transition-colors hover:bg-blue-100/70 hover:text-blue-400 last:border-b active:bg-blue-200/70",
                             item.className
                         )}
                     >

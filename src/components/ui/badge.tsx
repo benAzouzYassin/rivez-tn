@@ -56,6 +56,9 @@ function Badge({
     onDelete,
     ...props
 }: BadgeProps) {
+    if (!children) {
+        return null
+    }
     return (
         <div className={cn(badgeVariants({ variant }), className)} {...props}>
             {isLoading ? (

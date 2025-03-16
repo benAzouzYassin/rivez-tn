@@ -29,16 +29,16 @@ export default function Page() {
         )
     }
     return (
-        <section className="   min-h-[100vh] pb-[200px]">
+        <section className=" relative  min-h-[100vh] pb-[200px]">
             {isGeneratingState ? (
                 <>
                     <GeneralLoadingScreen text="Generating your quiz" />
                 </>
             ) : (
-                <>
+                <div>
                     <SelectedQuestionContent />
                     <AllQuestionsPreviews />
-                </>
+                </div>
             )}
         </section>
     )

@@ -85,7 +85,7 @@ export default function Page() {
                         className="text-base "
                         variant={"blue"}
                         onClick={() => {
-                            router.push("/admin/quizzes/add/generate")
+                            router.push("/quizzes/add")
                         }}
                     >
                         <Plus />

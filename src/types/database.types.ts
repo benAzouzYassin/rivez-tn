@@ -135,6 +135,7 @@ export type Database = {
           description: string | null
           id: number
           image: string | null
+          is_featured: boolean
           name: string
           publishing_status: Database["public"]["Enums"]["publishing_status"]
         }
@@ -145,6 +146,7 @@ export type Database = {
           description?: string | null
           id?: number
           image?: string | null
+          is_featured?: boolean
           name: string
           publishing_status?: Database["public"]["Enums"]["publishing_status"]
         }
@@ -155,6 +157,7 @@ export type Database = {
           description?: string | null
           id?: number
           image?: string | null
+          is_featured?: boolean
           name?: string
           publishing_status?: Database["public"]["Enums"]["publishing_status"]
         }
@@ -181,6 +184,7 @@ export type Database = {
           description: string | null
           id: number
           image: string | null
+          is_disabled: boolean | null
           name: string | null
           publishing_status:
             | Database["public"]["Enums"]["publishing_status"]
@@ -191,6 +195,7 @@ export type Database = {
           description?: string | null
           id?: number
           image?: string | null
+          is_disabled?: boolean | null
           name?: string | null
           publishing_status?:
             | Database["public"]["Enums"]["publishing_status"]
@@ -201,6 +206,7 @@ export type Database = {
           description?: string | null
           id?: number
           image?: string | null
+          is_disabled?: boolean | null
           name?: string | null
           publishing_status?:
             | Database["public"]["Enums"]["publishing_status"]
@@ -265,6 +271,7 @@ export type Database = {
         Row: {
           avatar_url: string | null
           created_at: string
+          credit_balance: number
           email: string | null
           is_banned: boolean
           phone: string | null
@@ -275,6 +282,7 @@ export type Database = {
         Insert: {
           avatar_url?: string | null
           created_at?: string
+          credit_balance?: number
           email?: string | null
           is_banned?: boolean
           phone?: string | null
@@ -285,6 +293,7 @@ export type Database = {
         Update: {
           avatar_url?: string | null
           created_at?: string
+          credit_balance?: number
           email?: string | null
           is_banned?: boolean
           phone?: string | null

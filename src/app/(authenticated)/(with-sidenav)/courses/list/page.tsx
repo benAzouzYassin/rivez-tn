@@ -4,21 +4,14 @@ import { useSidenav } from "@/providers/sidenav-provider"
 import { motion } from "framer-motion"
 import { BookOpen, ZapIcon } from "lucide-react"
 import { useState } from "react"
-import EmptyDisplay from "./_components/empty-display"
 import ListItem from "./_components/list-item"
+import EmptyDisplay from "@/components/shared/empty-display"
 
 function Page() {
-    const [activeTab, setActiveTab] = useState("all")
+    const [activeTab, setActiveTab] = useState("popular")
 
     // Custom tab data with icons and descriptions
     const tabs = [
-        {
-            id: "all",
-            label: "My Courses",
-            icon: <BookOpen size={18} />,
-            description: "View all your flashcard decks",
-            count: courses.length,
-        },
         {
             id: "popular",
             label: "All Courses ",
@@ -26,8 +19,14 @@ function Page() {
             description: "Cards that need your attention",
             count: 3,
         },
+        {
+            id: "personal",
+            label: "My Courses",
+            icon: <BookOpen size={18} />,
+            description: "View all your flashcard decks",
+            count: courses.length,
+        },
     ]
-    const { isSidenavOpen } = useSidenav()
     const handleTabChange = (tabId: any) => {
         setActiveTab(tabId)
     }
@@ -88,8 +87,9 @@ function Page() {
 
                     {/* Tab content */}
                     <div className="relative min-h-[70vh] ">
-                        {activeTab === "all" && (
+                        {activeTab === "personal" && (
                             <EmptyDisplay
+                                buttonText="View popular"
                                 title="You have no courses yet"
                                 icon={
                                     <BookOpen
@@ -103,14 +103,7 @@ function Page() {
                         )}
 
                         {activeTab === "popular" && (
-                            <div
-                                className={cn(
-                                    "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-4 gap-y-8",
-                                    {
-                                        " lg:grid-cols-4 ": !isSidenavOpen,
-                                    }
-                                )}
-                            >
+                            <div className={cn(" flex flex-col gap-y-8")}>
                                 {courses.map((item) => {
                                     return (
                                         <ListItem item={item} key={item.id} />

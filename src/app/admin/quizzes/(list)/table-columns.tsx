@@ -7,6 +7,7 @@ import CategoryButton from "./_components/category"
 import MoreButton from "./_components/more-button"
 import StatusButton from "./_components/status-button"
 import { Item } from "./page"
+import IsFeaturedSwitch from "./_components/is-featured-switch"
 
 export const columns: ColumnDef<Item>[] = [
     {
@@ -115,6 +116,19 @@ export const columns: ColumnDef<Item>[] = [
         },
     },
     {
+        header: "Featured",
+        cell: ({ row }) => {
+            return (
+                <div className="flex items-center !text-base font-semibold justify-center ">
+                    <IsFeaturedSwitch
+                        initialIsFeatured={row.original.is_featured || false}
+                        itemId={row.original.id}
+                    />
+                </div>
+            )
+        },
+    },
+    {
         header: "Created At",
         cell: ({ row }) => {
             return (
@@ -127,7 +141,12 @@ export const columns: ColumnDef<Item>[] = [
     {
         id: "actions",
         cell: ({ row }) => {
-            return <MoreButton itemId={row.original.id} />
+            return (
+                <MoreButton
+                    status={row.original.publishing_status}
+                    itemId={row.original.id}
+                />
+            )
         },
     },
 ]

@@ -17,7 +17,6 @@ export default function ToolBarImage(props: Props) {
                 isOpen={props.isOpen}
                 onImageSave={(url) => {
                     if (url) {
-                        console.log("image url ==>", url)
                         props.editor
                             .chain()
                             .focus()

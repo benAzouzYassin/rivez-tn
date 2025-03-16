@@ -25,7 +25,7 @@ export default function RootLayout({
     return (
         <html lang="en" className=" overflow-x-hidden">
             <head>
-                <script src="httaps://unpkg.com/react-scan/dist/auto.global.js"></script>
+                {/* <script src="https://unpkg.com/react-scan/dist/auto.global.js"></script> */}
             </head>
             <body
                 className={`${nunito.className} overflow-y-auto overflow-x-hidden antialiased  min-w-screen`}

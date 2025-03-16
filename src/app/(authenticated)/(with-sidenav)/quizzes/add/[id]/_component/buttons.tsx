@@ -13,7 +13,9 @@ import useQuizStore, {
 } from "../store"
 import { useQueryClient } from "@tanstack/react-query"
 import { shuffleArray } from "@/utils/array"
+import { useIsAdmin } from "@/hooks/use-is-admin"
 export default function Buttons() {
+    const isAdmin = useIsAdmin()
     const params = useParams()
     const quizId = parseInt(params["id"] as string)
     const reset = useQuizStore((s) => s.reset)
@@ -122,7 +124,7 @@ export default function Buttons() {
                 queryClient.invalidateQueries({
                     queryKey: ["quizzes"],
                 })
-                router.replace("/admin/quizzes")
+                router.replace("/quizzes/list")
                 reset()
             }
         } catch (error) {
@@ -194,21 +196,24 @@ export default function Buttons() {
                 </Button>
             </WarningDialog>
             <Button
-                onClick={() => handleSubmit("publish")}
-                isLoading={isPublishing}
-                className="text-base font-extrabold"
-                variant="secondary"
-            >
-                Publish
-            </Button>
-            <Button
                 isLoading={isSavingAsDraft}
                 onClick={() => handleSubmit("saveAsDraft")}
                 className="text-base font-extrabold"
-                variant="blue"
+                variant={isAdmin ? "secondary" : "blue"}
             >
-                Save draft
+                {isAdmin ? "Save draft" : "Save Quiz"}
             </Button>
+            {isAdmin && (
+                <Button
+                    onClick={() => handleSubmit("publish")}
+                    isLoading={isPublishing}
+                    className="text-base font-extrabold"
+                    variant="blue"
+                >
+                    Publish Quiz
+                </Button>
+            )}
+
             <WarningDialog
                 titleClassName="text-[#EF9C07]"
                 isOpen={isWarning}

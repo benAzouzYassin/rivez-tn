@@ -5,42 +5,45 @@ import ImageUpload from "@/components/shared/image-upload"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import {
+    Collapsible,
+    CollapsibleContent,
+    CollapsibleTrigger,
+} from "@/components/ui/collapsible"
+import {
     Select,
     SelectContent,
     SelectItem,
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select"
-import { ChevronDown, ChevronLeft, ImageIcon } from "lucide-react"
+import {
+    ChevronDown,
+    ChevronLeft,
+    Edit,
+    ImageIcon,
+    ZapIcon,
+} from "lucide-react"
 import { Controller } from "react-hook-form"
 
 import { createQuiz } from "@/data-access/quizzes/create"
 import { useCurrentUser } from "@/hooks/use-current-user"
-import { toastError } from "@/lib/toasts"
+import { toastError, toastSuccess } from "@/lib/toasts"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useRouter } from "nextjs-toploader/app"
-import { useMemo, useState } from "react"
+import { useEffect, useMemo, useState } from "react"
 import { useForm } from "react-hook-form"
 import { z } from "zod"
-import useQuizStore from "../../[id]/store"
-import dynamic from "next/dynamic"
-import { PdfInputLoading } from "./_components/pdf-input-loading"
 import { useSidenav } from "@/providers/sidenav-provider"
-import {
-    Collapsible,
-    CollapsibleContent,
-    CollapsibleTrigger,
-} from "@/components/ui/collapsible"
-import { Textarea } from "@/components/ui/textarea"
 import SearchSelectMultiple from "@/components/ui/search-select-multiple"
+import { Textarea } from "@/components/ui/textarea"
 import { POSSIBLE_QUESTIONS } from "@/app/api/quiz/generate-quiz/constants"
+import { default as useEditableQuizStore } from "../[id]/store"
+import { useQuestionsStore as useViewOnlyQuizStore } from "../../../../quizzes/[id]/store"
+import GeneralLoadingScreen from "@/components/shared/general-loading-screen"
+import { ErrorDisplay } from "@/components/shared/error-display"
+import { useQueryClient } from "@tanstack/react-query"
 
 const POSSIBLE_QUESTIONS_TYPES = Object.keys(POSSIBLE_QUESTIONS)
-
-const PdfInput = dynamic(() => import("./_components/pdf-input"), {
-    loading: () => <PdfInputLoading />,
-})
-
 export type FormValues = {
     category: string | null
     name: string
@@ -53,16 +56,32 @@ export type FormValues = {
     allowedQuestions?: string[] | null
 }
 
-export default function Document() {
+export default function SubjectForm() {
     const sideNav = useSidenav()
-
+    const queryClient = useQueryClient()
     const [imageUrl, setImageUrl] = useState<string | null>(null)
-    const [pdfPages, setPdfPages] = useState<string[]>([])
     const [isUploadingImage, setIsUploadingImage] = useState(false)
     const [isLoading, setIsLoading] = useState(false)
     const user = useCurrentUser()
     const router = useRouter()
-    const generateQuizWithAi = useQuizStore((s) => s.generateQuizWithAi)
+    const addToEditQuizWithAi = useEditableQuizStore(
+        (s) => s.generateQuizWithAi
+    )
+    const addToTakeQuizWithAi = useViewOnlyQuizStore(
+        (s) => s.generateQuizWithAi
+    )
+    const isGeneratingToTakeQuiz = useViewOnlyQuizStore(
+        (s) => s.isGeneratingWithAi
+    )
+    const isToTakeQuizError = useViewOnlyQuizStore((s) => s.isAiError)
+    const resetViewOnlyQuizStore = useViewOnlyQuizStore((s) => s.reset)
+    const resetEditableQuizStore = useEditableQuizStore((s) => s.reset)
+
+    useEffect(() => {
+        resetViewOnlyQuizStore()
+        resetEditableQuizStore()
+    }, [resetViewOnlyQuizStore, resetEditableQuizStore])
+
     const formSchema = useMemo(
         () =>
             z.object({
@@ -75,10 +94,13 @@ export default function Document() {
                     .optional()
                     .nullable(),
                 notes: z.string().nullable(),
-
                 name: z
                     .string()
                     .min(1, "Name is required")
+                    .max(100, "Input exceeds maximum length"),
+                mainTopic: z
+                    .string()
+                    .min(1, "The quiz subject is required")
                     .max(100, "Input exceeds maximum length"),
                 category: z.string().nullable().optional(),
                 language: z.string().nullable().optional(),
@@ -101,10 +123,14 @@ export default function Document() {
             mainTopic: "",
             maxQuestions: null,
             minQuestions: null,
+            allowedQuestions: null,
         },
     })
 
-    const onSubmit = async (data: FormValues) => {
+    const onSubmit = async (
+        data: FormValues,
+        type: "generate-and-take" | "generate-and-modify"
+    ) => {
         try {
             setIsLoading(true)
             const result = await createQuiz({
@@ -115,11 +141,31 @@ export default function Document() {
                 author_id: user.data?.id,
             })
             const quizId = result[0].id
-            if (sideNav.isSidenavOpen) {
-                sideNav.toggleSidenav()
+            if (type === "generate-and-modify") {
+                if (sideNav.isSidenavOpen) {
+                    sideNav.toggleSidenav()
+                }
+                router.push(`/quizzes/add/${quizId}?isGeneratingWithAi=true`)
+                addToEditQuizWithAi({ ...data, quizId }, "subject", () => {
+                    // on success
+                    queryClient.refetchQueries({
+                        predicate: (query) =>
+                            query.queryKey.includes("current-user"),
+                    })
+                })
             }
-            router.push(`/admin/quizzes/add/${quizId}?isGeneratingWithAi=true`)
-            generateQuizWithAi({ ...data, pdfPages }, "pdf")
+
+            if (type === "generate-and-take") {
+                addToTakeQuizWithAi({ ...data, quizId }, "subject", () => {
+                    // on success
+                    toastSuccess("Quiz generated successfully")
+                    router.push(`/quizzes/${quizId}?isGeneratingWithAi=true`)
+                    queryClient.refetchQueries({
+                        predicate: (query) =>
+                            query.queryKey.includes("current-user"),
+                    })
+                })
+            }
 
             setImageUrl(null)
         } catch (error) {
@@ -129,10 +175,16 @@ export default function Document() {
         }
     }
 
+    if (isGeneratingToTakeQuiz) {
+        return <GeneralLoadingScreen text="Generating your quiz" />
+    }
+    if (isToTakeQuizError) {
+        return <ErrorDisplay message="Something went wrong..." />
+    }
     return (
         <main className="flex relative items-center pb-20  flex-col">
             <h1 className="mt-10 text-neutral-600 text-3xl font-extrabold">
-                Generate from pdf
+                Generate from subject
             </h1>
             <div className="flex items-center  h-0">
                 <Button
@@ -151,8 +203,13 @@ export default function Document() {
                     className="w-full"
                     errorMessage={form.formState.errors.name?.message}
                 />
-                <PdfInput onPDFPagesChanges={setPdfPages} />
-                <div className="grid grid-cols-2 mt-4 gap-8">
+                <Input
+                    {...form.register("mainTopic")}
+                    placeholder="Subject"
+                    className="w-full"
+                    errorMessage={form.formState.errors.mainTopic?.message}
+                />
+                <div className="grid grid-cols-2 -mt-1 gap-8">
                     <Controller
                         control={form.control}
                         name="category"
@@ -202,7 +259,9 @@ export default function Document() {
                 </div>
                 <Collapsible className="group ">
                     <CollapsibleTrigger className="w-full data-[state=open]:font-bold  data-[state=open]:text-neutral-500 data-[state=open]:bg-blue-300/80 data-[state=open]:border-transparent   mb-4 hover:bg-neutral-100 flex justify-between items-center rounded-xl transition-all duration-200 bg-[#F7F7F7]/50 font-medium border-2 p-3 h-12 border-[#E5E5E5] text-[#AFAFAF] cursor-pointer">
-                        <span>Advanced options</span>
+                        <span className="underline underline-offset-4">
+                            Advanced options
+                        </span>
                         <ChevronDown className="group-data-[state=open]:rotate-180 transition-transform duration-500" />
                     </CollapsibleTrigger>
                     <CollapsibleContent className="bg-white data  mt-2 border-neutral-200">
@@ -303,16 +362,35 @@ export default function Document() {
                     imageUrl={imageUrl}
                     onImageUrlChange={setImageUrl}
                 />
-                <Button
-                    isLoading={isLoading}
-                    disabled={isUploadingImage}
-                    type="button"
-                    onClick={form.handleSubmit(onSubmit)}
-                    className="font-extrabold uppercase mt-5 text-sm"
-                    variant="blue"
-                >
-                    Generate Quiz
-                </Button>
+                <div className="grid grid-cols-2 gap-5">
+                    <Button
+                        isLoading={isLoading}
+                        disabled={isUploadingImage}
+                        type="button"
+                        onClick={() => {
+                            form.handleSubmit((data) =>
+                                onSubmit(data, "generate-and-take")
+                            )()
+                        }}
+                        className="font-extrabold uppercase mt-5 py-7 text-sm"
+                        variant="blue"
+                    >
+                        Generate and Take <ZapIcon className="!w-5 !h-5" />
+                    </Button>
+                    <Button
+                        isLoading={isLoading}
+                        disabled={isUploadingImage}
+                        type="button"
+                        onClick={() => {
+                            form.handleSubmit((data) =>
+                                onSubmit(data, "generate-and-modify")
+                            )()
+                        }}
+                        className="font-extrabold uppercase py-7 mt-5 text-sm"
+                    >
+                        Generate And Modify <Edit className="!w-5 !h-5" />
+                    </Button>
+                </div>
             </section>
         </main>
     )

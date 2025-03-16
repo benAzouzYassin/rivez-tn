@@ -18,7 +18,7 @@ export async function readCurrentUser() {
 
     const userProfileResponse = await supabase
         .from("user_profiles")
-        .select("username,xp_points")
+        .select("username,xp_points,credit_balance")
         .eq("user_id", userResponse.data.user.id)
         .single()
 
@@ -31,6 +31,7 @@ export async function readCurrentUser() {
     }
     return {
         data: {
+            credit_balance: userProfileResponse.data?.credit_balance || 0,
             user_role: userRoleResponse.data.user_role,
             xp_points: userProfileResponse.data?.xp_points || 0,
             id: userResponse.data.user?.id,
@@ -183,4 +184,14 @@ export async function readUserProfileWithData(params: {
         .single()
         .throwOnError()
     return { ...response.data, submissionsCount }
+}
+
+export async function getUserCreditBalance(userId: string) {
+    const response = await supabase
+        .from("user_profiles")
+        .select(`credit_balance`)
+        .eq("user_id", userId)
+        .single()
+        .throwOnError()
+    return response.data.credit_balance
 }

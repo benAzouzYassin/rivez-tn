@@ -8,7 +8,8 @@ import { CodeSnippetsResponse } from "@/app/api/quiz/generate-code-snippets/rout
 export const generateQuiz = async (
     method: "subject" | "pdf",
     data: GenerateFromSubjectBody,
-    onChange: (newValue: z.infer<typeof quizQuestionSchema> | null) => void
+    onChange: (newValue: z.infer<typeof quizQuestionSchema> | null) => void,
+    onFinish?: () => void
 ) => {
     const {
         data: { session },
@@ -34,18 +35,25 @@ export const generateQuiz = async (
     })
 
     const reader = response?.body?.getReader()
+
     let rawResult = ""
     if (reader) {
-        readStream(reader, (chunk) => {
-            rawResult += chunk
-            rawResult = cleanJsonStream(rawResult)
+        readStream(
+            reader,
+            (chunk) => {
+                rawResult += chunk
+                rawResult = cleanJsonStream(rawResult)
 
-            try {
-                const partialData = partialParseJson(rawResult)
-                const questions = quizQuestionSchema.parse(partialData)
-                onChange(questions)
-            } catch {}
-        })
+                try {
+                    const partialData = partialParseJson(rawResult)
+                    const questions = quizQuestionSchema.parse(partialData)
+                    onChange(questions)
+                } catch {}
+            },
+            () => {
+                onFinish?.()
+            }
+        )
     } else {
         throw new Error("no stream to read data")
     }

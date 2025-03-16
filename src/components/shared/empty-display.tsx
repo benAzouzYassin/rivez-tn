@@ -6,6 +6,7 @@ interface Props {
     title: string
     onClick?: () => void
     description: string
+    buttonText?: string
 }
 export default function EmptyDisplay(props: Props) {
     return (
@@ -25,7 +26,7 @@ export default function EmptyDisplay(props: Props) {
                     className="-mt-4"
                     onClick={props.onClick}
                 >
-                    Browse all courses
+                    {props.buttonText}
                 </Button>
             )}
         </div>

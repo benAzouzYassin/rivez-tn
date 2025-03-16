@@ -28,7 +28,7 @@ export default function QuizType({
                 if (sideNav.isSidenavOpen) {
                     sideNav.toggleSidenav()
                 }
-                router.push(`/admin/quizzes/add/generate/${value}`)
+                router.push(`/quizzes/add/${value}`)
             }}
             variant={"secondary"}
             className="!p-3 h-28 flex items-center justify-start  disabled:opacity-80 disabled:bg-neutral-200/70 w-full max-h-fit text-start rounded-xl hover:border-blue-300 hover:bg-blue-100/70 hover:shadow-blue-300 transition-all  "

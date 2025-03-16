@@ -64,7 +64,7 @@ export default function Page() {
             if (sideNav.isSidenavOpen) {
                 sideNav.toggleSidenav()
             }
-            router.push(`/admin/quizzes/add/${quizId}`)
+            router.push(`/quizzes/add/${quizId}`)
             setImageUrl(null)
         } catch (error) {
             toastError("Something wrong happened.")

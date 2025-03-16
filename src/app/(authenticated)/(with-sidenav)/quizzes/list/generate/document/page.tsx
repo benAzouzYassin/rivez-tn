@@ -5,11 +5,6 @@ import ImageUpload from "@/components/shared/image-upload"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import {
-    Collapsible,
-    CollapsibleContent,
-    CollapsibleTrigger,
-} from "@/components/ui/collapsible"
-import {
     Select,
     SelectContent,
     SelectItem,
@@ -27,13 +22,26 @@ import { useRouter } from "nextjs-toploader/app"
 import { useMemo, useState } from "react"
 import { useForm } from "react-hook-form"
 import { z } from "zod"
-import useQuizStore from "../../[id]/store"
+import dynamic from "next/dynamic"
+import { PdfInputLoading } from "./_components/pdf-input-loading"
 import { useSidenav } from "@/providers/sidenav-provider"
-import SearchSelectMultiple from "@/components/ui/search-select-multiple"
+import {
+    Collapsible,
+    CollapsibleContent,
+    CollapsibleTrigger,
+} from "@/components/ui/collapsible"
 import { Textarea } from "@/components/ui/textarea"
+import SearchSelectMultiple from "@/components/ui/search-select-multiple"
 import { POSSIBLE_QUESTIONS } from "@/app/api/quiz/generate-quiz/constants"
+import useQuizStore from "../../../add/[id]/store"
+import { useQueryClient } from "@tanstack/react-query"
 
 const POSSIBLE_QUESTIONS_TYPES = Object.keys(POSSIBLE_QUESTIONS)
+
+const PdfInput = dynamic(() => import("./_components/pdf-input"), {
+    loading: () => <PdfInputLoading />,
+})
+
 export type FormValues = {
     category: string | null
     name: string
@@ -46,10 +54,11 @@ export type FormValues = {
     allowedQuestions?: string[] | null
 }
 
-export default function SubjectForm() {
+export default function Document() {
     const sideNav = useSidenav()
-
+    const queryClient = useQueryClient()
     const [imageUrl, setImageUrl] = useState<string | null>(null)
+    const [pdfPages, setPdfPages] = useState<string[]>([])
     const [isUploadingImage, setIsUploadingImage] = useState(false)
     const [isLoading, setIsLoading] = useState(false)
     const user = useCurrentUser()
@@ -67,13 +76,10 @@ export default function SubjectForm() {
                     .optional()
                     .nullable(),
                 notes: z.string().nullable(),
+
                 name: z
                     .string()
                     .min(1, "Name is required")
-                    .max(100, "Input exceeds maximum length"),
-                mainTopic: z
-                    .string()
-                    .min(1, "The quiz subject is required")
                     .max(100, "Input exceeds maximum length"),
                 category: z.string().nullable().optional(),
                 language: z.string().nullable().optional(),
@@ -96,7 +102,6 @@ export default function SubjectForm() {
             mainTopic: "",
             maxQuestions: null,
             minQuestions: null,
-            allowedQuestions: null,
         },
     })
 
@@ -114,8 +119,14 @@ export default function SubjectForm() {
             if (sideNav.isSidenavOpen) {
                 sideNav.toggleSidenav()
             }
-            router.push(`/admin/quizzes/add/${quizId}?isGeneratingWithAi=true`)
-            generateQuizWithAi(data, "subject")
+            router.push(`/quizzes/add/${quizId}?isGeneratingWithAi=true`)
+            generateQuizWithAi({ ...data, pdfPages, quizId }, "pdf", () => {
+                // on success
+                queryClient.refetchQueries({
+                    predicate: (query) =>
+                        query.queryKey.includes("current-user"),
+                })
+            })
 
             setImageUrl(null)
         } catch (error) {
@@ -128,7 +139,7 @@ export default function SubjectForm() {
     return (
         <main className="flex relative items-center pb-20  flex-col">
             <h1 className="mt-10 text-neutral-600 text-3xl font-extrabold">
-                Generate from subject
+                Generate from pdf
             </h1>
             <div className="flex items-center  h-0">
                 <Button
@@ -147,13 +158,8 @@ export default function SubjectForm() {
                     className="w-full"
                     errorMessage={form.formState.errors.name?.message}
                 />
-                <Input
-                    {...form.register("mainTopic")}
-                    placeholder="Subject"
-                    className="w-full"
-                    errorMessage={form.formState.errors.mainTopic?.message}
-                />
-                <div className="grid grid-cols-2 -mt-1 gap-8">
+                <PdfInput onPDFPagesChanges={setPdfPages} />
+                <div className="grid grid-cols-2 mt-4 gap-8">
                     <Controller
                         control={form.control}
                         name="category"
@@ -203,7 +209,9 @@ export default function SubjectForm() {
                 </div>
                 <Collapsible className="group ">
                     <CollapsibleTrigger className="w-full data-[state=open]:font-bold  data-[state=open]:text-neutral-500 data-[state=open]:bg-blue-300/80 data-[state=open]:border-transparent   mb-4 hover:bg-neutral-100 flex justify-between items-center rounded-xl transition-all duration-200 bg-[#F7F7F7]/50 font-medium border-2 p-3 h-12 border-[#E5E5E5] text-[#AFAFAF] cursor-pointer">
-                        <span>Advanced options</span>
+                        <span className="underline underline-offset-4">
+                            Advanced options
+                        </span>
                         <ChevronDown className="group-data-[state=open]:rotate-180 transition-transform duration-500" />
                     </CollapsibleTrigger>
                     <CollapsibleContent className="bg-white data  mt-2 border-neutral-200">
