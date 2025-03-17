@@ -18,3 +18,22 @@ export async function handleQuizRefund(data: {
         },
     })
 }
+export async function handleQuestionRefund() {
+    const {
+        data: { session },
+    } = await readCurrentSession()
+    if (!session) {
+        throw new Error("Session error")
+    }
+
+    await axios.post(
+        `/api/quiz/handle-question-refund`,
+        {},
+        {
+            headers: {
+                "access-token": session.access_token,
+                "refresh-token": session.refresh_token,
+            },
+        }
+    )
+}

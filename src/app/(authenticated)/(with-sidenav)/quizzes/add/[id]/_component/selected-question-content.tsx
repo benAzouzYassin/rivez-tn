@@ -14,6 +14,10 @@ export default function SelectedQuestionContent() {
         (q) => q.localId === selectedQuestionId
     )
     const isBeingGenerated = useQuizStore((s) => s.isAddingQuestionByAi)
+
+    if (isBeingGenerated) {
+        return <GeneralLoadingScreen text="Generating your question" />
+    }
     if (!selectedQuestion) {
         return (
             <section className="flex min-h-[70vh] items-center justify-center w-full h-full">
@@ -25,9 +29,6 @@ export default function SelectedQuestionContent() {
                 />
             </section>
         )
-    }
-    if (isBeingGenerated) {
-        return <GeneralLoadingScreen text="Generating your question" />
     }
     return (
         <section className="mt-10 h-full px-20 w-full">

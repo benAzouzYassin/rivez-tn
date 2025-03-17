@@ -1,5 +1,6 @@
 import { toastError } from "@/lib/toasts"
 import { cn } from "@/lib/ui-utils"
+import { useQueryClient } from "@tanstack/react-query"
 import { Plus } from "lucide-react"
 import useQuizStore from "../store"
 import LayoutSelectDialog, { LayoutOptions } from "./layout-select-dialog"
@@ -10,6 +11,7 @@ interface Props {
 export default function AddQuestionButton(props: Props) {
     const addQuestion = useQuizStore((s) => s.addQuestion)
     const generateAddedQuestion = useQuizStore((s) => s.addQuestionWithAi)
+    const queryClient = useQueryClient()
     const handleSelect = (layoutType: LayoutOptions) => {
         switch (layoutType) {
             case "fill-in-the-blank":
@@ -110,17 +112,28 @@ export default function AddQuestionButton(props: Props) {
                 break
         }
     }
+
     return (
         <LayoutSelectDialog
             enableAi
             onSelect={handleSelect}
             onSelectWithAi={(layout, data) => {
                 const aiQuestionType = layoutTypeToAiQuestionType[layout]
+                const dataForStore = layoutTypeToStoreQuestionType[layout] || {}
                 generateAddedQuestion({
-                    data: { ...data, questionType: aiQuestionType },
+                    storeData: dataForStore,
+                    aiData: {
+                        ...data,
+                        questionType: aiQuestionType,
+                    },
                     onError: () => {
                         toastError("Something went wrong.")
                     },
+                }).then(() => {
+                    queryClient.refetchQueries({
+                        predicate: (query) =>
+                            query.queryKey.includes("current-user"),
+                    })
                 })
             }}
             trigger={
@@ -144,4 +157,32 @@ const layoutTypeToAiQuestionType = {
     "matching-pairs": "MATCHING_PAIRS",
     "multiple-choice-without-image": "MULTIPLE_CHOICE_WITHOUT_IMAGE",
     "fill-in-the-blank": "FILL_IN_THE_BLANK",
+} as const
+
+const layoutTypeToStoreQuestionType = {
+    "vertical-multiple-choice": {
+        imageType: "normal-image",
+        layout: "vertical",
+        type: "MULTIPLE_CHOICE",
+    },
+    "horizontal-multiple-choice": {
+        imageType: "normal-image",
+        layout: "horizontal",
+        type: "MULTIPLE_CHOICE",
+    },
+    "matching-pairs": {
+        layout: "vertical",
+        type: "MATCHING_PAIRS",
+        imageType: "none",
+    },
+    "multiple-choice-without-image": {
+        imageType: "none",
+        layout: "vertical",
+        type: "MULTIPLE_CHOICE",
+    },
+    "fill-in-the-blank": {
+        imageType: "none",
+        layout: "vertical",
+        type: "FILL_IN_THE_BLANK",
+    },
 } as const

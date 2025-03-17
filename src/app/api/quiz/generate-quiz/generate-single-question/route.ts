@@ -1,15 +1,12 @@
 import { anthropicHaiku } from "@/lib/ai"
-import { streamText, generateText } from "ai"
+import { generateText } from "ai"
 import { NextRequest, NextResponse } from "next/server"
 import { z } from "zod"
 import { generateSingleQuestionPrompt } from "./utils"
-import { POSSIBLE_QUESTIONS } from "../constants"
+import { POSSIBLE_QUESTIONS, QUESTION_COST } from "../constants"
 import { getUserInServerSide } from "@/data-access/users/authenticate-user-ssr"
 import { supabaseAdminServerSide } from "@/lib/supabase-server-side"
 
-const QUESTION_COST =
-    Number(process.env.NEXT_PUBLIC_LOW_MODEL_LOW_TOKENS_QUIZ_CREDIT_COST || 1) /
-    6
 export async function POST(req: NextRequest) {
     try {
         const accessToken = req.headers.get("access-token") || ""

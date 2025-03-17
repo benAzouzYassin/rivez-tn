@@ -26,7 +26,7 @@ type Props = {
     onSelectWithAi?: (
         layoutType: LayoutOptions,
         data: Omit<
-            Parameters<Store["addQuestionWithAi"]>["0"]["data"],
+            Parameters<Store["addQuestionWithAi"]>["0"]["aiData"],
             "questionType"
         >
     ) => void

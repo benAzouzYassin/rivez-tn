@@ -8,7 +8,10 @@ import { Database } from "@/types/database.types"
 import { create } from "zustand"
 import { formatGeneratedQuizQuestions, formatSingleQuestion } from "./utils"
 import { deleteQuizById } from "@/data-access/quizzes/delete"
-import { handleQuizRefund } from "@/data-access/quizzes/handle-refund"
+import {
+    handleQuestionRefund,
+    handleQuizRefund,
+} from "@/data-access/quizzes/handle-refund"
 import { generateQuizQuestion } from "@/data-access/quizzes/generate-question"
 
 interface State {
@@ -22,7 +25,12 @@ interface State {
 
 interface Actions {
     addQuestionWithAi: (params: {
-        data: Parameters<typeof generateQuizQuestion>["0"]
+        storeData: {
+            layout: QuizQuestionType["layout"]
+            type: QuizQuestionType["type"]
+            imageType: QuizQuestionType["imageType"]
+        }
+        aiData: Parameters<typeof generateQuizQuestion>["0"]
         onError: () => void
     }) => Promise<void>
     generateQuizWithAi: (
@@ -104,22 +112,37 @@ const initialState: State = {
 
 const useQuizStore = create<Store>((set, get) => ({
     ...initialState,
-    addQuestionWithAi: async ({ data, onError }) => {
+    addQuestionWithAi: async ({ aiData, storeData, onError }) => {
         set({ isAddingQuestionByAi: true })
         try {
-            const result = await generateQuizQuestion(data)
+            const result = await generateQuizQuestion(aiData)
             const localId = crypto.randomUUID()
-            const formatted = { ...formatSingleQuestion(result), localId }
-            console.log(formatted)
+            const formatted = {
+                ...formatSingleQuestion(result),
+                localId,
+            } as any
             if (!formatted) {
                 throw new Error("error while formatting question")
             }
             set((state) => ({
-                allQuestions: [...state.allQuestions, formatted as any],
+                allQuestions: [
+                    ...state.allQuestions,
+                    {
+                        imageType: storeData.imageType,
+                        layout: storeData.layout,
+                        type: storeData.type,
+                        content: formatted?.content,
+                        imageUrl: "",
+                        localId: formatted.localId || crypto.randomUUID(),
+                        questionText: formatted?.questionText || "",
+                        codeSnippets: [],
+                    },
+                ],
                 selectedQuestionLocalId: localId,
             }))
         } catch (err) {
-            console.log("errror ", err)
+            console.log("error ", err)
+            await handleQuestionRefund()
             onError()
         } finally {
             set({ isAddingQuestionByAi: false })

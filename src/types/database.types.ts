@@ -304,6 +304,7 @@ export type Database = {
       }
       user_profiles: {
         Row: {
+          allowed_error_credit_refund: number | null
           avatar_url: string | null
           created_at: string
           credit_balance: number
@@ -315,6 +316,7 @@ export type Database = {
           xp_points: number | null
         }
         Insert: {
+          allowed_error_credit_refund?: number | null
           avatar_url?: string | null
           created_at?: string
           credit_balance?: number
@@ -326,6 +328,7 @@ export type Database = {
           xp_points?: number | null
         }
         Update: {
+          allowed_error_credit_refund?: number | null
           avatar_url?: string | null
           created_at?: string
           credit_balance?: number

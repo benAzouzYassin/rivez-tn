@@ -33,20 +33,29 @@ export async function POST(req: NextRequest) {
             .throwOnError()
         const { isValidRefund, refundError } = validateQuizRefund(quizData)
         if (isValidRefund) {
-            const userBalance = (
-                await supabaseAdmin
-                    .from("user_profiles")
-                    .select(`credit_balance`)
-                    .eq("user_id", userId)
-                    .single()
-                    .throwOnError()
-            ).data.credit_balance
+            const userProfileData = await supabaseAdmin
+                .from("user_profiles")
+                .select(`credit_balance,allowed_error_credit_refund`)
+                .eq("user_id", userId)
+                .single()
+                .throwOnError()
+            const userBalance = userProfileData.data.credit_balance
+            const allowedErrorCreditRefund =
+                userProfileData.data.allowed_error_credit_refund
+            const creditToRefund = Number(quizData.credit_cost || 0)
 
+            if (!allowedErrorCreditRefund) {
+                return NextResponse.json(
+                    { error: "you did too much refunds." },
+                    { status: 429 }
+                )
+            }
             await supabaseAdmin
                 .from("user_profiles")
                 .update({
-                    credit_balance:
-                        userBalance + Number(quizData.credit_cost || 0),
+                    credit_balance: userBalance + creditToRefund,
+                    allowed_error_credit_refund:
+                        (allowedErrorCreditRefund || 0) - creditToRefund,
                 })
                 .eq("user_id", userId)
                 .throwOnError()
