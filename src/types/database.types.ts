@@ -279,18 +279,21 @@ export type Database = {
           created_at: string
           id: number
           quiz_id: number | null
+          user_id: string | null
         }
         Insert: {
           cause?: string | null
           created_at?: string
           id?: number
           quiz_id?: number | null
+          user_id?: string | null
         }
         Update: {
           cause?: string | null
           created_at?: string
           id?: number
           quiz_id?: number | null
+          user_id?: string | null
         }
         Relationships: [
           {
@@ -300,11 +303,17 @@ export type Database = {
             referencedRelation: "quizzes"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "quizzes_refunds_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["user_id"]
+          },
         ]
       }
       user_profiles: {
         Row: {
-          allowed_error_credit_refund: number | null
           avatar_url: string | null
           created_at: string
           credit_balance: number
@@ -316,7 +325,6 @@ export type Database = {
           xp_points: number | null
         }
         Insert: {
-          allowed_error_credit_refund?: number | null
           avatar_url?: string | null
           created_at?: string
           credit_balance?: number
@@ -328,7 +336,6 @@ export type Database = {
           xp_points?: number | null
         }
         Update: {
-          allowed_error_credit_refund?: number | null
           avatar_url?: string | null
           created_at?: string
           credit_balance?: number
