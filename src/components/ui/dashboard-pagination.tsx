@@ -143,7 +143,13 @@ export default function DashboardPagination({
                                             page === currentPage,
                                     }
                                 )}
-                                onClick={() => onPageChange(Number(page))}
+                                onClick={() => {
+                                    onPageChange(Number(page))
+                                    window.scroll({
+                                        top: 0,
+                                        behavior: "smooth",
+                                    })
+                                }}
                             >
                                 {page}
                             </Button>

@@ -123,7 +123,7 @@ function Page() {
             <div className="flex flex-col gap-6">
                 <div className="flex justify-between items-center">
                     <h1 className="text-4xl text-neutral-600 -mt-5 font-extrabold">
-                        My Flashcards
+                        Flashcards
                     </h1>
                     <div className="flex items-center gap-2">
                         <div className="mt-5 ">

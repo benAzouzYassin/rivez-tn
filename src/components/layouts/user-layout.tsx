@@ -14,6 +14,7 @@ import {
     LockIcon,
     LucidePresentation,
     PlusCircle,
+    Rocket,
     Search,
     Settings,
     WandSparklesIcon,
@@ -96,9 +97,9 @@ export default function UserLayout({ children }: Props) {
                         ],
                     },
                     {
-                        name: "Settings",
-                        icon: <Settings className="!w-6 !h-6" />,
-                        route: "/settings",
+                        name: "Our Offers",
+                        icon: <Rocket className="!w-6 !h-6" />,
+                        route: "/offers",
                     },
 
                     ...adminItems,

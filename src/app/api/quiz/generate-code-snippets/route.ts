@@ -1,5 +1,5 @@
-import { isCurrentUserAdmin } from "@/data-access/users/is-admin"
-import { anthropicHaiku, googleGemini } from "@/lib/ai"
+import { authenticateAdmin } from "@/data-access/users/is-admin"
+import { anthropicHaiku } from "@/lib/ai"
 import { streamText } from "ai"
 import { NextRequest, NextResponse } from "next/server"
 import { z } from "zod"
@@ -9,7 +9,7 @@ export async function POST(req: NextRequest) {
     try {
         const accessToken = req.headers.get("access-token") || ""
         const refreshToken = req.headers.get("refresh-token") || ""
-        const isAdmin = await isCurrentUserAdmin({ refreshToken, accessToken })
+        const isAdmin = await authenticateAdmin({ refreshToken, accessToken })
 
         if (!isAdmin) {
             return NextResponse.json(
@@ -32,7 +32,6 @@ export async function POST(req: NextRequest) {
             system: `
             - you only answer with arrays. 
             - you should escape special characters for the special characters since your response will be parse with JSON.parse()
-
             `,
         })
         return llmResponse.toTextStreamResponse()

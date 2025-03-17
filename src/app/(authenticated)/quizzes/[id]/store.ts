@@ -1,15 +1,23 @@
 import { saveSubmission } from "@/data-access/quiz_submissions/create"
+import { deleteQuizById } from "@/data-access/quizzes/delete"
+import { generateQuiz } from "@/data-access/quizzes/generate"
+import { handleQuizRefund } from "@/data-access/quizzes/handle-refund"
+import { addQuestionsToQuiz } from "@/data-access/quizzes/update"
 import {
     CodeCompletionContent,
     DebugCodeContent,
     FillInTheBlankContent,
     MatchingPairsContent,
     MultipleChoiceContent,
+    PossibleQuestionTypes,
 } from "@/schemas/questions-content"
 import { Database } from "@/types/database.types"
 import { create } from "zustand"
 
 interface State {
+    isAiError: boolean
+    temporaryAiData: Parameters<Parameters<typeof generateQuiz>["2"]>["0"]
+    isGeneratingWithAi: boolean
     savedResult: {
         correctAnswers: number
         xpGained: number
@@ -34,6 +42,22 @@ interface State {
 }
 
 interface Actions {
+    generateQuizWithAi: (
+        data: {
+            category: string | null
+            name: string
+            mainTopic: string
+            language: string | null
+            maxQuestions: number | null
+            minQuestions: number | null
+            notes: string | null
+            pdfPages?: string[]
+            allowedQuestions?: string[] | null
+            quizId: number
+        },
+        method: "subject" | "pdf",
+        onSuccess: () => void
+    ) => void
     setCurrentQuestionIndex: (index: number) => void
     addFailedQuestionIds: (id: number[]) => void
     addSkippedQuestionIds: (id: number[]) => void
@@ -50,6 +74,9 @@ interface Actions {
 
 type Store = Actions & State
 const initialState: State = {
+    isAiError: false,
+    temporaryAiData: null,
+    isGeneratingWithAi: false,
     savedResult: null,
     isSavingResults: false,
     isSavingError: false,
@@ -67,6 +94,167 @@ export const useQuestionsStore = create<Store>((set, get) => ({
     ...initialState,
     addAnswer: (answer) =>
         set((state) => ({ answers: [...state.answers, answer] })),
+    generateQuizWithAi: async (data, method, onSuccess) => {
+        try {
+            set({
+                ...initialState,
+                questions: [],
+                isGeneratingWithAi: true,
+                currentQuestionIndex: 0,
+                temporaryAiData: null,
+            })
+            generateQuiz(
+                method,
+                data,
+                (result) => {
+                    set({
+                        temporaryAiData: result,
+                    })
+                },
+                async () => {
+                    const generatedData = get().temporaryAiData?.questions
+                    if (!generatedData?.length) {
+                        throw new Error("No questions was generated.")
+                    }
+                    try {
+                        // adding the questions into the database
+                        await addQuestionsToQuiz(
+                            data.quizId,
+                            generatedData
+                                .map((q, index) => {
+                                    if (
+                                        q.type ===
+                                            "MULTIPLE_CHOICE_WITHOUT_IMAGE" ||
+                                        q.type === "MULTIPLE_CHOICE_WITH_IMAGE"
+                                    ) {
+                                        return {
+                                            displayOrder: index,
+                                            content: {
+                                                options: q.content.options.map(
+                                                    (opt) => {
+                                                        return {
+                                                            isCorrect: false,
+                                                            text: opt,
+                                                            localId:
+                                                                crypto.randomUUID(),
+                                                        }
+                                                    }
+                                                ),
+                                                codeSnippets: null,
+                                            },
+                                            type: "MULTIPLE_CHOICE" as PossibleQuestionTypes,
+                                            image: "",
+                                            question: q.questionText,
+                                            layout: "vertical" as any,
+                                            imageType: (q.type ===
+                                            "MULTIPLE_CHOICE_WITHOUT_IMAGE"
+                                                ? "none"
+                                                : "normal-image") as any,
+                                        }
+                                    }
+
+                                    if (q.type === "FILL_IN_THE_BLANK") {
+                                        return {
+                                            displayOrder: index,
+                                            content: {
+                                                options: q.content.options,
+                                                correct: q.content.correct,
+                                                parts: q.content.parts,
+                                            },
+                                            type: "FILL_IN_THE_BLANK" as PossibleQuestionTypes,
+                                            image: "",
+                                            question: q.questionText,
+                                            layout: "vertical" as any,
+                                            imageType: "none" as any,
+                                        }
+                                    }
+                                    if (q.type === "MATCHING_PAIRS") {
+                                        const formattedLeft =
+                                            q.content.leftSideOptions.map(
+                                                (opt) => ({
+                                                    text: opt,
+                                                    localId:
+                                                        crypto.randomUUID(),
+                                                })
+                                            )
+
+                                        const formattedRight =
+                                            q.content.rightSideOptions.map(
+                                                (opt) => {
+                                                    const pairedLeftOption =
+                                                        q.content.correct
+                                                            .find((pair) =>
+                                                                pair.includes(
+                                                                    opt
+                                                                )
+                                                            )
+                                                            ?.filter(
+                                                                (item) =>
+                                                                    item !== opt
+                                                            )[0]
+                                                    const pairedLeftOptionLocalId =
+                                                        formattedLeft.find(
+                                                            (item) =>
+                                                                item.text ===
+                                                                pairedLeftOption
+                                                        )?.localId
+                                                    return {
+                                                        text: opt,
+                                                        localId:
+                                                            crypto.randomUUID(),
+                                                        leftOptionLocalId:
+                                                            pairedLeftOptionLocalId ||
+                                                            null,
+                                                    }
+                                                }
+                                            )
+
+                                        return {
+                                            displayOrder: index,
+                                            content: {
+                                                leftOptions: formattedLeft,
+                                                rightOptions: formattedRight,
+                                            },
+                                            type: "MATCHING_PAIRS" as PossibleQuestionTypes,
+                                            image: "",
+                                            question: q.questionText,
+                                            layout: "horizontal" as any,
+                                            imageType: "none" as any,
+                                        }
+                                    }
+                                    return null
+                                })
+                                .filter((q) => !!q)
+                        )
+                        onSuccess()
+                    } catch (err) {
+                        console.error(err)
+                        await handleQuizRefund({
+                            cause: JSON.stringify(err),
+                            quizId: data.quizId,
+                        })
+                        await deleteQuizById(data.quizId).catch(console.error)
+                        set({
+                            isGeneratingWithAi: false,
+                            isAiError: true,
+                        })
+                    }
+                }
+            )
+        } catch (err) {
+            console.error(err)
+            await handleQuizRefund({
+                cause: JSON.stringify(err),
+                quizId: data.quizId,
+            })
+
+            deleteQuizById(data.quizId).catch(console.error)
+            set({
+                isGeneratingWithAi: false,
+                isAiError: true,
+            })
+        }
+    },
     handleQuizFinish: async (params: { quizId: string; userId: string }) => {
         set({ isSavingResults: true, isSavingError: false })
         const startDate = get().startDate?.getTime()
@@ -154,7 +342,13 @@ export const useQuestionsStore = create<Store>((set, get) => ({
         set((state) => ({
             failedQuestionsIds: [...state.failedQuestionsIds, ...ids],
         })),
-    setQuestions: (questions) => set(() => ({ questions })),
+    setQuestions: (questions) =>
+        set(() => ({
+            isAiError: false,
+            temporaryAiData: null,
+            isGeneratingWithAi: false,
+            questions,
+        })),
     incrementQuestionIndex: () =>
         set((state) => ({
             currentQuestionIndex: state.currentQuestionIndex + 1,

@@ -56,7 +56,7 @@ export default function Buttons() {
                 queryClient.invalidateQueries({
                     queryKey: ["quizzes"],
                 })
-                router.replace("/admin/quizzes")
+                router.replace("/quizzes/list")
                 reset()
             }
         } catch (error) {

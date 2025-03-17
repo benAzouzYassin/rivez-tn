@@ -104,7 +104,6 @@ export async function addQuestionsToQuiz(
         return null
     })
     if (formattedData.some((q) => !q)) {
-        console.log(formattedData)
         throw new Error("Some questions content is not valid")
     }
     const result = await supabase

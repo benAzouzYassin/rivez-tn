@@ -9,6 +9,7 @@ import {
 } from "@/data-access/users/login"
 import { dismissToasts, toastError } from "@/lib/toasts"
 import { zodResolver } from "@hookform/resolvers/zod"
+import { useQueryClient } from "@tanstack/react-query"
 import Link from "next/link"
 import { useRouter } from "nextjs-toploader/app"
 import { useMemo, useState } from "react"
@@ -16,6 +17,7 @@ import { useForm } from "react-hook-form"
 import { z } from "zod"
 
 export default function Page() {
+    const queryClient = useQueryClient()
     const router = useRouter()
     const [isPasswordAuth, setIsPasswordAuth] = useState(false)
     const [isGoogleAuth, setIsGoogleAuth] = useState(false)
@@ -54,6 +56,9 @@ export default function Page() {
             password: formData.password,
         })
         if (success) {
+            queryClient.refetchQueries({
+                queryKey: ["current-user"],
+            })
             window.location.replace(
                 localStorage.getItem("afterAuthRedirect") ||
                     process.env.NEXT_PUBLIC_SITE_URL!
@@ -127,6 +132,9 @@ export default function Page() {
                     isLoading={isGoogleAuth}
                     onClick={async () => {
                         setIsGoogleAuth(true)
+                        queryClient.refetchQueries({
+                            queryKey: ["current-user"],
+                        })
                         await loginUserWithGoogle({
                             redirectTo:
                                 localStorage.getItem("afterAuthRedirect") ||

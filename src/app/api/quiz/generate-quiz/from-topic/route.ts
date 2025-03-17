@@ -4,21 +4,27 @@ import { NextRequest, NextResponse } from "next/server"
 import { z } from "zod"
 import { generateQuizPrompt } from "./utils"
 import { POSSIBLE_QUESTIONS } from "../constants"
-import { isCurrentUserAdmin } from "@/data-access/users/is-admin"
+import { getUserInServerSide } from "@/data-access/users/authenticate-user-ssr"
+import { supabaseAdminServerSide } from "@/lib/supabase-server-side"
 
-// TODO make rate limiting for each user
+const LOW_MODEL_LOW_COST_QUIZ = Number(
+    process.env.NEXT_PUBLIC_LOW_MODEL_LOW_TOKENS_QUIZ_CREDIT_COST
+)
 export async function POST(req: NextRequest) {
     try {
         const accessToken = req.headers.get("access-token") || ""
         const refreshToken = req.headers.get("refresh-token") || ""
-        const isAdmin = await isCurrentUserAdmin({ refreshToken, accessToken })
-
-        if (!isAdmin) {
+        const userId = await getUserInServerSide({ accessToken, refreshToken })
+        if (!userId) {
             return NextResponse.json(
-                { error: "this feature is available for admins only" },
+                {
+                    error: "this feature is available for authenticated users only",
+                },
                 { status: 403 }
             )
         }
+        const supabaseAdmin = await supabaseAdminServerSide()
+
         const body = await req.json()
 
         const { success, data, error } = bodySchema.safeParse(body)
@@ -27,6 +33,7 @@ export async function POST(req: NextRequest) {
             return NextResponse.json({ error }, { status: 400 })
         }
 
+        // quiz generation
         const quizLanguage = data.language || "english"
         const notes = data.notes || null
 
@@ -53,15 +60,54 @@ export async function POST(req: NextRequest) {
             allowQuestions: (data.allowedQuestions as any) || "ALL",
         })
 
+        const userBalance = (
+            await supabaseAdmin
+                .from("user_profiles")
+                .select(`credit_balance`)
+                .eq("user_id", userId)
+                .single()
+                .throwOnError()
+        ).data.credit_balance
+
+        if (userBalance < LOW_MODEL_LOW_COST_QUIZ) {
+            return NextResponse.json(
+                {
+                    error: "Insufficient balance.",
+                },
+                { status: 400 }
+            )
+        }
+        const newBalance = userBalance - LOW_MODEL_LOW_COST_QUIZ
+
+        await supabaseAdmin
+            .from("quizzes")
+            .update({
+                credit_cost: LOW_MODEL_LOW_COST_QUIZ,
+            })
+            .eq("id", data.quizId)
+            .throwOnError()
+
+        await supabaseAdmin
+            .from("user_profiles")
+            .update({
+                credit_balance: newBalance,
+            })
+            .eq("user_id", userId)
+            .throwOnError()
         const llmResponse = streamText({
             system: `
-            - Your answers should not include any template strings.
+            - Your answer should start with this character "{".
+            - Your answer should not include any template strings.
             - Your response should be valid JSON that can be used like this : JSON.parse(response)
             - You should escape special characters for the special characters since your response will be parse with JSON.parse()
             - Your response should not be markdown. 
             - Your responses shouldn't include any example content provided to you. 
             - You should follow any user notes when generating quiz questions.
             - The content of the questions options should and the question should be simple and clear.
+            - Any code comment that starts with "//" is important and should not be ignored.
+            - Difficulty of the questions should be ${
+                data.difficulty || "NORMAL"
+            }
             `,
 
             model: anthropicHaiku,
@@ -71,6 +117,7 @@ export async function POST(req: NextRequest) {
         return llmResponse.toTextStreamResponse()
     } catch (error) {
         console.error(error)
+
         return NextResponse.json({ error }, { status: 500 })
     }
 }
@@ -80,12 +127,14 @@ const bodySchema = z.object({
         .string()
         .min(1, "Name is required")
         .max(100, "Input exceeds maximum length"),
+    quizId: z.number(),
     mainTopic: z
         .string()
         .min(1, "Main topic is required")
         .max(100, "Input exceeds maximum length"),
     language: z.string().nullable().optional(),
     notes: z.string().nullable().optional(),
+    difficulty: z.string().nullable().optional(),
     maxQuestions: z.coerce.number().max(999).nullable().optional(),
     minQuestions: z.coerce.number().max(20).nullable().optional(),
     allowedQuestions: z

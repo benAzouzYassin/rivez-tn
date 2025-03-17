@@ -1,9 +1,10 @@
-import { isCurrentUserAdmin } from "@/data-access/users/is-admin"
+import { authenticateAdmin } from "@/data-access/users/is-admin"
 import { NextRequest, NextResponse } from "next/server"
 import { s3Client } from "@/lib/s3"
 import { DeleteObjectCommand, PutObjectCommand } from "@aws-sdk/client-s3"
 
 const S3_BUCKET_NAME = "public_files"
+// TODO make rate limits for normal users
 
 export async function POST(req: NextRequest) {
     const maxFileSize =
@@ -19,13 +20,13 @@ export async function POST(req: NextRequest) {
             )
         }
 
-        const isAdmin = await isCurrentUserAdmin({ refreshToken, accessToken })
-        if (!isAdmin) {
-            return NextResponse.json(
-                { message: "Unauthorized: Admin access required" },
-                { status: 403 }
-            )
-        }
+        // const isAdmin = await authenticateAdmin({ refreshToken, accessToken })
+        // if (!isAdmin) {
+        //     return NextResponse.json(
+        //         { message: "Unauthorized: Admin access required" },
+        //         { status: 403 }
+        //     )
+        // }
 
         const formData = await req.formData()
         const file = formData.get("file") as File | null
@@ -80,7 +81,7 @@ export async function DELETE(req: NextRequest) {
             return NextResponse.json(false, { status: 401 })
         }
 
-        const isAdmin = await isCurrentUserAdmin({ refreshToken, accessToken })
+        const isAdmin = await authenticateAdmin({ refreshToken, accessToken })
         if (!isAdmin) {
             return NextResponse.json(false, { status: 403 })
         }

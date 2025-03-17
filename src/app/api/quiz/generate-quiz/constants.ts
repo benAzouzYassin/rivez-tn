@@ -277,3 +277,7 @@ export const POSSIBLE_QUESTIONS = {
             })`,
     },
 } as const
+
+export const QUESTION_COST =
+    Number(process.env.NEXT_PUBLIC_LOW_MODEL_LOW_TOKENS_QUIZ_CREDIT_COST || 1) /
+    6

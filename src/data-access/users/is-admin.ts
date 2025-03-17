@@ -2,7 +2,7 @@ import "server-only"
 
 import { supabaseServerSide } from "@/lib/supabase-server-side"
 
-export async function isCurrentUserAdmin(params: {
+export async function authenticateAdmin(params: {
     accessToken: string
     refreshToken: string
 }): Promise<boolean> {

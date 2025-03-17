@@ -132,9 +132,12 @@ export type Database = {
           author_id: string | null
           category: number | null
           created_at: string
+          credit_cost: number | null
           description: string | null
+          difficulty: Database["public"]["Enums"]["difficulty"] | null
           id: number
           image: string | null
+          is_featured: boolean
           name: string
           publishing_status: Database["public"]["Enums"]["publishing_status"]
         }
@@ -142,9 +145,12 @@ export type Database = {
           author_id?: string | null
           category?: number | null
           created_at?: string
+          credit_cost?: number | null
           description?: string | null
+          difficulty?: Database["public"]["Enums"]["difficulty"] | null
           id?: number
           image?: string | null
+          is_featured?: boolean
           name: string
           publishing_status?: Database["public"]["Enums"]["publishing_status"]
         }
@@ -152,9 +158,12 @@ export type Database = {
           author_id?: string | null
           category?: number | null
           created_at?: string
+          credit_cost?: number | null
           description?: string | null
+          difficulty?: Database["public"]["Enums"]["difficulty"] | null
           id?: number
           image?: string | null
+          is_featured?: boolean
           name?: string
           publishing_status?: Database["public"]["Enums"]["publishing_status"]
         }
@@ -181,6 +190,7 @@ export type Database = {
           description: string | null
           id: number
           image: string | null
+          is_disabled: boolean | null
           name: string | null
           publishing_status:
             | Database["public"]["Enums"]["publishing_status"]
@@ -191,6 +201,7 @@ export type Database = {
           description?: string | null
           id?: number
           image?: string | null
+          is_disabled?: boolean | null
           name?: string | null
           publishing_status?:
             | Database["public"]["Enums"]["publishing_status"]
@@ -201,6 +212,7 @@ export type Database = {
           description?: string | null
           id?: number
           image?: string | null
+          is_disabled?: boolean | null
           name?: string | null
           publishing_status?:
             | Database["public"]["Enums"]["publishing_status"]
@@ -261,10 +273,41 @@ export type Database = {
           },
         ]
       }
+      quizzes_refunds: {
+        Row: {
+          cause: string | null
+          created_at: string
+          id: number
+          quiz_id: number | null
+        }
+        Insert: {
+          cause?: string | null
+          created_at?: string
+          id?: number
+          quiz_id?: number | null
+        }
+        Update: {
+          cause?: string | null
+          created_at?: string
+          id?: number
+          quiz_id?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "quizzes_refunds_quiz_id_fkey"
+            columns: ["quiz_id"]
+            isOneToOne: false
+            referencedRelation: "quizzes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       user_profiles: {
         Row: {
+          allowed_error_credit_refund: number | null
           avatar_url: string | null
           created_at: string
+          credit_balance: number
           email: string | null
           is_banned: boolean
           phone: string | null
@@ -273,8 +316,10 @@ export type Database = {
           xp_points: number | null
         }
         Insert: {
+          allowed_error_credit_refund?: number | null
           avatar_url?: string | null
           created_at?: string
+          credit_balance?: number
           email?: string | null
           is_banned?: boolean
           phone?: string | null
@@ -283,8 +328,10 @@ export type Database = {
           xp_points?: number | null
         }
         Update: {
+          allowed_error_credit_refund?: number | null
           avatar_url?: string | null
           created_at?: string
+          credit_balance?: number
           email?: string | null
           is_banned?: boolean
           phone?: string | null
@@ -317,6 +364,7 @@ export type Database = {
       [_ in never]: never
     }
     Enums: {
+      difficulty: "NORMAL" | "MEDIUM" | "HARD"
       publishing_status: "DRAFT" | "PUBLISHED" | "ARCHIVED"
       quiz_question_image_type: "normal-image" | "code-snippets" | "none"
       quiz_question_types:

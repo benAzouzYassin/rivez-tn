@@ -23,6 +23,7 @@ export async function readQuizById(id: number) {
 export async function readQuizzesWithDetails(config?: {
     filters?: {
         name?: string | null
+        isFeatured?: boolean
     }
     pagination?: {
         currentPage: number
@@ -49,6 +50,10 @@ export async function readQuizzesWithDetails(config?: {
                 ascending: false,
             })
             .neq("publishing_status", "ARCHIVED")
+            .in(
+                "is_featured",
+                config.filters?.isFeatured ? [true] : [false, true]
+            )
             .throwOnError()
         return { data: response.data, count: response.count }
     }
