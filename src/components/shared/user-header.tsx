@@ -69,9 +69,9 @@ export default function UserHeader() {
     return (
         <header
             className={cn(
-                "w-full h-[10vh] z-10 fixed transition-all duration-300 bg-white/95 backdrop-blur-sm supports-backdrop-filter:bg-white/60",
+                "w-full h-[10vh] max-h-[85px] z-10 fixed transition-all duration-300 bg-white/95 backdrop-blur-sm supports-backdrop-filter:bg-white/60",
                 {
-                    "pl-[256px]": isSidenavOpen,
+                    "pl-[300px]": isSidenavOpen,
                     "pl-[100px]": !isSidenavOpen,
                 }
             )}
@@ -80,9 +80,9 @@ export default function UserHeader() {
                 <div className="ml-auto flex items-center gap-6">
                     <LanguageSelector />
                     <TooltipWrapper content="XP Points">
-                        <div className="flex items-center gap-2 rounded-full bg-orange-50 px-4 py-2 text-orange-500 hover:bg-orange-100 transition-colors">
+                        <div className="flex items-center gap-2 rounded-full bg-orange-50 px-4 py-2 text-orange-400 hover:bg-orange-100 transition-colors">
                             <XpIcon className="h-5 w-5" />
-                            <span className="font-medium">
+                            <span className="font-extrabold">
                                 {user?.xp_points}
                             </span>
                         </div>
@@ -92,7 +92,7 @@ export default function UserHeader() {
                         open={isUserSettingOpen}
                         onOpenChange={setIsUserSettingOpen}
                     >
-                        <PopoverTrigger>
+                        <PopoverTrigger className="cursor-pointer hover:scale-105 transition-transform">
                             <UserProfile
                                 name={user?.identities?.[0].displayName}
                                 image={user?.identities?.[0].avatar}

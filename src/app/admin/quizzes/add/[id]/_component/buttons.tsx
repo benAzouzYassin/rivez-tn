@@ -7,10 +7,12 @@ import { useParams } from "next/navigation"
 import { useRouter } from "nextjs-toploader/app"
 import { useRef, useState } from "react"
 import useQuizStore, {
+    FillInTheBlankStoreContent,
     MatchingPairsOptions,
     MultipleChoiceOptions,
 } from "../store"
 import { useQueryClient } from "@tanstack/react-query"
+import { shuffleArray } from "@/utils/array"
 export default function Buttons() {
     const params = useParams()
     const quizId = parseInt(params["id"] as string)
@@ -34,7 +36,7 @@ export default function Buttons() {
                 await addQuestionsToQuiz(
                     quizId,
                     questions
-                        .map((q) => {
+                        .map((q, index) => {
                             if (q.type === "MULTIPLE_CHOICE") {
                                 const content =
                                     q.content as MultipleChoiceOptions
@@ -42,11 +44,43 @@ export default function Buttons() {
                                     (opt) => !!opt.text
                                 )
                                 return {
-                                    content: { options: filteredOptions },
+                                    displayOrder: index,
+                                    content: {
+                                        options: filteredOptions,
+                                        codeSnippets: q.codeSnippets,
+                                    },
                                     type: q.type as any,
                                     image: q.imageUrl || "",
                                     question: q.questionText,
                                     layout: q.layout,
+                                    imageType: q.imageType,
+                                }
+                            }
+                            if (q.type === "FILL_IN_THE_BLANK") {
+                                const content =
+                                    q.content as FillInTheBlankStoreContent
+                                const notSelectedOptions = content.options.map(
+                                    (opt) => opt.text
+                                )
+                                const selectedOptions = content.correct.map(
+                                    (opt) => opt.option
+                                )
+                                const allOptions = [
+                                    ...notSelectedOptions,
+                                    ...selectedOptions,
+                                ]
+                                return {
+                                    displayOrder: index,
+                                    content: {
+                                        options: shuffleArray(allOptions),
+                                        correct: content.correct,
+                                        parts: content.parts,
+                                    },
+                                    type: q.type as any,
+                                    image: "",
+                                    question: q.questionText,
+                                    layout: q.layout,
+                                    imageType: q.imageType,
                                 }
                             }
                             if (q.type === "MATCHING_PAIRS") {
@@ -63,6 +97,7 @@ export default function Buttons() {
                                     )
 
                                 return {
+                                    displayOrder: index,
                                     content: {
                                         leftOptions: filteredLeftOptions,
                                         rightOptions: filteredRightOptions,
@@ -71,6 +106,7 @@ export default function Buttons() {
                                     image: q.imageUrl || "",
                                     question: q.questionText,
                                     layout: q.layout,
+                                    imageType: q.imageType,
                                 }
                             }
                             return null
@@ -79,7 +115,6 @@ export default function Buttons() {
                 )
                 toastSuccess("Saved successfully.")
                 if (action === "publish") {
-                    console.log("publishing the quiz")
                     await updateQuiz(quizId, { publishing_status: "PUBLISHED" })
                 } else {
                     await updateQuiz(quizId, { publishing_status: "DRAFT" })
@@ -129,6 +164,9 @@ export default function Buttons() {
                     content.leftOptions.length > 0
 
                 return isLeftOptionsValid && isRightOptionsValid
+            }
+            if (q.type === "FILL_IN_THE_BLANK") {
+                return true
             }
             return false
         })
@@ -180,6 +218,7 @@ export default function Buttons() {
                 confirmText="Continue"
                 confirmBtnClassName="bg-amber-400 shadow-amber-400"
                 onConfirm={async () => {
+                    setIsWarning(false)
                     handleSave()
                     reset()
                     router.back()

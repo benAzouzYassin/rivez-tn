@@ -34,12 +34,16 @@ export default function SearchSelect<OptionData>(props: Props<OptionData>) {
 
     return (
         <Command
-            className="h-fit  overflow-hidden"
+            className={cn("h-fit overflow-hidden", props.containerClassName)}
             autoFocus={false}
             shouldFilter={false}
         >
             <Popover open={isPopoverOpen} modal={true}>
-                <PopoverAnchor autoFocus={false} asChild>
+                <PopoverAnchor
+                    className={props.anchorClassName}
+                    autoFocus={false}
+                    asChild
+                >
                     <Input
                         errorMessage={props.errorMessage}
                         className={props.inputClassName}
@@ -166,4 +170,6 @@ interface Props<OptionData> {
     isLoading?: boolean
     errorMessage?: string
     inputClassName?: string
+    anchorClassName?: string
+    containerClassName?: string
 }

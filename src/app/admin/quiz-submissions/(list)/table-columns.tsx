@@ -1,14 +1,13 @@
+import XpIcon from "@/components/icons/xp"
+import { Badge } from "@/components/ui/badge"
 import { Checkbox } from "@/components/ui/checkbox"
 import ImageWithPreview from "@/components/ui/img-with-preview"
-import { cn } from "@/lib/ui-utils"
-import { ColumnDef } from "@tanstack/react-table"
-import { Item } from "./page"
-import { formatDate } from "@/utils/date"
-import MoreButton from "./_components/more-button"
-import { Badge } from "@/components/ui/badge"
 import TooltipWrapper from "@/components/ui/tooltip"
-import XpIcon from "@/components/icons/xp"
-import { Plus } from "lucide-react"
+import { cn } from "@/lib/ui-utils"
+import { formatDate, formatSeconds } from "@/utils/date"
+import { ColumnDef } from "@tanstack/react-table"
+import MoreButton from "./_components/more-button"
+import { Item } from "./page"
 
 export const columns: ColumnDef<Item>[] = [
     {
@@ -81,7 +80,7 @@ export const columns: ColumnDef<Item>[] = [
         cell: ({ row }) => {
             return (
                 <div className="flex items-center  min-w-[200px] !text-base font-semibold justify-center">
-                    {row.original?.seconds_spent?.toFixed(1)} Seconds
+                    {formatSeconds(row.original?.seconds_spent || 0)} Min
                 </div>
             )
         },

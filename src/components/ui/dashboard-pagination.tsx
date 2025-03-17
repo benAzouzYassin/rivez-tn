@@ -131,12 +131,15 @@ export default function DashboardPagination({
                         return (
                             <Button
                                 key={page}
+                                variant={
+                                    page === currentPage
+                                        ? "default"
+                                        : "secondary"
+                                }
                                 className={cn(
-                                    "min-w-12 p-0 transition-all duration-300 text-sm ease-in-out text-black",
+                                    "min-w-12 p-0 transition-all text-sm  text-black",
                                     {
-                                        "border-2 active:scale-95 border-neutral-300 h-[44px] bg-white shadow-xs hover:border-blue-300 hover:bg-blue-50 hover:text-neutral-900 text-neutral-900":
-                                            page !== currentPage,
-                                        "border-2 border-blue-300 h-[44px] hover:bg-blue-200/80 hover:font-extrabold bg-blue-100/80 ":
+                                        "text-white h-[44px]  bg-neutral-700":
                                             page === currentPage,
                                     }
                                 )}

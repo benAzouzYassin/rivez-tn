@@ -100,16 +100,19 @@ export function QuestionsBarChart() {
                             content={<ChartTooltipContent indicator="line" />}
                         />
                         <Bar
+                            barSize={50}
                             dataKey="correct"
                             fill="var(--color-correct)"
                             radius={4}
                         />
                         <Bar
+                            barSize={50}
                             dataKey="wrong"
                             fill="var(--color-wrong)"
                             radius={4}
                         />
                         <Bar
+                            barSize={50}
                             dataKey="skipped"
                             fill="var(--color-skipped)"
                             radius={4}

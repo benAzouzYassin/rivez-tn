@@ -1,16 +1,24 @@
 import { supabase } from "@/lib/supabase-client-side"
+import {
+    FillInTheBlankContent,
+    MultipleChoiceContent,
+    PossibleQuestionTypes,
+} from "@/schemas/questions-content"
 import { Database } from "@/types/database.types"
 
 export async function addQuestionsToQuiz(
     quizId: number,
     questions: {
+        displayOrder: number
         content:
             | AddQuestionToQuizContentTypes["MatchingPairs"]
             | AddQuestionToQuizContentTypes["MultipleChoice"]
+            | FillInTheBlankContent
         image: string
         question: string
-        type: "MULTIPLE_CHOICE" | "MATCHING_PAIRS"
+        type: PossibleQuestionTypes
         layout: "vertical" | "horizontal"
+        imageType: Database["public"]["Tables"]["quizzes_questions"]["Insert"]["image_type"]
     }[]
 ) {
     const formattedData = questions.map((q) => {
@@ -24,6 +32,7 @@ export async function addQuestionsToQuiz(
                     .filter((opt) => opt.isCorrect === true)
                     .map((opt) => opt.text) || []
             const options = content?.options.map((opt) => opt.text) || []
+            const codeSnippets = content?.codeSnippets
 
             return {
                 image: q.image,
@@ -31,10 +40,27 @@ export async function addQuestionsToQuiz(
                 quiz: quizId,
                 question: q.question,
                 layout: q.layout,
+                image_type: q.imageType,
+                display_order: q.displayOrder,
                 content: {
                     correct,
                     options,
+                    codeSnippets,
                 } satisfies DbMultipleChoiceContent,
+            }
+        }
+        if (q.type === "FILL_IN_THE_BLANK") {
+            const content = q.content as FillInTheBlankContent | undefined
+
+            return {
+                image: q.image,
+                type: q.type,
+                quiz: quizId,
+                question: q.question,
+                layout: q.layout,
+                image_type: q.imageType,
+                display_order: q.displayOrder,
+                content: content,
             }
         }
         if (q.type === "MATCHING_PAIRS") {
@@ -64,6 +90,8 @@ export async function addQuestionsToQuiz(
                 quiz: quizId,
                 question: q.question,
                 layout: q.layout,
+                image_type: q.imageType,
+                display_order: q.displayOrder,
                 content: {
                     correct,
                     leftSideOptions:
@@ -76,6 +104,7 @@ export async function addQuestionsToQuiz(
         return null
     })
     if (formattedData.some((q) => !q)) {
+        console.log(formattedData)
         throw new Error("Some questions content is not valid")
     }
     const result = await supabase
@@ -120,6 +149,7 @@ type AddQuestionToQuizContentTypes = {
             localId: string
             isCorrect: boolean | null
         }[]
+        codeSnippets: MultipleChoiceContent["codeSnippets"]
     }
     MatchingPairs: {
         leftOptions: {
@@ -136,6 +166,7 @@ type AddQuestionToQuizContentTypes = {
 interface DbMultipleChoiceContent {
     correct: string[]
     options: string[]
+    codeSnippets: MultipleChoiceContent["codeSnippets"]
 }
 interface DbMatchingPairsContent {
     rightSideOptions: string[]
@@ -145,15 +176,19 @@ interface DbMatchingPairsContent {
 
 export async function updateQuizQuestions(
     questions: {
+        displayOrder: number
         id: number
         quizId: number
         content:
             | AddQuestionToQuizContentTypes["MatchingPairs"]
             | AddQuestionToQuizContentTypes["MultipleChoice"]
+            | FillInTheBlankContent
+
         image: string
         question: string
-        type: "MULTIPLE_CHOICE" | "MATCHING_PAIRS"
+        type: PossibleQuestionTypes
         layout: "vertical" | "horizontal"
+        imageType: Database["public"]["Tables"]["quizzes_questions"]["Insert"]["image_type"]
     }[]
 ) {
     const formattedData = questions.map((q) => {
@@ -167,6 +202,7 @@ export async function updateQuizQuestions(
                     .filter((opt) => opt.isCorrect === true)
                     .map((opt) => opt.text) || []
             const options = content?.options.map((opt) => opt.text) || []
+            const codeSnippets = content?.codeSnippets
 
             return {
                 quiz: q.quizId,
@@ -175,9 +211,12 @@ export async function updateQuizQuestions(
                 type: q.type,
                 question: q.question,
                 layout: q.layout,
+                image_type: q.imageType,
+                display_order: q.displayOrder,
                 content: {
                     correct,
                     options,
+                    codeSnippets,
                 } satisfies DbMultipleChoiceContent,
             }
         }
@@ -203,12 +242,14 @@ export async function updateQuizQuestions(
                     ) || []
 
             return {
+                image_type: q.imageType,
                 quiz: q.quizId,
                 id: q.id,
                 image: q.image,
                 type: q.type,
                 question: q.question,
                 layout: q.layout,
+                display_order: q.displayOrder,
                 content: {
                     correct,
                     leftSideOptions:
@@ -216,6 +257,20 @@ export async function updateQuizQuestions(
                     rightSideOptions:
                         content?.rightOptions.map((opt) => opt.text) || [],
                 } satisfies DbMatchingPairsContent,
+            }
+        }
+        if (q.type === "FILL_IN_THE_BLANK") {
+            const content = q.content as FillInTheBlankContent | undefined
+            return {
+                id: q.id,
+                image: q.image,
+                type: "FILL_IN_THE_BLANK",
+                quiz: q.quizId,
+                question: q.question,
+                layout: q.layout,
+                image_type: q.imageType,
+                display_order: q.displayOrder,
+                content: content,
             }
         }
         return null

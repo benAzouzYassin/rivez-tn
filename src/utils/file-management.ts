@@ -1,8 +1,10 @@
 import { readCurrentSession } from "@/data-access/users/read"
 import axios from "axios"
 
+export const maxFileSize =
+    Number(process.env.NEXT_PUBLIC_FILE_SIZE_LIMIT! || 0) * 1024 * 1024
 export async function uploadFile(
-    fileObject: File,
+    fileObject: File | Blob,
     abortController?: AbortController
 ) {
     // TODO make rate limiting for each user
@@ -13,7 +15,17 @@ export async function uploadFile(
         throw new Error("Session error")
     }
     const formData = new FormData()
-    formData.append("file", fileObject)
+
+    if (fileObject instanceof File) {
+        formData.append("file", fileObject)
+    } else {
+        formData.append(
+            "file",
+            new File([fileObject], crypto.randomUUID(), {
+                type: fileObject.type,
+            })
+        )
+    }
 
     try {
         const response = await axios.post(

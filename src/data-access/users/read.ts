@@ -86,7 +86,9 @@ export async function readUsersProfilesWithDetails(config?: {
                 count: "exact",
             }
         )
-        .order("created_at", { ascending: false })
+        .order("created_at", {
+            ascending: false,
+        })
 
     if (isFiltering) {
         query = query.or(
@@ -141,14 +143,44 @@ export async function readUsersProfilesWithDetails(config?: {
     return { data: formattedData, count: response.count }
 }
 
-export async function readUserProfileWithData(params: { user_id: string }) {
+export async function readUserProfileWithData(params: {
+    user_id: string
+    pagination: {
+        currentPage: number
+        itemsPerPage: number
+    }
+}) {
+    const submissionsCount =
+        (
+            await supabase
+                .from("user_profiles")
+                .select(`*,quiz_submissions(count)`)
+                .limit(1, {
+                    referencedTable: "quiz_submissions",
+                })
+                .eq("user_id", params.user_id)
+                .single()
+                .throwOnError()
+        ).data?.quiz_submissions?.[0]?.count || 0
+
     const response = await supabase
         .from("user_profiles")
         .select(
             `*,quiz_submissions(*,quiz(name,image),quiz_submission_answers(is_answered_correctly,is_skipped))`
         )
+        .limit(10, {
+            referencedTable: "quiz_submissions",
+        })
+        .range(
+            (params.pagination.currentPage - 1) *
+                params.pagination.itemsPerPage,
+            params.pagination.currentPage * params.pagination.itemsPerPage - 1,
+            {
+                referencedTable: "quiz_submissions",
+            }
+        )
         .eq("user_id", params.user_id)
         .single()
         .throwOnError()
-    return response.data
+    return { ...response.data, submissionsCount }
 }

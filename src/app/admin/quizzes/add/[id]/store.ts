@@ -1,12 +1,38 @@
+import { generateQuiz } from "@/data-access/quizzes/generate"
+import {
+    PossibleQuestionTypes,
+    MultipleChoiceContent,
+    FillInTheBlankContent,
+} from "@/schemas/questions-content"
 import { create } from "zustand"
-import { PossibleQuestionTypes } from "@/schemas/questions-content"
+import { formatGeneratedQuestions, getRightOptionPairLocalId } from "./utils"
+import { wait } from "@/utils/wait"
+import { shuffleArray } from "@/utils/array"
+import { Database } from "@/types/database.types"
 
 interface State {
     allQuestions: QuizQuestionType[]
     selectedQuestionLocalId: string | null
+    isGeneratingWithAi: boolean
+    isGenerationError: boolean
+    shadowQuestionsCount: number
 }
 
 interface Actions {
+    generateQuizWithAi: (
+        data: {
+            category: string | null
+            name: string
+            mainTopic: string
+            language: string | null
+            maxQuestions: number | null
+            minQuestions: number | null
+            notes: string | null
+            pdfPages?: string[]
+            allowedQuestions?: string[] | null
+        },
+        method: "subject" | "pdf"
+    ) => void
     setSelectedQuestion: (localId: string | null) => void
     setAllQuestions: (questions: QuizQuestionType[]) => void
     getQuestion: (localId: string) => QuizQuestionType | undefined
@@ -38,11 +64,16 @@ interface Actions {
     reset: () => void
 }
 
-type Store = State & Actions
+export type Store = State & Actions
 
 const initialState: State = {
+    shadowQuestionsCount: 0,
+    isGeneratingWithAi: false,
+    isGenerationError: false,
     allQuestions: [
         {
+            codeSnippets: null,
+            imageType: "normal-image",
             content: {
                 options: [
                     {
@@ -64,7 +95,91 @@ const initialState: State = {
 
 const useQuizStore = create<Store>((set, get) => ({
     ...initialState,
+    generateQuizWithAi: async (data, method) => {
+        try {
+            set({
+                ...initialState,
+                allQuestions: [],
+                isGeneratingWithAi: true,
+                selectedQuestionLocalId: null,
+            })
+            generateQuiz(method, data, (result) => {
+                const questionsCount = result?.questionsCount
+                const generatedQuestions = result?.questions || []
+                const formattedGenerated = formatGeneratedQuestions(result, get)
+                    .filter((item) => !!item)
+                    .map((item) => {
+                        return { ...item, type: item?.questionType }
+                    })
 
+                console.log("formattedGenerated", formattedGenerated)
+                if (generatedQuestions.length > 0 && questionsCount) {
+                    set((state) => {
+                        // here we are incrementally adding the questions
+                        // each questions is not displayed in the ui unless it is fully generated
+                        // also we track the user updates and keep them while we are adding the new questions (that is why the logic bellow is kind of complicated)
+
+                        const isGenerating =
+                            generatedQuestions.length < questionsCount
+
+                        const oldQuestions = [
+                            ...state.allQuestions.slice(
+                                0,
+                                state.allQuestions.length - 1
+                            ),
+                        ]
+
+                        const existingQuestionsTexts = oldQuestions.map(
+                            (item) => item.questionText
+                        )
+
+                        const newQuestions = formattedGenerated.filter(
+                            (item) =>
+                                !existingQuestionsTexts.includes(
+                                    item.questionText
+                                )
+                        )
+
+                        // making sure that the last item is generated correctly
+                        const questionsToAdd = isGenerating
+                            ? newQuestions
+                            : [
+                                  ...newQuestions.slice(0, -1),
+                                  formattedGenerated[
+                                      formattedGenerated.length - 1
+                                  ],
+                              ]
+                        const questionsForState = [
+                            ...oldQuestions,
+                            ...questionsToAdd,
+                        ]
+                        return {
+                            shadowQuestionsCount:
+                                Number(questionsCount || 0) -
+                                questionsForState.length,
+                            selectedQuestionLocalId:
+                                state.selectedQuestionLocalId ||
+                                questionsForState.at(0)?.localId,
+                            isGeneratingWithAi: !(
+                                generatedQuestions.length > 1
+                            ),
+                            allQuestions: questionsForState as any,
+                        }
+                    })
+                }
+            })
+
+            await wait(100_000)
+            const didGenerate = get().allQuestions.length > 1
+
+            if (!didGenerate) {
+                throw new Error("Error while generating the questions.")
+            }
+        } catch (error) {
+            console.error(error)
+            set({ isGeneratingWithAi: false, isGenerationError: true })
+        }
+    },
     setAllQuestions: (allQuestions) => set({ allQuestions }),
 
     getQuestion: (localId: string) =>
@@ -295,15 +410,31 @@ const useQuizStore = create<Store>((set, get) => ({
 
 export default useQuizStore
 
-export interface QuizQuestionType {
-    content: MultipleChoiceOptions | MatchingPairsOptions
+export type QuizQuestionType = {
+    content:
+        | FillInTheBlankStoreContent
+        | MultipleChoiceOptions
+        | MatchingPairsOptions
     localId: string
     questionText: string
     imageUrl: string | null
     type: PossibleQuestionTypes
     layout: "horizontal" | "vertical"
+    imageType: Database["public"]["Tables"]["quizzes_questions"]["Insert"]["image_type"]
+    codeSnippets: MultipleChoiceContent["codeSnippets"] | null
 }
 
+export type FillInTheBlankStoreContent = Omit<
+    Omit<FillInTheBlankContent, "correct">,
+    "options"
+> & {
+    options: { text: string; localId: string }[]
+    correct: {
+        option: string
+        index: number
+        optionId: string
+    }[]
+}
 export interface MultipleChoiceOptions {
     options: { text: string; localId: string; isCorrect: boolean | null }[]
 }

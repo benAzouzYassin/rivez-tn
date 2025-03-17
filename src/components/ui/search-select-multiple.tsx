@@ -131,7 +131,6 @@ export default function SearchSelect<OptionData>(props: Props<OptionData>) {
                                                     }
                                                 }}
                                             >
-                                                {/* makes sure every CommandItem content is unique */}
                                                 <span className="w-0 opacity-0 overflow-hidden">
                                                     {item.id}
                                                 </span>{" "}
@@ -168,7 +167,7 @@ interface Props<OptionData> {
     items: { id: string; label: string; data?: OptionData }[]
     selectedIds: string[]
     placeholder?: string
-    onSelect?: (ids: string[]) => void
+    onSelect?: (oldAndNewIds: string[]) => void
     onUnselect?: (unselectedId?: string) => void
     onAddButtonClick?: (inputValue: string) => void
     enableAddButton?: boolean

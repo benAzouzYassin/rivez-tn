@@ -1,20 +1,21 @@
 import { Button } from "@/components/ui/button"
 import WarningDialog from "@/components/ui/warning-dialog"
+import { deleteQuizQuestions } from "@/data-access/quizzes/delete"
 import {
     addQuestionsToQuiz,
     updateQuizQuestions,
 } from "@/data-access/quizzes/update"
 import { toastError, toastSuccess } from "@/lib/toasts"
-import { wait } from "@/utils/wait"
 import { useQueryClient } from "@tanstack/react-query"
 import { useParams } from "next/navigation"
 import { useRouter } from "nextjs-toploader/app"
 import { useState } from "react"
 import useUpdateQuizStore, {
+    FillInTheBlankStoreContent,
     StateMatchingPairsOptions,
     StateMultipleChoiceOptions,
 } from "../store"
-import { deleteQuizQuestions } from "@/data-access/quizzes/delete"
+import { shuffleArray } from "@/utils/array"
 export default function Buttons() {
     const params = useParams()
     const quizId = parseInt(params["id"] as string)
@@ -71,7 +72,7 @@ export default function Buttons() {
             await updateQuizQuestions(
                 questions
                     .filter((q) => !!q.questionId)
-                    .map((q) => {
+                    .map((q, index) => {
                         if (q.type === "MULTIPLE_CHOICE") {
                             const content =
                                 q.content as StateMultipleChoiceOptions
@@ -79,15 +80,21 @@ export default function Buttons() {
                                 (opt) => !!opt.text
                             )
                             return {
+                                displayOrder: index,
                                 quizId,
                                 id: Number(q.questionId),
-                                content: { options: filteredOptions },
+                                content: {
+                                    options: filteredOptions,
+                                    codeSnippets: q.codeSnippets,
+                                },
                                 type: q.type as any,
                                 image: q.imageUrl || "",
                                 question: q.questionText,
                                 layout: q.layout,
+                                imageType: q.imageType,
                             }
                         }
+
                         if (q.type === "MATCHING_PAIRS") {
                             const content =
                                 q.content as StateMatchingPairsOptions
@@ -98,6 +105,7 @@ export default function Buttons() {
                                 content.leftOptions.filter((opt) => !!opt.text)
 
                             return {
+                                displayOrder: index,
                                 quizId,
                                 id: Number(q.questionId),
                                 content: {
@@ -108,6 +116,36 @@ export default function Buttons() {
                                 image: q.imageUrl || "",
                                 question: q.questionText,
                                 layout: q.layout,
+                                imageType: q.imageType,
+                            }
+                        }
+                        if (q.type === "FILL_IN_THE_BLANK") {
+                            const content =
+                                q.content as FillInTheBlankStoreContent
+                            const notSelectedOptions = content.options.map(
+                                (opt) => opt.text
+                            )
+                            const selectedOptions = content.correct.map(
+                                (opt) => opt.option
+                            )
+                            const allOptions = [
+                                ...notSelectedOptions,
+                                ...selectedOptions,
+                            ]
+                            return {
+                                displayOrder: index,
+                                id: Number(q.questionId),
+                                quizId,
+                                content: {
+                                    options: shuffleArray(allOptions),
+                                    correct: content.correct,
+                                    parts: content.parts,
+                                },
+                                type: q.type as any,
+                                image: "",
+                                question: q.questionText,
+                                layout: q.layout,
+                                imageType: q.imageType,
                             }
                         }
                         return null
@@ -116,17 +154,21 @@ export default function Buttons() {
             )
             return true
         } catch (error) {
+            console.error(error)
             return false
         }
     }
 
     const saveNewQuestions = async () => {
-        const newQuestions = questions.filter((q) => !q.questionId)
+        const newQuestions = questions.filter(
+            (q) => q.questionId === undefined || q.questionId === null
+        )
+        const oldQuestionsLength = questions.length - newQuestions.length
         try {
             await addQuestionsToQuiz(
                 quizId,
                 newQuestions
-                    .map((q) => {
+                    .map((q, index) => {
                         if (q.type === "MULTIPLE_CHOICE") {
                             const content =
                                 q.content as StateMultipleChoiceOptions
@@ -134,11 +176,43 @@ export default function Buttons() {
                                 (opt) => !!opt.text
                             )
                             return {
-                                content: { options: filteredOptions },
+                                displayOrder: index + oldQuestionsLength,
+                                content: {
+                                    options: filteredOptions,
+                                    codeSnippets: q.codeSnippets,
+                                },
                                 type: q.type as any,
                                 image: q.imageUrl || "",
                                 question: q.questionText,
                                 layout: q.layout,
+                                imageType: q.imageType,
+                            }
+                        }
+                        if (q.type === "FILL_IN_THE_BLANK") {
+                            const content =
+                                q.content as FillInTheBlankStoreContent
+                            const notSelectedOptions = content.options.map(
+                                (opt) => opt.text
+                            )
+                            const selectedOptions = content.correct.map(
+                                (opt) => opt.option
+                            )
+                            const allOptions = [
+                                ...notSelectedOptions,
+                                ...selectedOptions,
+                            ]
+                            return {
+                                displayOrder: index,
+                                content: {
+                                    options: shuffleArray(allOptions),
+                                    correct: content.correct,
+                                    parts: content.parts,
+                                },
+                                type: q.type as any,
+                                image: "",
+                                question: q.questionText,
+                                layout: q.layout,
+                                imageType: q.imageType,
                             }
                         }
                         if (q.type === "MATCHING_PAIRS") {
@@ -151,6 +225,7 @@ export default function Buttons() {
                                 content.leftOptions.filter((opt) => !!opt.text)
 
                             return {
+                                displayOrder: index + oldQuestionsLength,
                                 content: {
                                     leftOptions: filteredLeftOptions,
                                     rightOptions: filteredRightOptions,
@@ -159,6 +234,7 @@ export default function Buttons() {
                                 image: q.imageUrl || "",
                                 question: q.questionText,
                                 layout: q.layout,
+                                imageType: q.imageType,
                             }
                         }
                         return null
@@ -167,6 +243,7 @@ export default function Buttons() {
             )
             return true
         } catch (error) {
+            console.error(error)
             return false
         }
     }
@@ -175,6 +252,7 @@ export default function Buttons() {
             await deleteQuizQuestions({ questionIds: removedQuestionsIds })
             return true
         } catch (error) {
+            console.error(error)
             return false
         }
     }
@@ -213,6 +291,9 @@ export default function Buttons() {
                     content.leftOptions.length > 0
 
                 return isLeftOptionsValid && isRightOptionsValid
+            }
+            if (q.type === "FILL_IN_THE_BLANK") {
+                return true
             }
             return false
         })

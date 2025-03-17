@@ -16,7 +16,7 @@ interface NavItem {
 
 type Props = {
     items: NavItem[]
-    settingsItem: NavItem
+    bottomItem: NavItem
 }
 
 export default function Sidenav(props: Props) {
@@ -27,7 +27,7 @@ export default function Sidenav(props: Props) {
             className={cn(
                 "h-full z-10 group hover:border-r-[#8aa8fb] border-r-2 px-4 pt-10 fixed top-0 left-0 transition-all duration-300",
                 {
-                    "w-[256px]": isSidenavOpen,
+                    "w-[300px]": isSidenavOpen,
                     "w-[100px]": !isSidenavOpen,
                 }
             )}
@@ -61,11 +61,11 @@ export default function Sidenav(props: Props) {
                 />
             ))}
 
-            <div className="absolute bottom-5 px-3 left-0 w-full">
+            <div className="absolute bottom-10 px-3 left-0 w-full">
                 <NavButton
-                    item={props.settingsItem}
+                    item={props.bottomItem}
                     isSidenavOpen={isSidenavOpen}
-                    additionalClasses="mt-1"
+                    additionalClasses="mt-1 pl-6 hover:bg-blue-400/90 rounded-2xl border-b-4 border-blue-400/70 bg-blue-400/80 text-white gap-2 text-xl"
                 />
             </div>
         </nav>
