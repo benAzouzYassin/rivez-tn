@@ -46,6 +46,8 @@ export default function Page() {
         ],
         queryFn: () =>
             readQuizzesWithDetails({
+                isAdmin: true,
+                userId: null,
                 filters: {
                     name: searchValue || undefined,
                 },
