@@ -21,6 +21,8 @@ export async function readQuizById(id: number) {
 }
 
 export async function readQuizzesWithDetails(config?: {
+    isAdmin: boolean | null
+    userId: string | null
     filters?: {
         name?: string | null
         isFeatured?: boolean
@@ -30,8 +32,36 @@ export async function readQuizzesWithDetails(config?: {
         itemsPerPage: number
     }
 }) {
+    // when is Featured == false and isAdmin == false we should only return the quizzes with author_id == currentUser.id
     const isFiltering = !!config?.filters?.name
     if (config?.pagination && !isFiltering) {
+        if (config.isAdmin) {
+            const response = await supabase
+                .from("quizzes")
+                .select(
+                    `*, category(*),quizzes_questions(count),quiz_submissions(count)`,
+                    {
+                        count: "exact",
+                    }
+                )
+                .range(
+                    (config.pagination.currentPage - 1) *
+                        config.pagination.itemsPerPage,
+                    config.pagination.currentPage *
+                        config.pagination.itemsPerPage -
+                        1
+                )
+                .order("created_at", {
+                    ascending: false,
+                })
+                .neq("publishing_status", "ARCHIVED")
+                .in(
+                    "is_featured",
+                    config.filters?.isFeatured ? [true] : [false, true]
+                )
+                .throwOnError()
+            return { data: response.data, count: response.count }
+        }
         const response = await supabase
             .from("quizzes")
             .select(
@@ -54,6 +84,7 @@ export async function readQuizzesWithDetails(config?: {
                 "is_featured",
                 config.filters?.isFeatured ? [true] : [false, true]
             )
+            .eq("author_id", config.userId!)
             .throwOnError()
         return { data: response.data, count: response.count }
     }

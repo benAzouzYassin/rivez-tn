@@ -19,9 +19,11 @@ import { useState } from "react"
 import Item from "./_components/item"
 import ItemSkeleton from "./_components/item-skeleton"
 import Search from "./_components/search"
+import { useCurrentUser } from "@/hooks/use-current-user"
 
 export default function Page() {
     const isAdmin = useIsAdmin()
+    const { data: userData } = useCurrentUser()
     const router = useRouter()
     const [activeTab, setActiveTab] = useState("popular")
     const [searchValue, setSearchValue] = useQueryState(
@@ -52,9 +54,13 @@ export default function Page() {
             currentPage,
             searchValue,
             activeTab,
+            isAdmin,
+            userData,
         ],
         queryFn: () =>
             readQuizzesWithDetails({
+                isAdmin,
+                userId: userData?.id || "",
                 filters: {
                     name: searchValue || undefined,
                     isFeatured: activeTab === "popular",

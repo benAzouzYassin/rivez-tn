@@ -13,6 +13,7 @@ import {
     handleQuizRefund,
 } from "@/data-access/quizzes/handle-refund"
 import { generateQuizQuestion } from "@/data-access/quizzes/generate-question"
+import { wait } from "@/utils/wait"
 
 interface State {
     allQuestions: QuizQuestionType[]
@@ -149,6 +150,22 @@ const useQuizStore = create<Store>((set, get) => ({
         }
     },
     generateQuizWithAi: async (data, method, onSuccess) => {
+        // timeout functionality
+        wait(60 * 1000).then(async () => {
+            const didGenerate = get().allQuestions.length > 1
+            if (!didGenerate) {
+                set({
+                    isGeneratingQuizWithAi: false,
+                    isGenerationQuizError: true,
+                    shadowQuestionsCount: 0,
+                })
+                await handleQuizRefund({
+                    cause: "timed out",
+                    quizId: data.quizId,
+                })
+                await deleteQuizById(data.quizId).catch(console.error)
+            }
+        })
         try {
             set({
                 ...initialState,

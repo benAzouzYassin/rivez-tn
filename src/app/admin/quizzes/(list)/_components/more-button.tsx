@@ -50,7 +50,9 @@ export default function MoreButton(props: Props) {
                         icon: <Edit className="w-5 h-5" />,
                         label: "Update questions",
                         onClick: () =>
-                            router.push(`/quizzes/update/${props.itemId}`),
+                            router.push(
+                                `/admin/quizzes/update/${props.itemId}`
+                            ),
                     },
                     {
                         icon: <Info className="w-5 h-5" />,
