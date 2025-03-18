@@ -3,6 +3,9 @@ import { supabaseAdminServerSide } from "@/lib/supabase-server-side"
 import { NextRequest, NextResponse } from "next/server"
 import { z } from "zod"
 
+const MONTHLY_ALLOWED_REFUNDS = Number(
+    process.env.NEXT_PUBLIC_ALLOWED_REFUNDS_PER_MONTH || "0"
+)
 const REFUND_TIME_WINDOW = 10 * 60 * 1000 //10 minutes
 export async function POST(req: NextRequest) {
     try {
@@ -25,26 +28,46 @@ export async function POST(req: NextRequest) {
         const { data: quizData } = await supabaseAdmin
             .from("quizzes")
             .select(
-                "id,credit_cost,created_at,quizzes_refunds(count),quizzes_questions(count),quiz_submissions(count)",
+                "id,credit_cost,author_id,created_at,quizzes_refunds(count),quizzes_questions(count),quiz_submissions(count)",
                 { count: "exact" }
             )
             .eq("id", data.quizId)
             .single()
             .throwOnError()
+        if (quizData.author_id !== userId) {
+            return NextResponse.json(
+                { error: "you don't own this quiz." },
+                { status: 400 }
+            )
+        }
+
         const { isValidRefund, refundError } = validateQuizRefund(quizData)
         if (isValidRefund) {
             const userProfileData = await supabaseAdmin
                 .from("user_profiles")
-                .select(`credit_balance,allowed_error_credit_refund`)
+                .select(`credit_balance`)
                 .eq("user_id", userId)
                 .single()
                 .throwOnError()
             const userBalance = userProfileData.data.credit_balance
-            const allowedErrorCreditRefund =
-                userProfileData.data.allowed_error_credit_refund
-            const creditToRefund = Number(quizData.credit_cost || 0)
 
-            if (!allowedErrorCreditRefund) {
+            const now = new Date()
+            const firstDayOfMonth = new Date(
+                now.getFullYear(),
+                now.getMonth(),
+                1
+            ).toISOString()
+            const monthRefundsCount =
+                (
+                    await supabaseAdmin
+                        .from("quizzes_refunds")
+                        .select(`id`, { count: "exact" })
+                        .eq("user_id", userId)
+                        .gte("created_at", firstDayOfMonth)
+                        .throwOnError()
+                ).count || 0
+            const creditToRefund = Number(quizData.credit_cost || 0)
+            if (monthRefundsCount >= MONTHLY_ALLOWED_REFUNDS) {
                 return NextResponse.json(
                     { error: "you did too much refunds." },
                     { status: 429 }
@@ -54,8 +77,6 @@ export async function POST(req: NextRequest) {
                 .from("user_profiles")
                 .update({
                     credit_balance: userBalance + creditToRefund,
-                    allowed_error_credit_refund:
-                        (allowedErrorCreditRefund || 0) - creditToRefund,
                 })
                 .eq("user_id", userId)
                 .throwOnError()
@@ -63,8 +84,9 @@ export async function POST(req: NextRequest) {
             await supabaseAdmin
                 .from("quizzes_refunds")
                 .insert({
-                    cause: "",
+                    cause: data.cause || "",
                     quiz_id: data.quizId,
+                    user_id: userId,
                 })
                 .throwOnError()
 
@@ -74,12 +96,7 @@ export async function POST(req: NextRequest) {
             return NextResponse.json({ error: refundError }, { status: 400 })
         }
     } catch (error) {
-        console.error(
-            "error while refunding : ",
-            error,
-            "request body ==>",
-            await req.json().catch((err) => console.error(err))
-        )
+        console.error("error while refunding : ", error)
         return NextResponse.json({ error }, { status: 500 })
     }
 }
@@ -99,8 +116,7 @@ function validateQuizRefund(quizData: any) {
             status: 400,
         }
     }
-    // Make sure the quiz has no questions
-    if (quizData.quizzes_questions > 0) {
+    if (quizData.quizzes_questions?.[0]?.count > 0) {
         return {
             isValidRefund: false,
             refundError: "Quiz already has questions and cannot be refunded",
@@ -108,8 +124,7 @@ function validateQuizRefund(quizData: any) {
         }
     }
 
-    // Make sure the quiz has no submissions
-    if (quizData.quiz_submissions > 0) {
+    if (quizData.quiz_submissions?.[0]?.count > 0) {
         return {
             isValidRefund: false,
             refundError: "Quiz has submissions and cannot be refunded",
@@ -117,8 +132,7 @@ function validateQuizRefund(quizData: any) {
         }
     }
 
-    // Make sure the quiz has no old refunds
-    if (quizData.quizzes_refunds > 0) {
+    if (quizData.quizzes_refunds?.[0]?.count > 0) {
         return {
             isValidRefund: false,
             refundError: "Quiz has already been refunded",
@@ -126,7 +140,6 @@ function validateQuizRefund(quizData: any) {
         }
     }
 
-    // Make sure the quiz is created in the last 10 mins
     const createdAt = new Date(quizData.created_at).getTime()
     const timeSinceCreation = Date.now() - createdAt
 

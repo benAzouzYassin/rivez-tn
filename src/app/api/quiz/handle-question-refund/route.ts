@@ -3,6 +3,9 @@ import { supabaseAdminServerSide } from "@/lib/supabase-server-side"
 import { NextRequest, NextResponse } from "next/server"
 import { QUESTION_COST } from "../generate-quiz/constants"
 
+const MONTHLY_ALLOWED_REFUNDS = Number(
+    process.env.NEXT_PUBLIC_ALLOWED_REFUNDS_PER_MONTH || "0"
+)
 export async function POST(req: NextRequest) {
     try {
         const accessToken = req.headers.get("access-token") || ""
@@ -14,33 +17,52 @@ export async function POST(req: NextRequest) {
                 { status: 401 }
             )
         }
-        console.log("handling question refund")
         const supabaseAdmin = await supabaseAdminServerSide()
 
         const userProfileData = await supabaseAdmin
             .from("user_profiles")
-            .select(`credit_balance,allowed_error_credit_refund`)
+            .select(`credit_balance`)
             .eq("user_id", userId)
             .single()
             .throwOnError()
-        const userBalance = userProfileData.data.credit_balance
-        const allowedErrorCreditRefund =
-            userProfileData.data.allowed_error_credit_refund
 
-        if (!allowedErrorCreditRefund) {
+        const now = new Date()
+        const firstDayOfMonth = new Date(
+            now.getFullYear(),
+            now.getMonth(),
+            1
+        ).toISOString()
+        const monthRefundsCount =
+            (
+                await supabaseAdmin
+                    .from("quizzes_refunds")
+                    .select(`id`, { count: "exact" })
+                    .eq("user_id", userId)
+                    .gte("created_at", firstDayOfMonth)
+                    .throwOnError()
+            ).count || 0
+
+        const userBalance = userProfileData.data.credit_balance
+        if (monthRefundsCount >= MONTHLY_ALLOWED_REFUNDS) {
             return NextResponse.json(
                 { error: "you did too much refunds." },
                 { status: 429 }
             )
         }
+
         await supabaseAdmin
             .from("user_profiles")
             .update({
                 credit_balance: userBalance + QUESTION_COST,
-                allowed_error_credit_refund:
-                    (allowedErrorCreditRefund || 0) - QUESTION_COST,
             })
             .eq("user_id", userId)
+            .throwOnError()
+
+        await supabaseAdmin
+            .from("quizzes_refunds")
+            .insert({
+                user_id: userId,
+            })
             .throwOnError()
 
         return NextResponse.json({ success: true }, { status: 200 })
