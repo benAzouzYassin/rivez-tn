@@ -1,7 +1,15 @@
 /* heading */
+.tiptap {
+    isolation: isolate;
+}
+
 .tiptap h1 {
     font-weight: 800;
     font-size: 2.2rem;
+}
+
+.tiptap u {
+    text-underline-offset: 2px;
 }
 
 .tiptap h2 {
@@ -17,6 +25,16 @@
 .tiptap h4 {
     font-weight: 800;
     font-size: 1.3rem;
+}
+
+.tiptap h5 {
+    font-weight: 700;
+    font-size: 1.1rem;
+}
+
+.tiptap h6 {
+    font-weight: 600;
+    font-size: 0.9rem;
 }
 
 .tiptap p {
@@ -320,4 +338,195 @@ p.is-editor-empty:first-child::before {
     float: left;
     height: 0;
     pointer-events: none;
+}
+
+/* TABLE STYLES */
+.tiptap table {
+    border-collapse: collapse;
+    table-layout: fixed;
+    width: 100%;
+    margin: 1.5rem 0;
+    position: relative;
+}
+
+.tiptap table td,
+.tiptap table th {
+    border: 2px solid #e5e7eb;
+    padding: 0.75rem;
+    position: relative;
+    font-weight: 600;
+    font-size: 1.1rem;
+    vertical-align: top;
+    transition: background-color 0.2s ease;
+}
+
+.tiptap table th {
+    background-color: #f3f4f6;
+    font-weight: 700;
+}
+
+/* Improved selected cell styling */
+.tiptap table td.selectedCell,
+.tiptap table th.selectedCell {
+    background-color: rgba(37, 99, 235, 0.2);
+    position: relative;
+    box-shadow: inset 0 0 0 1px rgba(37, 99, 235, 0.5);
+    z-index: 2;
+}
+
+/* Multiple selected cells */
+.tiptap table td.selectedCell::after,
+.tiptap table th.selectedCell::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    pointer-events: none;
+    border: 2px solid rgba(37, 99, 235, 0.8);
+    z-index: 3;
+}
+
+.tiptap table td:hover,
+.tiptap table th:hover {
+    background-color: rgba(165, 195, 255, 0.245);
+    cursor: pointer;
+}
+
+.tiptap table td.selectedCell:hover,
+.tiptap table th.selectedCell:hover {
+    background-color: rgba(37, 99, 235, 0.3);
+}
+
+.tiptap .tableWrapper {
+    overflow-x: auto;
+    padding: 1rem 0;
+    position: relative;
+}
+
+.tiptap .column-resize-handle {
+    background-color: #2563eb;
+    height: 100%;
+    width: 6px;
+    position: absolute;
+    right: -3px;
+    z-index: 150;
+    top: 0;
+    cursor: col-resize;
+    opacity: 0.5;
+    transition: opacity 0.2s, width 0.2s, background-color 0.2s;
+}
+
+.tiptap .column-resize-handle:hover,
+.tiptap .column-resize-handle.is-active {
+    opacity: 1;
+    width: 8px;
+    background-color: #1d4ed8;
+}
+
+.tiptap table.ProseMirror-selectednode {
+    outline: 2px solid #2563eb;
+    outline-offset: 2px;
+    box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.2);
+}
+
+.tiptap table td.selectedCell:not(:only-child)~.selectedCell,
+.tiptap table th.selectedCell:not(:only-child)~.selectedCell {
+    border-left-color: transparent;
+}
+
+.tiptap table tr:has(.selectedCell)+tr .selectedCell {
+    border-top-color: transparent;
+}
+
+.tiptap table:has(.selectedCell) {
+    position: relative;
+}
+
+.tiptap table:has(.selectedCell + .selectedCell),
+.tiptap table:has(tr:has(.selectedCell) + tr:has(.selectedCell)) {
+    position: relative;
+}
+
+.tiptap table:has(.selectedCell + .selectedCell)::after,
+.tiptap table:has(tr:has(.selectedCell) + tr:has(.selectedCell))::after {
+    content: "Selection";
+    position: absolute;
+    right: -80px;
+    top: -20px;
+    background-color: #2563eb;
+    color: white;
+    font-size: 0.75rem;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-weight: 600;
+    pointer-events: none;
+    opacity: 0.8;
+    z-index: 10;
+}
+
+@media screen and (max-width: 768px) {
+    .tiptap .tableWrapper {
+        overflow-x: auto;
+    }
+
+    .tiptap table {
+        min-width: 600px;
+    }
+
+    .tiptap table:has(.selectedCell + .selectedCell)::after,
+    .tiptap table:has(tr:has(.selectedCell) + tr:has(.selectedCell))::after {
+        right: 0;
+        top: -25px;
+    }
+}
+
+.tiptap table td[style*="text-align: left"],
+.tiptap table th[style*="text-align: left"] {
+    text-align: left;
+}
+
+.tiptap table td[style*="text-align: center"],
+.tiptap table th[style*="text-align: center"] {
+    text-align: center;
+}
+
+.tiptap table td[style*="text-align: right"],
+.tiptap table th[style*="text-align: right"] {
+    text-align: right;
+}
+
+.tiptap table figcaption {
+    margin-top: 0.5rem;
+    font-size: 0.875rem;
+    text-align: center;
+    color: #6b7280;
+    font-style: italic;
+}
+
+.tiptap table tr:first-child td.header,
+.tiptap table tr:first-child th.header {
+    background-color: #f3f4f6;
+    font-weight: 700;
+}
+
+.tiptap table tr td:first-child.header,
+.tiptap table tr th:first-child.header {
+    background-color: #f3f4f6;
+    font-weight: 700;
+}
+
+.tiptap:focus table td:focus,
+.tiptap:focus table th:focus {
+    outline: 2px solid #2563eb;
+    outline-offset: -2px;
+    position: relative;
+    z-index: 5;
+}
+
+.tiptap table td.selectedCell.can-merge,
+.tiptap table th.selectedCell.can-merge {
+    background-color: rgba(37, 99, 235, 0.3);
+    position: relative;
 }

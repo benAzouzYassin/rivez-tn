@@ -25,7 +25,7 @@ export default function Answer(props: Props) {
             <div className="flex items-center  justify-center mb-8"></div>
             <RichTextEditor
                 placeholder="Flashcard content..."
-                className="w-[90%] mx-auto"
+                containerClassName="w-[90%] mx-auto"
             />
             <div className="relative mt-4 mb-10  mx-auto w-[80%]">
                 <button
