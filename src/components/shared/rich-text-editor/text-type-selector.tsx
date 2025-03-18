@@ -44,6 +44,18 @@ export default function TextTypeSelector({ editor }: Props) {
             className:
                 "font-bold text-lg flex items-center justify-center !h-8",
         },
+        {
+            name: "Heading 5",
+            value: "heading-5",
+            className:
+                "font-semibold text-base flex items-center justify-center !h-8",
+        },
+        {
+            name: "Heading 6",
+            value: "heading-6",
+            className:
+                "font-semibold text-sm flex items-center justify-center !h-8",
+        },
     ]
 
     const handleValueChange = (value: string) => {
@@ -52,7 +64,7 @@ export default function TextTypeSelector({ editor }: Props) {
         if (value === "paragraph") {
             editor.chain().focus().setParagraph().run()
         } else if (value.startsWith("heading-")) {
-            const level = parseInt(value.split("-")[1]) as 1 | 2 | 3 | 4
+            const level = parseInt(value.split("-")[1]) as 1 | 2 | 3 | 4 | 5 | 6
             editor.chain().focus().toggleHeading({ level }).run()
         }
     }
@@ -62,10 +74,12 @@ export default function TextTypeSelector({ editor }: Props) {
         if (editor.isActive("heading", { level: 2 })) return "heading-2"
         if (editor.isActive("heading", { level: 3 })) return "heading-3"
         if (editor.isActive("heading", { level: 4 })) return "heading-4"
+        if (editor.isActive("heading", { level: 5 })) return "heading-5"
+        if (editor.isActive("heading", { level: 6 })) return "heading-6"
         return "paragraph"
     }
 
-    // Add useEffect to sync selectedLevel with editor state
+    // useEffect to sync selectedLevel with editor state
     useEffect(() => {
         const updateSelectedLevel = () => {
             const currentValue = getCurrentValue()

@@ -29,6 +29,7 @@ import {
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { toastError } from "@/lib/toasts"
+import ToolbarTable from "./toolbar-table"
 
 interface Props {
     editor: Editor | null
@@ -210,6 +211,8 @@ export default function Toolbar({ editor, className }: Props) {
                     </div>
                 </DialogContent>
             </Dialog>
+
+            <ToolbarTable editor={editor} />
             <MenuDivider />
             <MenuButton
                 onClick={() => editor.chain().focus().toggleBulletList().run()}

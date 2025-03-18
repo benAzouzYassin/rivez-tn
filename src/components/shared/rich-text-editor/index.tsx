@@ -5,9 +5,12 @@ import { Underline } from "@tiptap/extension-underline"
 import { Color } from "@tiptap/extension-color"
 import { TextStyle } from "@tiptap/extension-text-style"
 import { TextAlign } from "@tiptap/extension-text-align"
-import { Image } from "@tiptap/extension-image"
 import { Link } from "@tiptap/extension-link"
 import { Placeholder } from "@tiptap/extension-placeholder"
+import Table from "@tiptap/extension-table"
+import TableRow from "@tiptap/extension-table-row"
+import TableCell from "@tiptap/extension-table-cell"
+import TableHeader from "@tiptap/extension-table-header"
 import { ImageResize } from "tiptap-extension-resize-image"
 
 import {
@@ -27,7 +30,6 @@ import CodeBlockComponent from "./code-block"
 import "./styles.css"
 import Toolbar from "./toolbar"
 
-// Create a lowlight instance with specific languages
 const lowlight = createLowlight()
 lowlight.register("html", html)
 lowlight.register("css", css)
@@ -35,7 +37,8 @@ lowlight.register("js", js)
 lowlight.register("ts", ts)
 
 interface Props {
-    className?: string
+    containerClassName?: string
+    contentClassName?: string
     onChange?: (content: JSONContent) => void
     initialContent?: string
     placeholder?: string
@@ -47,12 +50,10 @@ function RichTextEditor(props: Props) {
 
         extensions: [
             StarterKit.configure({
-                // Disable the default code block to use our custom one
                 codeBlock: false,
             }),
             Underline,
             Strike,
-            // Image,
             ImageResize,
             Placeholder.configure({
                 placeholder: props.placeholder,
@@ -63,6 +64,13 @@ function RichTextEditor(props: Props) {
             }),
             Color,
             TextStyle,
+            Table.configure({
+                resizable: true,
+                allowTableNodeSelection: true,
+            }),
+            TableRow,
+            TableCell,
+            TableHeader,
             Link.configure({
                 openOnClick: false,
                 autolink: true,
@@ -70,17 +78,14 @@ function RichTextEditor(props: Props) {
                 protocols: ["http", "https"],
                 isAllowedUri: (url, ctx) => {
                     try {
-                        // construct URL
                         const parsedUrl = url.includes(":")
                             ? new URL(url)
                             : new URL(`${ctx.defaultProtocol}://${url}`)
 
-                        // use default validation
                         if (!ctx.defaultValidate(parsedUrl.href)) {
                             return false
                         }
 
-                        // disallowed protocols
                         const disallowedProtocols = ["ftp", "file", "mailto"]
                         const protocol = parsedUrl.protocol.replace(":", "")
 
@@ -88,7 +93,6 @@ function RichTextEditor(props: Props) {
                             return false
                         }
 
-                        // only allow protocols specified in ctx.protocols
                         const allowedProtocols = ctx.protocols.map((p) =>
                             typeof p === "string" ? p : p.scheme
                         )
@@ -97,41 +101,13 @@ function RichTextEditor(props: Props) {
                             return false
                         }
 
-                        // disallowed domains
-                        const disallowedDomains = [
-                            "example-phishing.com",
-                            "malicious-site.net",
-                        ]
-                        const domain = parsedUrl.hostname
-
-                        if (disallowedDomains.includes(domain)) {
-                            return false
-                        }
-
-                        // all checks have passed
                         return true
                     } catch {
                         return false
                     }
                 },
                 shouldAutoLink: (url) => {
-                    try {
-                        // construct URL
-                        const parsedUrl = url.includes(":")
-                            ? new URL(url)
-                            : new URL(`https://${url}`)
-
-                        // only auto-link if the domain is not in the disallowed list
-                        const disallowedDomains = [
-                            "example-no-autolink.com",
-                            "another-no-autolink.com",
-                        ]
-                        const domain = parsedUrl.hostname
-
-                        return !disallowedDomains.includes(domain)
-                    } catch {
-                        return false
-                    }
+                    return true
                 },
             }),
             CodeBlockLowlight.extend({
@@ -159,7 +135,8 @@ function RichTextEditor(props: Props) {
         editorProps: {
             attributes: {
                 class: cn(
-                    "min-h-[10rem] border-x-2 border-b-2 rounded-b-lg w-full border-t focus:pl-3 focus:shadow-sm p-2 outline-none transition-all"
+                    "min-h-[10rem] h-full overflow-y-auto border-x-2 border-b-2 rounded-b-lg w-full border-t focus:pl-[1.5rem] focus:shadow-sm p-5 outline-none transition-all",
+                    props.contentClassName
                 ),
             },
         },
@@ -172,9 +149,9 @@ function RichTextEditor(props: Props) {
     }, [editor, props.placeholder])
 
     return (
-        <div className={props.className}>
+        <div className={props.containerClassName}>
             <Toolbar editor={editor} />
-            <EditorContent editor={editor} />
+            <EditorContent className={props.contentClassName} editor={editor} />
         </div>
     )
 }
