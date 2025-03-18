@@ -55,6 +55,7 @@ export default function Item({ item }: Props) {
             <div className="flex flex-col">
                 <CardHeader className="-mt-3">
                     <MoreButton
+                        authorId={item.author_id}
                         status={item.publishing_status}
                         itemId={item.id}
                         className="scale-90 absolute right-3"
@@ -104,7 +105,7 @@ export default function Item({ item }: Props) {
 
                 <div className="block pt-4 mt-auto h-20 gap-1">
                     <Link
-                        href={"/courses/1"}
+                        href={`/quizzes/${item.id}`}
                         className="w-full absolute px-4 bottom-6 flex"
                     >
                         <Button
