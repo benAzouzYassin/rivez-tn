@@ -7,9 +7,9 @@ import { generateQuizPrompt } from "./utils"
 import { getUserInServerSide } from "@/data-access/users/authenticate-user-ssr"
 import { supabaseAdminServerSide } from "@/lib/supabase-server-side"
 
-const MAX_CHARS_PER_PDF = 200_000
+const MAX_CHARS_PER_PDF = 300_000
 const LOW_MODEL_HIGH_COST_QUIZ = Number(
-    process.env.NEXT_PUBLIC_LOW_MODEL_HIGH_TOKENS_QUIZ_CREDIT_COST
+    process.env.NEXT_PUBLIC_HIGH_CREDIT_COST
 )
 export async function POST(req: NextRequest) {
     try {
@@ -107,19 +107,21 @@ export async function POST(req: NextRequest) {
             .throwOnError()
         const llmResponse = streamText({
             system: `
-            - Your answer should start with this character "{".
-            - If there is a question typed "FILL_IN_THE_BLANK" use all the content.options inside content.correct (only applied in "FILL_IN_THE_BLANK" question type ).
-            - your answer should not include any template strings.
-            - You should escape special characters for the special characters since your response will be parse with JSON.parse()
-            - Your response should not be markdown. 
-            - Your responses shouldn't include any example content provided to you. 
-            - You should follow any user notes when generating quiz questions.
-            - The quiz questions should always be base on the pdf content.
-            - The content of the questions options should and the question should be simple and clear.
-            - Any code comment that starts with "//" is important and should not be ignored
-            - Difficulty of the questions should be ${
-                data.difficulty || "NORMAL"
-            }
+            You are a quiz generator that follows the rules.
+            RULES :
+                - Your answer should start with this character "{".
+                - If there is a question typed "FILL_IN_THE_BLANK" use all the content.options inside content.correct (only applied in "FILL_IN_THE_BLANK" question type ).
+                - your answer should not include any template strings.
+                - You should escape special characters for the special characters since your response will be parse with JSON.parse()
+                - Your response should not be markdown. 
+                - Your responses shouldn't include any example content provided to you. 
+                - You should follow any user notes when generating quiz questions.
+                - The quiz questions should always be base on the pdf content.
+                - The content of the questions options should and the question should be simple and clear.
+                - Any code comment that starts with "//" is important and should not be ignored
+                - Difficulty of the questions should be ${
+                    data.difficulty || "NORMAL"
+                }
             `,
             model: anthropicHaiku,
             prompt,

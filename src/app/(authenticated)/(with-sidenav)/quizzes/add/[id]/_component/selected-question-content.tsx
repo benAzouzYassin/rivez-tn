@@ -26,6 +26,8 @@ export default function SelectedQuestionContent() {
             )
         }
     }
+    const getOptionsForHint = () => {}
+
     if (isBeingGenerated) {
         return <GeneralLoadingScreen text="Generating your question" />
     }
@@ -61,6 +63,7 @@ export default function SelectedQuestionContent() {
                 <FillInTheBlankContent />
             )}
             <HintsSheet
+                selectedQuestion={selectedQuestion}
                 hints={selectedQuestion.hints || []}
                 setHints={setHints}
             />

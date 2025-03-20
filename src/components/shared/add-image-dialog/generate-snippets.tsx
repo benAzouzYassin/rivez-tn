@@ -17,6 +17,7 @@ import { cn } from "@/lib/ui-utils"
 import { generateCodeSnippets } from "@/data-access/quizzes/generate"
 import { toastError } from "@/lib/toasts"
 import CodeSnippets from "./code-snippets"
+import { useIsAdmin } from "@/hooks/use-is-admin"
 
 interface Props {
     setCodeSnippets: (
@@ -24,6 +25,7 @@ interface Props {
     ) => void
 }
 export default function GenerateSnippets(props: Props) {
+    const isAdmin = useIsAdmin()
     const [open, setOpen] = useState(false)
     const formSchema = useMemo(
         () =>
@@ -61,13 +63,6 @@ export default function GenerateSnippets(props: Props) {
         formState: { errors, isSubmitting },
     } = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
-        defaultValues: {
-            language: "",
-            framework: "",
-            concepts: "",
-            notes: "",
-            fileCount: 1,
-        },
     })
 
     const onSubmit = async (data: z.infer<typeof formSchema>) => {
@@ -91,6 +86,9 @@ export default function GenerateSnippets(props: Props) {
         }
     }
 
+    if (!isAdmin) {
+        return null
+    }
     return (
         <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger asChild>

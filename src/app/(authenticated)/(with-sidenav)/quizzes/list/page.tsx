@@ -25,7 +25,7 @@ export default function Page() {
     const isAdmin = useIsAdmin()
     const { data: userData } = useCurrentUser()
     const router = useRouter()
-    const [activeTab, setActiveTab] = useState("popular")
+    const [activeTab, setActiveTab] = useState("personal")
     const [searchValue, setSearchValue] = useQueryState(
         "search-value",
         parseAsString.withDefault("")
@@ -174,10 +174,7 @@ export default function Page() {
                         icon={<ZapIcon size={50} className="text-indigo-500" />}
                         buttonText="Your quizzes"
                         description=""
-                        onClick={() => {
-                            setActiveTab("personal")
-                            setCurrentPage(1)
-                        }}
+                        onClick={() => router.push("/quizzes/add")}
                     />
                 )}
             </div>
