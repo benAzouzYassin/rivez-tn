@@ -6,5 +6,5 @@ const openRouter = createOpenRouter({
     baseURL: process.env.OPENROUTER_ENDPOINT,
 })
 
-export const anthropicHaiku = anthropic("claude-3-5-haiku-latest")
+export const anthropicHaiku = anthropic("claude-3-5-haiku-latest", {})
 export const googleGemini = openRouter("google/gemini-2.0-flash-001")

@@ -2,7 +2,6 @@ import { Button } from "@/components/ui/button"
 import Courses from "../_icons/courses"
 import FlashCards from "../_icons/flash-cards"
 import GenerateQuiz from "../_icons/generate-quiz"
-import SummarizeDocument from "../_icons/summarize-document"
 import LatestCoursesCarousel from "./latest-courses-carousel"
 import FloatingSection from "@/components/shared/floating-section"
 
@@ -22,9 +21,26 @@ export default function HomePage() {
                                     Our courses
                                 </p>
                             </div>
-                            <p className="mt-2 pl-2 pr-4 text-base text-neutral-500 font-semibold text-wrap text-left">
-                                Flash cards are common way to prepare for exams
-                                and to assure that you memorize the terms
+                            <p className="mt-2 pl-2 pr-4 text-lg text-neutral-500 font-semibold text-wrap text-left">
+                                Explore our comprehensive software development
+                                courses designed to help you master modern
+                                programming languages, frameworks, and industry
+                                best practices.
+                            </p>
+                        </Button>
+                        <Button
+                            variant={"secondary"}
+                            className="p-4 px-4 py-6  items-start justify-start flex-col h-48"
+                        >
+                            <div className="flex items-center gap-2">
+                                <GenerateQuiz className="!w-10 !h-10" />
+                                <p className="text-2xl font-extrabold text-blue-700/70">
+                                    Quizzes
+                                </p>
+                            </div>
+                            <p className="mt-2 pl-2 pr-4 text-lg text-neutral-500 font-semibold text-wrap text-left">
+                                Take quizzes on various programming topics, or
+                                generate custom quizzes with AI.
                             </p>
                         </Button>
                         <Button
@@ -37,24 +53,9 @@ export default function HomePage() {
                                     Flash Cards
                                 </p>
                             </div>
-                            <p className="mt-2 pl-2 pr-4 text-base text-neutral-500 font-semibold text-wrap text-left">
-                                Flash cards are common way to prepare for exams
-                                and to assure that you memorize the terms
-                            </p>
-                        </Button>
-                        <Button
-                            variant={"secondary"}
-                            className="p-4 px-4 py-6  items-start justify-start flex-col h-48"
-                        >
-                            <div className="flex items-center gap-2">
-                                <GenerateQuiz className="!w-10 !h-10" />
-                                <p className="text-2xl font-extrabold text-blue-700/70">
-                                    Generate a quiz
-                                </p>
-                            </div>
-                            <p className="mt-2 pl-2 pr-4 text-base text-neutral-500 font-semibold text-wrap text-left">
-                                Flash cards are common way to prepare for exams
-                                and to assure that you memorize the terms
+                            <p className="mt-2 pl-2 pr-4 text-lg text-neutral-500 font-semibold text-wrap text-left">
+                                Create your own study flashcards or browse our
+                                collection of popular decks.
                             </p>
                         </Button>
                     </div>

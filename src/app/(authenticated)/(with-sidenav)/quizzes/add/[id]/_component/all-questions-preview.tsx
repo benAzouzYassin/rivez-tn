@@ -22,7 +22,7 @@ export default function AllQuestionsPreviews() {
                 }
             )}
         >
-            <section className="pt-5 pb-3 h-full overflow-x-auto flex gap-2 px-8 border-t-2">
+            <section className="pt-5 pb-3 h-full overflow-x-auto overflow-y-hidden flex gap-2 px-8 border-t-2">
                 {questions.map((question) => (
                     <QuestionPreview
                         isSelected={question.localId == selectedQuestionId}

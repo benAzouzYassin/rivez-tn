@@ -16,6 +16,7 @@ export default function AddQuestionButton(props: Props) {
         switch (layoutType) {
             case "fill-in-the-blank":
                 addQuestion({
+                    hints: [],
                     localId: crypto.randomUUID(),
                     questionText: "",
                     imageUrl: null,
@@ -36,6 +37,7 @@ export default function AddQuestionButton(props: Props) {
                 break
             case "multiple-choice-without-image":
                 addQuestion({
+                    hints: [],
                     localId: crypto.randomUUID(),
                     questionText: "",
                     imageUrl: null,
@@ -54,6 +56,7 @@ export default function AddQuestionButton(props: Props) {
                 break
             case "matching-pairs":
                 addQuestion({
+                    hints: [],
                     imageType: "none",
                     localId: crypto.randomUUID(),
                     questionText: "",
@@ -74,6 +77,7 @@ export default function AddQuestionButton(props: Props) {
 
             case "vertical-multiple-choice":
                 addQuestion({
+                    hints: [],
                     localId: crypto.randomUUID(),
                     questionText: "",
                     imageUrl: null,
@@ -92,6 +96,7 @@ export default function AddQuestionButton(props: Props) {
                 break
             case "horizontal-multiple-choice":
                 addQuestion({
+                    hints: [],
                     localId: crypto.randomUUID(),
                     questionText: "",
                     imageUrl: null,

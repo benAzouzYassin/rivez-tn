@@ -65,7 +65,7 @@ export default function Toolbar({ editor, className }: Props) {
     return (
         <div
             className={cn(
-                "pb-1 pt-2 px-2 rounded-t-lg border-t border-x   flex flex-wrap items-center gap-1 ",
+                "pb-3 pt-2 px-2 rounded-t-lg border-t-2 border-x-2   flex flex-wrap items-center gap-1 ",
                 className
             )}
         >

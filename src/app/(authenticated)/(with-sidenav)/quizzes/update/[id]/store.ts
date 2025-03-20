@@ -1,4 +1,4 @@
-import { readQuizQuestions } from "@/data-access/quizzes/read"
+import { readQuizQuestionsWithHints } from "@/data-access/quizzes/read"
 import {
     FillInTheBlankContent,
     MatchingPairsContent,
@@ -296,7 +296,7 @@ const useUpdateQuizStore = create<Store>((set, get) => ({
     loadQuizData: async (quizId: number) => {
         set(initialState)
         try {
-            const data = await readQuizQuestions({
+            const data = await readQuizQuestionsWithHints({
                 quizId,
             })
 
@@ -411,6 +411,14 @@ const useUpdateQuizStore = create<Store>((set, get) => ({
                         codeSnippets,
                         imageType: q.image_type,
                         displayOrder: q.display_order || 0,
+                        hints:
+                            q.questions_hints.map((hint) => ({
+                                content: hint.content || "",
+                                id: hint.id,
+                                name: hint.name || "",
+                                isNew: false,
+                                localId: String(hint.id),
+                            })) || [],
                     } satisfies QuizQuestionType
                 })
                 .filter((q) => q !== null)
@@ -433,6 +441,13 @@ const useUpdateQuizStore = create<Store>((set, get) => ({
 export default useUpdateQuizStore
 
 export interface QuizQuestionType {
+    hints: {
+        localId: string
+        isNew: boolean
+        id: number | null
+        name: string
+        content: string
+    }[]
     questionId: number | null
     content:
         | StateMultipleChoiceOptions

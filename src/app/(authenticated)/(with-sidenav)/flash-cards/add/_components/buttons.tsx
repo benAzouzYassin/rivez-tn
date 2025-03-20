@@ -12,7 +12,7 @@ function Buttons(props: Props) {
     const [isSaving, setIsSaving] = useState(false)
     const handleSubmit = () => {}
     return (
-        <div className={cn("flex items-center gap-2", props.className)}>
+        <div className={cn("flex items-center  gap-2", props.className)}>
             <Button
                 onClick={() => {
                     reset()
