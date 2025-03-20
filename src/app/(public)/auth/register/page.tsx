@@ -151,7 +151,7 @@ export default function Page() {
                     isLoading={isGoogleAuth}
                     onClick={async () => {
                         setIsGoogleAuth(true)
-                        queryClient.refetchQueries({
+                        queryClient.invalidateQueries({
                             queryKey: ["current-user"],
                         })
                         await registerUserWithGoogle({

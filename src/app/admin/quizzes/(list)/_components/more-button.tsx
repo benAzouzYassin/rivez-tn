@@ -42,15 +42,15 @@ export default function MoreButton(props: Props) {
                 contentClassName="-translate-x-4 "
                 items={[
                     {
-                        icon: <Edit2 className="w-5 h-5" />,
-                        label: "Update",
-                        onClick: () => setIsUpdating(true),
-                    },
-                    {
                         icon: <Edit className="w-5 h-5" />,
                         label: "Update questions",
                         onClick: () =>
                             router.push(`/quizzes/update/${props.itemId}`),
+                    },
+                    {
+                        icon: <Edit2 className="w-5 h-5" />,
+                        label: "Update information",
+                        onClick: () => setIsUpdating(true),
                     },
                     {
                         icon: <Info className="w-5 h-5" />,

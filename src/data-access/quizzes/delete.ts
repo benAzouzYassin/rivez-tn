@@ -28,3 +28,11 @@ export async function deleteQuizQuestions(params: { questionIds: number[] }) {
         .throwOnError()
     return response
 }
+export async function deleteHintById(hintId: number) {
+    const response = await supabase
+        .from("questions_hints")
+        .delete()
+        .eq("id", hintId)
+        .throwOnError()
+    return response
+}

@@ -1,8 +1,9 @@
 import GeneralLoadingScreen from "@/components/shared/general-loading-screen"
-import useQuizStore from "../store"
+import useQuizStore, { QuizQuestionType } from "../store"
 import AddQuestionButton from "./add-question-button"
 import Buttons from "./buttons"
 import FillInTheBlankContent from "./fill-in-the-blank/fill-in-the-blank-content"
+import HintsSheet from "./hints-sheet"
 import LayoutSelect from "./layout-select"
 import MultipleChoiceContent from "./multiple-choice-question/multiple-choice-content"
 import MatchingPairsContent from "./pair-matchint-question/pair-matching-content"
@@ -13,8 +14,18 @@ export default function SelectedQuestionContent() {
     const selectedQuestion = allQuestions.find(
         (q) => q.localId === selectedQuestionId
     )
+    const updateQuestion = useQuizStore((s) => s.updateQuestion)
     const isBeingGenerated = useQuizStore((s) => s.isAddingQuestionByAi)
-
+    const setHints = (hints: QuizQuestionType["hints"]) => {
+        if (selectedQuestionId) {
+            updateQuestion(
+                {
+                    hints,
+                },
+                selectedQuestionId
+            )
+        }
+    }
     if (isBeingGenerated) {
         return <GeneralLoadingScreen text="Generating your question" />
     }
@@ -31,7 +42,7 @@ export default function SelectedQuestionContent() {
         )
     }
     return (
-        <section className="mt-10 h-full px-20 w-full">
+        <section className="mt-10 h-full relative px-20 w-full">
             <section className="flex justify-between">
                 <div className="flex pb-3 flex-col relative  ">
                     <LayoutSelect selectedQuestion={selectedQuestion} />
@@ -40,17 +51,19 @@ export default function SelectedQuestionContent() {
                     <Buttons />
                 </div>
             </section>
-
             {selectedQuestion.type === "MULTIPLE_CHOICE" && (
                 <MultipleChoiceContent />
             )}
-
             {selectedQuestion.type === "MATCHING_PAIRS" && (
                 <MatchingPairsContent />
             )}
             {selectedQuestion.type === "FILL_IN_THE_BLANK" && (
                 <FillInTheBlankContent />
             )}
+            <HintsSheet
+                hints={selectedQuestion.hints || []}
+                setHints={setHints}
+            />
         </section>
     )
 }

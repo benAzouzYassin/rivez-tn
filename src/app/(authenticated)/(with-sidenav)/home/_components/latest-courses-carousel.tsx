@@ -1,3 +1,4 @@
+import { Badge } from "@/components/ui/badge"
 import { Card } from "@/components/ui/card"
 import {
     Carousel,
@@ -66,17 +67,20 @@ export default function LatestCoursesCarousel() {
                                     <div className="p-6 flex ">
                                         <div className="w-44 bg-neutral-200 rounded-2xl h-32 mr-6"></div>
                                         <div>
-                                            <h3 className="text-xl font-bold">
+                                            <h3 className="text-[1.4rem] text-neutral-700 font-extrabold">
                                                 {course.title}
                                             </h3>
-                                            <p className="text-gray-600 mt-2">
+                                            <p className="text-gray-500 font-medium mt-2">
                                                 {course.description}
                                             </p>
 
                                             <div className="flex gap-4 mt-4">
-                                                <div className="bg-blue-100 px-3 py-1 rounded-full text-blue-800 text-sm">
+                                                <Badge
+                                                    variant={"blue"}
+                                                    className="  opacity-90 px-3 py-1 rounded-full text-sm"
+                                                >
                                                     {course.level}
-                                                </div>
+                                                </Badge>
                                             </div>
                                         </div>
                                     </div>

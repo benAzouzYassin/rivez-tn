@@ -94,7 +94,7 @@ export default function ToolbarTextColor(props: Props) {
     const isActive = () => !!editor.getAttributes("textStyle").color
 
     return (
-        <Popover>
+        <Popover modal={true}>
             <TooltipWrapper content="Text color">
                 <PopoverTrigger asChild>
                     <div
@@ -118,7 +118,7 @@ export default function ToolbarTextColor(props: Props) {
                                 <button
                                     key={color.code}
                                     onClick={() => applyColor(color.code)}
-                                    className="w-7 h-7 rounded-md border hover:scale-110 cursor-pointer transition-transform"
+                                    className="w-7 h-7 rounded-md  z-50 border hover:scale-110 cursor-pointer transition-transform"
                                     style={{ backgroundColor: color.code }}
                                     title={color.name}
                                     aria-label={`Set text color to ${color.name}`}

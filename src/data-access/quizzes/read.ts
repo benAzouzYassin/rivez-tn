@@ -229,10 +229,10 @@ export async function readQuizQuestionsDetails(params: { quizId: number }) {
     })
     return formattedData
 }
-export async function readQuizQuestions(params: { quizId: number }) {
+export async function readQuizQuestionsWithHints(params: { quizId: number }) {
     const response = await supabase
         .from("quizzes_questions")
-        .select(`*`)
+        .select(`*,questions_hints(*)`)
         .eq("quiz", params.quizId)
         .order("created_at", {
             ascending: false,

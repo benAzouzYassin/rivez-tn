@@ -3,9 +3,16 @@ import WarningDialog from "@/components/ui/warning-dialog"
 import { deleteQuizQuestions } from "@/data-access/quizzes/delete"
 import {
     addQuestionsToQuiz,
+    updateManyHints,
     updateQuizQuestions,
+    addHintsToQuestions,
 } from "@/data-access/quizzes/update"
-import { toastError, toastSuccess } from "@/lib/toasts"
+import {
+    dismissToasts,
+    toastError,
+    toastLoading,
+    toastSuccess,
+} from "@/lib/toasts"
 import { useQueryClient } from "@tanstack/react-query"
 import { useParams } from "next/navigation"
 import { useRouter } from "nextjs-toploader/app"
@@ -16,6 +23,7 @@ import useUpdateQuizStore, {
     StateMultipleChoiceOptions,
 } from "../store"
 import { shuffleArray } from "@/utils/array"
+import { useCurrentUser } from "@/hooks/use-current-user"
 export default function Buttons() {
     const params = useParams()
     const quizId = parseInt(params["id"] as string)
@@ -26,6 +34,7 @@ export default function Buttons() {
     const [isSaving, setIsSaving] = useState(false)
     const [isWarning, setIsWarning] = useState(false)
     const queryClient = useQueryClient()
+    const { data: userData } = useCurrentUser()
     const handleSave = async () => {
         try {
             if (isNaN(quizId) === false && quizId) {
@@ -69,89 +78,132 @@ export default function Buttons() {
 
     const updateOldQuestions = async () => {
         try {
-            await updateQuizQuestions(
-                questions
-                    .filter((q) => !!q.questionId)
-                    .map((q, index) => {
-                        if (q.type === "MULTIPLE_CHOICE") {
-                            const content =
-                                q.content as StateMultipleChoiceOptions
-                            const filteredOptions = content.options.filter(
-                                (opt) => !!opt.text
-                            )
-                            return {
-                                displayOrder: index,
-                                quizId,
-                                id: Number(q.questionId),
-                                content: {
-                                    options: filteredOptions,
-                                    codeSnippets: q.codeSnippets,
-                                },
-                                type: q.type as any,
-                                image: q.imageUrl || "",
-                                question: q.questionText,
-                                layout: q.layout,
-                                imageType: q.imageType,
-                            }
+            const oldQuestions = questions
+                .filter((q) => !!q.questionId)
+                .map((q, index) => {
+                    if (q.type === "MULTIPLE_CHOICE") {
+                        const content = q.content as StateMultipleChoiceOptions
+                        const filteredOptions = content.options.filter(
+                            (opt) => !!opt.text
+                        )
+                        return {
+                            displayOrder: index,
+                            quizId,
+                            id: Number(q.questionId),
+                            content: {
+                                options: filteredOptions,
+                                codeSnippets: q.codeSnippets,
+                            },
+                            type: q.type as any,
+                            image: q.imageUrl || "",
+                            question: q.questionText,
+                            layout: q.layout,
+                            imageType: q.imageType,
                         }
+                    }
 
-                        if (q.type === "MATCHING_PAIRS") {
-                            const content =
-                                q.content as StateMatchingPairsOptions
-                            const filteredRightOptions =
-                                content.rightOptions.filter((opt) => !!opt.text)
+                    if (q.type === "MATCHING_PAIRS") {
+                        const content = q.content as StateMatchingPairsOptions
+                        const filteredRightOptions =
+                            content.rightOptions.filter((opt) => !!opt.text)
 
-                            const filteredLeftOptions =
-                                content.leftOptions.filter((opt) => !!opt.text)
+                        const filteredLeftOptions = content.leftOptions.filter(
+                            (opt) => !!opt.text
+                        )
 
-                            return {
-                                displayOrder: index,
-                                quizId,
-                                id: Number(q.questionId),
-                                content: {
-                                    leftOptions: filteredLeftOptions,
-                                    rightOptions: filteredRightOptions,
-                                },
-                                type: q.type as any,
-                                image: q.imageUrl || "",
-                                question: q.questionText,
-                                layout: q.layout,
-                                imageType: q.imageType,
-                            }
+                        return {
+                            displayOrder: index,
+                            quizId,
+                            id: Number(q.questionId),
+                            content: {
+                                leftOptions: filteredLeftOptions,
+                                rightOptions: filteredRightOptions,
+                            },
+                            type: q.type as any,
+                            image: q.imageUrl || "",
+                            question: q.questionText,
+                            layout: q.layout,
+                            imageType: q.imageType,
                         }
-                        if (q.type === "FILL_IN_THE_BLANK") {
-                            const content =
-                                q.content as FillInTheBlankStoreContent
-                            const notSelectedOptions = content.options.map(
-                                (opt) => opt.text
-                            )
-                            const selectedOptions = content.correct.map(
-                                (opt) => opt.option
-                            )
-                            const allOptions = [
-                                ...notSelectedOptions,
-                                ...selectedOptions,
-                            ]
-                            return {
-                                displayOrder: index,
-                                id: Number(q.questionId),
-                                quizId,
-                                content: {
-                                    options: shuffleArray(allOptions),
-                                    correct: content.correct,
-                                    parts: content.parts,
-                                },
-                                type: q.type as any,
-                                image: "",
-                                question: q.questionText,
-                                layout: q.layout,
-                                imageType: q.imageType,
-                            }
+                    }
+                    if (q.type === "FILL_IN_THE_BLANK") {
+                        const content = q.content as FillInTheBlankStoreContent
+                        const notSelectedOptions = content.options.map(
+                            (opt) => opt.text
+                        )
+                        const selectedOptions = content.correct.map(
+                            (opt) => opt.option
+                        )
+                        const allOptions = [
+                            ...notSelectedOptions,
+                            ...selectedOptions,
+                        ]
+                        return {
+                            displayOrder: index,
+                            id: Number(q.questionId),
+                            quizId,
+                            content: {
+                                options: shuffleArray(allOptions),
+                                correct: content.correct,
+                                parts: content.parts,
+                            },
+                            type: q.type as any,
+                            image: "",
+                            question: q.questionText,
+                            layout: q.layout,
+                            imageType: q.imageType,
                         }
-                        return null
-                    })
-                    .filter((q) => !!q)
+                    }
+                    return null
+                })
+                .filter((q) => !!q)
+            const result = await updateQuizQuestions(oldQuestions)
+            const hintsToUpsert = result.data
+                .flatMap((q) => {
+                    const hints = questions.find(
+                        (item, itemIndex) =>
+                            item.questionText === q.question &&
+                            itemIndex === q.display_order
+                    )?.hints
+                    return hints?.map((hint) => ({
+                        id: hint.id || undefined,
+                        content: hint.content || "",
+                        name: hint.name,
+                        question_id: q.id,
+                    }))
+                })
+                .filter((hint) => hint !== undefined)
+            toastLoading("Adding / Updating Questions hints...")
+            updateManyHints(
+                hintsToUpsert.filter((h) => h.id),
+                userData?.id || ""
             )
+                .then(() => {
+                    dismissToasts("loading")
+                    toastSuccess("Request completed successfully ! ")
+                })
+                .catch(() => {
+                    dismissToasts("loading")
+                    toastError("Some hints was not updated.")
+                })
+            addHintsToQuestions(
+                hintsToUpsert
+                    .filter((h) => !h.id)
+                    .map((h) => ({
+                        content: h.content,
+                        name: h.name,
+                        question_id: h.question_id,
+                    })),
+                userData?.id || ""
+            )
+                .then(() => {
+                    dismissToasts("loading")
+                    toastSuccess("Request completed successfully ! ")
+                })
+                .catch(() => {
+                    dismissToasts("loading")
+                    toastError("Some hints was not added.")
+                })
             return true
         } catch (error) {
             console.error(error)
@@ -165,82 +217,105 @@ export default function Buttons() {
         )
         const oldQuestionsLength = questions.length - newQuestions.length
         try {
-            await addQuestionsToQuiz(
+            const formattedNewQuestions = newQuestions
+                .map((q, index) => {
+                    if (q.type === "MULTIPLE_CHOICE") {
+                        const content = q.content as StateMultipleChoiceOptions
+                        const filteredOptions = content.options.filter(
+                            (opt) => !!opt.text
+                        )
+                        return {
+                            displayOrder: index + oldQuestionsLength,
+                            content: {
+                                options: filteredOptions,
+                                codeSnippets: q.codeSnippets,
+                            },
+                            type: q.type as any,
+                            image: q.imageUrl || "",
+                            question: q.questionText,
+                            layout: q.layout,
+                            imageType: q.imageType,
+                        }
+                    }
+                    if (q.type === "FILL_IN_THE_BLANK") {
+                        const content = q.content as FillInTheBlankStoreContent
+                        const notSelectedOptions = content.options.map(
+                            (opt) => opt.text
+                        )
+                        const selectedOptions = content.correct.map(
+                            (opt) => opt.option
+                        )
+                        const allOptions = [
+                            ...notSelectedOptions,
+                            ...selectedOptions,
+                        ]
+                        return {
+                            displayOrder: index,
+                            content: {
+                                options: shuffleArray(allOptions),
+                                correct: content.correct,
+                                parts: content.parts,
+                            },
+                            type: q.type as any,
+                            image: "",
+                            question: q.questionText,
+                            layout: q.layout,
+                            imageType: q.imageType,
+                        }
+                    }
+                    if (q.type === "MATCHING_PAIRS") {
+                        const content = q.content as StateMatchingPairsOptions
+                        const filteredRightOptions =
+                            content.rightOptions.filter((opt) => !!opt.text)
+
+                        const filteredLeftOptions = content.leftOptions.filter(
+                            (opt) => !!opt.text
+                        )
+
+                        return {
+                            displayOrder: index + oldQuestionsLength,
+                            content: {
+                                leftOptions: filteredLeftOptions,
+                                rightOptions: filteredRightOptions,
+                            },
+                            type: q.type as any,
+                            image: q.imageUrl || "",
+                            question: q.questionText,
+                            layout: q.layout,
+                            imageType: q.imageType,
+                        }
+                    }
+                    return null
+                })
+                .filter((q) => !!q)
+            const result = await addQuestionsToQuiz(
                 quizId,
-                newQuestions
-                    .map((q, index) => {
-                        if (q.type === "MULTIPLE_CHOICE") {
-                            const content =
-                                q.content as StateMultipleChoiceOptions
-                            const filteredOptions = content.options.filter(
-                                (opt) => !!opt.text
-                            )
-                            return {
-                                displayOrder: index + oldQuestionsLength,
-                                content: {
-                                    options: filteredOptions,
-                                    codeSnippets: q.codeSnippets,
-                                },
-                                type: q.type as any,
-                                image: q.imageUrl || "",
-                                question: q.questionText,
-                                layout: q.layout,
-                                imageType: q.imageType,
-                            }
-                        }
-                        if (q.type === "FILL_IN_THE_BLANK") {
-                            const content =
-                                q.content as FillInTheBlankStoreContent
-                            const notSelectedOptions = content.options.map(
-                                (opt) => opt.text
-                            )
-                            const selectedOptions = content.correct.map(
-                                (opt) => opt.option
-                            )
-                            const allOptions = [
-                                ...notSelectedOptions,
-                                ...selectedOptions,
-                            ]
-                            return {
-                                displayOrder: index,
-                                content: {
-                                    options: shuffleArray(allOptions),
-                                    correct: content.correct,
-                                    parts: content.parts,
-                                },
-                                type: q.type as any,
-                                image: "",
-                                question: q.questionText,
-                                layout: q.layout,
-                                imageType: q.imageType,
-                            }
-                        }
-                        if (q.type === "MATCHING_PAIRS") {
-                            const content =
-                                q.content as StateMatchingPairsOptions
-                            const filteredRightOptions =
-                                content.rightOptions.filter((opt) => !!opt.text)
-
-                            const filteredLeftOptions =
-                                content.leftOptions.filter((opt) => !!opt.text)
-
-                            return {
-                                displayOrder: index + oldQuestionsLength,
-                                content: {
-                                    leftOptions: filteredLeftOptions,
-                                    rightOptions: filteredRightOptions,
-                                },
-                                type: q.type as any,
-                                image: q.imageUrl || "",
-                                question: q.questionText,
-                                layout: q.layout,
-                                imageType: q.imageType,
-                            }
-                        }
-                        return null
-                    })
-                    .filter((q) => !!q)
+                formattedNewQuestions
             )
+            const hintsToInsert = result.data
+                .flatMap((q) => {
+                    const hints = questions.find(
+                        (item, itemIndex) =>
+                            item.questionText === q.question &&
+                            itemIndex === q.display_order
+                    )?.hints
+                    return hints?.map((hint) => ({
+                        content: hint.content || "",
+                        name: hint.name,
+                        question_id: q.id,
+                    }))
+                })
+                .filter((hint) => hint !== undefined)
+            toastLoading("Adding / Updating Questions hints...")
+            addHintsToQuestions(hintsToInsert, userData?.id || "")
+                .then(() => {
+                    dismissToasts("loading")
+                    toastSuccess("Request completed successfully ! ")
+                })
+                .catch(() => {
+                    dismissToasts("loading")
+                    toastError("Some hints was not added.")
+                })
             return true
         } catch (error) {
             console.error(error)
@@ -304,40 +379,42 @@ export default function Buttons() {
         await handleSave()
     }
     return (
-        <div className="flex items-center gap-2">
-            <Button
-                onClick={() => {
-                    reset()
-                    router.back()
-                }}
-                className="text-base font-extrabold"
-                variant="red"
-            >
-                Cancel
-            </Button>
+        <div className="flex items-center justify-end h-10 fixed right-10 top-24 w-full bg-none gap-2">
+            <div className="bg-white p-2 flex items-center justify-center gap-2 rounded-2xl">
+                <Button
+                    onClick={() => {
+                        reset()
+                        router.back()
+                    }}
+                    className="text-base font-extrabold"
+                    variant="red"
+                >
+                    Cancel
+                </Button>
 
-            <Button
-                onClick={handleSubmit}
-                isLoading={isSaving}
-                className="text-base font-extrabold"
-                variant="blue"
-            >
-                Save changes
-            </Button>
-            <WarningDialog
-                titleClassName="text-[#EF9C07]"
-                isOpen={isWarning}
-                onOpenChange={setIsWarning}
-                description="You have left some options empty. Any empty will option be ignored."
-                title="Warning: Proceed with caution"
-                confirmText="Continue"
-                confirmBtnClassName="bg-amber-400 shadow-amber-400"
-                onConfirm={async () => {
-                    handleSave()
-                    reset()
-                    router.back()
-                }}
-            />
+                <Button
+                    onClick={handleSubmit}
+                    isLoading={isSaving}
+                    className="text-base font-extrabold"
+                    variant="blue"
+                >
+                    Save changes
+                </Button>
+                <WarningDialog
+                    titleClassName="text-[#EF9C07]"
+                    isOpen={isWarning}
+                    onOpenChange={setIsWarning}
+                    description="You have left some options empty. Any empty will option be ignored."
+                    title="Warning: Proceed with caution"
+                    confirmText="Continue"
+                    confirmBtnClassName="bg-amber-400 shadow-amber-400"
+                    onConfirm={async () => {
+                        handleSave()
+                        reset()
+                        router.back()
+                    }}
+                />
+            </div>
         </div>
     )
 }

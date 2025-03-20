@@ -90,6 +90,7 @@ const initialState: State = {
     isGenerationQuizError: false,
     allQuestions: [
         {
+            hints: [],
             codeSnippets: null,
             imageType: "normal-image",
             content: {
@@ -129,6 +130,7 @@ const useQuizStore = create<Store>((set, get) => ({
                 allQuestions: [
                     ...state.allQuestions,
                     {
+                        hints: [],
                         imageType: storeData.imageType,
                         layout: storeData.layout,
                         type: storeData.type,
@@ -511,6 +513,11 @@ const useQuizStore = create<Store>((set, get) => ({
 export default useQuizStore
 
 export type QuizQuestionType = {
+    hints: {
+        id: string
+        name: string
+        content: string
+    }[]
     content:
         | FillInTheBlankStoreContent
         | MultipleChoiceOptions

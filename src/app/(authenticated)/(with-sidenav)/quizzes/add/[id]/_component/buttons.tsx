@@ -1,8 +1,17 @@
 import { Button } from "@/components/ui/button"
 import WarningDialog from "@/components/ui/warning-dialog"
 import { softDeleteQuizById } from "@/data-access/quizzes/delete"
-import { addQuestionsToQuiz, updateQuiz } from "@/data-access/quizzes/update"
-import { toastError, toastSuccess } from "@/lib/toasts"
+import {
+    addHintsToQuestions,
+    addQuestionsToQuiz,
+    updateQuiz,
+} from "@/data-access/quizzes/update"
+import {
+    dismissToasts,
+    toastError,
+    toastLoading,
+    toastSuccess,
+} from "@/lib/toasts"
 import { useParams } from "next/navigation"
 import { useRouter } from "nextjs-toploader/app"
 import { useRef, useState } from "react"
@@ -14,7 +23,10 @@ import useQuizStore, {
 import { useQueryClient } from "@tanstack/react-query"
 import { shuffleArray } from "@/utils/array"
 import { useIsAdmin } from "@/hooks/use-is-admin"
+import { useCurrentUser } from "@/hooks/use-current-user"
 export default function Buttons() {
+    const { data: userData } = useCurrentUser()
+
     const isAdmin = useIsAdmin()
     const params = useParams()
     const quizId = parseInt(params["id"] as string)
@@ -27,6 +39,7 @@ export default function Buttons() {
     const [isWarning, setIsWarning] = useState(false)
     const savingActionRef = useRef<"saveAsDraft" | "publish">("saveAsDraft")
     const queryClient = useQueryClient()
+
     const handleSave = async (action?: "publish" | "saveAsDraft") => {
         try {
             if (isNaN(quizId) === false && quizId) {
@@ -35,7 +48,8 @@ export default function Buttons() {
                 } else {
                     setIsSavingAsDraft(true)
                 }
-                await addQuestionsToQuiz(
+                // TODO make the addedQuestions include the display order and add the  hints
+                const addedQuestions = await addQuestionsToQuiz(
                     quizId,
                     questions
                         .map((q, index) => {
@@ -116,6 +130,32 @@ export default function Buttons() {
                         .filter((q) => !!q)
                 )
                 toastSuccess("Saved successfully.")
+                const hintsToAdd = addedQuestions.data
+                    .flatMap((q) => {
+                        const hints = questions.find(
+                            (item, itemIndex) =>
+                                item.questionText === q.question &&
+                                itemIndex === q.display_order
+                        )?.hints
+                        return hints?.map((hint) => ({
+                            content: hint.content || "",
+                            name: hint.name,
+                            question_id: q.id,
+                        }))
+                    })
+                    .filter((hint) => hint !== undefined)
+
+                toastLoading("Adding Questions hints...")
+                addHintsToQuestions(hintsToAdd, userData?.id || "")
+                    .then(() => {
+                        dismissToasts("loading")
+                        toastSuccess("Added successfully ! ")
+                    })
+                    .catch(() => {
+                        dismissToasts("loading")
+                        toastError("Quiz added but without hints.")
+                    })
+
                 if (action === "publish") {
                     await updateQuiz(quizId, { publishing_status: "PUBLISHED" })
                 } else {
@@ -180,55 +220,57 @@ export default function Buttons() {
         handleSave(action)
     }
     return (
-        <div className="flex items-center gap-2">
-            <WarningDialog
-                isOpen={isCanceling}
-                onOpenChange={setIsCanceling}
-                confirmText="Remove the quiz"
-                onConfirm={async () => {
-                    await softDeleteQuizById(quizId)
-                    reset()
-                    router.back()
-                }}
-            >
-                <Button className="text-base font-extrabold" variant="red">
-                    Cancel
-                </Button>
-            </WarningDialog>
-            <Button
-                isLoading={isSavingAsDraft}
-                onClick={() => handleSubmit("saveAsDraft")}
-                className="text-base font-extrabold"
-                variant={isAdmin ? "secondary" : "blue"}
-            >
-                {isAdmin ? "Save draft" : "Save Quiz"}
-            </Button>
-            {isAdmin && (
-                <Button
-                    onClick={() => handleSubmit("publish")}
-                    isLoading={isPublishing}
-                    className="text-base font-extrabold"
-                    variant="blue"
+        <div className=" w-full  fixed flex items-center justify-end right-0 top-24 ">
+            <div className="flex   items-center gap-2 bg-white p-2 rounded-2xl">
+                <WarningDialog
+                    isOpen={isCanceling}
+                    onOpenChange={setIsCanceling}
+                    confirmText="Remove the quiz"
+                    onConfirm={async () => {
+                        await softDeleteQuizById(quizId)
+                        reset()
+                        router.back()
+                    }}
                 >
-                    Publish Quiz
+                    <Button className="text-base font-extrabold" variant="red">
+                        Cancel
+                    </Button>
+                </WarningDialog>
+                <Button
+                    isLoading={isSavingAsDraft}
+                    onClick={() => handleSubmit("saveAsDraft")}
+                    className="text-base font-extrabold"
+                    variant={isAdmin ? "secondary" : "blue"}
+                >
+                    {isAdmin ? "Save draft" : "Save Quiz"}
                 </Button>
-            )}
+                {isAdmin && (
+                    <Button
+                        onClick={() => handleSubmit("publish")}
+                        isLoading={isPublishing}
+                        className="text-base font-extrabold"
+                        variant="blue"
+                    >
+                        Publish Quiz
+                    </Button>
+                )}
 
-            <WarningDialog
-                titleClassName="text-[#EF9C07]"
-                isOpen={isWarning}
-                onOpenChange={setIsWarning}
-                description="You have left some options empty. Any empty will option be ignored."
-                title="Warning: Proceed with caution"
-                confirmText="Continue"
-                confirmBtnClassName="bg-amber-400 shadow-amber-400"
-                onConfirm={async () => {
-                    setIsWarning(false)
-                    handleSave()
-                    reset()
-                    router.back()
-                }}
-            />
+                <WarningDialog
+                    titleClassName="text-[#EF9C07]"
+                    isOpen={isWarning}
+                    onOpenChange={setIsWarning}
+                    description="You have left some options empty. Any empty will option be ignored."
+                    title="Warning: Proceed with caution"
+                    confirmText="Continue"
+                    confirmBtnClassName="bg-amber-400 shadow-amber-400"
+                    onConfirm={async () => {
+                        setIsWarning(false)
+                        handleSave()
+                        reset()
+                        router.back()
+                    }}
+                />
+            </div>
         </div>
     )
 }

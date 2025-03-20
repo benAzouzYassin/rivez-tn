@@ -180,20 +180,20 @@ export default function ToolbarTable({ editor }: ToolbarTableProps) {
                     </DropdownMenuTrigger>
                     <DropdownMenuContent className="!min-w-64">
                         <DropdownMenuItem
-                            className="font-semibold cursor-pointer"
+                            className="font-semibold hover:bg-neutral-200/70 cursor-pointer"
                             onClick={toggleHeaderRow}
                         >
                             Toggle Header Row
                         </DropdownMenuItem>
                         <DropdownMenuItem
-                            className="font-semibold cursor-pointer"
+                            className="font-semibold cursor-pointer hover:bg-neutral-200/70"
                             onClick={toggleHeaderColumn}
                         >
                             Toggle Header Column
                         </DropdownMenuItem>
                         <DropdownMenuSeparator />
                         <DropdownMenuItem
-                            className="font-semibold cursor-pointer"
+                            className="font-semibold cursor-pointer hover:bg-neutral-200/70"
                             onClick={toggleCell}
                         >
                             <CheckSquare className="mr-2 h-4 w-4" />
@@ -203,7 +203,7 @@ export default function ToolbarTable({ editor }: ToolbarTableProps) {
                             className={cn(
                                 "font-semibold",
                                 canMergeOrSplitCells
-                                    ? "cursor-pointer"
+                                    ? "cursor-pointer hover:bg-neutral-200/70"
                                     : "cursor-not-allowed opacity-50"
                             )}
                             onClick={mergeOrSplitCells}
@@ -214,42 +214,42 @@ export default function ToolbarTable({ editor }: ToolbarTableProps) {
                         </DropdownMenuItem>
                         <DropdownMenuSeparator />
                         <DropdownMenuItem
-                            className="font-semibold cursor-pointer"
+                            className="font-semibold cursor-pointer hover:bg-neutral-200/70"
                             onClick={addRowBefore}
                         >
                             <Rows3 className="mr-2 h-4 w-4" />
                             Add Row Before
                         </DropdownMenuItem>
                         <DropdownMenuItem
-                            className="font-semibold cursor-pointer"
+                            className="font-semibold cursor-pointer hover:bg-neutral-200/70"
                             onClick={addRowAfter}
                         >
                             <Rows3 className="mr-2 h-4 w-4" />
                             Add Row After
                         </DropdownMenuItem>
                         <DropdownMenuItem
-                            className="font-semibold cursor-pointer"
+                            className="font-semibold cursor-pointer hover:bg-neutral-200/70"
                             onClick={deleteRow}
                         >
                             Delete Row
                         </DropdownMenuItem>
                         <DropdownMenuSeparator />
                         <DropdownMenuItem
-                            className="font-semibold cursor-pointer"
+                            className="font-semibold cursor-pointer hover:bg-neutral-200/70"
                             onClick={addColumnBefore}
                         >
                             <Columns3 className="mr-2 h-4 w-4" />
                             Add Column Before
                         </DropdownMenuItem>
                         <DropdownMenuItem
-                            className="font-semibold cursor-pointer"
+                            className="font-semibold cursor-pointer hover:bg-neutral-200/70"
                             onClick={addColumnAfter}
                         >
                             <Columns3 className="mr-2 h-4 w-4" />
                             Add Column After
                         </DropdownMenuItem>
                         <DropdownMenuItem
-                            className="font-semibold cursor-pointer"
+                            className="font-semibold cursor-pointer hover:bg-neutral-200/70"
                             onClick={deleteColumn}
                         >
                             Delete Column
@@ -257,7 +257,7 @@ export default function ToolbarTable({ editor }: ToolbarTableProps) {
                         <DropdownMenuSeparator />
                         <DropdownMenuItem
                             onClick={deleteTable}
-                            className="text-red-600 cursor-pointer focus:bg-red-50 focus:text-red-500 font-semibold"
+                            className="text-red-600 cursor-pointer hover:bg-red-200/70 focus:bg-red-50 focus:text-red-500 font-semibold"
                         >
                             <Trash2 className="mr-2 h-4 w-4" />
                             Delete Table

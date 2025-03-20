@@ -23,6 +23,7 @@ import StarterKit from "@tiptap/starter-kit"
 import css from "highlight.js/lib/languages/css"
 import js from "highlight.js/lib/languages/javascript"
 import ts from "highlight.js/lib/languages/typescript"
+import xml from "highlight.js/lib/languages/xml.js"
 import html from "highlight.js/lib/languages/xml"
 import { createLowlight } from "lowlight"
 import { memo, useEffect } from "react"
@@ -34,14 +35,19 @@ const lowlight = createLowlight()
 lowlight.register("html", html)
 lowlight.register("css", css)
 lowlight.register("js", js)
+lowlight.register("jsx", js)
 lowlight.register("ts", ts)
+lowlight.register("tsx", ts)
+lowlight.register("xml", xml)
 
 interface Props {
     containerClassName?: string
     contentClassName?: string
-    onChange?: (content: JSONContent) => void
+    onJsonChange?: (content: JSONContent) => void
+    onHtmlChange?: (content: string) => void
     initialContent?: string
     placeholder?: string
+    displayedEditorContent?: string
 }
 
 function RichTextEditor(props: Props) {
@@ -130,7 +136,8 @@ function RichTextEditor(props: Props) {
         ],
         content: props.initialContent || "",
         onUpdate: ({ editor }) => {
-            props.onChange?.(editor.getJSON())
+            props.onJsonChange?.(editor.getJSON())
+            props.onHtmlChange?.(editor.getHTML())
         },
         editorProps: {
             attributes: {
@@ -147,6 +154,12 @@ function RichTextEditor(props: Props) {
             editor.view.dispatch(editor.state.tr)
         }
     }, [editor, props.placeholder])
+
+    useEffect(() => {
+        if (editor !== null && props.displayedEditorContent) {
+            editor.commands.setContent(props.displayedEditorContent)
+        }
+    }, [editor, props.displayedEditorContent])
 
     return (
         <div className={props.containerClassName}>

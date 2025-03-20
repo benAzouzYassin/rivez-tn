@@ -56,7 +56,7 @@ export default function Page() {
             password: formData.password,
         })
         if (success) {
-            queryClient.refetchQueries({
+            queryClient.invalidateQueries({
                 queryKey: ["current-user"],
             })
             window.location.replace(
