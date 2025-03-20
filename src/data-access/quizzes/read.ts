@@ -240,3 +240,16 @@ export async function readQuizQuestionsWithHints(params: { quizId: number }) {
         .throwOnError()
     return response.data
 }
+
+export async function readQuizQuestionHints(params: { questionId: number }) {
+    console.log(params.questionId)
+    const response = await supabase
+        .from("questions_hints")
+        .select(`*`)
+        .eq("question_id", params.questionId)
+        .order("created_at", {
+            ascending: false,
+        })
+        .throwOnError()
+    return response.data
+}

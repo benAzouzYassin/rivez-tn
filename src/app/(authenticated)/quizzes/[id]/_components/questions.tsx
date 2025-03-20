@@ -52,18 +52,6 @@ export default function Questions() {
             ) : (
                 <ErrorDisplay />
             )
-        // case "CODE_COMPLETION":
-        //     return isCodeCompletion(currentQuestion) ? (
-        //         <CodeCompletionQuestion question={currentQuestion} />
-        //     ) : (
-        //         <ErrorDisplay />
-        //     )
-        // case "DEBUG_CODE":
-        //     return isCodeDebug(currentQuestion) ? (
-        //         <DebugCodeQuestion question={currentQuestion} />
-        //     ) : (
-        //         <ErrorDisplay />
-        //     )
         default:
             return <ErrorDisplay />
     }
@@ -94,19 +82,3 @@ function isFillInTheBlank(
     )
     return success
 }
-// function isCodeCompletion(
-//     currentQuestion: QuestionType
-// ): currentQuestion is QuestionType & { content: CodeCompletionContent } {
-//     const { success } = CodeCompletionContentSchema.safeParse(
-//         currentQuestion.content
-//     )
-//     return success
-// }
-// function isCodeDebug(
-//     currentQuestion: QuestionType
-// ): currentQuestion is QuestionType & { content: DebugCodeContent } {
-//     const { success } = DebugCodeContentSchema.safeParse(
-//         currentQuestion.content
-//     )
-//     return success
-// }

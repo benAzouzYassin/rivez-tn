@@ -12,6 +12,7 @@ import CorrectAnswerBanner from "./correct-answer-banner"
 import MatchingPairsLeft from "./matching-pairs-left"
 import MatchingPairsRight from "./matching-pairs-right"
 import WrongAnswerBanner from "./wrong-answer-banner"
+import HintsSheet from "./hints-sheet"
 
 type Props = {
     question: { content: MatchingPairsContent } & QuestionType
@@ -182,6 +183,7 @@ export default function MatchingPairsQuestion(props: Props) {
     return (
         <>
             <div className="flex flex-col relative h-fit items-center justify-center">
+                <HintsSheet questionId={props.question.id} />
                 <div>
                     <p className="max-w-[1200px] mb-1 text-3xl font-extrabold top-0 text-neutral-700 text-left w-full left-0">
                         {props.question?.question || "Match the items :"}

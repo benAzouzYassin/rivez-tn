@@ -23,6 +23,7 @@ import { useEffect, useRef, useState } from "react"
 import FillInTheBlankItem from "./fill-in-the-blank-item"
 import FillInTheBlankOptions from "./fill-in-the-blank-options"
 import FillInTheBlankParts from "./fill-in-the-blank-parts"
+import HintsSheet from "../hints-sheet"
 
 type Props = {
     question: { content: FillInTheBlankContent } & QuestionType
@@ -159,6 +160,7 @@ export default function FillInTheBlankQuestion(props: Props) {
     return (
         <>
             <div className="flex flex-col relative h-fit items-center justify-center">
+                <HintsSheet questionId={props.question.id} />
                 <div>
                     <p className="max-w-[1200px] mb-1 pt-5 text-4xl text-center font-extrabold top-0 text-neutral-700  w-full left-0">
                         {props.question?.question ||
