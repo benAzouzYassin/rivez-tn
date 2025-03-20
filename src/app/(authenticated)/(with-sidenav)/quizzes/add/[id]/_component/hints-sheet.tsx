@@ -16,6 +16,7 @@ import { cn } from "@/lib/ui-utils"
 
 import {
     ChevronLeft,
+    Lightbulb,
     LightbulbIcon,
     PlusCircleIcon,
     SaveIcon,
@@ -100,14 +101,10 @@ function HintsSheet(props: Props) {
     return (
         <Sheet open={isOpen} onOpenChange={setIsOpen}>
             <SheetTrigger asChild>
-                <Button
-                    variant={"secondary"}
-                    className=" fixed h-14 bottom-72 right-0 px-4 py-2 cursor-pointer shadow-sky-600 border-[#598bf0] hover:bg-blue-500 bg-[#598bf0] text-white rounded-r-none flex items-center gap-2 group"
-                    aria-label="Show hint"
-                >
-                    <LightbulbIcon className="w-6 h-6" />
-                    <span className="font-bold text-xl">Hints</span>
-                </Button>
+                <button className="h-10 text-center hover:bg-blue-50 cursor-pointer active:scale-95 transition-all  text-blue-600/80 font-bold text-lg flex items-center justify-center fixed rounded-l-xl border-blue-500/70 top-44 border-r-0 right-0 w-20 gap-px border-2">
+                    <Lightbulb className="w-6 h-6" />
+                    Hint
+                </button>
             </SheetTrigger>
 
             <SheetContent

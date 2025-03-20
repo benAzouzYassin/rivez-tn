@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/ui-utils"
 import { MultipleChoiceContent } from "@/schemas/questions-content"
 import { areArraysEqual } from "@/utils/array"
-import { ImageIcon } from "lucide-react"
+import { ImageIcon, Lightbulb } from "lucide-react"
 import { AnimatePresence, motion } from "motion/react"
 import { useParams } from "next/navigation"
 import { useEffect, useState } from "react"
@@ -14,6 +14,7 @@ import { useCurrentUser } from "@/hooks/use-current-user"
 import { toastError } from "@/lib/toasts"
 import { useQueryClient } from "@tanstack/react-query"
 import CodeSnippets from "./code-snippets"
+import HintsSheet from "./hints-sheet"
 
 type Props = {
     question: { content: MultipleChoiceContent } & QuestionType
@@ -118,6 +119,7 @@ export default function MultipleAnswerQuestion(props: Props) {
                     "flex flex-col relative h-fit items-center justify-center pb-44"
                 )}
             >
+                <HintsSheet questionId={props.question.id} />
                 <div
                     className={cn("", {
                         "flex flex-col w-full  items-center justify-center":

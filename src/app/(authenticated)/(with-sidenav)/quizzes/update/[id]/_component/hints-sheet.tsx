@@ -14,8 +14,16 @@ import {
 
 import { cn } from "@/lib/ui-utils"
 
+import { deleteHintById } from "@/data-access/quizzes/delete"
+import {
+    dismissToasts,
+    toastError,
+    toastLoading,
+    toastSuccess,
+} from "@/lib/toasts"
 import {
     ChevronLeft,
+    Lightbulb,
     LightbulbIcon,
     PlusCircleIcon,
     SaveIcon,
@@ -24,13 +32,6 @@ import {
 import dynamic from "next/dynamic"
 import { memo, useEffect, useMemo, useState } from "react"
 import { QuizQuestionType } from "../store"
-import { deleteHintById } from "@/data-access/quizzes/delete"
-import {
-    dismissToasts,
-    toastError,
-    toastLoading,
-    toastSuccess,
-} from "@/lib/toasts"
 const RichTextEditor = dynamic(
     () => import("@/components/shared/rich-text-editor"),
     {
@@ -125,14 +126,10 @@ function HintsSheet(props: Props) {
     return (
         <Sheet open={isOpen} onOpenChange={setIsOpen}>
             <SheetTrigger asChild>
-                <Button
-                    variant={"secondary"}
-                    className=" fixed h-14 bottom-72 right-0 px-4 py-2 cursor-pointer shadow-sky-600 border-[#598bf0] hover:bg-blue-500 bg-[#598bf0] text-white rounded-r-none flex items-center gap-2 group"
-                    aria-label="Show hint"
-                >
-                    <LightbulbIcon className="w-6 h-6" />
-                    <span className="font-bold text-xl">Hints</span>
-                </Button>
+                <button className="h-10 text-center hover:bg-blue-50 cursor-pointer active:scale-95 transition-all  text-blue-600/80 font-bold text-lg flex items-center justify-center fixed rounded-l-xl border-blue-500/70 top-44 border-r-0 right-0 w-20 gap-px border-2">
+                    <Lightbulb className="w-6 h-6" />
+                    Hint
+                </button>
             </SheetTrigger>
 
             <SheetContent
@@ -198,12 +195,12 @@ function HintsSheet(props: Props) {
                                         There is no hints...
                                     </div>
                                 ) : (
-                                    props.hints.map((hint) => (
+                                    props.hints.map((hint, index) => (
                                         <Card
                                             onClick={() => {
                                                 setSelectedId(hint.localId)
                                             }}
-                                            key={hint.id}
+                                            key={`${hint.id}-${hint.localId}-${index}`}
                                             className={`relative active:scale-95 rounded-2xl hover:bg-blue-100/70 pl-1 hover:border-blue-300 hover:shadow-blue-300 hover:pl-2 transition-all cursor-pointer  overflow-hidden`}
                                         >
                                             <CardContent className="px-2  rounded-2xl pt-5 pb-2 flex items-start gap-3">

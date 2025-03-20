@@ -41,6 +41,7 @@ lowlight.register("tsx", ts)
 lowlight.register("xml", xml)
 
 interface Props {
+    readonly?: boolean
     containerClassName?: string
     contentClassName?: string
     onJsonChange?: (content: JSONContent) => void
@@ -53,7 +54,7 @@ interface Props {
 function RichTextEditor(props: Props) {
     const editor = useEditor({
         immediatelyRender: true,
-
+        editable: !props.readonly,
         extensions: [
             StarterKit.configure({
                 codeBlock: false,
@@ -143,7 +144,10 @@ function RichTextEditor(props: Props) {
             attributes: {
                 class: cn(
                     "min-h-[10rem] h-full overflow-y-auto border-x-2 border-b-2 rounded-b-lg w-full border-t focus:pl-[1.5rem] focus:shadow-sm p-5 outline-none transition-all",
-                    props.contentClassName
+                    props.contentClassName,
+                    {
+                        "h-fit border-none p-0": props.readonly,
+                    }
                 ),
             },
         },
@@ -163,8 +167,12 @@ function RichTextEditor(props: Props) {
 
     return (
         <div className={props.containerClassName}>
-            <Toolbar editor={editor} />
-            <EditorContent className={props.contentClassName} editor={editor} />
+            {!props.readonly && <Toolbar editor={editor} />}
+            <EditorContent
+                readOnly={true}
+                className={props.contentClassName}
+                editor={editor}
+            />
         </div>
     )
 }

@@ -96,8 +96,8 @@ export async function POST(req: NextRequest) {
             .throwOnError()
         const llmResponse = streamText({
             system: `
-            - If there is a question typed "FILL_IN_THE_BLANK" use all the content.options inside content.correct (only applied in "FILL_IN_THE_BLANK" question type ).
             - Your answer should start with this character "{".
+            - If there is a question typed "FILL_IN_THE_BLANK" use all the content.options inside content.correct (only applied in "FILL_IN_THE_BLANK" question type ).
             - Your answer should not include any template strings.
             - Your response should be valid JSON that can be used like this : JSON.parse(response)
             - You should escape special characters for the special characters since your response will be parse with JSON.parse()

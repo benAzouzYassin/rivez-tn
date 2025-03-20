@@ -2,7 +2,7 @@
 
 import { motion } from "framer-motion"
 type Props = {
-    text?: string
+    text?: string | null
 }
 export default function GeneralLoadingScreen(props: Props) {
     const containerVariants = {
@@ -51,17 +51,19 @@ export default function GeneralLoadingScreen(props: Props) {
                 className="flex flex-col -translate-y-20  items-center justify-center"
                 variants={containerVariants}
             >
-                <motion.h2
-                    className="text-5xl pb-1 flex  items-end font-black text-transparent bg-clip-text bg-gradient-to-r from-neutral-600 to-neutral-800"
-                    variants={circleVariants}
-                >
-                    {props.text || "Loading "}{" "}
-                    <div className="flex items-center gap-1 -translate-y-2 ml-1">
-                        <div className="w-3 h-3 bg-neutral-700 rounded-full"></div>
-                        <div className="w-3 h-3 bg-neutral-700 rounded-full"></div>
-                        <div className="w-3 h-3 bg-neutral-700 rounded-full"></div>
-                    </div>
-                </motion.h2>
+                {props.text !== null && (
+                    <motion.h2
+                        className="text-5xl pb-1 flex  items-end font-black text-transparent bg-clip-text bg-gradient-to-r from-neutral-600 to-neutral-800"
+                        variants={circleVariants}
+                    >
+                        {props.text || "Loading "}{" "}
+                        <div className="flex items-center gap-1 -translate-y-2 ml-1">
+                            <div className="w-3 h-3 bg-neutral-700 rounded-full"></div>
+                            <div className="w-3 h-3 bg-neutral-700 rounded-full"></div>
+                            <div className="w-3 h-3 bg-neutral-700 rounded-full"></div>
+                        </div>
+                    </motion.h2>
+                )}
                 <motion.div
                     className="mt-5 flex flex-col items-center gap-3"
                     variants={containerVariants}
