@@ -21,16 +21,47 @@ export async function readQuizById(id: number) {
 }
 
 export async function readQuizzesWithDetails(config?: {
+    isAdmin: boolean | null
+    userId: string | null
     filters?: {
         name?: string | null
+        isFeatured?: boolean
     }
     pagination?: {
         currentPage: number
         itemsPerPage: number
     }
 }) {
+    // when is Featured == false and isAdmin == false we should only return the quizzes with author_id == currentUser.id
     const isFiltering = !!config?.filters?.name
     if (config?.pagination && !isFiltering) {
+        if (config.isAdmin) {
+            const response = await supabase
+                .from("quizzes")
+                .select(
+                    `*, category(*),quizzes_questions(count),quiz_submissions(count)`,
+                    {
+                        count: "exact",
+                    }
+                )
+                .range(
+                    (config.pagination.currentPage - 1) *
+                        config.pagination.itemsPerPage,
+                    config.pagination.currentPage *
+                        config.pagination.itemsPerPage -
+                        1
+                )
+                .order("created_at", {
+                    ascending: false,
+                })
+                .neq("publishing_status", "ARCHIVED")
+                .in(
+                    "is_featured",
+                    config.filters?.isFeatured ? [true] : [false, true]
+                )
+                .throwOnError()
+            return { data: response.data, count: response.count }
+        }
         const response = await supabase
             .from("quizzes")
             .select(
@@ -49,6 +80,11 @@ export async function readQuizzesWithDetails(config?: {
                 ascending: false,
             })
             .neq("publishing_status", "ARCHIVED")
+            .in(
+                "is_featured",
+                config.filters?.isFeatured ? [true] : [false, true]
+            )
+            .eq("author_id", config.userId!)
             .throwOnError()
         return { data: response.data, count: response.count }
     }
@@ -207,11 +243,24 @@ export async function readQuizQuestionsDetails(params: { quizId: number }) {
     })
     return formattedData
 }
-export async function readQuizQuestions(params: { quizId: number }) {
+export async function readQuizQuestionsWithHints(params: { quizId: number }) {
     const response = await supabase
         .from("quizzes_questions")
-        .select(`*`)
+        .select(`*,questions_hints(*)`)
         .eq("quiz", params.quizId)
+        .order("created_at", {
+            ascending: false,
+        })
+        .throwOnError()
+    return response.data
+}
+
+export async function readQuizQuestionHints(params: { questionId: number }) {
+    console.log(params.questionId)
+    const response = await supabase
+        .from("questions_hints")
+        .select(`*`)
+        .eq("question_id", params.questionId)
         .order("created_at", {
             ascending: false,
         })

@@ -11,6 +11,7 @@ import {
 import { dismissToasts, toastError } from "@/lib/toasts"
 
 import { zodResolver } from "@hookform/resolvers/zod"
+import { useQueryClient } from "@tanstack/react-query"
 import Link from "next/link"
 import { useRouter } from "nextjs-toploader/app"
 import { useMemo, useState } from "react"
@@ -18,6 +19,7 @@ import { useForm } from "react-hook-form"
 import { z } from "zod"
 
 export default function Page() {
+    const queryClient = useQueryClient()
     const [isPasswordAuth, setIsPasswordAuth] = useState(false)
     const [isGoogleAuth, setIsGoogleAuth] = useState(false)
     const formSchema = useMemo(
@@ -54,6 +56,7 @@ export default function Page() {
 
     const onSubmit = async (formData: z.infer<typeof formSchema>) => {
         setIsPasswordAuth(true)
+
         const { success } = await registerUserWithPassword({
             email: formData.email,
             password: formData.password,
@@ -61,6 +64,9 @@ export default function Page() {
             phone: formData.phone || undefined,
         })
         if (success) {
+            queryClient.refetchQueries({
+                queryKey: ["current-user"],
+            })
             window.location.replace(
                 localStorage.getItem("afterAuthRedirect") ||
                     process.env.NEXT_PUBLIC_SITE_URL!
@@ -145,6 +151,9 @@ export default function Page() {
                     isLoading={isGoogleAuth}
                     onClick={async () => {
                         setIsGoogleAuth(true)
+                        queryClient.invalidateQueries({
+                            queryKey: ["current-user"],
+                        })
                         await registerUserWithGoogle({
                             redirectTo:
                                 localStorage.getItem("afterAuthRedirect") ||

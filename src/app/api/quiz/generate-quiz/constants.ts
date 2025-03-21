@@ -209,7 +209,7 @@ export const POSSIBLE_QUESTIONS = {
                 type: "FILL_IN_THE_BLANK",
                 content: {
                     parts: ["The capital of France is ", "."],
-                    options: ["London", "Berlin", "Madrid"],
+                    options: [],
                     correct: [
                         {
                             option: "Paris",
@@ -228,7 +228,7 @@ export const POSSIBLE_QUESTIONS = {
                         ".",
                         "have no color",
                     ],
-                    options: ["carbon", "nitrogen"],
+                    options: [],
                     correct: [
                         {
                             option: "hydrogen",
@@ -266,14 +266,18 @@ export const POSSIBLE_QUESTIONS = {
                 type: z.literal("FILL_IN_THE_BLANK"),
                 content: z.object({
                     parts: z.array(z.string()).min(4), //example : if we want "this___fill in the example." we will get this array ["this" , "fill in the blank example."] 
-                    options: z.array(z.string()),// will have the options that are not present in the correct array only,
+                    options: z.array(z.string()),
                     correct: z.array(
                         z.object({
                             option: z.string(),
                             index: z.number(), // index always stars from 0
                         })
-                    ),
+                    ).min(3),
                 }),
             })`,
     },
 } as const
+
+export const QUESTION_COST = Number(
+    process.env.NEXT_PUBLIC_LOW_CREDIT_COST || 0.2
+)

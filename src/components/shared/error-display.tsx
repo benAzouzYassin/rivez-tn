@@ -3,6 +3,7 @@
 import { motion } from "framer-motion"
 import { useRouter } from "nextjs-toploader/app"
 import { Button } from "../ui/button"
+import { useEffect } from "react"
 
 interface ErrorDisplayProps {
     message?: string
@@ -12,6 +13,15 @@ export const ErrorDisplay: React.FC<ErrorDisplayProps> = ({
     message = "An error has occurred",
 }) => {
     const router = useRouter()
+
+    useEffect(() => {
+        if (window !== undefined) {
+            window.scrollTo({
+                top: 0,
+                behavior: "smooth",
+            })
+        }
+    }, [])
 
     // Animation Variants
     const containerVariants = {

@@ -34,6 +34,38 @@ export type Database = {
   }
   public: {
     Tables: {
+      questions_hints: {
+        Row: {
+          content: string | null
+          created_at: string
+          id: number
+          name: string | null
+          question_id: number | null
+        }
+        Insert: {
+          content?: string | null
+          created_at?: string
+          id?: number
+          name?: string | null
+          question_id?: number | null
+        }
+        Update: {
+          content?: string | null
+          created_at?: string
+          id?: number
+          name?: string | null
+          question_id?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "questions_hints_question_id_fkey"
+            columns: ["question_id"]
+            isOneToOne: false
+            referencedRelation: "quizzes_questions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       quiz_submission_answers: {
         Row: {
           created_at: string
@@ -132,9 +164,12 @@ export type Database = {
           author_id: string | null
           category: number | null
           created_at: string
+          credit_cost: number | null
           description: string | null
+          difficulty: Database["public"]["Enums"]["difficulty"] | null
           id: number
           image: string | null
+          is_featured: boolean
           name: string
           publishing_status: Database["public"]["Enums"]["publishing_status"]
         }
@@ -142,9 +177,12 @@ export type Database = {
           author_id?: string | null
           category?: number | null
           created_at?: string
+          credit_cost?: number | null
           description?: string | null
+          difficulty?: Database["public"]["Enums"]["difficulty"] | null
           id?: number
           image?: string | null
+          is_featured?: boolean
           name: string
           publishing_status?: Database["public"]["Enums"]["publishing_status"]
         }
@@ -152,9 +190,12 @@ export type Database = {
           author_id?: string | null
           category?: number | null
           created_at?: string
+          credit_cost?: number | null
           description?: string | null
+          difficulty?: Database["public"]["Enums"]["difficulty"] | null
           id?: number
           image?: string | null
+          is_featured?: boolean
           name?: string
           publishing_status?: Database["public"]["Enums"]["publishing_status"]
         }
@@ -181,6 +222,7 @@ export type Database = {
           description: string | null
           id: number
           image: string | null
+          is_disabled: boolean | null
           name: string | null
           publishing_status:
             | Database["public"]["Enums"]["publishing_status"]
@@ -191,6 +233,7 @@ export type Database = {
           description?: string | null
           id?: number
           image?: string | null
+          is_disabled?: boolean | null
           name?: string | null
           publishing_status?:
             | Database["public"]["Enums"]["publishing_status"]
@@ -201,6 +244,7 @@ export type Database = {
           description?: string | null
           id?: number
           image?: string | null
+          is_disabled?: boolean | null
           name?: string | null
           publishing_status?:
             | Database["public"]["Enums"]["publishing_status"]
@@ -261,10 +305,50 @@ export type Database = {
           },
         ]
       }
+      quizzes_refunds: {
+        Row: {
+          cause: string | null
+          created_at: string
+          id: number
+          quiz_id: number | null
+          user_id: string | null
+        }
+        Insert: {
+          cause?: string | null
+          created_at?: string
+          id?: number
+          quiz_id?: number | null
+          user_id?: string | null
+        }
+        Update: {
+          cause?: string | null
+          created_at?: string
+          id?: number
+          quiz_id?: number | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "quizzes_refunds_quiz_id_fkey"
+            columns: ["quiz_id"]
+            isOneToOne: false
+            referencedRelation: "quizzes"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "quizzes_refunds_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["user_id"]
+          },
+        ]
+      }
       user_profiles: {
         Row: {
           avatar_url: string | null
           created_at: string
+          credit_balance: number
           email: string | null
           is_banned: boolean
           phone: string | null
@@ -275,6 +359,7 @@ export type Database = {
         Insert: {
           avatar_url?: string | null
           created_at?: string
+          credit_balance?: number
           email?: string | null
           is_banned?: boolean
           phone?: string | null
@@ -285,6 +370,7 @@ export type Database = {
         Update: {
           avatar_url?: string | null
           created_at?: string
+          credit_balance?: number
           email?: string | null
           is_banned?: boolean
           phone?: string | null
@@ -317,6 +403,7 @@ export type Database = {
       [_ in never]: never
     }
     Enums: {
+      difficulty: "NORMAL" | "MEDIUM" | "HARD"
       publishing_status: "DRAFT" | "PUBLISHED" | "ARCHIVED"
       quiz_question_image_type: "normal-image" | "code-snippets" | "none"
       quiz_question_types:

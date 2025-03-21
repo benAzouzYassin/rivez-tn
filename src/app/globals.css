@@ -1,5 +1,4 @@
 @import 'tailwindcss';
-
 @config '../../tailwind.config.ts';
 
 @layer base {
@@ -349,15 +348,6 @@
   display: none !important;
 }
 
-.main-menu-trigger {
-  display: none !important;
-
-}
-
-.selected-shape-actions {
-  margin-top: 50px;
-
-}
 
 .layer-ui__wrapper__footer-right {
   display: none !important;

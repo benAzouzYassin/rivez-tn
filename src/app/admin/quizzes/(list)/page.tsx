@@ -46,6 +46,8 @@ export default function Page() {
         ],
         queryFn: () =>
             readQuizzesWithDetails({
+                isAdmin: true,
+                userId: null,
                 filters: {
                     name: searchValue || undefined,
                 },
@@ -85,7 +87,7 @@ export default function Page() {
                         className="text-base "
                         variant={"blue"}
                         onClick={() => {
-                            router.push("/admin/quizzes/add/generate")
+                            router.push("/quizzes/add")
                         }}
                     >
                         <Plus />

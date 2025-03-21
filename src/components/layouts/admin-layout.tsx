@@ -49,9 +49,9 @@ export default function AdminLayout({ children }: Props) {
                         route: "/admin/users",
                     },
                     {
-                        name: "Public view",
+                        name: "Home page",
                         icon: <AppWindowIcon className="!w-6 !h-6" />,
-                        route: "/learn",
+                        route: "/home",
                     },
                 ]}
                 bottomItem={{

@@ -170,7 +170,7 @@ export default function EditCategoryDialog(props: Props) {
         >
             <DialogContent className="sm:max-w-[45vw] max-h-[97vh] overflow-y-auto py-10">
                 <DialogTitle className="text-2xl font-bold text-center text-[#3C3C3C]">
-                    Create New category
+                    Add New category
                 </DialogTitle>
                 <DialogDescription></DialogDescription>
                 {isLoading ? (

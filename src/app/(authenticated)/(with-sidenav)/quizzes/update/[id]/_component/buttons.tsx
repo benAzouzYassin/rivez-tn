@@ -1,0 +1,420 @@
+import { Button } from "@/components/ui/button"
+import WarningDialog from "@/components/ui/warning-dialog"
+import { deleteQuizQuestions } from "@/data-access/quizzes/delete"
+import {
+    addQuestionsToQuiz,
+    updateManyHints,
+    updateQuizQuestions,
+    addHintsToQuestions,
+} from "@/data-access/quizzes/update"
+import {
+    dismissToasts,
+    toastError,
+    toastLoading,
+    toastSuccess,
+} from "@/lib/toasts"
+import { useQueryClient } from "@tanstack/react-query"
+import { useParams } from "next/navigation"
+import { useRouter } from "nextjs-toploader/app"
+import { useState } from "react"
+import useUpdateQuizStore, {
+    FillInTheBlankStoreContent,
+    StateMatchingPairsOptions,
+    StateMultipleChoiceOptions,
+} from "../store"
+import { shuffleArray } from "@/utils/array"
+import { useCurrentUser } from "@/hooks/use-current-user"
+export default function Buttons() {
+    const params = useParams()
+    const quizId = parseInt(params["id"] as string)
+    const reset = useUpdateQuizStore((s) => s.reset)
+    const questions = useUpdateQuizStore((s) => s.allQuestions)
+    const removedQuestionsIds = useUpdateQuizStore((s) => s.deletedQuestionsIds)
+    const router = useRouter()
+    const [isSaving, setIsSaving] = useState(false)
+    const [isWarning, setIsWarning] = useState(false)
+    const queryClient = useQueryClient()
+    const { data: userData } = useCurrentUser()
+    const handleSave = async () => {
+        try {
+            if (isNaN(quizId) === false && quizId) {
+                setIsSaving(true)
+
+                // TODO make this implemented inside a transaction
+                const isUpdatedOldSuccess = await updateOldQuestions()
+                const isQuestionDeleteSuccess = await deleteRemovedQuestions()
+                const isSavedNewQuestionsSuccess = await saveNewQuestions()
+
+                if (!isUpdatedOldSuccess) {
+                    toastError("Error while updating some questions...")
+                    throw new Error("Error while updating some questions...")
+                }
+                if (!isQuestionDeleteSuccess) {
+                    toastError("Error while deleting some questions...")
+                    throw new Error("Error while deleting some questions...")
+                }
+                if (!isSavedNewQuestionsSuccess) {
+                    toastError(
+                        "Error while saving some of the new questions..."
+                    )
+                    throw new Error(
+                        "Error while saving some of the new questions..."
+                    )
+                }
+                toastSuccess("Changes saved successfully.")
+                queryClient.invalidateQueries({
+                    queryKey: ["quizzes"],
+                })
+                router.replace("/quizzes/list")
+                reset()
+            }
+        } catch (error) {
+            console.error(error)
+            // wait(200).then(() => window.location.reload())
+        } finally {
+            setIsSaving(false)
+        }
+    }
+
+    const updateOldQuestions = async () => {
+        try {
+            const oldQuestions = questions
+                .filter((q) => !!q.questionId)
+                .map((q, index) => {
+                    if (q.type === "MULTIPLE_CHOICE") {
+                        const content = q.content as StateMultipleChoiceOptions
+                        const filteredOptions = content.options.filter(
+                            (opt) => !!opt.text
+                        )
+                        return {
+                            displayOrder: index,
+                            quizId,
+                            id: Number(q.questionId),
+                            content: {
+                                options: filteredOptions,
+                                codeSnippets: q.codeSnippets,
+                            },
+                            type: q.type as any,
+                            image: q.imageUrl || "",
+                            question: q.questionText,
+                            layout: q.layout,
+                            imageType: q.imageType,
+                        }
+                    }
+
+                    if (q.type === "MATCHING_PAIRS") {
+                        const content = q.content as StateMatchingPairsOptions
+                        const filteredRightOptions =
+                            content.rightOptions.filter((opt) => !!opt.text)
+
+                        const filteredLeftOptions = content.leftOptions.filter(
+                            (opt) => !!opt.text
+                        )
+
+                        return {
+                            displayOrder: index,
+                            quizId,
+                            id: Number(q.questionId),
+                            content: {
+                                leftOptions: filteredLeftOptions,
+                                rightOptions: filteredRightOptions,
+                            },
+                            type: q.type as any,
+                            image: q.imageUrl || "",
+                            question: q.questionText,
+                            layout: q.layout,
+                            imageType: q.imageType,
+                        }
+                    }
+                    if (q.type === "FILL_IN_THE_BLANK") {
+                        const content = q.content as FillInTheBlankStoreContent
+                        const notSelectedOptions = content.options.map(
+                            (opt) => opt.text
+                        )
+                        const selectedOptions = content.correct.map(
+                            (opt) => opt.option
+                        )
+                        const allOptions = [
+                            ...notSelectedOptions,
+                            ...selectedOptions,
+                        ]
+                        return {
+                            displayOrder: index,
+                            id: Number(q.questionId),
+                            quizId,
+                            content: {
+                                options: shuffleArray(allOptions),
+                                correct: content.correct,
+                                parts: content.parts,
+                            },
+                            type: q.type as any,
+                            image: "",
+                            question: q.questionText,
+                            layout: q.layout,
+                            imageType: q.imageType,
+                        }
+                    }
+                    return null
+                })
+                .filter((q) => !!q)
+            const result = await updateQuizQuestions(oldQuestions)
+            const hintsToUpsert = result.data
+                .flatMap((q) => {
+                    const hints = questions.find(
+                        (item, itemIndex) =>
+                            item.questionText === q.question &&
+                            itemIndex === q.display_order
+                    )?.hints
+                    return hints?.map((hint) => ({
+                        id: hint.id || undefined,
+                        content: hint.content || "",
+                        name: hint.name,
+                        question_id: q.id,
+                    }))
+                })
+                .filter((hint) => hint !== undefined)
+            toastLoading("Adding / Updating Questions hints...")
+            updateManyHints(
+                hintsToUpsert.filter((h) => h.id),
+                userData?.id || ""
+            )
+                .then(() => {
+                    dismissToasts("loading")
+                    toastSuccess("Request completed successfully ! ")
+                })
+                .catch(() => {
+                    dismissToasts("loading")
+                    toastError("Some hints was not updated.")
+                })
+            addHintsToQuestions(
+                hintsToUpsert
+                    .filter((h) => !h.id)
+                    .map((h) => ({
+                        content: h.content,
+                        name: h.name,
+                        question_id: h.question_id,
+                    })),
+                userData?.id || ""
+            )
+                .then(() => {
+                    dismissToasts("loading")
+                    toastSuccess("Request completed successfully ! ")
+                })
+                .catch(() => {
+                    dismissToasts("loading")
+                    toastError("Some hints was not added.")
+                })
+            return true
+        } catch (error) {
+            console.error(error)
+            return false
+        }
+    }
+
+    const saveNewQuestions = async () => {
+        const newQuestions = questions.filter(
+            (q) => q.questionId === undefined || q.questionId === null
+        )
+        const oldQuestionsLength = questions.length - newQuestions.length
+        try {
+            const formattedNewQuestions = newQuestions
+                .map((q, index) => {
+                    if (q.type === "MULTIPLE_CHOICE") {
+                        const content = q.content as StateMultipleChoiceOptions
+                        const filteredOptions = content.options.filter(
+                            (opt) => !!opt.text
+                        )
+                        return {
+                            displayOrder: index + oldQuestionsLength,
+                            content: {
+                                options: filteredOptions,
+                                codeSnippets: q.codeSnippets,
+                            },
+                            type: q.type as any,
+                            image: q.imageUrl || "",
+                            question: q.questionText,
+                            layout: q.layout,
+                            imageType: q.imageType,
+                        }
+                    }
+                    if (q.type === "FILL_IN_THE_BLANK") {
+                        const content = q.content as FillInTheBlankStoreContent
+                        const notSelectedOptions = content.options.map(
+                            (opt) => opt.text
+                        )
+                        const selectedOptions = content.correct.map(
+                            (opt) => opt.option
+                        )
+                        const allOptions = [
+                            ...notSelectedOptions,
+                            ...selectedOptions,
+                        ]
+                        return {
+                            displayOrder: index,
+                            content: {
+                                options: shuffleArray(allOptions),
+                                correct: content.correct,
+                                parts: content.parts,
+                            },
+                            type: q.type as any,
+                            image: "",
+                            question: q.questionText,
+                            layout: q.layout,
+                            imageType: q.imageType,
+                        }
+                    }
+                    if (q.type === "MATCHING_PAIRS") {
+                        const content = q.content as StateMatchingPairsOptions
+                        const filteredRightOptions =
+                            content.rightOptions.filter((opt) => !!opt.text)
+
+                        const filteredLeftOptions = content.leftOptions.filter(
+                            (opt) => !!opt.text
+                        )
+
+                        return {
+                            displayOrder: index + oldQuestionsLength,
+                            content: {
+                                leftOptions: filteredLeftOptions,
+                                rightOptions: filteredRightOptions,
+                            },
+                            type: q.type as any,
+                            image: q.imageUrl || "",
+                            question: q.questionText,
+                            layout: q.layout,
+                            imageType: q.imageType,
+                        }
+                    }
+                    return null
+                })
+                .filter((q) => !!q)
+            const result = await addQuestionsToQuiz(
+                quizId,
+                formattedNewQuestions
+            )
+            const hintsToInsert = result.data
+                .flatMap((q) => {
+                    const hints = questions.find(
+                        (item, itemIndex) =>
+                            item.questionText === q.question &&
+                            itemIndex === q.display_order
+                    )?.hints
+                    return hints?.map((hint) => ({
+                        content: hint.content || "",
+                        name: hint.name,
+                        question_id: q.id,
+                    }))
+                })
+                .filter((hint) => hint !== undefined)
+            toastLoading("Adding / Updating Questions hints...")
+            addHintsToQuestions(hintsToInsert, userData?.id || "")
+                .then(() => {
+                    dismissToasts("loading")
+                    toastSuccess("Request completed successfully ! ")
+                })
+                .catch(() => {
+                    dismissToasts("loading")
+                    toastError("Some hints was not added.")
+                })
+            return true
+        } catch (error) {
+            console.error(error)
+            return false
+        }
+    }
+    const deleteRemovedQuestions = async () => {
+        try {
+            await deleteQuizQuestions({ questionIds: removedQuestionsIds })
+            return true
+        } catch (error) {
+            console.error(error)
+            return false
+        }
+    }
+    const handleSubmit = async () => {
+        const isAllOptionsFilled = questions.every((q) => {
+            if (q.type === "MULTIPLE_CHOICE") {
+                const content = q.content as
+                    | StateMultipleChoiceOptions
+                    | undefined
+
+                if (!content || !content.options.length) {
+                    return false
+                }
+                const isOptionsValid =
+                    content.options.every((opt) => !!opt.text) &&
+                    content.options.length > 0
+                return isOptionsValid
+            }
+            if (q.type === "MATCHING_PAIRS") {
+                const content = q.content as
+                    | StateMatchingPairsOptions
+                    | undefined
+                if (
+                    !content ||
+                    !content.leftOptions.length ||
+                    !content.rightOptions.length
+                ) {
+                    return false
+                }
+                const isRightOptionsValid =
+                    content.rightOptions.every((opt) => !!opt.text) &&
+                    content.rightOptions.length > 0
+
+                const isLeftOptionsValid =
+                    content.leftOptions.every((opt) => !!opt.text) &&
+                    content.leftOptions.length > 0
+
+                return isLeftOptionsValid && isRightOptionsValid
+            }
+            if (q.type === "FILL_IN_THE_BLANK") {
+                return true
+            }
+            return false
+        })
+        const isQuestionsFilled = questions.every((q) => !!q.content)
+        if (!isAllOptionsFilled || !isQuestionsFilled) {
+            return setIsWarning(true)
+        }
+        await handleSave()
+    }
+    return (
+        <div className="flex items-center justify-end h-10 fixed right-10 top-24 w-full bg-none gap-2">
+            <div className="bg-white p-2 flex items-center justify-center gap-2 rounded-2xl">
+                <Button
+                    onClick={() => {
+                        reset()
+                        router.back()
+                    }}
+                    className="text-base font-extrabold"
+                    variant="red"
+                >
+                    Cancel
+                </Button>
+
+                <Button
+                    onClick={handleSubmit}
+                    isLoading={isSaving}
+                    className="text-base font-extrabold"
+                    variant="blue"
+                >
+                    Save changes
+                </Button>
+                <WarningDialog
+                    titleClassName="text-[#EF9C07]"
+                    isOpen={isWarning}
+                    onOpenChange={setIsWarning}
+                    description="You have left some options empty. Any empty will option be ignored."
+                    title="Warning: Proceed with caution"
+                    confirmText="Continue"
+                    confirmBtnClassName="bg-amber-400 shadow-amber-400"
+                    onConfirm={async () => {
+                        handleSave()
+                        reset()
+                        router.back()
+                    }}
+                />
+            </div>
+        </div>
+    )
+}

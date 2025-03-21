@@ -1,4 +1,4 @@
-import { isCurrentUserAdmin, isUserIdAdmin } from "@/data-access/users/is-admin"
+import { authenticateAdmin, isUserIdAdmin } from "@/data-access/users/is-admin"
 import { supabaseAdminServerSide } from "@/lib/supabase-server-side"
 
 import { NextRequest, NextResponse } from "next/server"
@@ -14,7 +14,7 @@ export async function PATCH(req: NextRequest) {
 
         const userId = (await req.json())["userId"]
 
-        const isAdminRequest = await isCurrentUserAdmin({
+        const isAdminRequest = await authenticateAdmin({
             refreshToken,
             accessToken,
         })

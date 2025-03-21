@@ -3,6 +3,7 @@ import { useQuery } from "@tanstack/react-query"
 
 export function useCurrentUser() {
     const { isLoading, data, isError } = useQuery({
+        staleTime: Infinity,
         queryKey: ["current-user"],
         queryFn: async () => {
             const { data, error, success } = await readCurrentUser()

@@ -104,13 +104,12 @@ export async function addQuestionsToQuiz(
         return null
     })
     if (formattedData.some((q) => !q)) {
-        console.log(formattedData)
         throw new Error("Some questions content is not valid")
     }
     const result = await supabase
         .from("quizzes_questions")
         .insert(formattedData.filter((q) => q !== null)) //we filter to make typescript happy we checked for the null questions in the previous lines
-        .select("id")
+        .select("id,display_order,question")
         .throwOnError()
     return result
 }
@@ -118,7 +117,7 @@ export async function addQuestionsToQuiz(
 export async function updateQuiz(quizId: number, data: QuizUpdateType) {
     const result = await supabase
         .from("quizzes")
-        .update(data)
+        .update({ ...data, author_id: undefined })
         .eq(`id`, quizId)
         .select("id")
         .throwOnError()
@@ -131,7 +130,7 @@ export async function updateManyQuizzes(
 ) {
     const result = await supabase
         .from("quizzes")
-        .update(data)
+        .update({ ...data, author_id: undefined })
         .in(`id`, quizzesIds)
         .select("id")
         .throwOnError()
@@ -284,6 +283,34 @@ export async function updateQuizQuestions(
             onConflict: "id",
             ignoreDuplicates: false,
         })
+        .select("id,display_order,question")
+        .throwOnError()
+    return response
+}
+
+export async function addHintsToQuestions(
+    hints: Database["public"]["Tables"]["questions_hints"]["Insert"][],
+    userId: string
+) {
+    const response = await supabase
+        .from("questions_hints")
+        .insert(hints.map((h) => ({ ...h, author_id: userId })))
+        .throwOnError()
+    return response
+}
+export async function updateManyHints(
+    hints: Database["public"]["Tables"]["questions_hints"]["Update"][],
+    userId: string
+) {
+    const response = await supabase
+        .from("questions_hints")
+        .upsert(
+            hints.map((h) => ({ ...h, author_id: userId })),
+            {
+                onConflict: "id",
+                ignoreDuplicates: false,
+            }
+        )
         .throwOnError()
     return response
 }
