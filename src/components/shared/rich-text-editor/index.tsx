@@ -160,9 +160,11 @@ function RichTextEditor(props: Props) {
     }, [editor, props.placeholder])
 
     useEffect(() => {
-        if (editor !== null && props.displayedEditorContent) {
-            editor.commands.setContent(props.displayedEditorContent)
-        }
+        setTimeout(() => {
+            if (editor !== null && props.displayedEditorContent) {
+                editor.commands.setContent(props.displayedEditorContent)
+            }
+        })
     }, [editor, props.displayedEditorContent])
 
     return (

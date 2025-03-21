@@ -12,6 +12,7 @@ import {
     PossibleQuestionTypes,
 } from "@/schemas/questions-content"
 import { Database } from "@/types/database.types"
+import { shuffleArray } from "@/utils/array"
 import { create } from "zustand"
 
 interface State {
@@ -130,15 +131,20 @@ export const useQuestionsStore = create<Store>((set, get) => ({
                                         return {
                                             displayOrder: index,
                                             content: {
-                                                options: q.content.options.map(
-                                                    (opt) => {
-                                                        return {
-                                                            isCorrect: false,
-                                                            text: opt,
-                                                            localId:
-                                                                crypto.randomUUID(),
+                                                options: shuffleArray(
+                                                    q.content.options.map(
+                                                        (opt) => {
+                                                            return {
+                                                                isCorrect:
+                                                                    q.content.correct.includes(
+                                                                        opt
+                                                                    ),
+                                                                text: opt,
+                                                                localId:
+                                                                    crypto.randomUUID(),
+                                                            }
                                                         }
-                                                    }
+                                                    )
                                                 ),
                                                 codeSnippets: null,
                                             },
@@ -157,7 +163,12 @@ export const useQuestionsStore = create<Store>((set, get) => ({
                                         return {
                                             displayOrder: index,
                                             content: {
-                                                options: q.content.options,
+                                                options: [
+                                                    ...q.content.options,
+                                                    ...q.content.correct.map(
+                                                        (item) => item.option
+                                                    ),
+                                                ],
                                                 correct: q.content.correct,
                                                 parts: q.content.parts,
                                             },
@@ -213,7 +224,10 @@ export const useQuestionsStore = create<Store>((set, get) => ({
                                             displayOrder: index,
                                             content: {
                                                 leftOptions: formattedLeft,
-                                                rightOptions: formattedRight,
+                                                rightOptions:
+                                                    shuffleArray(
+                                                        formattedRight
+                                                    ),
                                             },
                                             type: "MATCHING_PAIRS" as PossibleQuestionTypes,
                                             image: "",

@@ -53,9 +53,7 @@ export default function HintsSheet(props: Props) {
                 </button>
             </SheetTrigger>
             <SheetContent
-                className={cn("transition-all p-5", {
-                    "w-96 min-w-[70vw]": selectedId,
-                })}
+                className={cn("transition-all  p-5 w-96 min-w-[70vw]")}
             >
                 <SheetTitle></SheetTitle>
                 <SheetDescription></SheetDescription>
@@ -86,7 +84,7 @@ export default function HintsSheet(props: Props) {
                                 >
                                     <CardContent className="px-2   rounded-xl h-fit my-auto pb-0 !flex justify-center items-center gap-3">
                                         <Lightbulb className="!w-7 stroke-3 !h-7 text-amber-400 mt-0.5 flex-shrink-0" />
-                                        <p className="text-lg grow text-neutral-600 max-w-[90%] font-bold">
+                                        <p className="text-lg grow  py-4 text-neutral-600 max-w-[90%] font-bold">
                                             {hint.name}
                                         </p>
                                     </CardContent>

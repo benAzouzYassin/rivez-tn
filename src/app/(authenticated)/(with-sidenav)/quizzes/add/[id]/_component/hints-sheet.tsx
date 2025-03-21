@@ -25,6 +25,7 @@ import {
 import dynamic from "next/dynamic"
 import { memo, useEffect, useMemo, useState } from "react"
 import { QuizQuestionType } from "../store"
+import GenerateHintDialog from "./generate-hint-dialog"
 const RichTextEditor = dynamic(
     () => import("@/components/shared/rich-text-editor"),
     {
@@ -34,6 +35,7 @@ const RichTextEditor = dynamic(
 interface Props {
     hints: QuizQuestionType["hints"]
     setHints: (hints: Props["hints"]) => void
+    selectedQuestion: QuizQuestionType
 }
 function HintsSheet(props: Props) {
     const [isAdding, setIsAdding] = useState(false)
@@ -98,6 +100,10 @@ function HintsSheet(props: Props) {
         }
     }, [selectedHint])
 
+    const handleGenerateEnd = (content: string) => {
+        setCurrentEditorContent(content)
+        setDisplayedEditorContent(content)
+    }
     return (
         <Sheet open={isOpen} onOpenChange={setIsOpen}>
             <SheetTrigger asChild>
@@ -109,10 +115,7 @@ function HintsSheet(props: Props) {
 
             <SheetContent
                 className={cn(
-                    "w-96 min-w-[30vw] p-0 transition-all overflow-hidden border-none bg-white px-0 ",
-                    {
-                        "min-w-[70vw] w-[70vw]": !!selectedId || isAdding,
-                    }
+                    " min-w-[70vw] w-[70vw] p-0 transition-all overflow-hidden border-none bg-white px-0 "
                 )}
             >
                 <div className="flex flex-col h-full">
@@ -136,7 +139,7 @@ function HintsSheet(props: Props) {
                     </SheetHeader>
                     <ScrollArea className="flex-1 px-4  ">
                         {(selectedId !== null || isAdding) && (
-                            <div className="mt-5">
+                            <div className="mt-5 relative">
                                 <label
                                     className="pl-1 font-semibold"
                                     htmlFor="hint-name"
@@ -152,6 +155,10 @@ function HintsSheet(props: Props) {
                                     className="h-14 w-full"
                                     placeholder="Hint name"
                                 />
+                                <GenerateHintDialog
+                                    onGenerateEnd={handleGenerateEnd}
+                                    question={props.selectedQuestion}
+                                />
                                 <RichTextEditor
                                     displayedEditorContent={
                                         displayedEditorContent
@@ -165,9 +172,23 @@ function HintsSheet(props: Props) {
                         )}
                         {selectedId === null && (
                             <div className="space-y-3 mt-8 pr-2">
-                                {props.hints.length === 0 ? (
-                                    <div className="mt-44 w-full flex text-2xl font-semibold text-neutral-400 items-center justify-center">
-                                        There is no hints...
+                                {props.hints.length === 0 && !isAdding ? (
+                                    <div className="mt-44 w-full flex flex-col items-center justify-center">
+                                        <LightbulbIcon className="w-16 h-16 text-amber-300 mb-4" />
+                                        <p className="text-2xl font-semibold text-neutral-400">
+                                            No hints yet
+                                        </p>
+                                        <p className="text-neutral-400 mb-6">
+                                            Add hints to help students solve
+                                            problems
+                                        </p>
+                                        <Button
+                                            onClick={startAddingHint}
+                                            className="mt-2"
+                                        >
+                                            <PlusCircleIcon className="w-5 h-5 mr-2" />
+                                            Create First Hint
+                                        </Button>
                                     </div>
                                 ) : (
                                     props.hints.map((hint) => (
@@ -204,7 +225,7 @@ function HintsSheet(props: Props) {
                     </ScrollArea>
 
                     <SheetFooter className="p-2 border-t bg-gray-50">
-                        {!isAdding && !selectedId && (
+                        {!isAdding && !selectedId && !!props.hints.length && (
                             <Button
                                 onClick={startAddingHint}
                                 className="h-14 text-lg"
@@ -235,3 +256,5 @@ function HintsSheet(props: Props) {
     )
 }
 export default memo(HintsSheet)
+// TODO make the endpoint accept the type of the question and accept the content of the question
+// TODO make the hints get the content of the question and the question and send it

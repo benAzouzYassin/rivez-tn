@@ -37,3 +37,22 @@ export async function handleQuestionRefund() {
         }
     )
 }
+export async function handleHintRefund() {
+    const {
+        data: { session },
+    } = await readCurrentSession()
+    if (!session) {
+        throw new Error("Session error")
+    }
+
+    await axios.post(
+        `/api/quiz/handle-hint-refund`,
+        {},
+        {
+            headers: {
+                "access-token": session.access_token,
+                "refresh-token": session.refresh_token,
+            },
+        }
+    )
+}

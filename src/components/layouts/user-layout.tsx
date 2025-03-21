@@ -66,7 +66,7 @@ export default function UserLayout({ children }: Props) {
                                 icon: (
                                     <WandSparklesIcon className="!w-6 !h-6" />
                                 ),
-                                name: "Generate",
+                                name: "Generate quiz",
                                 route: "/quizzes/add",
                             },
                         ],

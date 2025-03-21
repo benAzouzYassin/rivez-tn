@@ -6,7 +6,7 @@ export default function Content() {
     const [isAnswerOpen, setIsAnswerOpen] = useState(false)
     const isWithImage = true
     return (
-        <div className="w-full min-h-[28rem] overflow-hidden relative border-2 mt-4 rounded-2xl p-4">
+        <div className="w-full min-h-[24rem] overflow-hidden relative border-2 mt-4 rounded-2xl p-4">
             {isWithImage ? (
                 <ContentWithImage onRevealClick={() => setIsAnswerOpen(true)} />
             ) : (
@@ -19,11 +19,11 @@ export default function Content() {
                 className={cn(
                     "absolute duration-200 ease-in-out transition-transform bg-neutral-50 bottom-0 w-full flex flex-col p-4  left-0   border-x border-t-2 rounded-2xl  ",
                     {
-                        "h-[31rem]": isWithImage,
-                        "h-[26rem]": !isWithImage,
+                        "h-[28rem]": isWithImage,
+                        "h-[28.6rem]": !isWithImage,
                         "translate-y-0": isAnswerOpen,
-                        "translate-y-[26rem]": !isAnswerOpen && !isWithImage,
-                        "translate-y-[31rem]": !isAnswerOpen && isWithImage,
+                        "translate-y-[28.7rem]": !isAnswerOpen && !isWithImage,
+                        "translate-y-[28.6rem]": !isAnswerOpen && isWithImage,
                     }
                 )}
             >
@@ -46,7 +46,7 @@ export default function Content() {
 
 function ContentWithImage(props: { onRevealClick: () => void }) {
     return (
-        <div className="flex pb-5  flex-col min-h-[20rem] h-full ">
+        <div className="flex pb-5  flex-col h-[28.5rem]  ">
             <p className="w-full pt-4 text-xl font-semibold text-gray-400  text-center">
                 Normal difficulty
             </p>
@@ -65,7 +65,7 @@ function ContentWithImage(props: { onRevealClick: () => void }) {
 }
 function ContentWithoutImage(props: { onRevealClick: () => void }) {
     return (
-        <div className="flex pb-5  flex-col min-h-[20rem] ">
+        <div className="flex pb-5  flex-col h-[28.5rem]  ">
             <p className="w-full pt-4 text-xl font-semibold text-gray-400  text-center">
                 Normal difficulty
             </p>

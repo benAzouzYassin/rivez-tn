@@ -12,6 +12,7 @@ import {
 import { NavButton, NavButtonProps } from "./nav-button"
 import { usePathname } from "next/navigation"
 import { useSidenav } from "@/providers/sidenav-provider"
+import TooltipWrapper from "../ui/tooltip"
 
 export default function CollapsibleNavButton(props: NavButtonProps) {
     const [isOpen, setIsOpen] = useState(false)
@@ -31,16 +32,52 @@ export default function CollapsibleNavButton(props: NavButtonProps) {
                         {
                             "bg-[#D3EEFA]/50 text-[#27b3ef] hover:bg-[#cdeffd]/80 border-[#8cd9f9]/70 border-2":
                                 isSelected,
+                            "!px-0": isSidenavOpen,
                         }
                     )}
                 >
-                    {props.item.icon}
-                    {props.isSidenavOpen && (
-                        <span className="ml-2">{props.item.name}</span>
+                    {props.isSidenavOpen ? (
+                        <div
+                            className={cn("flex     items-center gap-2", {
+                                "pl-5": isSidenavOpen,
+                            })}
+                        >
+                            {props.item.icon}
+                            {props.isSidenavOpen && (
+                                <span className="ml-2">{props.item.name}</span>
+                            )}
+                            {isSidenavOpen && (
+                                <ChevronRight className="absolute group-data-[state=open]:rotate-90 transition-transform opacity-70 right-3 !w-6 stroke-[2.5] !h-6 " />
+                            )}{" "}
+                        </div>
+                    ) : (
+                        <TooltipWrapper
+                            duration={0}
+                            align="end"
+                            content={props.item.name}
+                            contentClassName={cn(
+                                "  translate-y-12   rounded-lg  font-bold text-neutral-600/90 text-sm  w-[110px] text-center translate-x-[90px]",
+                                { "opacity-0": isSidenavOpen }
+                            )}
+                            asChild
+                        >
+                            <div
+                                className={cn("flex items-center gap-2", {
+                                    "pl-5": isSidenavOpen,
+                                })}
+                            >
+                                {props.item.icon}
+                                {props.isSidenavOpen && (
+                                    <span className="ml-2">
+                                        {props.item.name}
+                                    </span>
+                                )}
+                                {isSidenavOpen && (
+                                    <ChevronRight className="absolute group-data-[state=open]:rotate-90 transition-transform opacity-70 right-3 !w-6 stroke-[2.5] !h-6 " />
+                                )}{" "}
+                            </div>
+                        </TooltipWrapper>
                     )}
-                    {isSidenavOpen && (
-                        <ChevronRight className="absolute group-data-[state=open]:rotate-90 transition-transform opacity-70 right-3 !w-6 stroke-[2.5] !h-6 " />
-                    )}{" "}
                 </Button>
             </CollapsibleTrigger>
             <CollapsibleContent>
@@ -52,17 +89,25 @@ export default function CollapsibleNavButton(props: NavButtonProps) {
                 <div className="">
                     {props.item.subItems?.map((subItem) => {
                         return (
-                            <NavButton
-                                item={subItem}
-                                isSidenavOpen={props.isSidenavOpen}
-                                additionalClasses={cn(
-                                    " translate-x-2 !border-l-3 last:border-b-3 !border-neutral-200 hover:!bg-neutral-100 !bg-white border-y-0 pl-3  !rounded-r-xl rounded-l-none  ",
-                                    {
-                                        "translate-x-7": isSidenavOpen,
-                                    }
-                                )}
+                            <TooltipWrapper
+                                duration={0}
+                                content={subItem.name}
+                                asChild
                                 key={subItem.route}
-                            />
+                                contentClassName="text-nowrap"
+                            >
+                                <NavButton
+                                    item={subItem}
+                                    isSidenavOpen={props.isSidenavOpen}
+                                    additionalClasses={cn(
+                                        " translate-x-2 !border-l-3 last:border-b-3 !border-neutral-200 hover:!bg-neutral-100 !bg-white border-y-0 pl-3  !rounded-r-xl rounded-l-none  ",
+                                        {
+                                            "translate-x-7": isSidenavOpen,
+                                        }
+                                    )}
+                                    key={subItem.route}
+                                />
+                            </TooltipWrapper>
                         )
                     })}
                 </div>

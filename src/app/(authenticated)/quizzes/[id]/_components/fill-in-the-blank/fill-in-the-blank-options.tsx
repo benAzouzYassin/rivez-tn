@@ -15,7 +15,7 @@ function FillInTheBlankOptions(props: Props) {
         <div
             ref={setNodeRef}
             className={cn(
-                "border-2 border-transparent rounded-xl  flex min-w-full  gap-4 py-7 -mt-3  px-4",
+                "border-2 border-transparent rounded-xl flex-wrap  flex min-w-full  gap-4 py-7 -mt-3  px-4",
                 { "border-blue-300/50": isOver }
             )}
         >

@@ -34,6 +34,8 @@ export default function TooltipWrapper(props: {
     content: string
     children: React.ReactNode
     duration?: number
+    contentClassName?: string
+    align?: "center" | "start" | "end"
 }) {
     return (
         <TooltipProvider delayDuration={props.duration || 50}>
@@ -41,11 +43,17 @@ export default function TooltipWrapper(props: {
                 <TooltipTrigger asChild={props.asChild}>
                     {props.children}
                 </TooltipTrigger>
-                <TooltipContent className="bg-white text-xs border border-neutral-300 font-semibold  text-neutral-700">
+                <TooltipContent
+                    align={props.align}
+                    className={cn(
+                        "bg-white text-xs border border-neutral-300 font-semibold  text-neutral-700",
+                        props.contentClassName
+                    )}
+                >
                     {props.content}
                 </TooltipContent>
             </Tooltip>
         </TooltipProvider>
     )
 }
-export { Tooltip, TooltipContent, TooltipTrigger }
+export { Tooltip, TooltipContent, TooltipTrigger, TooltipProvider }

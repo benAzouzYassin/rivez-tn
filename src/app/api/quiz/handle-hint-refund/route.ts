@@ -1,11 +1,11 @@
 import { getUserInServerSide } from "@/data-access/users/authenticate-user-ssr"
 import { supabaseAdminServerSide } from "@/lib/supabase-server-side"
 import { NextRequest, NextResponse } from "next/server"
-import { QUESTION_COST } from "../generate-quiz/constants"
 
 const MONTHLY_ALLOWED_REFUNDS = Number(
     process.env.NEXT_PUBLIC_ALLOWED_REFUNDS_PER_MONTH || "0"
 )
+const COST = Number(process.env.NEXT_PUBLIC_LOW_CREDIT_COST || 0.2)
 export async function POST(req: NextRequest) {
     try {
         const accessToken = req.headers.get("access-token") || ""
@@ -53,7 +53,7 @@ export async function POST(req: NextRequest) {
         await supabaseAdmin
             .from("user_profiles")
             .update({
-                credit_balance: userBalance + QUESTION_COST,
+                credit_balance: userBalance + COST,
             })
             .eq("user_id", userId)
             .throwOnError()
@@ -62,7 +62,7 @@ export async function POST(req: NextRequest) {
             .from("quizzes_refunds")
             .insert({
                 user_id: userId,
-                cause: "question generation error.",
+                cause: "hint generation error",
             })
             .throwOnError()
 
