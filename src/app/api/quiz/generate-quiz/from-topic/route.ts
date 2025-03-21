@@ -7,7 +7,9 @@ import { POSSIBLE_QUESTIONS } from "../constants"
 import { getUserInServerSide } from "@/data-access/users/authenticate-user-ssr"
 import { supabaseAdminServerSide } from "@/lib/supabase-server-side"
 
-const LOW_MODEL_LOW_COST_QUIZ = Number(process.env.NEXT_PUBLIC_LOW_CREDIT_COST)
+const LOW_MODEL_LOW_COST_QUIZ = Number(
+    process.env.NEXT_PUBLIC_MEDIUM_CREDIT_COST
+)
 export async function POST(req: NextRequest) {
     try {
         const accessToken = req.headers.get("access-token") || ""

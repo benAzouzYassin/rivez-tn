@@ -101,7 +101,7 @@ function HintsSheet(props: Props) {
     }, [selectedHint])
 
     const handleGenerateEnd = (content: string) => {
-        // setCurrentEditorContent(content)
+        setCurrentEditorContent(content)
         setDisplayedEditorContent(content)
     }
     return (
@@ -115,10 +115,7 @@ function HintsSheet(props: Props) {
 
             <SheetContent
                 className={cn(
-                    "w-96 min-w-[30vw] p-0 transition-all overflow-hidden border-none bg-white px-0 ",
-                    {
-                        "min-w-[70vw] w-[70vw]": !!selectedId || isAdding,
-                    }
+                    " min-w-[70vw] w-[70vw] p-0 transition-all overflow-hidden border-none bg-white px-0 "
                 )}
             >
                 <div className="flex flex-col h-full">

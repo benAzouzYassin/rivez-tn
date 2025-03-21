@@ -30,6 +30,7 @@ import {
     MultipleChoiceOptions,
     QuizQuestionType,
 } from "../store"
+import { handleHintRefund } from "@/data-access/quizzes/handle-refund"
 
 interface Props {
     question: QuizQuestionType
@@ -96,6 +97,7 @@ export default function GenerateHintDialog(props: Props) {
         )
         if (error) {
             toastError("Something went wrong.")
+            handleHintRefund()
         }
     }
 

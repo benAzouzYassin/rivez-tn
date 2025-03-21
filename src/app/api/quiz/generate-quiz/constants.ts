@@ -278,5 +278,6 @@ export const POSSIBLE_QUESTIONS = {
     },
 } as const
 
-export const QUESTION_COST =
-    Number(process.env.NEXT_PUBLIC_LOW_CREDIT_COST || 1) / 6
+export const QUESTION_COST = Number(
+    process.env.NEXT_PUBLIC_LOW_CREDIT_COST || 0.2
+)
