@@ -172,7 +172,7 @@ export default function Page() {
                     <EmptyDisplay
                         title="No popular quizzes yet"
                         icon={<ZapIcon size={50} className="text-indigo-500" />}
-                        buttonText="Your quizzes"
+                        buttonText="Add new quiz"
                         description=""
                         onClick={() => router.push("/quizzes/add")}
                     />
