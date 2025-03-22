@@ -5,12 +5,14 @@ import { Checkbox } from "@/components/ui/checkbox"
 import { Input } from "@/components/ui/input"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { cn } from "@/lib/ui-utils"
-import { SearchIcon, Sparkles, Upload } from "lucide-react"
+import { SearchIcon } from "lucide-react"
 import { useEffect, useMemo, useState } from "react"
 import { Virtuoso } from "react-virtuoso"
 import { usePdfSummarizerStore } from "../store"
+import AddFilesButton from "./add-files-button"
 import FileItem from "./file-item"
 import PageCard from "./page-card"
+import SummarizeSelectedBtn from "./summarize-selected-btn"
 
 export default function PagesSelection() {
     const files = usePdfSummarizerStore((s) => s.files)
@@ -38,14 +40,12 @@ export default function PagesSelection() {
     const filteredPages = useMemo(() => {
         if (!selectedFile) return []
         if (!searchQuery.trim()) return selectedFile.pages
-
         return selectedFile.pages.filter((page) => {
-            return page.localId
+            return page.content
                 .toLowerCase()
                 .includes(searchQuery.toLowerCase())
         })
     }, [selectedFile, searchQuery])
-
     useEffect(() => {
         const firstFileLocalId = files?.[0]?.localId
         if (!selectedLocalId && firstFileLocalId) {
@@ -92,12 +92,7 @@ export default function PagesSelection() {
                                 })}
                             </div>
                         </ScrollArea>
-                        <Button
-                            className="text-base absolute font-extrabold rounded-xl w-full text-neutral-500 z-50 bottom-5 mt-0"
-                            variant={"secondary"}
-                        >
-                            <Upload className="min-w-5 min-h-5" /> Upload Files
-                        </Button>
+                        <AddFilesButton />
                     </div>
                 </div>
                 <div className="col-span-14">
@@ -129,13 +124,7 @@ export default function PagesSelection() {
                                 >
                                     Cancel
                                 </Button>
-                                <Button
-                                    variant={"blue"}
-                                    className="text-lg font-bold"
-                                >
-                                    Summarize{" "}
-                                    <Sparkles className="min-w-5 min-h-5" />
-                                </Button>
+                                <SummarizeSelectedBtn />
                             </div>
                         </div>
                     </div>
@@ -185,7 +174,7 @@ export default function PagesSelection() {
                                                                 page.localId
                                                             )
                                                         }
-                                                        index={pageIndex}
+                                                        index={page.index}
                                                         pageLocalId={
                                                             page.localId
                                                         }

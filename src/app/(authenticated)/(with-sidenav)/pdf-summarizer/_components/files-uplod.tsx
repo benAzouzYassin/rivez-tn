@@ -7,13 +7,11 @@ import {} from "pdfjs-dist"
 import { ChangeEvent, DragEvent, useState } from "react"
 import { z } from "zod"
 import { usePdfSummarizerStore } from "../store"
-import { useSidenav } from "@/providers/sidenav-provider"
 
 pdfjsLib.GlobalWorkerOptions.workerSrc =
     "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js"
 
 export default function FilesUpload() {
-    const [isDialogOpen, setIsDialogOpen] = useState(false)
     const [isDragging, setIsDragging] = useState(false)
     const addFileToState = usePdfSummarizerStore((s) => s.addFile)
     const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -57,14 +55,14 @@ export default function FilesUpload() {
                 localId: crypto.randomUUID(),
                 file: fileData,
                 name: file.name,
-                pages: pages.map((p) => ({
+                pages: pages.map((p, i) => ({
                     content: p,
                     localId: crypto.randomUUID(),
+                    index: i,
                 })),
             })
         }
 
-        setIsDialogOpen(true)
         dismissToasts("loading")
     }
 

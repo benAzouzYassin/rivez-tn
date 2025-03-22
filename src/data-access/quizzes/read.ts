@@ -256,7 +256,6 @@ export async function readQuizQuestionsWithHints(params: { quizId: number }) {
 }
 
 export async function readQuizQuestionHints(params: { questionId: number }) {
-    console.log(params.questionId)
     const response = await supabase
         .from("questions_hints")
         .select(`*`)
