@@ -1,14 +1,15 @@
+import { Button } from "@/components/ui/button"
 import {
     Dialog,
     DialogContent,
     DialogDescription,
     DialogTitle,
 } from "@/components/ui/dialog"
-import { Button } from "@/components/ui/button"
 import { wait } from "@/utils/wait"
-import { Loader2, Sparkles } from "lucide-react"
-import { useEffect, useState } from "react"
+import { Loader2 } from "lucide-react"
+import { useEffect } from "react"
 import { usePdfSummarizerStore } from "../store"
+import SummarizeSinglePageBtn from "./summarize-single-page-btn"
 
 interface Props {
     documentLocalId: string
@@ -20,7 +21,17 @@ interface Props {
 
 export default function SinglePagePreview(props: Props) {
     const getFile = usePdfSummarizerStore((s) => s.getFileByLocalId)
-    const [isSummarizing, setIsSummarizing] = useState(false)
+    const setOpenPageLocalId = usePdfSummarizerStore(
+        (s) => s.setOpenPageLocalId
+    )
+
+    useEffect(() => {
+        if (props.isOpen) {
+            setOpenPageLocalId(props.pageLocalId)
+        } else {
+            setOpenPageLocalId(null)
+        }
+    }, [props.isOpen, setOpenPageLocalId, props.pageLocalId])
 
     useEffect(() => {
         if (props.isOpen) {
@@ -69,14 +80,9 @@ export default function SinglePagePreview(props: Props) {
         getFile,
     ])
 
-    const handleSummarize = async () => {
-        setIsSummarizing(true)
-        await wait(1500)
-    }
-
     return (
         <Dialog open={props.isOpen} onOpenChange={props.onOpenChange}>
-            <DialogContent className="h-[90vh] !px-10 pt-4 min-w-[700px]">
+            <DialogContent className="h-[90vh] !px-10 pt-4 min-w-fit">
                 <div className="flex h-16 mt-5 justify-between items-center ">
                     <DialogTitle>Page {props.index + 1}</DialogTitle>
                     <div className="flex items-center">
@@ -87,14 +93,7 @@ export default function SinglePagePreview(props: Props) {
                         >
                             Cancel
                         </Button>
-                        <Button
-                            variant={"blue"}
-                            onClick={handleSummarize}
-                            isLoading={isSummarizing}
-                            className="text-base"
-                        >
-                            Summarize <Sparkles className="!w-5 !h-5" />
-                        </Button>
+                        <SummarizeSinglePageBtn />
                     </div>
                 </div>
 

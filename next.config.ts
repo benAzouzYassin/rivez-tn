@@ -9,6 +9,14 @@ const nextConfig: NextConfig = {
         }
         return config
     },
+    experimental: {
+        turbo: {
+            resolveAlias: {
+                canvas: "false",
+                encoding: "false",
+            },
+        },
+    },
     images: {
         remotePatterns: [
             {

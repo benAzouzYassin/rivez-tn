@@ -10,6 +10,7 @@ interface State {
     }[]
     selectedFileLocalId: string | null
     selectedPagesLocalIds: string[]
+    openPageLocalId: string | null
 }
 
 interface Actions {
@@ -22,6 +23,8 @@ interface Actions {
     getFileByLocalId: (localId: string) => State["files"][number] | undefined
     selectPages: (localIds: string[]) => void
     unSelectPages: (localIds: string[]) => void
+    setOpenPageLocalId: (localId: string | null) => void
+    getPageContent: (localId: string) => string | undefined
 }
 
 type Store = Actions & State
@@ -29,10 +32,16 @@ const initialState: State = {
     files: [],
     selectedFileLocalId: null,
     selectedPagesLocalIds: [],
+    openPageLocalId: null,
 }
 
 export const usePdfSummarizerStore = create<Store>((set, get) => ({
     ...initialState,
+    getPageContent: (localId) =>
+        get()
+            .files.flatMap((file) => file.pages)
+            .find((page) => page.localId === localId)?.content,
+    setOpenPageLocalId: (openPageLocalId) => set({ openPageLocalId }),
     selectPages: (localIds) =>
         set((s) => ({
             selectedPagesLocalIds: [...s.selectedPagesLocalIds, ...localIds],

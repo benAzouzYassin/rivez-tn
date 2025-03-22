@@ -148,7 +148,6 @@ export default function AddQuestionWithAiForm(props: Props) {
             <Button
                 type="button"
                 onClick={() => {
-                    console.log(form.formState.errors)
                     form.handleSubmit((data) => props.onSubmit(data))()
                 }}
                 className="font-extrabold uppercase mt-4 py-6 text-base w-full md:w-auto"
