@@ -156,18 +156,18 @@ export default function LearningPathSection(props: Props) {
                                                 "!bg-neutral-100   !shadow-neutral-300 !border-neutral-300 ":
                                                     item.status === "disabled",
 
-                                                "bg-sky-400 border-2 shadow-sky-600 border-sky-600":
+                                                "hover:bg-sky-400/90 bg-sky-400 border-2 shadow-sky-600 border-sky-600":
                                                     props.variant === "sky",
-                                                "bg-green-400 border-2  shadow-green-500  border-green-500":
+                                                "hover:bg-green-400/90 bg-green-400 border-2  shadow-green-500  border-green-500":
                                                     props.variant === "green",
-                                                "bg-purple-400 border-2 shadow-purple-500 border-purple-500":
+                                                "hover:bg-purple-400/90 bg-purple-400 border-2 shadow-purple-500 border-purple-500":
                                                     props.variant === "purple",
-                                                "bg-yellow-400 border-2  shadow-yellow-500 border-yellow-500":
+                                                "hover:bg-yellow-400/90 bg-yellow-400 border-2  shadow-yellow-500 border-yellow-500":
                                                     props.variant === "yellow",
-                                                "bg-orange-400 border-2 shadow-orange-500 border-orange-500":
+                                                "hover:bg-orange-400/90 bg-orange-400 border-2 shadow-orange-500 border-orange-500":
                                                     props.variant === "orange",
 
-                                                "bg-emerald-400 border-2  shadow-emerald-500 border-emerald-500 ":
+                                                "hover:bg-emerald-400/90 bg-emerald-400 border-2  shadow-emerald-500 border-emerald-500 ":
                                                     props.variant === "emerald",
                                             }
                                         )}

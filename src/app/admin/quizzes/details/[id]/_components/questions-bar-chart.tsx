@@ -54,7 +54,7 @@ export function QuestionsBarChart() {
     return (
         <Card className=" mt-10 pb-2 pt-5  w-full">
             <h2 className="text-2xl px-5 font-extrabold  text-black/80">
-                Questions data :
+                Questions last 100 submission data :
             </h2>
 
             {isLoading ? (

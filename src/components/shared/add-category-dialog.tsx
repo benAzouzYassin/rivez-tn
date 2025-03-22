@@ -129,8 +129,12 @@ export default function AddCategoryDialog(props: Props) {
                                     onChange(ids)
                                     onBlur()
                                 }}
-                                onUnselect={() => {
-                                    onChange(value)
+                                onUnselect={(unselectedId) => {
+                                    onChange(
+                                        value?.filter(
+                                            (id) => id !== unselectedId
+                                        )
+                                    )
                                     onBlur()
                                 }}
                             />

@@ -7,6 +7,7 @@ import {
     AwardIcon,
     BookOpen,
     CopyIcon,
+    FileText,
     Gamepad2Icon,
     Home,
     LayoutGrid,
@@ -95,6 +96,11 @@ export default function UserLayout({ children }: Props) {
                                 route: "/flash-cards/add",
                             },
                         ],
+                    },
+                    {
+                        name: "Summarize PDF",
+                        icon: <FileText className="!w-6 !h-6" />,
+                        route: "/pdf-summarizer",
                     },
                     {
                         name: "Our Offers",
