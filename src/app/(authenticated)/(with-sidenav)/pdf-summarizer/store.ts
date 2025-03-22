@@ -6,7 +6,7 @@ interface State {
         localId: string
         file: PDFDocumentProxy
         name: string
-        pages: { content: string; localId: string }[]
+        pages: { content: string; localId: string; index: number }[]
     }[]
     selectedFileLocalId: string | null
     selectedPagesLocalIds: string[]
