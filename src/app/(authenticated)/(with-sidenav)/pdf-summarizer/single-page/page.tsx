@@ -1,12 +1,12 @@
 "use client"
 import { ErrorDisplay } from "@/components/shared/error-display"
 import GeneralLoadingScreen from "@/components/shared/general-loading-screen"
+import Markdown from "@/components/shared/markdown"
 import { Button } from "@/components/ui/button"
 import { summarizePage } from "@/data-access/documents/summarize"
 import { ChevronLeft } from "lucide-react"
 import Link from "next/link"
 import { useEffect, useMemo, useState } from "react"
-import ReactMarkdown from "react-markdown"
 import { usePdfSummarizerStore } from "../store"
 import "./styles.css"
 export default function Page() {
@@ -67,7 +67,7 @@ export default function Page() {
             </Link>
             {!result && <GeneralLoadingScreen text={"Processing your data"} />}
             <div className="max-w-[950px] markdown-content mt-10 mx-auto px-8 pt-8 pb-5 border rounded-2xl">
-                <ReactMarkdown>{result}</ReactMarkdown>
+                <Markdown content={result} />
             </div>
         </section>
     )
