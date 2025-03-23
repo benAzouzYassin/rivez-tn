@@ -25,7 +25,6 @@ import js from "highlight.js/lib/languages/javascript"
 import ts from "highlight.js/lib/languages/typescript"
 import xml from "highlight.js/lib/languages/xml.js"
 import html from "highlight.js/lib/languages/xml"
-import sql from "highlight.js/lib/languages/sql"
 import { createLowlight } from "lowlight"
 import { memo, useEffect } from "react"
 import CodeBlockComponent from "./code-block"
@@ -40,7 +39,6 @@ lowlight.register("jsx", js)
 lowlight.register("ts", ts)
 lowlight.register("tsx", ts)
 lowlight.register("xml", xml)
-lowlight.register("sql", sql)
 
 interface Props {
     readonly?: boolean
