@@ -5,8 +5,8 @@ import { z } from "zod"
 import { generatePrompt, systemPrompt } from "./prompt"
 import { streamText } from "ai"
 import { anthropicHaiku } from "@/lib/ai"
+import { PAGE_COST } from "../constants"
 
-const COST = Number(process.env.NEXT_PUBLIC_LOW_CREDIT_COST || 0.2) / 10
 export async function POST(req: NextRequest) {
     try {
         const accessToken = req.headers.get("access-token") || ""
@@ -47,7 +47,7 @@ export async function POST(req: NextRequest) {
                 .throwOnError()
         ).data.credit_balance
 
-        if (userBalance < COST) {
+        if (userBalance < PAGE_COST) {
             return NextResponse.json(
                 {
                     error: "Insufficient balance.",
@@ -55,7 +55,7 @@ export async function POST(req: NextRequest) {
                 { status: 400 }
             )
         }
-        const newBalance = userBalance - COST
+        const newBalance = userBalance - PAGE_COST
 
         await supabaseAdmin
             .from("user_profiles")
@@ -76,3 +76,4 @@ const bodySchema = z.object({
 })
 
 export type BodyType = z.infer<typeof bodySchema>
+export const maxDuration = 60

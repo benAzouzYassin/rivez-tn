@@ -71,7 +71,7 @@ export default function Page() {
         return <ErrorDisplay />
     }
     if (isLoading) {
-        return <GeneralLoadingScreen text={"Summarizing your page"} />
+        return <GeneralLoadingScreen text={"Summarizing your pages"} />
     }
     return (
         <section className="">
