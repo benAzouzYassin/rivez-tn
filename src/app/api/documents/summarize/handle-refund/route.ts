@@ -26,6 +26,22 @@ export async function POST(req: NextRequest) {
             .single()
             .throwOnError()
 
+        const lastDocumentSummarization = await supabaseAdmin
+            .from("document_summarizations")
+            .select("*")
+            .order("created_at", {
+                ascending: false,
+            })
+            .eq("user_id", userId)
+            .single()
+            .throwOnError()
+
+        if (lastDocumentSummarization?.data?.is_refunded) {
+            return NextResponse.json(
+                { error: "document already refunded" },
+                { status: 400 }
+            )
+        }
         const now = new Date()
         const firstDayOfMonth = new Date(
             now.getFullYear(),
@@ -35,7 +51,7 @@ export async function POST(req: NextRequest) {
         const monthRefundsCount =
             (
                 await supabaseAdmin
-                    .from("quizzes_refunds")
+                    .from("refunds")
                     .select(`id`, { count: "exact" })
                     .eq("user_id", userId)
                     .gte("created_at", firstDayOfMonth)
@@ -53,19 +69,30 @@ export async function POST(req: NextRequest) {
         await supabaseAdmin
             .from("user_profiles")
             .update({
-                credit_balance: userBalance + PAGE_COST,
+                credit_balance:
+                    userBalance +
+                    PAGE_COST *
+                        Number(
+                            lastDocumentSummarization?.data?.pages_count || "0"
+                        ),
             })
             .eq("user_id", userId)
             .throwOnError()
 
         await supabaseAdmin
-            .from("quizzes_refunds")
+            .from("refunds")
             .insert({
                 user_id: userId,
-                cause: "document single page summarization.",
+                cause: "documents page summarization.",
             })
             .throwOnError()
-
+        supabaseAdmin
+            .from("document_summarizations")
+            .update({
+                is_refunded: true,
+            })
+            .eq("id", lastDocumentSummarization?.data?.id)
+            .throwOnError()
         return NextResponse.json({ success: true }, { status: 200 })
     } catch (error) {
         console.error("error while refunding a question : ", error)

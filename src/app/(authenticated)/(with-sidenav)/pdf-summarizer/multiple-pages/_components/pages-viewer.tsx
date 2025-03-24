@@ -2,9 +2,12 @@ import Markdown from "@/components/shared/markdown"
 import { Button } from "@/components/ui/button"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { cn } from "@/lib/ui-utils"
-import { ChevronLeft, ChevronRight, Loader2 } from "lucide-react"
+import { ChevronLeft, ChevronRight, Download, Loader2 } from "lucide-react"
 import { useRef, useState } from "react"
 import SideItem from "./side-item"
+import { useReactToPrint } from "react-to-print"
+import { wait } from "@/utils/wait"
+import { dismissToasts, toastLoading } from "@/lib/toasts"
 
 interface Props {
     files: {
@@ -16,6 +19,7 @@ interface Props {
 }
 
 export default function PagesViewer(props: Props) {
+    const [isPrinting, setIsPrinting] = useState(false)
     const contentRef = useRef<HTMLDivElement>(null)
     const [activePage, setActivePage] = useState({
         fileId: props.files?.[0]?.id,
@@ -87,6 +91,22 @@ export default function PagesViewer(props: Props) {
         )
     }
 
+    const markdownRef = useRef<HTMLDivElement>(null)
+    const reactToPrintFn = useReactToPrint({
+        contentRef: markdownRef,
+        onAfterPrint: () => {
+            dismissToasts("loading")
+            setIsPrinting(false)
+        },
+    })
+    const handlePrint = () => {
+        setIsPrinting(true)
+        toastLoading("Saving...")
+        wait(10).then(() => {
+            reactToPrintFn()
+        })
+    }
+
     return (
         <div className="flex h-[89vh] overflow-hidden bg-gray-50">
             <div className="w-[360px] h-[95vh] overflow-y-hidden fixed pb-20 bg-white">
@@ -139,27 +159,32 @@ export default function PagesViewer(props: Props) {
                             <ChevronRight className="min-w-5 min-h-5 -ml-2 stroke-3" />
                         </Button>
                     </div>
-
-                    <Markdown
-                        content={activeFile.markdownPages[activePage.pageIndex]}
-                    />
-                    <div className="flex justify-between mb-4">
+                    <div ref={markdownRef} className="print:px-10">
+                        {isPrinting ? (
+                            props.files.map((file) =>
+                                file.markdownPages.map((page, i) => (
+                                    <Markdown content={page} key={i} />
+                                ))
+                            )
+                        ) : (
+                            <Markdown
+                                content={
+                                    activeFile.markdownPages[
+                                        activePage.pageIndex
+                                    ]
+                                }
+                            />
+                        )}
+                    </div>
+                    <div className="flex justify-end mb-4">
                         <Button
-                            onClick={handlePreviousPage}
-                            className="text-base h-12 px-4 rounded-xl"
-                            disabled={isPreviousDisabled}
+                            isLoading={isPrinting}
+                            variant={"secondary"}
+                            onClick={handlePrint}
+                            className="text-lg h-[52px] px-6   "
                         >
-                            <ChevronLeft className="min-w-5 min-h-5 -mr-1 stroke-3" />
-                            Last page
-                        </Button>
-
-                        <Button
-                            onClick={handleNextPage}
-                            disabled={isNextDisabled}
-                            className="text-base h-12 px-4 rounded-xl"
-                        >
-                            Next page{" "}
-                            <ChevronRight className="min-w-5 min-h-5 -ml-2 stroke-3" />
+                            <Download className="min-w-6  min-h-6  " />
+                            Save
                         </Button>
                     </div>
                 </div>

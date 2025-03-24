@@ -64,6 +64,11 @@ export async function POST(req: NextRequest) {
             })
             .eq("user_id", userId)
             .throwOnError()
+
+        await supabaseAdmin.from("document_summarizations").insert({
+            pages_count: 1,
+            user_id: userId,
+        })
         return llmResponse.toTextStreamResponse()
     } catch (error) {
         console.error(error)

@@ -35,7 +35,7 @@ export async function POST(req: NextRequest) {
         const monthRefundsCount =
             (
                 await supabaseAdmin
-                    .from("quizzes_refunds")
+                    .from("refunds")
                     .select(`id`, { count: "exact" })
                     .eq("user_id", userId)
                     .gte("created_at", firstDayOfMonth)
@@ -59,7 +59,7 @@ export async function POST(req: NextRequest) {
             .throwOnError()
 
         await supabaseAdmin
-            .from("quizzes_refunds")
+            .from("refunds")
             .insert({
                 user_id: userId,
                 cause: "hint generation error",
