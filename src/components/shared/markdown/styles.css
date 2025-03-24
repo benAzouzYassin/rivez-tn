@@ -1,0 +1,319 @@
+/* Base styling for markdown content */
+.markdown-content {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    line-height: 1.6;
+    color: #333;
+    max-width: 100%;
+    overflow-wrap: break-word;
+}
+
+/* Headings */
+.markdown-content h1 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin: 2rem 0 1.5rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid #eaecef;
+    color: #24292e;
+}
+
+.markdown-content h2 {
+    font-size: 2rem;
+    font-weight: 600;
+    margin: 1.8rem 0 1rem;
+    padding-bottom: 0.3rem;
+    border-bottom: 1px solid #eaecef;
+    color: #24292e;
+}
+
+.markdown-content h3 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin: 1.5rem 0 0.8rem;
+    color: #24292e;
+}
+
+.markdown-content h4 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin: 1.2rem 0 0.6rem;
+    color: #24292e;
+}
+
+.markdown-content h5 {
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin: 1rem 0 0.5rem;
+    color: #24292e;
+}
+
+.markdown-content h6 {
+    font-size: 1rem;
+    font-weight: 600;
+    margin: 1rem 0 0.5rem;
+    color: #6a737d;
+}
+
+/* Paragraph and text */
+.markdown-content p {
+    margin: 0 0 1.2rem;
+}
+
+.markdown-content strong {
+    font-weight: 600;
+}
+
+.markdown-content em {
+    font-style: italic;
+}
+
+.markdown-content del {
+    text-decoration: line-through;
+}
+
+/* Links */
+.markdown-content a {
+    color: #0366d6;
+    text-decoration: none;
+}
+
+.markdown-content a:hover {
+    text-decoration: underline;
+}
+
+/* Lists */
+.markdown-content ul,
+.markdown-content ol {
+    margin: 0.8rem 0 1.2rem;
+    padding-left: 2rem;
+}
+
+.markdown-content ul {
+    list-style-type: disc;
+}
+
+.markdown-content ol {
+    list-style-type: decimal;
+}
+
+.markdown-content li {
+    margin-bottom: 0.4rem;
+}
+
+.markdown-content li>ul,
+.markdown-content li>ol {
+    margin: 0.4rem 0;
+}
+
+/* Blockquotes */
+.markdown-content blockquote {
+    margin: 1rem 0;
+    padding: 0 1rem;
+    color: #6a737d;
+    border-left: 0.25rem solid #dfe2e5;
+}
+
+.markdown-content blockquote> :first-child {
+    margin-top: 0;
+}
+
+.markdown-content blockquote> :last-child {
+    margin-bottom: 0;
+}
+
+/* Code */
+.markdown-content code {
+    font-family: SFMono-Regular, Consolas, 'Liberation Mono', Menlo, monospace;
+    font-size: 0.9em;
+    padding: 0.2em 0.4em;
+    margin: 0;
+    background-color: rgba(27, 31, 35, 0.05);
+    border-radius: 3px;
+}
+
+.markdown-content pre {
+    margin: 1rem 0;
+    padding: 1rem;
+    overflow: auto;
+    background-color: #f6f8fa;
+    border-radius: 3px;
+}
+
+.markdown-content pre code {
+    display: block;
+    padding: 0;
+    overflow: auto;
+    background-color: transparent;
+    line-height: 1.5;
+    font-size: 0.85rem;
+    white-space: pre;
+}
+
+/* Tables */
+.markdown-content table {
+    width: 90%;
+    overflow: auto;
+    margin: 1.5rem 0;
+    margin-left: auto;
+    margin-right: auto;
+    border-collapse: collapse;
+}
+
+.markdown-content table th,
+.markdown-content table td {
+    padding: 0.5rem 1rem;
+    border: 1px solid #dfe2e5;
+}
+
+.markdown-content table th {
+    font-weight: 600;
+    background-color: #f2f2f2;
+}
+
+.markdown-content table tr {
+    background-color: #fff;
+    border-top: 1px solid #aeb2b7;
+}
+
+.markdown-content table tr:nth-child(2n) {
+    background-color: #f2f2f2;
+}
+
+/* Horizontal rule */
+.markdown-content hr {
+    height: 0.25em;
+    padding: 0;
+    margin: 1.5rem 0;
+    background-color: #e1e4e8;
+    border: 0;
+}
+
+/* Images */
+.markdown-content img {
+    max-width: 100%;
+    height: auto;
+    margin: 1rem 0;
+    border-style: none;
+}
+
+/* Centered content */
+.markdown-content .center,
+.markdown-content [align="center"] {
+    text-align: center;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* Syntax highlighting for code blocks */
+.markdown-content .token.comment,
+.markdown-content .token.prolog,
+.markdown-content .token.doctype,
+.markdown-content .token.cdata {
+    color: #6a737d;
+}
+
+.markdown-content .token.punctuation {
+    color: #24292e;
+}
+
+.markdown-content .token.property,
+.markdown-content .token.tag,
+.markdown-content .token.boolean,
+.markdown-content .token.number,
+.markdown-content .token.constant,
+.markdown-content .token.symbol {
+    color: #005cc5;
+}
+
+.markdown-content .token.selector,
+.markdown-content .token.attr-name,
+.markdown-content .token.string,
+.markdown-content .token.char,
+.markdown-content .token.builtin {
+    color: #032f62;
+}
+
+.markdown-content .token.operator,
+.markdown-content .token.entity,
+.markdown-content .token.url,
+.markdown-content .language-css .token.string,
+.markdown-content .token.variable {
+    color: #d73a49;
+}
+
+.markdown-content .token.atrule,
+.markdown-content .token.attr-value,
+.markdown-content .token.keyword {
+    color: #d73a49;
+}
+
+.markdown-content .token.function {
+    color: #6f42c1;
+}
+
+.markdown-content .token.regex,
+.markdown-content .token.important {
+    color: #e36209;
+}
+
+.markdown-content .token.important,
+.markdown-content .token.bold {
+    font-weight: bold;
+}
+
+.markdown-content .token.italic {
+    font-style: italic;
+}
+
+/* Mobile responsiveness */
+@media screen and (max-width: 768px) {
+    .markdown-content h1 {
+        font-size: 2rem;
+    }
+
+    .markdown-content h2 {
+        font-size: 1.75rem;
+    }
+
+    .markdown-content h3 {
+        font-size: 1.3rem;
+    }
+
+    .markdown-content pre {
+        white-space: pre-wrap;
+    }
+
+    .markdown-content table {
+        display: block;
+        overflow-x: auto;
+    }
+}
+
+/* Print styles */
+@media print {
+    .markdown-content {
+        font-size: 12pt;
+    }
+
+    .markdown-content code,
+    .markdown-content pre {
+        font-size: 11pt;
+    }
+
+    .markdown-content h1,
+    .markdown-content h2,
+    .markdown-content h3,
+    .markdown-content h4 {
+        page-break-after: avoid;
+    }
+
+    .markdown-content img {
+        page-break-inside: avoid;
+    }
+
+    .markdown-content code {
+        page-break-after: avoid;
+        page-break-inside: avoid;
+    }
+}

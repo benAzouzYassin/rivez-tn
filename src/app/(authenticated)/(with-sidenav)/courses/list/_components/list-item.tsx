@@ -1,12 +1,12 @@
 import ProgressBar from "@/components/shared/progress-bar"
 import { Badge } from "@/components/ui/badge"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card"
+import { Card, CardContent, CardHeader } from "@/components/ui/card"
 import { shuffleArray } from "@/utils/array"
-import { BookOpen, StarIcon, Zap } from "lucide-react"
+import { BookOpen, StarIcon } from "lucide-react"
 import Link from "next/link"
 import { ItemType } from "../page"
 import MoreButton from "./more-button"
+import { useRouter } from "nextjs-toploader/app"
 
 interface Props {
     item: ItemType
@@ -16,8 +16,18 @@ export default function ListItem({ item }: Props) {
         item.id * 50
     }, 70%, 90%), hsl(${item.id * 50}, 70%, 75%))`
     const possibleTagColors = ["blue", "green", "orange", "purple", "gray"]
+    const router = useRouter()
+    const handleCardClick = () => {
+        router.push("/courses/1")
+    }
     return (
-        <Card key={item.id} className={"relative flex flex-row h-56"}>
+        <Card
+            onClick={handleCardClick}
+            key={item.id}
+            className={
+                "relative shadow-none   hover:bg-stone-100 cursor-pointer active:scale-99 transition-all rounded-2xl flex flex-row h-48"
+            }
+        >
             {/* Left side - Image section */}
             <div
                 className={`w-56 hover:cursor-pointer transition-all relative bg-gray-100 rounded-l-lg overflow-hidden`}
@@ -41,7 +51,7 @@ export default function ListItem({ item }: Props) {
                     />
                     <div className="flex justify-between items-start">
                         <div>
-                            <h2 className="text-3xl -mt-4 font-bold">
+                            <h2 className="text-3xl -mt-2 font-bold">
                                 {item.title}
                             </h2>
                             <div className="flex flex-wrap gap-y-2 items-center gap-1 mt-1">
@@ -63,14 +73,14 @@ export default function ListItem({ item }: Props) {
                     </div>
                 </CardHeader>
 
-                <CardContent className="pb-2">
+                <CardContent className="pb-2 ">
                     <div className="flex justify-between items-center text-gray-500 mb-1 text-sm">
                         <div className="flex items-center gap-1 font-bold">
                             <StarIcon size={14} />
                             <span>Your progress: </span>
                         </div>
 
-                        <div className="flex font-semibold justify-end mt-1 items-center text-xs text-gray-500">
+                        <div className="flex font-semibold justify-end mt-7 items-center text-xs text-gray-500">
                             <span>
                                 {Math.floor(
                                     (item.progress * item.sections) / 100
@@ -80,22 +90,11 @@ export default function ListItem({ item }: Props) {
                         </div>
                     </div>
                     <ProgressBar
-                        filledClassName="h-2 [&>div]:top-[2px] [&>div]:h-[3px]"
+                        filledClassName="h-3  [&>div]:top-[2px] [&>div]:h-[6px]"
                         percentage={50}
-                        className="h-2"
+                        className="h-3"
                     />
                 </CardContent>
-
-                <CardFooter className="flex pt-2 gap-1 mt-auto">
-                    <Link href={"/courses/1"} className="w-full flex">
-                        <Button
-                            className="grow text-lg font-bold"
-                            variant={"blue"}
-                        >
-                            Get started <Zap className="!w-6 opacity-80 !h-6" />
-                        </Button>
-                    </Link>
-                </CardFooter>
             </div>
         </Card>
     )

@@ -27,7 +27,7 @@ export default function Sidenav(props: Props) {
     return (
         <nav
             className={cn(
-                "h-full z-10 group hover:border-r-[#8aa8fb] border-r-2 px-2 pt-10 fixed top-0 left-0 transition-all duration-300",
+                "h-full  z-10 group hover:border-r-[#8aa8fb] border-r-2 px-2 pt-10 fixed top-0 left-0 transition-all duration-300",
                 {
                     "w-[300px]": isSidenavOpen,
                     "w-[100px]": !isSidenavOpen,

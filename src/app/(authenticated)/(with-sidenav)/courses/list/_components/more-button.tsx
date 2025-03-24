@@ -35,6 +35,7 @@ export default function MoreButton(props: Props) {
                 ]}
             >
                 <button
+                    onClick={(e) => e.stopPropagation()}
                     role="button"
                     className={cn(
                         "h-8 border-2 bg-white hover:bg-neutral-50 flex items-center justify-center rounded-lg w-8 p-0 hover:cursor-pointer active:scale-95",

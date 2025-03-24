@@ -31,7 +31,7 @@ export async function POST(req: NextRequest) {
         const llmResponse = streamText({
             model: anthropicHaiku,
             prompt,
-            temperature: 0.7,
+            temperature: 0.2,
             system: `
             You are an expert tutor specializing in explaining subject of quiz questions so people can answer the questions.
             Your explanations should be detailed, include examples, and guide users toward understanding without directly giving away answers.

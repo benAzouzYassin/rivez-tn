@@ -10,7 +10,6 @@ import EmptyDisplay from "@/components/shared/empty-display"
 function Page() {
     const [activeTab, setActiveTab] = useState("popular")
 
-    // Custom tab data with icons and descriptions
     const tabs = [
         {
             id: "popular",

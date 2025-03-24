@@ -34,8 +34,41 @@ export type Database = {
   }
   public: {
     Tables: {
+      document_summarizations: {
+        Row: {
+          created_at: string
+          id: number
+          is_refunded: boolean | null
+          pages_count: number | null
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          id?: number
+          is_refunded?: boolean | null
+          pages_count?: number | null
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          id?: number
+          is_refunded?: boolean | null
+          pages_count?: number | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "document_summarizations_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["user_id"]
+          },
+        ]
+      }
       questions_hints: {
         Row: {
+          author_id: string | null
           content: string | null
           created_at: string
           id: number
@@ -43,6 +76,7 @@ export type Database = {
           question_id: number | null
         }
         Insert: {
+          author_id?: string | null
           content?: string | null
           created_at?: string
           id?: number
@@ -50,6 +84,7 @@ export type Database = {
           question_id?: number | null
         }
         Update: {
+          author_id?: string | null
           content?: string | null
           created_at?: string
           id?: number
@@ -57,6 +92,13 @@ export type Database = {
           question_id?: number | null
         }
         Relationships: [
+          {
+            foreignKeyName: "questions_hints_author_id_fkey"
+            columns: ["author_id"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["user_id"]
+          },
           {
             foreignKeyName: "questions_hints_question_id_fkey"
             columns: ["question_id"]
@@ -305,7 +347,7 @@ export type Database = {
           },
         ]
       }
-      quizzes_refunds: {
+      refunds: {
         Row: {
           cause: string | null
           created_at: string

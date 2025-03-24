@@ -18,7 +18,7 @@ import TooltipWrapper from "@/components/ui/tooltip"
 import { generateQuestionHint } from "@/data-access/quizzes/generate-question-hint"
 import { toastError } from "@/lib/toasts"
 import { cn } from "@/lib/ui-utils"
-import { tryCatch } from "@/utils/try-catch"
+import { tryCatchAsync } from "@/utils/try-catch"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { Sparkles, SparklesIcon } from "lucide-react"
 import { useMemo, useRef, useState } from "react"
@@ -75,7 +75,7 @@ export default function GenerateHintDialog(props: Props) {
         }
         setIsStreaming(true)
         hint.current = ""
-        const { error } = await tryCatch(
+        const { error } = await tryCatchAsync(
             generateQuestionHint(
                 {
                     question: formatQuestion(props.question) as any,

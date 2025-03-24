@@ -28,7 +28,9 @@ export default function PopoverList(props: Props) {
     return (
         <Command className="bg-transparent">
             <Popover onOpenChange={setIsOpen} open={isOpen}>
-                <PopoverTrigger asChild>{props.children}</PopoverTrigger>
+                <PopoverTrigger onClick={(e) => e.stopPropagation()} asChild>
+                    {props.children}
+                </PopoverTrigger>
                 <PopoverContent
                     className={cn(
                         "min-w-[200px]  rounded-xl overflow-hidden border !w-(--radix-popover-trigger-width) p-0",

@@ -144,7 +144,7 @@ const useQuizStore = create<Store>((set, get) => ({
                 selectedQuestionLocalId: localId,
             }))
         } catch (err) {
-            console.log("error ", err)
+            console.error(err)
             await handleQuestionRefund()
             onError()
         } finally {
