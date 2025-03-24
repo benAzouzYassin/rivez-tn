@@ -1,4 +1,5 @@
 export const generatePrompt = (data: {
+    language?: string | null
     files: {
         id: string
         name: string
@@ -6,18 +7,26 @@ export const generatePrompt = (data: {
         numberOfPagesToGenerate: number
     }[]
 }) => {
-    return data.files
+    return `
+    ${
+        data.language
+            ? `## IMPORTANT : your output should be in this language : ${data.language}.`
+            : "## IMPORTANT: your output should use the file language."
+    }
+    ## files are : 
+    ${data.files
         .map(
             (file) => `
-  ### File: ${file.name} (ID: ${file.id})
-  
-  ${file.pages
-      .map((page, index) => `#### Page ${index + 1}\n\n${page}`)
-      .join("\n\n")}
-        ### Number of summary pages to generate: ${file.numberOfPagesToGenerate}
-        `
+### File: ${file.name} (ID: ${file.id})
+
+${file.pages
+    .map((page, index) => `#### Page ${index + 1}\n\n${page}`)
+    .join("\n\n")}
+      ### Number of summary pages to generate: ${file.numberOfPagesToGenerate}
+      `
         )
-        .join("\n\n")
+        .join("\n\n")}
+    `
 }
 
 export const systemPrompt = `

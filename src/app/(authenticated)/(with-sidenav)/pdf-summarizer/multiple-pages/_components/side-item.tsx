@@ -22,43 +22,28 @@ export default function SideItem(props: {
         <Collapsible open={isOpen} onOpenChange={setIsOpen}>
             <CollapsibleTrigger
                 className={cn(
-                    "group relative overflow-hidden max-w-82 bg-white border border-neutral-200 mt-4 cursor-pointer w-full flex mb-2 items-center justify-between rounded-xl px-4 py-4 transition-all ",
-                    {
-                        "bg-neutral-300/40 border-neutral-400/50 border-2":
-                            isOpen,
-                    }
+                    "group relative overflow-hidden  bg-white  border-neutral-200 mt-4 cursor-pointer w-full flex  items-center justify-between rounded-xl px-4 py-4 transition-all "
                 )}
             >
-                <div className="flex gap-3 items-center  max-w-[90%]">
-                    <div
-                        className={cn(
-                            "flex items-center justify-center w-8 h-8 rounded-lg bg-neutral-300 text-neutral-500 transition-colors",
-                            { "bg-neutral-200": isOpen }
-                        )}
-                    >
-                        <Files size={18} />
-                    </div>
-                    <h2
-                        className={cn(
-                            "text-lg first-letter:uppercase max-w-[80%] relative truncate font-semibold text-neutral-500",
-                            {
-                                "  font-bold": isOpen,
-                            }
-                        )}
-                    >
+                <h2
+                    className={cn(
+                        "text-lg font-bold -ml-3  flex   relative truncate  text-neutral-500"
+                    )}
+                >
+                    <span className="max-w-[270px] truncate first-letter:uppercase">
                         {props.file.name}
-                        <span className="w-full h-[1px] rounded-full bg-neutral-300 absolute bottom-0 left-0"></span>
-                    </h2>
-                </div>
+                    </span>
+                </h2>
                 <ChevronDown
                     size={18}
                     className={cn(
-                        "text-neutral-500 transition-transform duration-300",
+                        "text-neutral-500 transition-transform min-w-5 stroke-[2.5]  min-h-5 duration-300",
                         {
                             "rotate-180": !isOpen,
                         }
                     )}
                 />
+                <div className="w-[95%] left-1  absolute bottom-4 bg-neutral-300 h-[2px]"></div>
             </CollapsibleTrigger>
             <CollapsibleContent className="mt-2">
                 <ul className="space-y-2">
