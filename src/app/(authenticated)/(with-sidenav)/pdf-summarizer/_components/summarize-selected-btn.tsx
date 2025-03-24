@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button"
 import { Sparkles } from "lucide-react"
 import { usePdfSummarizerStore } from "../store"
+import Link from "next/link"
 
 export default function SummarizeSelectedBtn() {
     const files = usePdfSummarizerStore((s) => s.files)
@@ -23,12 +24,14 @@ export default function SummarizeSelectedBtn() {
             .filter((file) => file.pages.length > 0)
     }
     return (
-        <Button
-            onClick={handleClick}
-            variant={"blue"}
-            className="text-lg font-bold"
-        >
-            Summarize <Sparkles className="min-w-5 min-h-5" />
-        </Button>
+        <Link href={"/pdf-summarizer/multiple-pages"}>
+            <Button
+                onClick={handleClick}
+                variant={"blue"}
+                className="text-lg font-bold"
+            >
+                Summarize <Sparkles className="min-w-5 min-h-5" />
+            </Button>
+        </Link>
     )
 }

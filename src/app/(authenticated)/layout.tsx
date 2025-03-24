@@ -4,6 +4,7 @@ import AnimatedLoader from "@/components/ui/animated-loader"
 import { readCurrentSession } from "@/data-access/users/read"
 import { useRouter } from "nextjs-toploader/app"
 import { useEffect, useState } from "react"
+export const dynamic = "force-static"
 
 export default function PrivateLayout({
     children,

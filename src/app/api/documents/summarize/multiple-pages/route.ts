@@ -6,7 +6,7 @@ import { generatePrompt, systemPrompt } from "./prompt"
 import { streamText } from "ai"
 import { anthropicHaiku } from "@/lib/ai"
 
-const COST = Number(process.env.NEXT_PUBLIC_LOW_CREDIT_COST || 0.2) / 10
+const PAGE_COST = Number(process.env.NEXT_PUBLIC_LOW_CREDIT_COST || 0.2) / 10
 export async function POST(req: NextRequest) {
     try {
         const accessToken = req.headers.get("access-token") || ""
@@ -27,9 +27,19 @@ export async function POST(req: NextRequest) {
         if (!success) {
             return NextResponse.json({ error }, { status: 400 })
         }
-
         const prompt = generatePrompt({
-            documentContent: data.pageContent,
+            files: data.files.map((f) => {
+                const numberOfPagesToGenerate = parseInt(
+                    (f.pages.length / 3).toFixed(0)
+                )
+                return {
+                    ...f,
+                    numberOfPagesToGenerate:
+                        numberOfPagesToGenerate > 9
+                            ? numberOfPagesToGenerate
+                            : numberOfPagesToGenerate - 2 || 1,
+                }
+            }),
         })
         const llmResponse = streamText({
             model: anthropicHaiku,
@@ -47,7 +57,13 @@ export async function POST(req: NextRequest) {
                 .throwOnError()
         ).data.credit_balance
 
-        if (userBalance < COST) {
+        const totalCost =
+            PAGE_COST *
+            data.files
+                .flatMap((file) => file.pages)
+                .filter((page) => page.length > 50).length
+
+        if (userBalance < totalCost) {
             return NextResponse.json(
                 {
                     error: "Insufficient balance.",
@@ -55,7 +71,7 @@ export async function POST(req: NextRequest) {
                 { status: 400 }
             )
         }
-        const newBalance = userBalance - COST
+        const newBalance = userBalance - totalCost
 
         await supabaseAdmin
             .from("user_profiles")
@@ -71,8 +87,13 @@ export async function POST(req: NextRequest) {
     }
 }
 const bodySchema = z.object({
-    pageContent: z.string(),
-    exampleCount: z.number().max(5).nullable().optional(),
+    files: z.array(
+        z.object({
+            name: z.string(),
+            pages: z.array(z.string()),
+            id: z.string(),
+        })
+    ),
 })
 
-export type BodyType = z.infer<typeof bodySchema>
+export type TSummarizeMultiplePages = z.infer<typeof bodySchema>

@@ -2,8 +2,7 @@ import ReactMarkdown from "react-markdown"
 import { PrismLight as SyntaxHighlighter } from "react-syntax-highlighter"
 import { atomDark as prismStyle } from "react-syntax-highlighter/dist/cjs/styles/prism"
 import rangeParser from "parse-numeric-range"
-
-// Web Development
+import "./styles.css"
 import tsx from "react-syntax-highlighter/dist/cjs/languages/prism/tsx"
 import jsx from "react-syntax-highlighter/dist/cjs/languages/prism/jsx"
 import typescript from "react-syntax-highlighter/dist/cjs/languages/prism/typescript"
@@ -13,7 +12,6 @@ import scss from "react-syntax-highlighter/dist/cjs/languages/prism/scss"
 import html from "react-syntax-highlighter/dist/cjs/languages/prism/markup"
 import svg from "react-syntax-highlighter/dist/cjs/languages/prism/markup"
 
-// Backend Languages
 import java from "react-syntax-highlighter/dist/cjs/languages/prism/java"
 import python from "react-syntax-highlighter/dist/cjs/languages/prism/python"
 import csharp from "react-syntax-highlighter/dist/cjs/languages/prism/csharp"
@@ -26,7 +24,6 @@ import swift from "react-syntax-highlighter/dist/cjs/languages/prism/swift"
 import dart from "react-syntax-highlighter/dist/cjs/languages/prism/dart"
 import scala from "react-syntax-highlighter/dist/cjs/languages/prism/scala"
 
-// Data & Config
 import json from "react-syntax-highlighter/dist/cjs/languages/prism/json"
 import yaml from "react-syntax-highlighter/dist/cjs/languages/prism/yaml"
 import toml from "react-syntax-highlighter/dist/cjs/languages/prism/toml"
@@ -34,17 +31,16 @@ import xml from "react-syntax-highlighter/dist/cjs/languages/prism/markup"
 import sql from "react-syntax-highlighter/dist/cjs/languages/prism/sql"
 import graphql from "react-syntax-highlighter/dist/cjs/languages/prism/graphql"
 
-// Shell & Scripting
 import bash from "react-syntax-highlighter/dist/cjs/languages/prism/bash"
 import powershell from "react-syntax-highlighter/dist/cjs/languages/prism/powershell"
 import shell from "react-syntax-highlighter/dist/cjs/languages/prism/bash"
 
-// Documentation
 import markdown from "react-syntax-highlighter/dist/cjs/languages/prism/markdown"
 
-// Low-level languages
 import c from "react-syntax-highlighter/dist/cjs/languages/prism/c"
 import cpp from "react-syntax-highlighter/dist/cjs/languages/prism/cpp"
+
+import remarkGfm from "remark-gfm"
 
 SyntaxHighlighter.registerLanguage("tsx", tsx)
 SyntaxHighlighter.registerLanguage("jsx", jsx)
@@ -96,9 +92,16 @@ SyntaxHighlighter.registerLanguage("c", c)
 SyntaxHighlighter.registerLanguage("cpp", cpp)
 SyntaxHighlighter.registerLanguage("c++", cpp)
 
-export default function Markdown({ content }: { content: string }) {
+export function Markdown({ content }: { content: string }) {
     return (
-        <ReactMarkdown components={MarkdownComponents}>{content}</ReactMarkdown>
+        <div className="markdown-content">
+            <ReactMarkdown
+                remarkPlugins={[remarkGfm]}
+                components={MarkdownComponents}
+            >
+                {content}
+            </ReactMarkdown>
+        </div>
     )
 }
 
@@ -141,5 +144,27 @@ const MarkdownComponents: object = {
         ) : (
             <code className={className} {...props} />
         )
+    },
+    table({ node, ...props }: any) {
+        return (
+            <div className="table-container">
+                <table className="markdown-table" {...props} />
+            </div>
+        )
+    },
+    thead({ node, ...props }: any) {
+        return <thead className="markdown-thead" {...props} />
+    },
+    tbody({ node, ...props }: any) {
+        return <tbody className="markdown-tbody" {...props} />
+    },
+    tr({ node, ...props }: any) {
+        return <tr className="markdown-tr" {...props} />
+    },
+    th({ node, ...props }: any) {
+        return <th className="markdown-th" {...props} />
+    },
+    td({ node, ...props }: any) {
+        return <td className="markdown-td" {...props} />
     },
 }

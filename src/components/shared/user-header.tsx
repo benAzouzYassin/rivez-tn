@@ -1,6 +1,5 @@
 "use client"
 
-import XpIcon from "@/components/icons/xp"
 import { LanguageSelector } from "@/components/shared/language-selector"
 import AnimatedLoader from "@/components/ui/animated-loader"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
@@ -16,17 +15,10 @@ import { toastError } from "@/lib/toasts"
 import { cn } from "@/lib/ui-utils"
 import { useSidenav } from "@/providers/sidenav-provider"
 import { useQueryClient } from "@tanstack/react-query"
-import {
-    CreditCardIcon,
-    DollarSign,
-    LogOutIcon,
-    Settings,
-    User2,
-} from "lucide-react"
+import { CreditCardIcon, LogOutIcon, Settings, User2 } from "lucide-react"
 import { useRouter } from "nextjs-toploader/app"
 import { JSX, useState } from "react"
 import CreditIcon from "../icons/credit-icon"
-import Star from "../icons/star"
 
 export default function UserHeader() {
     const queryClient = useQueryClient()
@@ -95,7 +87,7 @@ export default function UserHeader() {
     return (
         <header
             className={cn(
-                "w-full h-[10vh] max-h-[85px] z-10 fixed transition-all duration-300 bg-white/95 backdrop-blur-sm supports-backdrop-filter:bg-white/60",
+                "w-full h-[10vh] max-h-[90px] z-10 fixed transition-all duration-300 bg-white/95 backdrop-blur-sm supports-backdrop-filter:bg-white/60",
                 {
                     "pl-[300px]": isSidenavOpen,
                     "pl-[100px]": !isSidenavOpen,
