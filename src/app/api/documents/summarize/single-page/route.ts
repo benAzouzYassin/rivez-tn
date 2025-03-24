@@ -6,7 +6,7 @@ import { generatePrompt, systemPrompt } from "./prompt"
 import { streamText } from "ai"
 import { anthropicHaiku } from "@/lib/ai"
 
-const COST = Number(process.env.NEXT_PUBLIC_LOW_CREDIT_COST || 0.2)
+const COST = Number(process.env.NEXT_PUBLIC_LOW_CREDIT_COST || 0.2) / 10
 export async function POST(req: NextRequest) {
     try {
         const accessToken = req.headers.get("access-token") || ""

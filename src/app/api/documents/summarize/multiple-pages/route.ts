@@ -6,7 +6,7 @@ import { generatePrompt, systemPrompt } from "./prompt"
 import { streamText } from "ai"
 import { anthropicHaiku } from "@/lib/ai"
 
-const PAGE_COST = Number(process.env.NEXT_PUBLIC_LOW_CREDIT_COST || 0.2) / 4
+const PAGE_COST = Number(process.env.NEXT_PUBLIC_LOW_CREDIT_COST || 0.2) / 10
 export async function POST(req: NextRequest) {
     try {
         const accessToken = req.headers.get("access-token") || ""
@@ -57,11 +57,11 @@ export async function POST(req: NextRequest) {
                 .throwOnError()
         ).data.credit_balance
 
-        const totalCost = 0
-        // PAGE_COST *
-        // data.files
-        //     .flatMap((file) => file.pages)
-        //     .filter((page) => page.length > 50).length
+        const totalCost =
+            PAGE_COST *
+            data.files
+                .flatMap((file) => file.pages)
+                .filter((page) => page.length > 50).length
 
         if (userBalance < totalCost) {
             return NextResponse.json(
