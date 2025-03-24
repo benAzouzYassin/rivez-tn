@@ -5,8 +5,8 @@ import { z } from "zod"
 import { generatePrompt, systemPrompt } from "./prompt"
 import { streamText } from "ai"
 import { anthropicHaiku } from "@/lib/ai"
+import { PAGE_COST } from "../constants"
 
-const PAGE_COST = Number(process.env.NEXT_PUBLIC_LOW_CREDIT_COST || 0.2) / 10
 export async function POST(req: NextRequest) {
     try {
         const accessToken = req.headers.get("access-token") || ""
@@ -97,3 +97,5 @@ const bodySchema = z.object({
 })
 
 export type TSummarizeMultiplePages = z.infer<typeof bodySchema>
+
+export const maxDuration = 60
