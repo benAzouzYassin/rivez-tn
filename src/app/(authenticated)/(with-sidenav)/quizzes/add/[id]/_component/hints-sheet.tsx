@@ -18,6 +18,7 @@ import {
     ChevronLeft,
     Lightbulb,
     LightbulbIcon,
+    Loader2,
     PlusCircleIcon,
     SaveIcon,
     XCircleIcon,
@@ -29,6 +30,11 @@ import GenerateHintDialog from "./generate-hint-dialog"
 const RichTextEditor = dynamic(
     () => import("@/components/shared/rich-text-editor"),
     {
+        loading: () => (
+            <div className=" flex items-center justify-center w-full h-72">
+                <Loader2 className="animate-spin duration-300 w-9 text-neutral-400 h-9" />
+            </div>
+        ),
         ssr: false,
     }
 )

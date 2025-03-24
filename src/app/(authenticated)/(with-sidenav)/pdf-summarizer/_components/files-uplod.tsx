@@ -1,5 +1,5 @@
 import { dismissToasts, toastError, toastLoading } from "@/lib/toasts"
-import { tryCatch } from "@/utils/try-catch"
+import { tryCatchAsync } from "@/utils/try-catch"
 import { wait } from "@/utils/wait"
 import { FilesIcon } from "lucide-react"
 import * as pdfjsLib from "pdfjs-dist"
@@ -44,7 +44,7 @@ export default function FilesUpload() {
     const handleFiles = async (files: File[]) => {
         toastLoading("Loading your files...")
         for await (const file of files) {
-            const { data: result, error } = await tryCatch(
+            const { data: result, error } = await tryCatchAsync(
                 Promise.all([getFileData(file), getFilePages(file)])
             )
             if (error) {

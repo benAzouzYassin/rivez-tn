@@ -151,10 +151,11 @@
 
 /* Tables */
 .markdown-content table {
-    display: block;
-    width: 100%;
+    width: 90%;
     overflow: auto;
     margin: 1.5rem 0;
+    margin-left: auto;
+    margin-right: auto;
     border-collapse: collapse;
 }
 
@@ -166,16 +167,16 @@
 
 .markdown-content table th {
     font-weight: 600;
-    background-color: #f6f8fa;
+    background-color: #f2f2f2;
 }
 
 .markdown-content table tr {
     background-color: #fff;
-    border-top: 1px solid #c6cbd1;
+    border-top: 1px solid #aeb2b7;
 }
 
 .markdown-content table tr:nth-child(2n) {
-    background-color: #f6f8fa;
+    background-color: #f2f2f2;
 }
 
 /* Horizontal rule */

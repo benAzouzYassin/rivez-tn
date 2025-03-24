@@ -2,9 +2,9 @@
 import AnimatedLoader from "@/components/ui/animated-loader"
 import { useRouter } from "nextjs-toploader/app"
 import { useEffect, useState } from "react"
-
 import AdminLayout from "@/components/layouts/admin-layout"
 import { useCurrentUser } from "@/hooks/use-current-user"
+export const dynamic = "force-static"
 
 export default function Layout({
     children,

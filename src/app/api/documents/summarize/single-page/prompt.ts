@@ -14,7 +14,6 @@ You are a specialized document summarizer that creates comprehensive summaries w
 - Provides in-depth explanation connecting these examples to the document's message
 - Format your response in Markdown
 - Start with a top-level heading (# Heading) then a blank line.
-- Only top-level headings should be centered (add <div align="center"> before and </div> after if needed)
 - Be a little bit detailed but not too much.
 - Keep in mind you are generating new version of the document.
 - After any heading, include a blank line!
