@@ -60,7 +60,7 @@ export async function POST(req: NextRequest) {
             const monthRefundsCount =
                 (
                     await supabaseAdmin
-                        .from("quizzes_refunds")
+                        .from("refunds")
                         .select(`id`, { count: "exact" })
                         .eq("user_id", userId)
                         .gte("created_at", firstDayOfMonth)
@@ -82,7 +82,7 @@ export async function POST(req: NextRequest) {
                 .throwOnError()
 
             await supabaseAdmin
-                .from("quizzes_refunds")
+                .from("refunds")
                 .insert({
                     cause: data.cause || "",
                     quiz_id: data.quizId,
@@ -132,7 +132,7 @@ function validateQuizRefund(quizData: any) {
         }
     }
 
-    if (quizData.quizzes_refunds?.[0]?.count > 0) {
+    if (quizData.refunds?.[0]?.count > 0) {
         return {
             isValidRefund: false,
             refundError: "Quiz has already been refunded",

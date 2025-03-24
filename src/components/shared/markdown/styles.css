@@ -311,4 +311,9 @@
     .markdown-content img {
         page-break-inside: avoid;
     }
+
+    .markdown-content code {
+        page-break-after: avoid;
+        page-break-inside: avoid;
+    }
 }

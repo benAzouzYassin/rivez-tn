@@ -9,6 +9,7 @@ import { ChevronLeft, Download, Printer } from "lucide-react"
 import Link from "next/link"
 import { useEffect, useMemo, useRef, useState } from "react"
 import { usePdfSummarizerStore } from "../store"
+import { handleRefund } from "@/data-access/documents/handle-refund"
 export default function Page() {
     const [isError, setIsError] = useState(false)
     const [result, setResult] = useState("")
@@ -40,6 +41,7 @@ export default function Page() {
             setIsLoading(false)
             if (!didGenerate) {
                 setIsError(true)
+                handleRefund().catch(console.error)
             }
         }
 
@@ -47,6 +49,7 @@ export default function Page() {
             (err) => {
                 setIsError(true)
                 console.error(err)
+                handleRefund().catch(console.error)
             }
         )
     }, [pageContent])

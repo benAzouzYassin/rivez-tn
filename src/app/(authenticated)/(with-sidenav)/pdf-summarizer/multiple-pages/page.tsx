@@ -6,6 +6,7 @@ import { useEffect, useRef, useState } from "react"
 import { useReactToPrint } from "react-to-print"
 import { usePdfSummarizerStore } from "../store"
 import PagesViewer from "./_components/pages-viewer"
+import { handleRefund } from "@/data-access/documents/handle-refund"
 
 export default function Page() {
     const [isStreaming, setIsStreaming] = useState(false)
@@ -17,6 +18,7 @@ export default function Page() {
         setIsLoading(true)
         setIsStreaming(true)
         const data = getSelectedPages()
+
         if (data.length < 1) {
             setIsError(true)
             setIsLoading(false)
@@ -49,6 +51,7 @@ export default function Page() {
 
             if (!didGenerate) {
                 setIsError(true)
+                handleRefund().catch(console.error)
             }
         }
 
@@ -58,6 +61,7 @@ export default function Page() {
             onStreamEnd
         ).catch((err) => {
             setIsError(true)
+            handleRefund().catch(console.error)
             console.error(err)
         })
     }, [getSelectedPages])
@@ -66,6 +70,10 @@ export default function Page() {
 
     const reactToPrintFn = useReactToPrint({
         contentRef: markdownRef,
+        onAfterPrint: () => {},
+        onBeforePrint: async () => {
+            return
+        },
     })
     if (isError) {
         return <ErrorDisplay />
