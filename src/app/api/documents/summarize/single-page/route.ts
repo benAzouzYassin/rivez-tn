@@ -30,6 +30,7 @@ export async function POST(req: NextRequest) {
 
         const prompt = generatePrompt({
             documentContent: data.pageContent,
+            language: data.language,
         })
         const llmResponse = streamText({
             model: anthropicHaiku,
@@ -76,6 +77,7 @@ export async function POST(req: NextRequest) {
     }
 }
 const bodySchema = z.object({
+    language: z.string().optional().nullable(),
     pageContent: z.string(),
     exampleCount: z.number().max(5).nullable().optional(),
 })

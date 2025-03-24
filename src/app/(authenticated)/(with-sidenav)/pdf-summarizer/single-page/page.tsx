@@ -10,10 +10,13 @@ import Link from "next/link"
 import { useEffect, useMemo, useRef, useState } from "react"
 import { usePdfSummarizerStore } from "../store"
 import { handleRefund } from "@/data-access/documents/handle-refund"
+import { useSearchParams } from "next/navigation"
 export default function Page() {
     const [isError, setIsError] = useState(false)
     const [result, setResult] = useState("")
     const [isLoading, setIsLoading] = useState(false)
+    const searchParams = useSearchParams()
+    const startedGenerating = useRef(false)
 
     const openPageLocalId = usePdfSummarizerStore((s) => s.openPageLocalId)
     const getPage = usePdfSummarizerStore((s) => s.getPageContent)
@@ -26,6 +29,8 @@ export default function Page() {
     }, [getPage, openPageLocalId])
 
     useEffect(() => {
+        if (startedGenerating.current === true) return
+        startedGenerating.current = true
         setIsLoading(true)
         let didGenerate = false
         if (!pageContent) return
@@ -44,15 +49,18 @@ export default function Page() {
                 handleRefund().catch(console.error)
             }
         }
+        const lang = searchParams.get("lang") || null
 
-        summarizePage({ pageContent }, onChunkReceive, onStreamEnd).catch(
-            (err) => {
-                setIsError(true)
-                console.error(err)
-                handleRefund().catch(console.error)
-            }
-        )
-    }, [pageContent])
+        summarizePage(
+            { pageContent, language: lang },
+            onChunkReceive,
+            onStreamEnd
+        ).catch((err) => {
+            setIsError(true)
+            console.error(err)
+            handleRefund().catch(console.error)
+        })
+    }, [pageContent, searchParams])
 
     const markdownRef = useRef<HTMLDivElement>(null)
     const reactToPrintFn = useReactToPrint({

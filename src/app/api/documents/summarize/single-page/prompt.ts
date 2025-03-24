@@ -1,5 +1,13 @@
-export const generatePrompt = (data: { documentContent: string }) => `
-summarize this : 
+export const generatePrompt = (data: {
+    documentContent: string
+    language?: string | null
+}) => `
+${
+    data.language
+        ? `## IMPORTANT : your output should be in this language : ${data.language}.`
+        : "## IMPORTANT: your output should use the file language."
+}
+## summarize this : 
   ${data.documentContent}
 `
 

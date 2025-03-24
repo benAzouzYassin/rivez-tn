@@ -7,14 +7,19 @@ import { useReactToPrint } from "react-to-print"
 import { usePdfSummarizerStore } from "../store"
 import PagesViewer from "./_components/pages-viewer"
 import { handleRefund } from "@/data-access/documents/handle-refund"
+import { useSearchParams } from "next/navigation"
 
 export default function Page() {
+    const searchParams = useSearchParams()
+    const startedGenerating = useRef(false)
     const [isStreaming, setIsStreaming] = useState(false)
     const [isError, setIsError] = useState(false)
     const [result, setResult] = useState<TResult>({ files: [] })
     const [isLoading, setIsLoading] = useState(false)
     const getSelectedPages = usePdfSummarizerStore((s) => s.getSelectedPages)
     useEffect(() => {
+        if (startedGenerating.current === true) return
+        startedGenerating.current = true
         setIsLoading(true)
         setIsStreaming(true)
         const data = getSelectedPages()
@@ -54,9 +59,10 @@ export default function Page() {
                 handleRefund().catch(console.error)
             }
         }
+        const lang = searchParams.get("lang") || null
 
         summarizeMultiplePage(
-            { files: getSelectedPages() },
+            { files: getSelectedPages(), language: lang },
             onResultChange,
             onStreamEnd
         ).catch((err) => {
@@ -64,7 +70,7 @@ export default function Page() {
             handleRefund().catch(console.error)
             console.error(err)
         })
-    }, [getSelectedPages])
+    }, [getSelectedPages, searchParams])
 
     const markdownRef = useRef<HTMLDivElement>(null)
 

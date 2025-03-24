@@ -80,12 +80,12 @@ export const summarizeMultiplePage = async (
                 try {
                     const parsedJson = partialParseJson(result)
                     console.log(parsedJson)
-                    // const { data, success } =
-                    //     MultiplePagesResponseSchema.safeParse(parsedJson)
-                    onChange(parsedJson)
+                    const { data, success } =
+                        MultiplePagesResponseSchema.safeParse(parsedJson)
 
-                    // if (data && success) {
-                    // }
+                    if (data && success) {
+                        onChange(parsedJson)
+                    }
                 } catch {}
             },
             onFinish

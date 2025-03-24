@@ -28,6 +28,7 @@ export async function POST(req: NextRequest) {
             return NextResponse.json({ error }, { status: 400 })
         }
         const prompt = generatePrompt({
+            language: data.language,
             files: data.files.map((f) => {
                 const numberOfPagesToGenerate = parseInt(
                     (f.pages.length / 3).toFixed(0)
@@ -93,6 +94,7 @@ export async function POST(req: NextRequest) {
     }
 }
 const bodySchema = z.object({
+    language: z.string().optional().nullable(),
     files: z.array(
         z.object({
             name: z.string(),
