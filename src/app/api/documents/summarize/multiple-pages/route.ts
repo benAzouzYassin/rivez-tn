@@ -4,7 +4,7 @@ import { NextRequest, NextResponse } from "next/server"
 import { z } from "zod"
 import { generatePrompt, systemPrompt } from "./prompt"
 import { streamText } from "ai"
-import { anthropicHaiku } from "@/lib/ai"
+import { anthropicHaiku, gpt4Mini } from "@/lib/ai"
 import { PAGE_COST } from "../constants"
 
 export async function POST(req: NextRequest) {
@@ -43,7 +43,7 @@ export async function POST(req: NextRequest) {
             }),
         })
         const llmResponse = streamText({
-            model: anthropicHaiku,
+            model: gpt4Mini,
             prompt,
             temperature: 0.1,
             system: systemPrompt,

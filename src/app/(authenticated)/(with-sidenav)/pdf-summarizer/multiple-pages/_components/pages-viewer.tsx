@@ -92,20 +92,6 @@ export default function PagesViewer(props: Props) {
     }
 
     const markdownRef = useRef<HTMLDivElement>(null)
-    const reactToPrintFn = useReactToPrint({
-        contentRef: markdownRef,
-        onAfterPrint: () => {
-            dismissToasts("loading")
-            setIsPrinting(false)
-        },
-    })
-    const handlePrint = () => {
-        setIsPrinting(true)
-        toastLoading("Saving...")
-        wait(10).then(() => {
-            reactToPrintFn()
-        })
-    }
 
     return (
         <div className="flex h-[89vh] overflow-hidden bg-gray-50">
@@ -130,36 +116,13 @@ export default function PagesViewer(props: Props) {
                     </div>
                 </ScrollArea>
             </div>
-            <div className="w-86"></div>
-            <div className="flex-1 pl-4 relative">
+            <div className="w-[21.5rem] min-w-[21.5rem]"></div>
+            <div className="flex-1 max-w-[calc(100%-21.5rem)] pl-4 relative">
                 <div
                     ref={contentRef}
-                    className="bg-white p-5 rounded-lg h-[90vh] w-full overflow-y-auto pb-20 -mt-1 pt-10 border mx-auto"
+                    className="bg-white p-5 rounded-lg h-[90vh]  overflow-y-auto pb-20 -mt-1 pt-8 border mx-auto"
                 >
-                    <div className="flex justify-between mb-4">
-                        <Button
-                            onClick={handlePreviousPage}
-                            className="text-base h-12 px-4 rounded-xl"
-                            disabled={isPreviousDisabled}
-                        >
-                            <ChevronLeft className="min-w-5 min-h-5 -mr-1 stroke-3" />
-                            Last page
-                        </Button>
-
-                        <span className="px-10 text-2xl underline-offset-6 text-neutral-600 underline font-bold flex items-center justify-center">
-                            Page {activePage.pageIndex + 1}
-                        </span>
-
-                        <Button
-                            onClick={handleNextPage}
-                            disabled={isNextDisabled}
-                            className="text-base h-12 px-4 rounded-xl"
-                        >
-                            Next page{" "}
-                            <ChevronRight className="min-w-5 min-h-5 -ml-2 stroke-3" />
-                        </Button>
-                    </div>
-                    <div ref={markdownRef} className="print:px-10">
+                    <div ref={markdownRef} className="print:px-10  ">
                         {isPrinting ? (
                             props.files.map((file) =>
                                 file.markdownPages.map((page, i) => (
@@ -176,15 +139,25 @@ export default function PagesViewer(props: Props) {
                             />
                         )}
                     </div>
-                    <div className="flex justify-end mb-4">
+                    <div className="flex border-t-2 pt-3 justify-between mb-4">
                         <Button
-                            isLoading={isPrinting}
                             variant={"secondary"}
-                            onClick={handlePrint}
-                            className="text-lg h-[52px] px-6   "
+                            onClick={handlePreviousPage}
+                            className="text-base h-12 px-4 rounded-xl"
+                            disabled={isPreviousDisabled}
                         >
-                            <Download className="min-w-6  min-h-6  " />
-                            Save
+                            <ChevronLeft className="min-w-5 min-h-5 -mr-1 stroke-3" />
+                            Previous
+                        </Button>
+
+                        <Button
+                            variant={"secondary"}
+                            onClick={handleNextPage}
+                            disabled={isNextDisabled}
+                            className="text-base h-12 px-4 rounded-xl"
+                        >
+                            Next{" "}
+                            <ChevronRight className="min-w-5 min-h-5 -ml-2 stroke-3" />
                         </Button>
                     </div>
                 </div>

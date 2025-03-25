@@ -63,7 +63,7 @@ export default function SideItem(props: {
                                         })
                                     }
                                     className={cn(
-                                        "py-7 transition-all border border-neutral-300 text-lg bg-white text-[#545454] hover:bg-neutral-100 font-extrabold rounded-xl shadow-none w-full justify-start px-4",
+                                        "py-7 transition-all max-w-[20rem]  border border-neutral-300 text-lg bg-white text-[#545454] hover:bg-neutral-100 font-extrabold rounded-xl shadow-none w-full justify-start px-4",
                                         {
                                             "bg-[#D3EEFA]/50 text-[#27b3ef] hover:bg-[#cdeffd]/80 border-[#8cd9f9]/70 border-2":
                                                 props.activePage.fileId ===
@@ -75,7 +75,9 @@ export default function SideItem(props: {
                                 >
                                     <FileText className="min-w-6 text-neutral-400 min-h-6" />
                                     <span className="mr-2">{index + 1}.</span>{" "}
-                                    {shortTitle}
+                                    <span className="max-w-[18rem] truncate">
+                                        {shortTitle}
+                                    </span>
                                 </Button>
                             </li>
                         )

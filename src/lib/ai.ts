@@ -7,4 +7,4 @@ const openRouter = createOpenRouter({
 })
 
 export const anthropicHaiku = anthropic("claude-3-5-haiku-latest", {})
-export const googleGemini = openRouter("google/gemini-2.0-flash-001")
+export const gpt4Mini = openRouter("openai/gpt-4o-mini-search-preview")
