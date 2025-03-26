@@ -1,12 +1,14 @@
 "use client"
-export const dynamic = "force-static"
 
 import { useEffect } from "react"
-import FilesUpload from "./_components/files-uplod"
+
 import PagesSelection from "./_components/pages-selection"
 import { usePdfSummarizerStore } from "./store"
 import { useSearchParams } from "next/navigation"
-
+import dynamic from "next/dynamic"
+const FilesUpload = dynamic(() => import("./_components/files-uplod"), {
+    ssr: false,
+})
 export default function Page() {
     const files = usePdfSummarizerStore((s) => s.files)
     const searchParams = useSearchParams()
