@@ -67,6 +67,7 @@ export default function AddFilesButton() {
                 Promise.all([getFileData(file), getFilePages(file)])
             )
             if (error) {
+                dismissToasts("loading")
                 return toastError(`Something went wrong with ${file.name}`)
             }
             const [fileData, pages] = result

@@ -66,6 +66,47 @@ export type Database = {
           },
         ]
       }
+      mindmaps: {
+        Row: {
+          author_id: string | null
+          created_at: string
+          edges: Json | null
+          id: number
+          image: string | null
+          name: string | null
+          nodes: Json | null
+          publishing_status: Database["public"]["Enums"]["publishing_status"]
+        }
+        Insert: {
+          author_id?: string | null
+          created_at?: string
+          edges?: Json | null
+          id?: number
+          image?: string | null
+          name?: string | null
+          nodes?: Json | null
+          publishing_status?: Database["public"]["Enums"]["publishing_status"]
+        }
+        Update: {
+          author_id?: string | null
+          created_at?: string
+          edges?: Json | null
+          id?: number
+          image?: string | null
+          name?: string | null
+          nodes?: Json | null
+          publishing_status?: Database["public"]["Enums"]["publishing_status"]
+        }
+        Relationships: [
+          {
+            foreignKeyName: "mindamps_author_id_fkey"
+            columns: ["author_id"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["user_id"]
+          },
+        ]
+      }
       questions_hints: {
         Row: {
           author_id: string | null

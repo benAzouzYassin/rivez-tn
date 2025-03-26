@@ -86,7 +86,7 @@ export default function UserHeader() {
     return (
         <header
             className={cn(
-                "w-full h-[10vh] max-h-[90px] z-10 fixed transition-all duration-300 bg-white/95 backdrop-blur-sm supports-backdrop-filter:bg-white/60",
+                "w-full h-[10vh] z-10 fixed transition-all duration-300 bg-white",
                 {
                     "pl-[300px]": isSidenavOpen,
                     "pl-[100px]": !isSidenavOpen,

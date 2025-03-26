@@ -12,8 +12,6 @@ import Questions from "./_components/questions"
 import Result from "./_components/result"
 import ResultLoadingPage from "./_components/result-loading-page"
 import { useQuestionsStore } from "./store"
-import { SparklesIcon } from "lucide-react"
-import TooltipWrapper from "@/components/ui/tooltip"
 
 export default function Page() {
     const params = useParams()

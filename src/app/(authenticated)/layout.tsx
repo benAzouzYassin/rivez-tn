@@ -2,6 +2,7 @@
 
 import AnimatedLoader from "@/components/ui/animated-loader"
 import { readCurrentSession } from "@/data-access/users/read"
+import { wait } from "@/utils/wait"
 import { useRouter } from "nextjs-toploader/app"
 import { useEffect, useState } from "react"
 export const dynamic = "force-static"
@@ -14,13 +15,18 @@ export default function PrivateLayout({
     const router = useRouter()
     const [allowedToEnter, setAllowedToEnter] = useState<boolean | null>(null)
     useEffect(() => {
-        readCurrentSession().then(({ data }) => {
-            if (data.session) {
-                setAllowedToEnter(true)
-            } else {
-                localStorage.setItem("afterAuthRedirect", window.location.href)
-                router.replace("/auth/register")
-            }
+        wait(100).then(() => {
+            readCurrentSession().then(({ data }) => {
+                if (data.session) {
+                    setAllowedToEnter(true)
+                } else {
+                    localStorage.setItem(
+                        "afterAuthRedirect",
+                        window.location.href
+                    )
+                    router.replace("/auth/register")
+                }
+            })
         })
     }, [router])
     if (allowedToEnter === null) {

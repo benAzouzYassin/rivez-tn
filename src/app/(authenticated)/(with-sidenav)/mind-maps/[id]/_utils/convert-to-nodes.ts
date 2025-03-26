@@ -25,10 +25,10 @@ export function convertItemsToNodes(
                 : { x: item.subItems.length * 140, y: 0 },
             type: "customNode",
             data: {
-                bgColor: getNodeColor(depth, i), // Use a more complex pattern based on depth and index
+                bgColor: getNodeColor(depth, i),
                 title: item.title,
                 description: item.description,
-                details: item.content,
+                details: item.markdownContent,
             },
         }
         nodes.push(node)
@@ -83,7 +83,6 @@ function getNodeColor(depth: number, index: number) {
         "#D1A1FF",
     ]
 
-    // Calculate a unique color index using both depth and index
     const patternIndex = (depth * 31 + index * 17) % possibleColors.length
     return possibleColors[patternIndex]
 }

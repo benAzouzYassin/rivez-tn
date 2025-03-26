@@ -4,13 +4,11 @@ import {
     Background,
     BackgroundVariant,
     Controls,
-    Edge,
     MiniMap,
     Panel,
     ReactFlow,
     useEdgesState,
     useNodesState,
-    Node,
 } from "@xyflow/react"
 import { useCallback } from "react"
 
@@ -92,29 +90,30 @@ const items = [
         title: "Object-Oriented Programming in Java",
         id: "OOP in Java",
         description: "Principles and techniques of OOP in Java",
-        content:
-            "Object-Oriented Programming (OOP) focuses on using objects and classes for software design.",
+        markdownContent:
+            "### Getter & Setter Methods\nEncapsulation is achieved by making fields private and providing public getter and setter methods:\n```java\nclass Person {\n    private String name;\n    \n    public String getName() { return name; }\n    public void setName(String name) { this.name = name; }\n}\n```",
         subItems: [
             {
                 title: "Classes & Objects",
                 id: "Classes & Objects",
                 description:
                     "The core of OOP, representing real-world entities.",
-                content:
-                    "Classes define object structure, and objects are instances of classes.",
+                markdownContent:
+                    '### Method Overloading\nMethod overloading allows multiple methods in the same class to have the same name but different parameters:\n```java\nclass MathUtils {\n    int add(int a, int b) { return a + b; }\n    double add(double a, double b) { return a + b; }\n}\n```\n\n### Method Overriding\nMethod overriding allows a subclass to provide a specific implementation of a method defined in its superclass:\n```java\nclass Animal {\n    void makeSound() { System.out.println("Animal makes a sound"); }\n}\n\nclass Dog extends Animal {\n    void makeSound() { System.out.println("Dog barks"); }\n}\n```',
                 subItems: [
                     {
                         title: "Class Declaration",
                         id: "Class Declaration",
                         description: "Defining a class in Java.",
-                        content: "class Person { String name; int age; }",
+                        markdownContent:
+                            '### Abstract Classes\nAn abstract class cannot be instantiated and is meant to be extended:\n```java\nabstract class Animal {\n    abstract void makeSound();\n}\n\nclass Cat extends Animal {\n    void makeSound() { System.out.println("Meow"); }\n}\n```\n\n### Interfaces\nAn interface defines a contract for classes to implement:\n```java\ninterface Vehicle {\n    void drive();\n}\n\nclass Bike implements Vehicle {\n    public void drive() { System.out.println("Bike is driving"); }\n}\n```',
                         subItems: [],
                     },
                     {
                         title: "Object Instantiation",
                         id: "Object Instantiation",
                         description: "Creating an object from a class.",
-                        content: "Person p = new Person();",
+                        markdownContent: "",
                         subItems: [],
                     },
                 ],
@@ -123,35 +122,34 @@ const items = [
                 title: "Inheritance",
                 id: "Inheritance",
                 description: "Mechanism where one class inherits from another.",
-                content:
-                    "Allows the creation of new classes based on existing ones.",
+                markdownContent: "",
                 subItems: [
                     {
                         title: "extends keyword",
                         id: "extends keyword",
                         description: "Used to inherit a class in Java.",
-                        content: "class Student extends Person { }",
+                        markdownContent: "",
                         subItems: [],
                     },
                     {
                         title: "extends keyword",
                         id: "aeaze",
                         description: "Used to inherit a class in Java.",
-                        content: "class Student extends Person { }",
+                        markdownContent: "",
                         subItems: [],
                     },
                     {
                         title: "extends keyword",
                         id: "extenaeeazeeds keyword",
                         description: "Used to inherit a class in Java.",
-                        content: "class Student extends Person { }",
+                        markdownContent: "",
                         subItems: [],
                     },
                     {
                         title: "extends keyword",
                         id: "azeaeee",
                         description: "Used to inherit a class in Java.",
-                        content: "class Student extends Person { }",
+                        markdownContent: "",
                         subItems: [],
                     },
                 ],
@@ -160,23 +158,21 @@ const items = [
                 title: "Polymorphism",
                 id: "Polymorphism",
                 description: "Ability of an object to take many forms.",
-                content:
-                    "Can be achieved through method overloading and overriding.",
+                markdownContent: "",
                 subItems: [
                     {
                         title: "Method Overloading",
                         id: "Method Overloading",
                         description:
                             "Defining multiple methods with the same name but different parameters.",
-                        content: "int add(int a, int b) { return a + b; }",
+                        markdownContent: "",
                         subItems: [],
                     },
                     {
                         title: "Method Overriding",
                         id: "Method Overriding",
                         description: "Redefining a method in a subclass.",
-                        content:
-                            "@Override public void display() { System.out.println('Student'); }",
+                        markdownContent: "",
                         subItems: [],
                     },
                 ],
@@ -186,16 +182,14 @@ const items = [
                 id: "Encapsulation",
                 description:
                     "Hiding internal state and requiring all interaction through an object's methods.",
-                content:
-                    "Allows restricting access to certain components of an object.",
+                markdownContent: "",
                 subItems: [
                     {
                         title: "Getter & Setter Methods",
                         id: "Getter & Setter Methods",
                         description:
                             "Methods to access and modify object properties.",
-                        content:
-                            "public String getName() { return name; } public void setName(String name) { this.name = name; }",
+                        markdownContent: "",
                         subItems: [],
                     },
                 ],
@@ -205,15 +199,14 @@ const items = [
                 id: "Abstraction",
                 description:
                     "Hiding complex implementation details while exposing only necessary features.",
-                content: "Achieved through abstract classes or interfaces.",
+                markdownContent: "",
                 subItems: [
                     {
                         title: "Abstract Classes",
                         id: "Abstract Classes",
                         description:
                             "A class that cannot be instantiated, meant to be extended.",
-                        content:
-                            "abstract class Animal { abstract void sound(); }",
+                        markdownContent: "",
                         subItems: [],
                     },
                     {
@@ -221,7 +214,7 @@ const items = [
                         id: "Interfaces",
                         description:
                             "Defines a contract for classes to implement.",
-                        content: "interface Animal { void sound(); }",
+                        markdownContent: "",
                         subItems: [],
                     },
                 ],
@@ -234,7 +227,7 @@ export type Item = {
     id: string
     title: string
     description: string
-    content: string
+    markdownContent: string
     subItems: Item[]
 }
 
