@@ -11,18 +11,18 @@ export const generatePrompt = (data: {
     ${
         data.language
             ? `## IMPORTANT : your output should be in this language : ${data.language}.`
-            : "## IMPORTANT: your output should use the file language."
+            : "## IMPORTANT: your output should use the files language."
     }
     ## files are : 
     ${data.files
         .map(
             (file) => `
 ### File: ${file.name} (ID: ${file.id})
-
+  ### Number of summary pages to generate: ${file.numberOfPagesToGenerate}
 ${file.pages
     .map((page, index) => `#### Page ${index + 1}\n\n${page}`)
     .join("\n\n")}
-      ### Number of summary pages to generate: ${file.numberOfPagesToGenerate}
+ 
       `
         )
         .join("\n\n")}
@@ -44,7 +44,9 @@ export const systemPrompt = `
   - Be a little bit detailed but not too much.
   - Keep in mind you are generating a new version of the document.
   - After any heading, include a blank line!
-  
+  - Generate the number of pages asked by the user.
+  - Use all the content provided to you by the user.
+
   ## Markdown Support
   Your response should leverage Markdown's formatting capabilities including:
   - Headings (# to ######)

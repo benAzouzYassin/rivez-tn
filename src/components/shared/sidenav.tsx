@@ -11,7 +11,6 @@ import { ScrollArea } from "../ui/scroll-area"
 interface NavItem {
     name: string
     icon: ReactNode
-    iconScale?: string
     route?: string
     subItems?: Omit<NavItem, "subItems">[]
 }
@@ -69,7 +68,7 @@ export default function Sidenav(props: Props) {
                 <NavButton
                     item={props.bottomItem}
                     isSidenavOpen={isSidenavOpen}
-                    additionalClasses="mt-1 pl-6 hover:bg-blue-400/90 rounded-2xl border-b-4 border-blue-400/70 bg-blue-400/80 text-white gap-2 text-xl"
+                    additionalClasses="mt-1 py-7 pl-6 hover:bg-blue-400/90 rounded-xl border-b-4 border-blue-400/70 bg-blue-400/80 text-white gap-2 text-xl"
                 />
             </div>
         </nav>

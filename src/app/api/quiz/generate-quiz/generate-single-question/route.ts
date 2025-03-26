@@ -1,4 +1,4 @@
-import { anthropicHaiku } from "@/lib/ai"
+import { cheapModel } from "@/lib/ai"
 import { generateText } from "ai"
 import { NextRequest, NextResponse } from "next/server"
 import { z } from "zod"
@@ -84,7 +84,7 @@ export async function POST(req: NextRequest) {
             }
             `,
 
-            model: anthropicHaiku,
+            model: cheapModel,
             prompt,
             temperature: 0.1,
         })

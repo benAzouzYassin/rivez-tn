@@ -4,8 +4,3 @@ import { parseJSON } from "partial-json"
 export function partialParseJson(str: string) {
     return parseJSON(str)
 }
-
-export function cleanJsonStream(chunk: string) {
-    // TODO implement this (will be used with models that generate markdown strictly)
-    return chunk
-}

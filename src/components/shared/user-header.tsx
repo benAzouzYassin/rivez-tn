@@ -26,7 +26,6 @@ export default function UserHeader() {
     const { data: user, isLoading, isError } = useCurrentUser()
     const [isUserSettingOpen, setIsUserSettingOpen] = useState(false)
     const router = useRouter()
-    const creditBalance = user?.credit_balance
     const handleLogout = async () => {
         setIsUserSettingOpen(false)
         try {
