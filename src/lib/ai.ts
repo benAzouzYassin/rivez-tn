@@ -6,5 +6,4 @@ const openRouter = createOpenRouter({
     baseURL: process.env.OPENROUTER_ENDPOINT,
 })
 
-export const anthropicHaiku = anthropic("claude-3-5-haiku-latest", {})
-export const gpt4Mini = openRouter("openai/gpt-4o-mini-search-preview")
+export const cheapModel = openRouter("openai/gpt-4o-mini-search-preview")

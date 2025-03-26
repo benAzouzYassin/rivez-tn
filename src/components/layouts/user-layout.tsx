@@ -4,20 +4,17 @@ import { useCurrentUser } from "@/hooks/use-current-user"
 import { cn } from "@/lib/ui-utils"
 import { useSidenav } from "@/providers/sidenav-provider"
 import {
-    AwardIcon,
     BookOpen,
     CopyIcon,
     FileText,
     Gamepad2Icon,
     Home,
-    LayoutGrid,
+    ImageIcon,
     LayoutListIcon,
     LockIcon,
-    LucidePresentation,
     PlusCircle,
     Rocket,
-    Search,
-    Settings,
+    Telescope,
     WandSparklesIcon,
 } from "lucide-react"
 import { ReactNode } from "react"
@@ -72,11 +69,11 @@ export default function UserLayout({ children }: Props) {
                             },
                         ],
                     },
-                    {
-                        name: "Leaderboard",
-                        icon: <AwardIcon className="!w-6 !h-6" />,
-                        route: "/leaderboard",
-                    },
+                    // {
+                    //     name: "Leaderboard",
+                    //     icon: <AwardIcon className="!w-6 !h-6" />,
+                    //     route: "/leaderboard",
+                    // },
 
                     {
                         name: "Flashcards",
@@ -98,9 +95,20 @@ export default function UserLayout({ children }: Props) {
                         ],
                     },
                     {
-                        name: "Summarize PDF",
-                        icon: <FileText className="!w-6 !h-6" />,
-                        route: "/pdf-summarizer",
+                        name: "Explain",
+                        icon: <Telescope className="!w-6 !h-6" />,
+                        subItems: [
+                            {
+                                icon: <FileText className="!w-6 !h-6" />,
+                                name: "Upload PDF",
+                                route: "/pdf-summarizer",
+                            },
+                            {
+                                icon: <ImageIcon className="!w-6 !h-6" />,
+                                name: "Upload Image",
+                                route: "/image-summarizer",
+                            },
+                        ],
                     },
                     {
                         name: "Our Offers",
@@ -114,7 +122,6 @@ export default function UserLayout({ children }: Props) {
                     route: "/get-credits",
                     name: "Get credits",
                     icon: <PlusCircle className="!w-6 stroke-[2.5]  !h-6" />,
-                    iconScale: "scale-95",
                 }}
             />
             <main
