@@ -1,6 +1,6 @@
 import { GenerateQuizBodyType as GenerateFromSubjectBody } from "@/app/api/quiz/generate-quiz/from-topic/route"
 import { GenerateQuizBodyType as GenerateFromPdfBody } from "@/app/api/quiz/generate-quiz/from-pdf/route"
-import { partialParseJson, cleanJsonStream } from "@/utils/json"
+import { partialParseJson } from "@/utils/json"
 import { readStream } from "@/utils/stream"
 import { z } from "zod"
 import { readCurrentSession } from "../users/read"
@@ -45,7 +45,6 @@ export const generateQuiz = async (
             reader,
             (chunk) => {
                 rawResult += chunk
-                rawResult = cleanJsonStream(rawResult)
 
                 try {
                     const partialData = partialParseJson(rawResult)

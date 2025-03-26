@@ -1,11 +1,11 @@
 import { getUserInServerSide } from "@/data-access/users/authenticate-user-ssr"
+import { cheapModel } from "@/lib/ai"
 import { supabaseAdminServerSide } from "@/lib/supabase-server-side"
+import { streamText } from "ai"
 import { NextRequest, NextResponse } from "next/server"
 import { z } from "zod"
-import { generatePrompt, systemPrompt } from "./prompt"
-import { streamText } from "ai"
-import { anthropicHaiku, gpt4Mini } from "@/lib/ai"
 import { PAGE_COST } from "../constants"
+import { generatePrompt, systemPrompt } from "./prompt"
 
 export async function POST(req: NextRequest) {
     try {
@@ -33,7 +33,7 @@ export async function POST(req: NextRequest) {
             language: data.language,
         })
         const llmResponse = streamText({
-            model: gpt4Mini,
+            model: cheapModel,
             prompt,
             temperature: 0.1,
             system: systemPrompt,

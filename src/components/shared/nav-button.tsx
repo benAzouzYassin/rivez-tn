@@ -49,7 +49,7 @@ export function NavButton({
                         }
                     }}
                     className={cn(
-                        "py-7 text-lg   bg-white text-[#545454] hover:bg-neutral-100 border-white font-extrabold rounded-xl shadow-none w-full justify-start",
+                        "py-7 text-base   bg-white text-[#545454] hover:bg-neutral-100 border-white font-extrabold rounded-xl shadow-none w-full justify-start",
                         additionalClasses,
                         "transition-all",
                         {
@@ -81,7 +81,7 @@ export function NavButton({
                             }
                         }}
                         className={cn(
-                            "py-7 text-lg  bg-white text-[#545454] hover:bg-neutral-100 border-white font-extrabold rounded-xl shadow-none w-full justify-start",
+                            "py-7 text-base  bg-white text-[#545454] hover:bg-neutral-100 border-white font-extrabold rounded-xl shadow-none w-full justify-start",
                             additionalClasses,
                             "transition-all",
                             {

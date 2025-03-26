@@ -26,7 +26,7 @@ export default function CollapsibleNavButton(props: NavButtonProps) {
                     key={props.item.name}
                     variant="secondary"
                     className={cn(
-                        "py-7 text-lg  bg-white relative text-[#545454] hover:bg-neutral-100 border-white font-extrabold rounded-xl shadow-none w-full justify-start",
+                        "py-7 text-base  bg-white relative text-[#545454] hover:bg-neutral-100 border-white font-extrabold rounded-xl shadow-none w-full justify-start",
                         props.additionalClasses,
                         "transition-all",
                         {

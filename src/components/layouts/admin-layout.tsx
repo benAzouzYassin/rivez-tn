@@ -57,7 +57,6 @@ export default function AdminLayout({ children }: Props) {
                 bottomItem={{
                     name: "Settings",
                     icon: <Settings className="!w-6 !h-6" />,
-                    iconScale: "scale-95",
                 }}
             />
             <main
