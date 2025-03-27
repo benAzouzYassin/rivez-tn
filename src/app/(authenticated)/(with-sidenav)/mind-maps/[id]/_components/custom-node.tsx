@@ -36,7 +36,7 @@ function CustomNode({ data }: CustomNodeProps) {
                 className="!opacity-0"
                 position={Position.Top}
             />
-            <Sheet open={open} onOpenChange={setOpen}>
+            <Sheet modal={false} open={open} onOpenChange={setOpen}>
                 <SheetTrigger onClick={(e) => e.stopPropagation()} asChild>
                     <div
                         onDoubleClick={() => setOpen(true)}
@@ -61,24 +61,26 @@ function CustomNode({ data }: CustomNodeProps) {
                         <ChevronRight className="w-4 stroke-neutral-600 stroke-[2.4] h-4" />
                     </div>
                 </SheetTrigger>
-                <SheetContent className="p-0 bg-white w-[70vw] min-w-[70vw]">
-                    <div className="">
-                        <Button
-                            isLoading={isSaving}
-                            onClick={() => {
-                                reactToPrintFn()
-                                setIsSaving(true)
-                            }}
-                            className="absolute top-8 font-extrabold right-7"
-                            variant={"secondary"}
-                        >
-                            <Download /> Save
-                        </Button>
-                        <div className="p-5 " ref={contentRef}>
-                            <Markdown content={data.details} />
+                <SheetContent className="p-0 bg-white  w-[calc(100vw-450px)] min-w-[calc(100vw-450px)]">
+                    <div className="scale-x-[-1]  overflow-y-auto">
+                        <div className=" h-full scale-x-[-1] ">
+                            <Button
+                                isLoading={isSaving}
+                                onClick={() => {
+                                    reactToPrintFn()
+                                    setIsSaving(true)
+                                }}
+                                className="absolute top-8 font-extrabold right-7"
+                                variant={"secondary"}
+                            >
+                                <Download /> Save
+                            </Button>
+                            <div className="p-5" ref={contentRef}>
+                                <Markdown content={data.details} />
+                            </div>
+                            <SheetTitle className="text-xl font-medium text-neutral-800"></SheetTitle>
+                            <SheetDescription></SheetDescription>
                         </div>
-                        <SheetTitle className="text-xl font-medium text-neutral-800"></SheetTitle>
-                        <SheetDescription></SheetDescription>
                     </div>
                 </SheetContent>
             </Sheet>

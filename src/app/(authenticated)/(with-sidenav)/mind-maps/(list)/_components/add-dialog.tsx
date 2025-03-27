@@ -32,6 +32,7 @@ import {
 } from "@/components/ui/select"
 import dynamic from "next/dynamic"
 import { PdfInputLoading } from "./pdf-input-loading"
+import { useRouter } from "nextjs-toploader/app"
 const PdfInput = dynamic(() => import("./pdf-input"), {
     loading: () => <PdfInputLoading />,
 })
@@ -44,7 +45,7 @@ export default function AddDialog() {
     const [instructions, setInstructions] = useState("")
     const [pdfPages, setPdfPages] = useState<string[]>([])
     const [isSubmitting, setIsSubmitting] = useState(false)
-
+    const router = useRouter()
     const items = [
         {
             disabled: false,
@@ -91,22 +92,16 @@ export default function AddDialog() {
         setIsSubmitting(true)
         try {
             if (currentTab === "subject") {
-                // Handle subject form submission
-                console.log({
-                    type: "subject",
-                    topic,
-                    language,
-                    instructions,
-                })
-                // Add your API call here
+                router.push(
+                    `/mind-maps/generate?shouldGenerate=true&contentType=subject&topic=${topic}&language=${language}&additionalInstructions=${instructions}`
+                )
             } else if (currentTab === "document") {
-                // Handle document form submission
+                // TODO implement this
                 console.log({
                     type: "document",
                     pdfPages,
                     language,
                 })
-                // Add your API call here
             }
         } catch (error) {
             console.error("Error submitting form:", error)

@@ -1,6 +1,5 @@
 "use client"
 import { ErrorDisplay } from "@/components/shared/error-display"
-import { Button } from "@/components/ui/button"
 import DashboardPagination from "@/components/ui/dashboard-pagination"
 import { readMindmaps } from "@/data-access/mindmaps/read"
 import { useCurrentUser } from "@/hooks/use-current-user"
@@ -8,13 +7,12 @@ import { useIsAdmin } from "@/hooks/use-is-admin"
 import { cn } from "@/lib/ui-utils"
 import { useSidenav } from "@/providers/sidenav-provider"
 import { useQuery } from "@tanstack/react-query"
-import { Plus } from "lucide-react"
 import { useRouter } from "nextjs-toploader/app"
 import { parseAsInteger, parseAsString, useQueryState } from "nuqs"
+import AddDialog from "./_components/add-dialog"
 import Item from "./_components/item"
 import ItemSkeleton from "./_components/item-skeleton"
 import Search from "./_components/search"
-import AddDialog from "./_components/add-dialog"
 
 export default function Page() {
     const { isSidenavOpen } = useSidenav()
