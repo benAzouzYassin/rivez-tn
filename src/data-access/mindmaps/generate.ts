@@ -39,7 +39,7 @@ export const generateMindMapFromText = async (
                 result += chunk
                 try {
                     const parsedJson = partialParseJson(result)
-                    console.log(parsedJson)
+
                     const { data, success } =
                         GeneratedMindmapSchema.safeParse(parsedJson)
                     if (data && success) {

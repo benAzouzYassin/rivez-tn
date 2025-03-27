@@ -15,8 +15,8 @@ import { useCallback } from "react"
 import { cn } from "@/lib/ui-utils"
 import { useSidenav } from "@/providers/sidenav-provider"
 import "@xyflow/react/dist/style.css"
-import CustomNode from "./_components/custom-node"
-import { convertItemsToNodes } from "./_utils/convert-to-nodes"
+import CustomNode from "../_components/custom-node"
+import { convertItemsToNodes } from "../_utils/convert-to-nodes"
 
 const nodeTypes = {
     customNode: CustomNode,
@@ -219,6 +219,7 @@ const items = [
                             "Defines a contract for classes to implement.",
                         markdownContent: "",
                         subItems: [],
+                        isLoading: true,
                     },
                 ],
             },
@@ -232,6 +233,7 @@ export type Item = {
     description: string
     markdownContent: string
     subItems: Item[]
+    isLoading?: boolean
 }
 
 const [initialNodes, initialEdges] = convertItemsToNodes(items, null)

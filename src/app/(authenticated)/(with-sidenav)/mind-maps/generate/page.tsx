@@ -1,13 +1,53 @@
 "use client"
 
+import {
+    Background,
+    BackgroundVariant,
+    Controls,
+    Edge,
+    MiniMap,
+    Node,
+    Panel,
+    ReactFlow,
+    useEdgesState,
+    useNodesState,
+} from "@xyflow/react"
+
+import { cn } from "@/lib/ui-utils"
+import { useSidenav } from "@/providers/sidenav-provider"
+import "@xyflow/react/dist/style.css"
+import CustomNode from "../_components/custom-node"
+
+import { Button } from "@/components/ui/button"
+import WarningDialog from "@/components/ui/warning-dialog"
 import { TGeneratedMindmap } from "@/data-access/mindmaps/constants"
+import { createMindMap } from "@/data-access/mindmaps/create"
 import { generateMindMapFromText } from "@/data-access/mindmaps/generate"
-import { toastError } from "@/lib/toasts"
+import { useCurrentUser } from "@/hooks/use-current-user"
+import {
+    dismissToasts,
+    toastError,
+    toastLoading,
+    toastSuccess,
+} from "@/lib/toasts"
+import { useQueryClient } from "@tanstack/react-query"
+import { EditIcon, Loader2, SaveIcon, Trash2Icon } from "lucide-react"
+import { useRouter } from "nextjs-toploader/app"
 import { parseAsBoolean, parseAsString, useQueryState } from "nuqs"
 import { useEffect, useState } from "react"
+import { convertItemsToNodes } from "../_utils/convert-to-nodes"
+import EditMindmapDialog from "./_components/edit-dialog"
 
 export default function Page() {
-    const [items, setItems] = useState<TGeneratedMindmap | null>(null)
+    const queryClient = useQueryClient()
+    const router = useRouter()
+    const [isEditing, setIsEditing] = useState(false)
+    const [isSaving, setIsSaving] = useState(false)
+    const [aiResult, setAiResult] = useState<TGeneratedMindmap>()
+    const { isSidenavOpen } = useSidenav()
+    const [nodes, setNodes, onNodesChange] = useNodesState([] as Node[])
+    const [edges, setEdges, onEdgesChange] = useEdgesState([] as Edge[])
+    const [isCanceling, setIsCanceling] = useState(false)
     const [isError, setIsError] = useState(false)
     const [isLoading, setIsLoading] = useState(false)
     const [topic] = useQueryState("topic", parseAsString)
@@ -30,15 +70,59 @@ export default function Page() {
             let didGenerate = false
             setShouldGenerate(false)
             setIsLoading(true)
+            toastLoading("Generating your mindmap")
             const onChange = (data: TGeneratedMindmap) => {
-                if (!didGenerate) didGenerate = true
+                didGenerate = true
+                setAiResult(data)
                 try {
-                    setItems(data)
+                    const [nodes, edges] = convertItemsToNodes(
+                        data.items.map((item) => {
+                            const loadingSubitemsCount =
+                                item.subItemsCount -
+                                (item.subItems?.length || 0)
+                            const loadingSubItems =
+                                loadingSubitemsCount > 0
+                                    ? Array.from({
+                                          length: loadingSubitemsCount,
+                                      }).map((_) => {
+                                          return {
+                                              isLoading: true,
+                                              description: "",
+                                              id: crypto.randomUUID(),
+                                              title: "",
+                                              subItems: [],
+                                              markdownContent: "",
+                                          }
+                                      })
+                                    : []
+                            return {
+                                isLoading: false,
+                                description: item.description,
+                                id: item.id,
+                                title: item.title,
+                                subItems: [
+                                    ...(item.subItems?.map((subItem) => ({
+                                        ...subItem,
+                                    })) || []),
+                                    ...loadingSubItems,
+                                ],
+                                markdownContent: "",
+                            }
+                        }),
+                        null
+                    )
+                    if (nodes.length) {
+                        setIsLoading(false)
+                        setNodes(nodes)
+                    }
+                    if (edges) setEdges(edges)
                 } catch {}
             }
 
             const onStreamEnd = () => {
+                dismissToasts("loading")
                 setIsLoading(false)
+                toastSuccess("Generated successfully.")
                 if (!didGenerate) {
                     setIsError(true)
                     toastError("Something went wrong")
@@ -55,7 +139,9 @@ export default function Page() {
                 onChange,
                 onStreamEnd
             ).catch((err) => {
+                dismissToasts("loading")
                 toastError("Something went wrong")
+                // handleRefund().catch(console.error)
             })
         }
     }, [
@@ -65,7 +151,144 @@ export default function Page() {
         shouldGenerate,
         setShouldGenerate,
         contentType,
+        setNodes,
+        setEdges,
     ])
-    console.log(items)
-    return <section>{isLoading ? "Loading..." : "Finished loading."}</section>
+    const { data: userData } = useCurrentUser()
+    const handleSave = () => {
+        setIsSaving(true)
+
+        createMindMap({
+            author_id: userData?.id,
+            edges: edges as any,
+            nodes: nodes as any,
+            name: aiResult?.items?.[0].title,
+        })
+            .then(() => {
+                toastSuccess("Added successfully.")
+                queryClient.invalidateQueries({
+                    predicate: (q) => q.queryKey.includes("mindmaps"),
+                })
+                router.back()
+            })
+            .catch((err) => {
+                toastError("Something went wrong.")
+            })
+            .finally(() => setIsSaving(false))
+    }
+    return (
+        <section>
+            <div
+                className={cn(
+                    "h-[92vh] -mt-2 border border-gray-300 relative isolate",
+                    {
+                        "w-[calc(100vw-306px)]": isSidenavOpen,
+                        "w-[calc(100vw-100px)]": !isSidenavOpen,
+                    }
+                )}
+            >
+                <div className="w-full h-20 p-3 gap-2 border-b absolute bg-white z-10 flex items-center justify-end top-0">
+                    <EditMindmapDialog
+                        isOpen={isEditing}
+                        mindMap={aiResult}
+                        onOpenChange={setIsEditing}
+                        onSubmit={() => {
+                            // TODO implement this
+                        }}
+                    />
+                    <WarningDialog
+                        isOpen={isCanceling}
+                        onOpenChange={setIsCanceling}
+                        confirmText="Remove the mindmap"
+                        onConfirm={async () => {
+                            router.back()
+                        }}
+                    >
+                        <Button className="font-bold" variant={"red"}>
+                            <Trash2Icon />
+                            Delete
+                        </Button>
+                    </WarningDialog>
+
+                    <Button
+                        onClick={() => setIsEditing(true)}
+                        className="font-bold"
+                        variant={"blue"}
+                    >
+                        <EditIcon />
+                        Modify
+                    </Button>
+                    <Button
+                        isLoading={isSaving}
+                        onClick={handleSave}
+                        className="font-bold"
+                    >
+                        <SaveIcon />
+                        Save Mindmap
+                    </Button>
+                </div>
+                <ReactFlow
+                    onNodesDelete={(nodes) => {
+                        const deletedIds = nodes.map((n) => n.data.id)
+                        setAiResult((prev) => {
+                            if (prev) {
+                                return {
+                                    ...prev,
+                                    items: prev.items.filter(
+                                        (item) => !deletedIds.includes(item.id)
+                                    ),
+                                }
+                            }
+                            return prev
+                        })
+                    }}
+                    nodeTypes={nodeTypes}
+                    nodes={nodes}
+                    edges={edges}
+                    onNodesChange={onNodesChange}
+                    onEdgesChange={onEdgesChange}
+                    fitView
+                >
+                    {isLoading && (
+                        <Loader2 className="w-10 h-10 absolute text-blue-400 animate-spin duration-300 top-[40%] left-1/2 -translate-x-1/2 -translate-y-1/2  " />
+                    )}
+                    <Controls className="rounded-lg -translate-y-4 border border-gray-200" />
+                    <Panel position="bottom-right" className="bg-transparent">
+                        <div className="rounded-lg shadow-lg overflow-hidden border border-gray-200">
+                            <MiniMap
+                                className="!bg-white/90 -translate-y-4 dark:!bg-gray-800/90"
+                                style={{ height: 110, width: 170 }}
+                                pannable
+                                nodeBorderRadius={2}
+                                nodeStrokeWidth={2}
+                                nodeComponent={(nodeProps) => {
+                                    const { x, y, width, height } = nodeProps
+                                    return (
+                                        <rect
+                                            x={x}
+                                            y={y}
+                                            width={width}
+                                            height={height}
+                                            rx={4}
+                                            className="fill-blue-400 dark:fill-blue-500 stroke-blue-400 dark:stroke-blue-400"
+                                            strokeWidth={2}
+                                        />
+                                    )
+                                }}
+                                maskColor="rgba(0, 0, 0, 0.1)"
+                            />
+                        </div>
+                    </Panel>
+                    <Background
+                        variant={BackgroundVariant.Cross}
+                        gap={12}
+                        size={1}
+                    />
+                </ReactFlow>
+            </div>
+        </section>
+    )
+}
+const nodeTypes = {
+    customNode: CustomNode,
 }
