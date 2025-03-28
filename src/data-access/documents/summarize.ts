@@ -79,7 +79,6 @@ export const summarizeMultiplePage = async (
                 result += chunk
                 try {
                     const parsedJson = partialParseJson(result)
-                    console.log(parsedJson)
                     const { data, success } =
                         MultiplePagesResponseSchema.safeParse(parsedJson)
 

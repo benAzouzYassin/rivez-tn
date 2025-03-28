@@ -65,10 +65,10 @@ export default function Page() {
         return <ErrorDisplay />
     }
     return (
-        <section className="flex flex-col min-h-[50vh] px-10 py-10">
+        <section className="flex isolate flex-col min-h-[50vh] px-10 py-10">
             <div
                 className={cn(
-                    "flex fixed  z-50   bg-white border-t top-[10vh] pt-4  justify-between items-center",
+                    "flex fixed  z-40  bg-white border-t top-[10vh] pt-4  justify-between items-center",
                     {
                         "left-[300px] w-[calc(100vw-306px)] px-8  ":
                             isSidenavOpen,

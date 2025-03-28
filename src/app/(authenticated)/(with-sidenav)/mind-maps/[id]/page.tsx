@@ -22,7 +22,7 @@ const nodeTypes = {
     customNode: CustomNode,
 }
 
-export default function App() {
+export default function Page() {
     const { isSidenavOpen } = useSidenav()
     const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes)
     const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges)

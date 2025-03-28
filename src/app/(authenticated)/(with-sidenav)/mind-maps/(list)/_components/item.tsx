@@ -21,13 +21,13 @@ export default function Item({ item }: Props) {
             }
         >
             <div
-                className={`h-48 min-h-48 hover:cursor-pointer  transition-all relative bg-gray-100  overflow-hidden`}
+                className={`h-48 min-h-48 w-full hover:cursor-pointer  transition-all relative bg-gray-100  overflow-hidden`}
             >
                 {item.image ? (
                     <img
                         src={item.image}
                         alt={""}
-                        className="absolute top-1/2 -translate-x-1/2 -translate-y-1/2 left-1/2 object-center w-[90%] object-contain h-[90%]"
+                        className="absolute w-full  object-cover  top-1/2 -translate-x-1/2 z-30 -translate-y-1/2 left-1/2   h-full object-center"
                     />
                 ) : (
                     <MapIcon className="w-12  absolute top-20 -translate-x-1/2 left-1/2 h-12 text-neutral-300" />

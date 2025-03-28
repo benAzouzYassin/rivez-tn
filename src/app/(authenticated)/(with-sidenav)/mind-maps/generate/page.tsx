@@ -11,8 +11,8 @@ import {
     ReactFlow,
     useEdgesState,
     useNodesState,
+    useReactFlow,
 } from "@xyflow/react"
-
 import { cn } from "@/lib/ui-utils"
 import { useSidenav } from "@/providers/sidenav-provider"
 import "@xyflow/react/dist/style.css"
@@ -34,13 +34,17 @@ import { useQueryClient } from "@tanstack/react-query"
 import { EditIcon, Loader2, SaveIcon, Trash2Icon } from "lucide-react"
 import { useRouter } from "nextjs-toploader/app"
 import { parseAsBoolean, parseAsString, useQueryState } from "nuqs"
-import { useEffect, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import { convertItemsToNodes } from "../_utils/convert-to-nodes"
 import EditMindmapDialog from "./_components/edit-dialog"
+import { uploadFlowImage } from "../_utils/upload-flow-image"
+import { wait } from "@/utils/wait"
 
 export default function Page() {
     const queryClient = useQueryClient()
     const router = useRouter()
+    const [imageUrl, setImageUrl] = useState("")
+    const [shouldUploadImage, setShouldUploadImage] = useState(false)
     const [isEditing, setIsEditing] = useState(false)
     const [isSaving, setIsSaving] = useState(false)
     const [aiResult, setAiResult] = useState<TGeneratedMindmap>()
@@ -122,12 +126,15 @@ export default function Page() {
             const onStreamEnd = () => {
                 dismissToasts("loading")
                 setIsLoading(false)
-                toastSuccess("Generated successfully.")
                 if (!didGenerate) {
                     setIsError(true)
                     toastError("Something went wrong")
-
                     // handleRefund().catch(console.error)
+                } else {
+                    toastSuccess("Generated successfully.")
+                    wait(100).then(() => {
+                        setShouldUploadImage(true)
+                    })
                 }
             }
             generateMindMapFromText(
@@ -153,6 +160,7 @@ export default function Page() {
         contentType,
         setNodes,
         setEdges,
+        nodes,
     ])
     const { data: userData } = useCurrentUser()
     const handleSave = () => {
@@ -163,6 +171,7 @@ export default function Page() {
             edges: edges as any,
             nodes: nodes as any,
             name: aiResult?.items?.[0].title,
+            image: imageUrl,
         })
             .then(() => {
                 toastSuccess("Added successfully.")
@@ -284,6 +293,13 @@ export default function Page() {
                         gap={12}
                         size={1}
                     />
+                    <ImageUploader
+                        shouldUpload={shouldUploadImage}
+                        onUpload={(url) => {
+                            setImageUrl(url)
+                            setShouldUploadImage(false)
+                        }}
+                    />
                 </ReactFlow>
             </div>
         </section>
@@ -291,4 +307,22 @@ export default function Page() {
 }
 const nodeTypes = {
     customNode: CustomNode,
+}
+
+const ImageUploader = ({
+    shouldUpload,
+    onUpload,
+}: {
+    shouldUpload: boolean
+    onUpload: (url: string) => void
+}) => {
+    const didUpload = useRef(false)
+    const { getNodes } = useReactFlow()
+    useEffect(() => {
+        if (shouldUpload && didUpload.current === false) {
+            uploadFlowImage(getNodes()).then(onUpload)
+            didUpload.current = true
+        }
+    }, [getNodes, onUpload, shouldUpload])
+    return null
 }
