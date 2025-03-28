@@ -26,26 +26,37 @@ type Props = {
 export default function PopoverList(props: Props) {
     const [isOpen, setIsOpen] = useState(false)
     return (
-        <Command className="bg-transparent">
+        <Command
+            onClick={(e) => e.stopPropagation()}
+            className="bg-transparent"
+        >
             <Popover onOpenChange={setIsOpen} open={isOpen}>
                 <PopoverTrigger onClick={(e) => e.stopPropagation()} asChild>
                     {props.children}
                 </PopoverTrigger>
                 <PopoverContent
+                    onClick={(e) => e.stopPropagation()}
                     className={cn(
                         "min-w-[200px]  rounded-xl overflow-hidden border !w-(--radix-popover-trigger-width) p-0",
                         props.contentClassName
                     )}
                     align="center"
                 >
-                    <CommandList className="p-0">
-                        <CommandGroup className="p-0">
+                    <CommandList
+                        onClick={(e) => e.stopPropagation()}
+                        className="p-0"
+                    >
+                        <CommandGroup
+                            onClick={(e) => e.stopPropagation()}
+                            className="p-0"
+                        >
                             {props.items.map((item, i) => (
                                 <CommandItem
-                                    onSelect={() => {
+                                    onSelect={(e) => {
                                         item.onClick?.()
                                         setIsOpen(false)
                                     }}
+                                    onClick={(e) => e.stopPropagation()}
                                     key={i}
                                     className={cn(
                                         "h-10 shadow-[0px_1px_0px] opacity-70 font-bold flex items-center shadow-neutral-200  rounded-none pl-4 text-sm active:scale-95 hover:cursor-pointer",

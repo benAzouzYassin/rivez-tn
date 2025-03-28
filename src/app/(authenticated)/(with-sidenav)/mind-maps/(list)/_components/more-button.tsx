@@ -1,5 +1,6 @@
 import PopoverList from "@/components/ui/popover-list"
-import { softDeleteQuizById } from "@/data-access/quizzes/delete"
+import WarningDialog from "@/components/ui/warning-dialog"
+import { deleteMindmapById } from "@/data-access/mindmaps/delete"
 import { PublishingStatusType } from "@/data-access/types"
 import { useCurrentUser } from "@/hooks/use-current-user"
 import { useIsAdmin } from "@/hooks/use-is-admin"
@@ -13,6 +14,7 @@ import { cn } from "@/lib/ui-utils"
 import { useQueryClient } from "@tanstack/react-query"
 import { Info, MoreVerticalIcon, Trash2 } from "lucide-react"
 import { useRouter } from "nextjs-toploader/app"
+import { useState } from "react"
 
 interface Props {
     itemId: number
@@ -26,20 +28,9 @@ export default function MoreButton(props: Props) {
     const isAdmin = useIsAdmin()
     const queryClient = useQueryClient()
     const router = useRouter()
+    const [isDeleting, setIsDeleting] = useState(false)
     const handleDelete = () => {
-        toastLoading("Deleting...")
-        softDeleteQuizById(props.itemId)
-            .then((res) => {
-                queryClient.refetchQueries({
-                    queryKey: ["quizzes"],
-                })
-                dismissToasts("loading")
-                toastSuccess("Deleted successfully.")
-            })
-            .catch(() => {
-                dismissToasts("loading")
-                toastError("Something went wrong.")
-            })
+        setIsDeleting(true)
     }
     if (isOwner || isAdmin)
         return (
@@ -51,9 +42,7 @@ export default function MoreButton(props: Props) {
                             icon: <Info className="w-5 h-5" />,
                             label: "Details",
                             onClick: () =>
-                                router.push(
-                                    `/admin/quizzes/details/${props.itemId}`
-                                ),
+                                router.push(`/mind-maps/${props.itemId}`),
                         },
                         {
                             icon: <Trash2 className="w-5 h-5" />,
@@ -75,6 +64,26 @@ export default function MoreButton(props: Props) {
                         <MoreVerticalIcon className="!h-6 text-neutral-600 !w-6" />
                     </button>
                 </PopoverList>
+                <WarningDialog
+                    isOpen={isDeleting}
+                    onConfirm={async () => {
+                        toastLoading("Deleting...")
+                        deleteMindmapById(props.itemId)
+                            .then((res) => {
+                                queryClient.refetchQueries({
+                                    predicate: (q) =>
+                                        q.queryKey.includes("mindmaps"),
+                                })
+                                dismissToasts("loading")
+                                toastSuccess("Deleted successfully.")
+                            })
+                            .catch(() => {
+                                dismissToasts("loading")
+                                toastError("Something went wrong.")
+                            })
+                    }}
+                    onOpenChange={setIsDeleting}
+                />
             </>
         )
 }

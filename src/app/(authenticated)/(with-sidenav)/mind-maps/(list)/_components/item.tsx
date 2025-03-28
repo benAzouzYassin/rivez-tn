@@ -13,7 +13,8 @@ export default function Item({ item }: Props) {
     const router = useRouter()
     return (
         <Card
-            onClick={() => {
+            onClick={(e) => {
+                console.log(e.target)
                 router.push(`/mind-maps/${item.id}`)
             }}
             className={
