@@ -53,3 +53,12 @@ export async function readMindMapById(params: { id: number }) {
         .throwOnError()
     return response.data
 }
+export async function readNodeExplanation(params: { nodeId: string }) {
+    const response = await supabase
+        .from("mindmap_node_explanation")
+        .select(`*`)
+        .eq("node_id", params.nodeId)
+        .single()
+        .throwOnError()
+    return response.data
+}

@@ -40,8 +40,13 @@ export default function Page() {
     const [nodes, setNodes, onNodesChange] = useNodesState([] as Node[])
     const [edges, setEdges, onEdgesChange] = useEdgesState([] as Edge[])
     useEffect(() => {
-        if (data) {
-            setNodes(data.nodes as any)
+        if (data && Array.isArray(data.nodes) && Array.isArray(data.edges)) {
+            setNodes(
+                data.nodes.map((n: any) => ({
+                    ...(n || {}),
+                    language: data.language,
+                })) as any
+            )
             setEdges(data.edges as any)
         }
     }, [data, setEdges, setNodes])

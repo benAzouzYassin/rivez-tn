@@ -90,16 +90,20 @@ export default function Page() {
                                           length: loadingSubitemsCount,
                                       }).map((_) => {
                                           return {
+                                              language: language,
                                               isLoading: true,
                                               description: "",
                                               id: crypto.randomUUID(),
                                               title: "",
                                               subItems: [],
                                               markdownContent: "",
+                                              enableSheet: false,
+                                              enableDelete: false,
                                           }
                                       })
                                     : []
                             return {
+                                language: language || undefined,
                                 isLoading: false,
                                 description: item.description,
                                 id: item.id,
@@ -111,6 +115,8 @@ export default function Page() {
                                     ...loadingSubItems,
                                 ],
                                 markdownContent: "",
+                                enableSheet: false,
+                                enableDelete: true,
                             }
                         }),
                         null
@@ -132,7 +138,7 @@ export default function Page() {
                     // handleRefund().catch(console.error)
                 } else {
                     toastSuccess("Generated successfully.")
-                    wait(100).then(() => {
+                    wait(10).then(() => {
                         setShouldUploadImage(true)
                     })
                 }
@@ -169,9 +175,18 @@ export default function Page() {
         createMindMap({
             author_id: userData?.id,
             edges: edges as any,
-            nodes: nodes as any,
+            nodes: nodes.map((item) => ({
+                ...item,
+                data: {
+                    ...item.data,
+                    enableSheet: true,
+                    enableDelete: false,
+                    language: item.data.language,
+                },
+            })) as any,
             name: aiResult?.items?.[0].title,
             image: imageUrl,
+            language: language,
         })
             .then(() => {
                 toastSuccess("Added successfully.")

@@ -1,0 +1,138 @@
+import { ErrorDisplay } from "@/components/shared/error-display"
+import Markdown from "@/components/shared/markdown"
+import { Button } from "@/components/ui/button"
+import {
+    Sheet,
+    SheetContent,
+    SheetDescription,
+    SheetTitle,
+} from "@/components/ui/sheet"
+import { createNodeExplanation } from "@/data-access/mindmaps/create"
+import { explainNode } from "@/data-access/mindmaps/explain"
+import { readNodeExplanation } from "@/data-access/mindmaps/read"
+import { useCurrentUser } from "@/hooks/use-current-user"
+import { useQuery, useQueryClient } from "@tanstack/react-query"
+import { Download, Loader2 } from "lucide-react"
+import { useParams } from "next/navigation"
+import { useEffect, useRef, useState } from "react"
+import { useReactToPrint } from "react-to-print"
+interface Props {
+    open: boolean
+    setOpen: (value: boolean) => void
+    getNodeTitles: () => string[]
+    nodeId: string
+    language?: string
+}
+
+export default function NodeSheet(props: Props) {
+    const params = useParams()
+    const mindMapId = params.id as string
+    const queryClient = useQueryClient()
+    const { data: userData } = useCurrentUser()
+    const [isError, setIsError] = useState(false)
+    const [generatedContent, setGeneratedContent] = useState("")
+    const [isLoading, setIsLoading] = useState(true)
+
+    const {
+        isFetched,
+        isError: isFetchErrored,
+        data: explanationData,
+    } = useQuery({
+        enabled: props.open,
+        queryKey: ["mindmap_node_explanation", props.nodeId],
+        queryFn: () => readNodeExplanation({ nodeId: props.nodeId }),
+        retry: 1,
+    })
+    const isFinishedStreaming = useRef(false)
+    useEffect(() => {
+        if (isFinishedStreaming.current === true) return
+        if (props.open && (isFetched || isFetchErrored)) {
+            if (!explanationData?.content) {
+                let contentToInsert = ""
+                let didGenerate = false
+                const onContentChange = (changedContent: string) => {
+                    if (!didGenerate) didGenerate = true
+                    try {
+                        setGeneratedContent(changedContent)
+                        contentToInsert = changedContent
+
+                        if (changedContent) setIsLoading(false)
+                    } catch {}
+                }
+
+                const onStreamEnd = () => {
+                    isFinishedStreaming.current = true
+                    if (!didGenerate) {
+                        setIsError(true)
+                        // handleRefund().catch(console.error)
+                    } else {
+                        createNodeExplanation({
+                            author_id: userData?.id as string,
+                            content: contentToInsert,
+                            mindmap_id: Number(mindMapId),
+                            node_id: props.nodeId,
+                        }).then(() => {
+                            isFinishedStreaming.current = true
+                            queryClient.invalidateQueries({
+                                queryKey: [
+                                    "mindmap_node_explanation",
+                                    props.nodeId,
+                                ],
+                            })
+                        })
+                    }
+                }
+                explainNode(
+                    {
+                        topics: props.getNodeTitles(),
+                        language: props.language,
+                    },
+                    onContentChange,
+                    onStreamEnd
+                )
+            } else {
+                setGeneratedContent(explanationData.content)
+                setIsLoading(false)
+            }
+        }
+    }, [
+        isFetched,
+        props,
+        isFetchErrored,
+        explanationData?.content,
+        userData?.id,
+        mindMapId,
+        queryClient,
+    ])
+
+    return (
+        <Sheet open={props.open} onOpenChange={props.setOpen}>
+            <SheetContent className="p-0 bg-white w-[calc(100vw-450px)] min-w-[calc(100vw-450px)]">
+                <div className="scale-x-[-1] overflow-y-auto">
+                    <div className="h-full scale-x-[-1]">
+                        {isError && <ErrorDisplay />}
+                        {!isError && (
+                            <>
+                                {isLoading ? (
+                                    <div className="h-[80vh] flex items-center justify-center ">
+                                        <Loader2 className="w-12 h-12 animate-spin duration-300 text-blue-400" />
+                                    </div>
+                                ) : (
+                                    <>
+                                        <div className="p-5">
+                                            <Markdown
+                                                content={generatedContent}
+                                            />
+                                        </div>
+                                    </>
+                                )}
+                            </>
+                        )}
+                        <SheetTitle className="text-xl font-medium text-neutral-800"></SheetTitle>
+                        <SheetDescription></SheetDescription>
+                    </div>
+                </div>
+            </SheetContent>
+        </Sheet>
+    )
+}

@@ -18,7 +18,7 @@ export default function Item({ item }: Props) {
                 router.push(`/mind-maps/${item.id}`)
             }}
             className={
-                "relative  grow cursor-pointer hover:bg-neutral-50  active:scale-104 hover:scale-105     transition-all items-start justify-center h-[300px]  flex rounded-3xl  flex-col"
+                "relative  grow cursor-pointer hover:bg-neutral-100 hover:scale-101  active:scale-100     transition-all items-start justify-center h-[300px]  flex rounded-3xl  flex-col"
             }
         >
             <div
