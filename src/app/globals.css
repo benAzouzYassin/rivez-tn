@@ -494,3 +494,7 @@ article,
 .react-flow__attribution {
   display: none;
 }
+
+.react-flow svg {
+  overflow: visible !important;
+}

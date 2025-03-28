@@ -22,11 +22,11 @@ export default function Item({ item }: Props) {
     return (
         <Card
             className={
-                "relative h-[420px] flex flex-col shadow-md hover:shadow-lg transition-shadow"
+                "relative h-[420px] flex rounded-3xl  flex-col  transition-shadow"
             }
         >
             <div
-                className={`h-48 min-h-48 hover:cursor-pointer transition-all relative bg-gray-100 rounded-t-lg overflow-hidden`}
+                className={`h-48 min-h-48 hover:cursor-pointer transition-all relative bg-gray-100  overflow-hidden`}
             >
                 <Link
                     href={`/quizzes/${item.id}`}

@@ -1,5 +1,4 @@
 import { Edge, Node } from "@xyflow/react"
-import { Item } from "../page"
 
 export function convertItemsToNodes(
     items: Item[],
@@ -11,6 +10,22 @@ export function convertItemsToNodes(
     const nodes = [] as Node[]
 
     let currentIndex = horizontalIndex
+    const calculateWidth = (result: number, subItems: Item[]): number => {
+        if (subItems.length === 0) {
+            return Math.max(1, result)
+        }
+
+        let totalSubWidth = 0
+        for (const subItem of subItems) {
+            const subItemWidth =
+                subItem.subItems.length > 0
+                    ? calculateWidth(0, subItem.subItems)
+                    : 1
+            totalSubWidth += subItemWidth
+        }
+
+        return Math.max(result, totalSubWidth)
+    }
 
     for (let i = 0; i < items.length; i++) {
         const item = items[i]
@@ -19,22 +34,28 @@ export function convertItemsToNodes(
             id: itemId,
             position: parentId
                 ? {
-                      x: currentIndex * 255 + item.subItems.length * 50,
+                      x: currentIndex * 255 + item.subItems.length * 70,
                       y: depth * 200,
                   }
-                : { x: item.subItems.length * 140, y: 0 },
+                : { x: calculateWidth(0, item.subItems) * 120, y: 0 },
             type: "customNode",
             data: {
-                bgColor: getNodeColor(depth, i), // Use a more complex pattern based on depth and index
+                id: itemId,
+                bgColor: getNodeColor(depth, i),
                 title: item.title,
                 description: item.description,
-                details: item.content,
+                details: item.markdownContent,
+                isLoading: item.isLoading,
             },
         }
         nodes.push(node)
 
         const edge = parentId
-            ? { id: crypto.randomUUID(), source: parentId, target: itemId }
+            ? {
+                  id: crypto.randomUUID(),
+                  source: parentId,
+                  target: itemId,
+              }
             : null
         if (edge) edges.push(edge)
 
@@ -83,7 +104,15 @@ function getNodeColor(depth: number, index: number) {
         "#D1A1FF",
     ]
 
-    // Calculate a unique color index using both depth and index
     const patternIndex = (depth * 31 + index * 17) % possibleColors.length
     return possibleColors[patternIndex]
+}
+
+export type Item = {
+    id: string
+    title: string
+    description: string
+    markdownContent: string
+    subItems: Item[]
+    isLoading?: boolean
 }

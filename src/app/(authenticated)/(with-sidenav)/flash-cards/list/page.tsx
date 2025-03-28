@@ -119,9 +119,17 @@ function Page() {
     }
 
     return (
-        <div className="container mx-auto p-6 pb-20 min-h-screen isolate">
+        <div className="container mx-auto p-6 relative  pb-20 min-h-screen isolate">
             <div className="flex flex-col gap-6">
-                <div className="flex justify-between items-center">
+                <div
+                    className={cn(
+                        "flex fixed  z-50  bg-white top-[9vh] pt-4 max-w-[1500px] justify-between items-center",
+                        {
+                            "w-[calc(100vw-346px)]  ": isSidenavOpen,
+                            "w-[calc(100vw-146px)]  ": !isSidenavOpen,
+                        }
+                    )}
+                >
                     <h1 className="text-4xl text-neutral-600 -mt-5 font-extrabold">
                         Flashcards
                     </h1>
@@ -143,7 +151,7 @@ function Page() {
                     </div>
                 </div>
 
-                <div className="w-full border-2 rounded-2xl p-5">
+                <div className="w-full border-2 rounded-2xl mt-24 p-5">
                     <div className="mb-4 ">
                         <div className="flex border-2 rounded-2xl ml-auto px-2 py-2 w-fit flex-wrap gap-2 mb-2">
                             {tabs.map((tab) => (
@@ -206,26 +214,11 @@ function Page() {
                                 onClick={() => setActiveTab("popular")}
                             />
                         )}
-                        {/* {activeTab === "popular" && (
-                            <EmptyDisplay
-                                title="No popular flashcards yet"
-                                icon={
-                                    <ZapIcon
-                                        size={50}
-                                        className="text-indigo-500"
-                                    />
-                                }
-                                description=""
-                                onClick={() => setActiveTab("all")}
-                            />
-                        )} */}
+
                         {activeTab === "popular" && (
                             <div
                                 className={cn(
-                                    "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-4 gap-y-8",
-                                    {
-                                        " lg:grid-cols-4 ": !isSidenavOpen,
-                                    }
+                                    "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-4 gap-y-8"
                                 )}
                             >
                                 {flashcardSets.map((item) => {

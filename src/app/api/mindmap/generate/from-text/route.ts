@@ -4,8 +4,8 @@ import { supabaseAdminServerSide } from "@/lib/supabase-server-side"
 import { streamText } from "ai"
 import { NextRequest, NextResponse } from "next/server"
 import { z } from "zod"
-import { PAGE_COST } from "../constants"
-import { generatePrompt, systemPrompt } from "./prompt"
+import { CHEAP_COST } from "../constants"
+import { getSystemPrompt, getUserPrompt } from "./prompt"
 
 export async function POST(req: NextRequest) {
     try {
@@ -21,33 +21,15 @@ export async function POST(req: NextRequest) {
             )
         }
         const supabaseAdmin = await supabaseAdminServerSide()
+
         const body = await req.json()
+
         const { success, data, error } = bodySchema.safeParse(body)
 
         if (!success) {
             return NextResponse.json({ error }, { status: 400 })
         }
-        const prompt = generatePrompt({
-            language: data.language,
-            files: data.files.map((f) => {
-                const numberOfPagesToGenerate = parseInt(
-                    (f.pages.length / 3).toFixed(0)
-                )
-                return {
-                    ...f,
-                    numberOfPagesToGenerate:
-                        numberOfPagesToGenerate > 9
-                            ? numberOfPagesToGenerate
-                            : numberOfPagesToGenerate - 2 || 1,
-                }
-            }),
-        })
-        const llmResponse = streamText({
-            model: cheapModel,
-            prompt,
-            temperature: 0.1,
-            system: systemPrompt,
-        })
+        const prompt = getUserPrompt(data)
 
         const userBalance = (
             await supabaseAdmin
@@ -58,13 +40,7 @@ export async function POST(req: NextRequest) {
                 .throwOnError()
         ).data.credit_balance
 
-        const totalCost =
-            PAGE_COST *
-            data.files
-                .flatMap((file) => file.pages)
-                .filter((page) => page.length > 50).length
-
-        if (userBalance < totalCost) {
+        if (userBalance < CHEAP_COST) {
             return NextResponse.json(
                 {
                     error: "Insufficient balance.",
@@ -72,7 +48,7 @@ export async function POST(req: NextRequest) {
                 { status: 400 }
             )
         }
-        const newBalance = userBalance - totalCost
+        const newBalance = userBalance - CHEAP_COST
 
         await supabaseAdmin
             .from("user_profiles")
@@ -81,29 +57,25 @@ export async function POST(req: NextRequest) {
             })
             .eq("user_id", userId)
             .throwOnError()
-
-        await supabaseAdmin.from("document_summarizations").insert({
-            pages_count: data.files.flatMap((item) => item.pages).length || 0,
-            user_id: userId,
+        const llmResponse = streamText({
+            system: getSystemPrompt(),
+            model: cheapModel,
+            prompt,
+            temperature: 0.1,
         })
-
         return llmResponse.toTextStreamResponse()
     } catch (error) {
         console.error(error)
+
         return NextResponse.json({ error }, { status: 500 })
     }
 }
+
 const bodySchema = z.object({
-    language: z.string().optional().nullable(),
-    files: z.array(
-        z.object({
-            name: z.string(),
-            pages: z.array(z.string()),
-            id: z.string(),
-        })
-    ),
+    topic: z.string().min(3).max(5000),
+    language: z.string().max(1000).optional().nullable(),
+    additionalInstructions: z.string().max(5000).optional().nullable(),
 })
 
-export type TSummarizeMultiplePages = z.infer<typeof bodySchema>
-
+export type TGenMindMapFromText = z.infer<typeof bodySchema>
 export const maxDuration = 60

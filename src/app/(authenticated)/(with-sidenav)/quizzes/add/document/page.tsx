@@ -1,8 +1,17 @@
 "use client"
 
+import { POSSIBLE_QUESTIONS } from "@/app/api/quiz/generate-quiz/constants"
 import CategorySelect from "@/components/shared/category-select"
+import { ErrorDisplay } from "@/components/shared/error-display"
+import GeneralLoadingScreen from "@/components/shared/general-loading-screen"
 import { Button } from "@/components/ui/button"
+import {
+    Collapsible,
+    CollapsibleContent,
+    CollapsibleTrigger,
+} from "@/components/ui/collapsible"
 import { Input } from "@/components/ui/input"
+import SearchSelectMultiple from "@/components/ui/search-select-multiple"
 import {
     Select,
     SelectContent,
@@ -10,40 +19,24 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select"
-import {
-    ChevronDown,
-    ChevronLeft,
-    Edit,
-    ImageIcon,
-    ZapIcon,
-} from "lucide-react"
-import { Controller } from "react-hook-form"
+import { Textarea } from "@/components/ui/textarea"
 import { createQuiz } from "@/data-access/quizzes/create"
 import { useCurrentUser } from "@/hooks/use-current-user"
 import { toastError, toastSuccess } from "@/lib/toasts"
+import { useSidenav } from "@/providers/sidenav-provider"
 import { zodResolver } from "@hookform/resolvers/zod"
+import { useQueryClient } from "@tanstack/react-query"
+import { ChevronDown, ChevronLeft, Edit, ZapIcon } from "lucide-react"
+import dynamic from "next/dynamic"
 import { useRouter } from "nextjs-toploader/app"
 import { useEffect, useMemo, useState } from "react"
-import { useForm } from "react-hook-form"
+import { Controller, useForm } from "react-hook-form"
 import { z } from "zod"
-import dynamic from "next/dynamic"
-import { PdfInputLoading } from "./_components/pdf-input-loading"
-import { useSidenav } from "@/providers/sidenav-provider"
-import {
-    Collapsible,
-    CollapsibleContent,
-    CollapsibleTrigger,
-} from "@/components/ui/collapsible"
-import { Textarea } from "@/components/ui/textarea"
-import SearchSelectMultiple from "@/components/ui/search-select-multiple"
-import { POSSIBLE_QUESTIONS } from "@/app/api/quiz/generate-quiz/constants"
-import { default as useEditableQuizStore } from "../[id]/store"
 import { useQuestionsStore as useViewOnlyQuizStore } from "../../../../quizzes/[id]/store"
-import GeneralLoadingScreen from "@/components/shared/general-loading-screen"
-import { ErrorDisplay } from "@/components/shared/error-display"
-import { useQueryClient } from "@tanstack/react-query"
+import { default as useEditableQuizStore } from "../[id]/store"
 import { DifficultySelect } from "../_components/difficulty-select"
 import ImageUpload from "../_components/image-upload"
+import { PdfInputLoading } from "./_components/pdf-input-loading"
 
 const POSSIBLE_QUESTIONS_TYPES = Object.keys(POSSIBLE_QUESTIONS)
 
