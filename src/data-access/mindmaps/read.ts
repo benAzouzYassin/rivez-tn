@@ -43,3 +43,13 @@ export async function readMindmaps(config: {
     const response = await query.throwOnError()
     return { data: response.data, count: response.count }
 }
+
+export async function readMindMapById(params: { id: number }) {
+    const response = await supabase
+        .from("mindmaps")
+        .select(`*`)
+        .eq("id", params.id)
+        .single()
+        .throwOnError()
+    return response.data
+}
