@@ -20,46 +20,159 @@ import {
 } from "@/components/ui/select"
 import { Textarea } from "@/components/ui/textarea"
 import { TGeneratedMindmap } from "@/data-access/mindmaps/constants"
-import { toastError, toastSuccess } from "@/lib/toasts"
-import { FormEvent, useState } from "react"
+import { generateEditedVersion } from "@/data-access/mindmaps/generate-edited-version"
+import {
+    dismissToasts,
+    toastError,
+    toastLoading,
+    toastSuccess,
+} from "@/lib/toasts"
+import { Edge, Node } from "@xyflow/react"
+import { useQueryState } from "nuqs"
+import { useRef, useState } from "react"
+import { convertItemsToNodes } from "../../_utils/convert-to-nodes"
 
 interface Props {
-    mindMap?: TGeneratedMindmap
-    onSubmit: (newMindMap: TGeneratedMindmap) => void
+    setNodes: (nodes: Node[]) => void
+    setEdges: (nodes: Edge[]) => void
     isOpen: boolean
+    mindMap: TGeneratedMindmap | undefined
     onOpenChange: (value: boolean) => void
+    setAiResult: (data: TGeneratedMindmap) => void
 }
 export default function EditMindmapDialog(props: Props) {
     const [editInstructions, setEditInstructions] = useState("")
-    const [language, setLanguage] = useState("")
-    const [isSubmitting, setIsSubmitting] = useState(false)
-
-    const handleSubmit = async (e: FormEvent) => {
-        e.preventDefault()
-
-        if (!editInstructions.trim()) {
-            toastError(
-                "Please specify what changes you want to make to the mindmap."
-            )
-
-            return
+    const [language, setLanguage] = useQueryState("language")
+    const newGeneratedResult = useRef<TGeneratedMindmap>(null)
+    const handleSubmit = () => {
+        let didGenerate = false
+        toastLoading("Modifying your mindmap")
+        props.onOpenChange(false)
+        const onChange = (data: TGeneratedMindmap) => {
+            didGenerate = true
+            newGeneratedResult.current = data
+            try {
+                const [nodes, edges] = convertItemsToNodes(
+                    data.items.map((item) => {
+                        const loadingSubitemsCount =
+                            item.subItemsCount - (item.subItems?.length || 0)
+                        const loadingSubItems =
+                            loadingSubitemsCount > 0
+                                ? Array.from({
+                                      length: loadingSubitemsCount,
+                                  }).map((_) => {
+                                      return {
+                                          language: language,
+                                          isLoading: true,
+                                          description: "",
+                                          id: crypto.randomUUID(),
+                                          title: "",
+                                          subItems: [],
+                                          markdownContent: "",
+                                          enableSheet: false,
+                                          enableDelete: false,
+                                      }
+                                  })
+                                : []
+                        return {
+                            language: language || undefined,
+                            isLoading: false,
+                            description: item.description,
+                            id: item.id,
+                            title: item.title,
+                            subItems: [
+                                ...(item.subItems?.map((subItem) => ({
+                                    ...subItem,
+                                })) || []),
+                                ...loadingSubItems,
+                            ],
+                            markdownContent: "",
+                            enableSheet: false,
+                            enableDelete: true,
+                        }
+                    }),
+                    null
+                )
+                if (nodes.length) {
+                    props.setNodes(nodes)
+                }
+                if (edges.length) props.setEdges(edges)
+            } catch {}
         }
 
-        setIsSubmitting(true)
+        const onStreamEnd = () => {
+            dismissToasts("loading")
 
-        try {
-            // TODO make the api call
-            toastSuccess("Your changes have been applied successfully.")
+            if (!didGenerate || !newGeneratedResult.current) {
+                toastError("Something went wrong")
+                handleFallBack()
+                // handleRefund().catch(console.error)
+            } else {
+                props.setAiResult(newGeneratedResult.current)
 
-            props.onOpenChange(false)
-        } catch (error) {
-            console.error("Error updating mindmap:", error)
-            toastError("Something went wrong.")
-        } finally {
-            setIsSubmitting(false)
+                toastSuccess("Modified successfully.")
+            }
         }
+        generateEditedVersion(
+            {
+                editInstructions,
+                language: language,
+                originalMindmap: JSON.stringify(props.mindMap || {}),
+            },
+            onChange,
+            onStreamEnd
+        ).catch((err) => {
+            dismissToasts("loading")
+            toastError("Something went wrong")
+            // handleRefund().catch(console.error)
+        })
     }
-
+    const handleFallBack = () => {
+        if (!props.mindMap) return
+        const [nodes, edges] = convertItemsToNodes(
+            props.mindMap.items.map((item) => {
+                const loadingSubitemsCount =
+                    item.subItemsCount - (item.subItems?.length || 0)
+                const loadingSubItems =
+                    loadingSubitemsCount > 0
+                        ? Array.from({
+                              length: loadingSubitemsCount,
+                          }).map((_) => {
+                              return {
+                                  language: language,
+                                  isLoading: true,
+                                  description: "",
+                                  id: crypto.randomUUID(),
+                                  title: "",
+                                  subItems: [],
+                                  markdownContent: "",
+                                  enableSheet: false,
+                                  enableDelete: false,
+                              }
+                          })
+                        : []
+                return {
+                    language: language || undefined,
+                    isLoading: false,
+                    description: item.description,
+                    id: item.id,
+                    title: item.title,
+                    subItems: [
+                        ...(item.subItems?.map((subItem) => ({
+                            ...subItem,
+                        })) || []),
+                        ...loadingSubItems,
+                    ],
+                    markdownContent: "",
+                    enableSheet: false,
+                    enableDelete: true,
+                }
+            }),
+            null
+        )
+        props.setNodes(nodes)
+        props.setEdges(edges)
+    }
     return (
         <Dialog open={props.isOpen} onOpenChange={props.onOpenChange}>
             <DialogContent className="sm:max-w-[600px]">
@@ -73,7 +186,13 @@ export default function EditMindmapDialog(props: Props) {
                     </DialogDescription>
                 </DialogHeader>
 
-                <form onSubmit={handleSubmit} className="mt-4 space-y-4">
+                <form
+                    onSubmit={(e) => {
+                        e.preventDefault()
+                        handleSubmit()
+                    }}
+                    className="mt-4 space-y-4"
+                >
                     <div>
                         <label
                             htmlFor="instructions"
@@ -90,7 +209,7 @@ export default function EditMindmapDialog(props: Props) {
                             onChange={(e) =>
                                 setEditInstructions(e.target.value)
                             }
-                            placeholder="Example: Make the max depth equal to 4"
+                            placeholder="Example: Change the language to ..."
                             className="h-32"
                             required
                         />
@@ -107,7 +226,10 @@ export default function EditMindmapDialog(props: Props) {
                         >
                             Language
                         </label>
-                        <Select onValueChange={setLanguage} value={language}>
+                        <Select
+                            onValueChange={setLanguage}
+                            value={language || undefined}
+                        >
                             <SelectTrigger id="language" className="w-full">
                                 <SelectValue placeholder="Same as original (recommended)" />
                             </SelectTrigger>
@@ -125,7 +247,7 @@ export default function EditMindmapDialog(props: Props) {
                     <div className="flex justify-end gap-3 pt-2">
                         <Button
                             type="button"
-                            variant="outline"
+                            variant="secondary"
                             onClick={() => props.onOpenChange(false)}
                         >
                             Cancel
@@ -133,8 +255,7 @@ export default function EditMindmapDialog(props: Props) {
                         <Button
                             type="submit"
                             className="gap-1"
-                            isLoading={isSubmitting}
-                            disabled={isSubmitting || !editInstructions.trim()}
+                            disabled={!editInstructions.trim()}
                         >
                             <Save size={16} />
                             Save Changes

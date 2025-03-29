@@ -39,6 +39,7 @@ import { convertItemsToNodes } from "../_utils/convert-to-nodes"
 import EditMindmapDialog from "./_components/edit-dialog"
 import { uploadFlowImage } from "../_utils/upload-flow-image"
 import { wait } from "@/utils/wait"
+import { ErrorDisplay } from "@/components/shared/error-display"
 
 export default function Page() {
     const queryClient = useQueryClient()
@@ -200,6 +201,9 @@ export default function Page() {
             })
             .finally(() => setIsSaving(false))
     }
+    if (isError) {
+        return <ErrorDisplay />
+    }
     return (
         <section>
             <div
@@ -213,12 +217,12 @@ export default function Page() {
             >
                 <div className="w-full h-20 p-3 gap-2 border-b absolute bg-white z-10 flex items-center justify-end top-0">
                     <EditMindmapDialog
+                        setAiResult={setAiResult}
                         isOpen={isEditing}
                         mindMap={aiResult}
+                        setEdges={setEdges}
+                        setNodes={setNodes}
                         onOpenChange={setIsEditing}
-                        onSubmit={() => {
-                            // TODO implement this
-                        }}
                     />
                     <WarningDialog
                         isOpen={isCanceling}
@@ -235,6 +239,7 @@ export default function Page() {
                     </WarningDialog>
 
                     <Button
+                        disabled={isLoading}
                         onClick={() => setIsEditing(true)}
                         className="font-bold"
                         variant={"blue"}
@@ -243,6 +248,7 @@ export default function Page() {
                         Modify
                     </Button>
                     <Button
+                        disabled={isLoading}
                         isLoading={isSaving}
                         onClick={handleSave}
                         className="font-bold"
