@@ -20,7 +20,7 @@ export default function FileItem(props: Props) {
         <div
             onClick={handleSelect}
             className={cn(
-                "w-full rounded-xl h-14 px-2  hover:bg-stone-100 active:scale-98 transition-all cursor-pointer border-neutral-200 border flex items-center  ",
+                "w-full  rounded-xl h-14 px-1  hover:bg-stone-100 active:scale-98 transition-all cursor-pointer border-neutral-200 border flex items-center  ",
                 {
                     "bg-sky-100/60 border-sky-300/80 hover:bg-sky-100 border-2":
                         props.isSelected,
