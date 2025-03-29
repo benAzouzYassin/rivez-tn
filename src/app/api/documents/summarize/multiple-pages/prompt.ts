@@ -149,7 +149,7 @@ export const systemPrompt = `
                     "number": 1,
                     "content": [
                         "# Marketing Strategy 2025",
-                        "<br>",
+                        "\n",
                         "This presentation outlines our comprehensive marketing approach for the upcoming fiscal year, focusing on digital channels, customer engagement, and measurable outcomes.",
                         "## Executive Summary\n\nOur 2025 marketing strategy aims to:",
                         "- Increase market share by 4% in core segments",

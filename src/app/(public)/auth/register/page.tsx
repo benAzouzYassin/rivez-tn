@@ -67,10 +67,7 @@ export default function Page() {
             queryClient.refetchQueries({
                 queryKey: ["current-user"],
             })
-            window.location.replace(
-                localStorage.getItem("afterAuthRedirect") ||
-                    process.env.NEXT_PUBLIC_SITE_URL!
-            )
+            router.replace(localStorage.getItem("afterAuthRedirect") || "/home")
         } else {
             toastError("Error while creating your account.")
         }
@@ -156,8 +153,9 @@ export default function Page() {
                         })
                         await registerUserWithGoogle({
                             redirectTo:
-                                localStorage.getItem("afterAuthRedirect") ||
-                                process.env.NEXT_PUBLIC_SITE_URL,
+                                window.location.origin +
+                                (localStorage.getItem("afterAuthRedirect") ||
+                                    "/home"),
                         })
                     }}
                     type="button"

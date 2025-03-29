@@ -37,17 +37,21 @@ import { wait } from "@/utils/wait"
 const PdfInput = dynamic(() => import("./pdf-input"), {
     loading: () => <PdfInputLoading />,
 })
-export default function AddDialog() {
+interface Props {
+    isOpen: boolean
+    setIsOpen: (value: boolean) => void
+}
+export default function AddDialog(props: Props) {
     const [currentTab, setCurrentTab] = useState<
         "subject" | "document" | "youtube" | "image" | null
     >(null)
+
     const [language, setLanguage] = useState("")
     const [topic, setTopic] = useState("")
     const [instructions, setInstructions] = useState("")
     const [pdfPages, setPdfPages] = useState<string[]>([])
     const [isSubmitting, setIsSubmitting] = useState(false)
     const router = useRouter()
-    const [isOpen, setIsOpen] = useState(false)
     const items = [
         {
             disabled: false,
@@ -97,7 +101,6 @@ export default function AddDialog() {
                 router.push(
                     `/mind-maps/generate?shouldGenerate=true&contentType=subject&topic=${topic}&language=${language}&additionalInstructions=${instructions}`
                 )
-                setIsOpen(false)
             } else if (currentTab === "document") {
                 // TODO implement this
                 console.log({
@@ -108,7 +111,6 @@ export default function AddDialog() {
             }
         } catch (error) {
             console.error("Error submitting form:", error)
-        } finally {
             setIsSubmitting(false)
         }
     }
@@ -120,13 +122,13 @@ export default function AddDialog() {
                         setCurrentTab(null)
                     })
                 }
-                setIsOpen(value)
+                props.setIsOpen(value)
             }}
-            open={isOpen}
+            open={props.isOpen}
         >
             <DialogTrigger asChild>
                 <Button className="text-base h-[3.2rem]">
-                    <Plus className="-mr-1 !w-5 stroke-2 !h-5" /> Add Mind Map
+                    <Plus className="-mr-1 !w-5 stroke-2 !h-5" /> Add Mindmap
                 </Button>
             </DialogTrigger>
             <DialogContent
