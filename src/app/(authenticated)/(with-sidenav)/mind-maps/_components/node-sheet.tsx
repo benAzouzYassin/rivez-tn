@@ -17,7 +17,6 @@ import { useQuery, useQueryClient } from "@tanstack/react-query"
 import { Download, Loader2 } from "lucide-react"
 import { useParams } from "next/navigation"
 import { useEffect, useRef, useState } from "react"
-import { useReactToPrint } from "react-to-print"
 interface Props {
     open: boolean
     setOpen: (value: boolean) => void

@@ -13,7 +13,6 @@ import { useRef, useState } from "react"
 import SideItem from "./side-item"
 import { useReactToPrint } from "react-to-print"
 import { wait } from "@/utils/wait"
-import { dismissToasts, toastLoading } from "@/lib/toasts"
 
 interface Props {
     files: {
@@ -101,6 +100,7 @@ export default function PagesViewer(props: Props) {
 
     const reactToPrintFn = useReactToPrint({
         contentRef: markdownRef,
+        documentTitle: "summary-of-" + props.files.map((f) => f.name).join("+"),
         onAfterPrint: () => {
             setIsPrinting(false)
         },
