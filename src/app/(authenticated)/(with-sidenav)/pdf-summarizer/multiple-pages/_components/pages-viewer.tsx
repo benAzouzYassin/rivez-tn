@@ -2,7 +2,13 @@ import Markdown from "@/components/shared/markdown"
 import { Button } from "@/components/ui/button"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { cn } from "@/lib/ui-utils"
-import { ChevronLeft, ChevronRight, Download, Loader2 } from "lucide-react"
+import {
+    ChevronLeft,
+    ChevronRight,
+    Download,
+    DownloadIcon,
+    Loader2,
+} from "lucide-react"
 import { useRef, useState } from "react"
 import SideItem from "./side-item"
 import { useReactToPrint } from "react-to-print"
@@ -93,6 +99,12 @@ export default function PagesViewer(props: Props) {
 
     const markdownRef = useRef<HTMLDivElement>(null)
 
+    const reactToPrintFn = useReactToPrint({
+        contentRef: markdownRef,
+        onAfterPrint: () => {
+            setIsPrinting(false)
+        },
+    })
     return (
         <div className="flex h-[89vh] overflow-hidden bg-gray-50">
             <div className="w-[360px] h-[95vh] overflow-y-hidden fixed pb-20 bg-white">
@@ -122,7 +134,7 @@ export default function PagesViewer(props: Props) {
                     ref={contentRef}
                     className="bg-white p-5 rounded-lg h-[90vh]  overflow-y-auto pb-20 -mt-1 pt-8 border mx-auto"
                 >
-                    <div ref={markdownRef} className="print:px-10  ">
+                    <div ref={markdownRef} className="print:px-10  relative ">
                         {isPrinting ? (
                             props.files.map((file) =>
                                 file.markdownPages.map((page, i) => (
@@ -160,6 +172,19 @@ export default function PagesViewer(props: Props) {
                             <ChevronRight className="min-w-5 min-h-5 -ml-2 stroke-3" />
                         </Button>
                     </div>
+                    <Button
+                        isLoading={isPrinting}
+                        onClick={() => {
+                            setIsPrinting(true)
+                            wait(100).then(() => {
+                                reactToPrintFn()
+                            })
+                        }}
+                        className=" "
+                        variant={"secondary"}
+                    >
+                        Save <DownloadIcon />
+                    </Button>
                 </div>
             </div>
         </div>

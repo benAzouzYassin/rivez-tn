@@ -78,13 +78,6 @@ export default function Page() {
 
     const markdownRef = useRef<HTMLDivElement>(null)
 
-    const reactToPrintFn = useReactToPrint({
-        contentRef: markdownRef,
-        onAfterPrint: () => {},
-        onBeforePrint: async () => {
-            return
-        },
-    })
     if (isError) {
         return <ErrorDisplay />
     }
