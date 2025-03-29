@@ -19,7 +19,10 @@ import { Sparkles } from "lucide-react"
 import { useRouter } from "nextjs-toploader/app"
 import { useState } from "react"
 
-export default function SummarizeSelectedBtn() {
+interface Props {
+    disabled: boolean
+}
+export default function SummarizeSelectedBtn(props: Props) {
     const router = useRouter()
     const [language, setLanguage] = useState("")
     const [customLanguage, setCustomLanguage] = useState("")
@@ -37,7 +40,11 @@ export default function SummarizeSelectedBtn() {
     return (
         <Dialog>
             <DialogTrigger asChild>
-                <Button variant={"blue"} className="text-lg font-bold">
+                <Button
+                    disabled={props.disabled}
+                    variant={"blue"}
+                    className="text-lg font-bold"
+                >
                     Summarize <Sparkles className="min-w-5 min-h-5" />
                 </Button>
             </DialogTrigger>

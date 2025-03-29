@@ -124,7 +124,9 @@ export default function PagesSelection() {
                                 >
                                     Cancel
                                 </Button>
-                                <SummarizeSelectedBtn />
+                                <SummarizeSelectedBtn
+                                    disabled={selectedPages.length < 1}
+                                />
                             </div>
                         </div>
                     </div>

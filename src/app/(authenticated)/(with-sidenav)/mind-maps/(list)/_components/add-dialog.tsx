@@ -182,7 +182,7 @@ export default function AddDialog(props: Props) {
                         Back
                     </Button>
                 )}
-                {currentTab === "document" && (
+                {/* {currentTab === "document" && (
                     <form onSubmit={handleSubmit} className="mt-6">
                         <PdfInput
                             onPDFPagesChanges={(value: string[]) =>
@@ -225,6 +225,11 @@ export default function AddDialog(props: Props) {
                             Generate Mind Map
                         </Button>
                     </form>
+                )} */}
+                {currentTab === "document" && (
+                    <div className="h-64 text-5xl font-semibold text-neutral-400 flex items-center justify-center">
+                        Coming Soon...
+                    </div>
                 )}
                 {currentTab === "subject" && (
                     <form onSubmit={handleSubmit} className="mt-5 pb-0">

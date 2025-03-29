@@ -19,7 +19,7 @@ export default function Page() {
     const [isLoading, setIsLoading] = useState(false)
     const searchParams = useSearchParams()
     const startedGenerating = useRef(false)
-
+    const [isPrinting, setIsPrinting] = useState(false)
     const openPageLocalId = usePdfSummarizerStore((s) => s.openPageLocalId)
     const getPage = usePdfSummarizerStore((s) => s.getPageContent)
     const pageContent = useMemo(() => {
@@ -69,6 +69,10 @@ export default function Page() {
     const markdownRef = useRef<HTMLDivElement>(null)
     const reactToPrintFn = useReactToPrint({
         contentRef: markdownRef,
+        documentTitle: generateShortTitle(result),
+        onAfterPrint: () => {
+            setIsPrinting(false)
+        },
     })
     if (isError || !pageContent) {
         return <ErrorDisplay />
@@ -94,8 +98,12 @@ export default function Page() {
             >
                 <Button
                     className="absolute text-lg !font-medium print:hidden top-4 right-4"
-                    onClick={() => reactToPrintFn()}
+                    onClick={() => {
+                        setIsPrinting(true)
+                        reactToPrintFn()
+                    }}
                     variant={"secondary"}
+                    isLoading={isPrinting}
                 >
                     <Download className="!w-5 !h-5" />
                     Save
@@ -104,4 +112,14 @@ export default function Page() {
             </div>
         </section>
     )
+}
+function generateShortTitle(page: string): string {
+    const title = page?.split("\n")?.[0]?.replace?.("# ", "")
+    if (title.includes(":")) {
+        return title.split(":")[1].trim()
+    } else if (title.length > 20) {
+        return title.substring(0, 20) + "..."
+    } else {
+        return title || "Overview"
+    }
 }
