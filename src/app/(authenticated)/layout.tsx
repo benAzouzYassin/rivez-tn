@@ -22,7 +22,7 @@ export default function PrivateLayout({
                 } else {
                     localStorage.setItem(
                         "afterAuthRedirect",
-                        window.location.href
+                        window.location.pathname
                     )
                     router.replace("/auth/register")
                 }
