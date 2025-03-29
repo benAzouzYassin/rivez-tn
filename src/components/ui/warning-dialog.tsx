@@ -78,6 +78,7 @@ const WarningDialog = ({
                         onClick={() => !isLoading && onOpenChange(false)}
                     >
                         <Button
+                            onClick={(e) => e.stopPropagation()}
                             className={cn(
                                 "font-extrabold px-8 text-neutral-700 !text-lg"
                             )}
@@ -89,7 +90,10 @@ const WarningDialog = ({
 
                     <Button
                         variant={"red"}
-                        onClick={handleConfirm}
+                        onClick={(e) => {
+                            e.stopPropagation()
+                            handleConfirm()
+                        }}
                         disabled={isLoading}
                         className={cn(
                             "font-extrabold bg-red-500 shadow-red-600/80 !text-lg px-8",

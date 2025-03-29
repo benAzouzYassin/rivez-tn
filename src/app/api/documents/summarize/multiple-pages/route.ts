@@ -42,7 +42,6 @@ export async function POST(req: NextRequest) {
                 }
             }),
         })
-        console.log(prompt)
         const llmResponse = streamText({
             model: cheapModel,
             prompt,

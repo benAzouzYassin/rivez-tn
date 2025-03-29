@@ -20,8 +20,10 @@ import Item from "./_components/item"
 import ItemSkeleton from "./_components/item-skeleton"
 import Search from "./_components/search"
 import { useCurrentUser } from "@/hooks/use-current-user"
+import { useSidenav } from "@/providers/sidenav-provider"
 
 export default function Page() {
+    const { isSidenavOpen } = useSidenav()
     const isAdmin = useIsAdmin()
     const { data: userData } = useCurrentUser()
     const router = useRouter()
@@ -92,7 +94,18 @@ export default function Page() {
     }
     return (
         <section className="flex flex-col min-h-[50vh] px-10 py-10">
-            <div className="flex justify-between items-center">
+            <div
+                className={cn(
+                    "flex fixed  z-50   bg-white border-t top-[10vh] pt-4  justify-between items-center",
+                    {
+                        "left-[300px] w-[calc(100vw-306px)] px-8  ":
+                            isSidenavOpen,
+                        "left-[100px] w-[calc(100vw-106px)] px-8  ":
+                            !isSidenavOpen,
+                    }
+                )}
+            >
+                {" "}
                 <h1 className="text-4xl text-neutral-600  font-extrabold">
                     Quizzes
                 </h1>
@@ -124,7 +137,7 @@ export default function Page() {
                 </div>
             </div>
 
-            <div className="w-full border-2 min-h-screen rounded-2xl p-5">
+            <div className="w-full border-2 min-h-screen mt-18 rounded-2xl p-5">
                 <AnimatedTabs
                     className="ml-auto mb-4"
                     tabs={tabs}

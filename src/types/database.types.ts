@@ -66,6 +66,92 @@ export type Database = {
           },
         ]
       }
+      mindmap_node_explanation: {
+        Row: {
+          author_id: string | null
+          content: string
+          created_at: string
+          id: number
+          mindmap_id: number | null
+          node_id: string
+        }
+        Insert: {
+          author_id?: string | null
+          content?: string
+          created_at?: string
+          id?: number
+          mindmap_id?: number | null
+          node_id?: string
+        }
+        Update: {
+          author_id?: string | null
+          content?: string
+          created_at?: string
+          id?: number
+          mindmap_id?: number | null
+          node_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "minmap_node_explanation_author_id_fkey"
+            columns: ["author_id"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["user_id"]
+          },
+          {
+            foreignKeyName: "minmap_node_explanation_mindmap_id_fkey"
+            columns: ["mindmap_id"]
+            isOneToOne: false
+            referencedRelation: "mindmaps"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      mindmaps: {
+        Row: {
+          author_id: string | null
+          created_at: string
+          edges: Json | null
+          id: number
+          image: string | null
+          language: string | null
+          name: string | null
+          nodes: Json | null
+          publishing_status: Database["public"]["Enums"]["publishing_status"]
+        }
+        Insert: {
+          author_id?: string | null
+          created_at?: string
+          edges?: Json | null
+          id?: number
+          image?: string | null
+          language?: string | null
+          name?: string | null
+          nodes?: Json | null
+          publishing_status?: Database["public"]["Enums"]["publishing_status"]
+        }
+        Update: {
+          author_id?: string | null
+          created_at?: string
+          edges?: Json | null
+          id?: number
+          image?: string | null
+          language?: string | null
+          name?: string | null
+          nodes?: Json | null
+          publishing_status?: Database["public"]["Enums"]["publishing_status"]
+        }
+        Relationships: [
+          {
+            foreignKeyName: "mindamps_author_id_fkey"
+            columns: ["author_id"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["user_id"]
+          },
+        ]
+      }
       questions_hints: {
         Row: {
           author_id: string | null

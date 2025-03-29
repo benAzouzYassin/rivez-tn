@@ -99,7 +99,7 @@ export default function DashboardPagination({
                             <SelectValue placeholder="Items per page" />
                         </SelectTrigger>
                         <SelectContent>
-                            {[5, 10, 20, 50, 100].map((option) => (
+                            {[5, 9, 10, 12, 20, 50, 100].map((option) => (
                                 <SelectItem
                                     key={option}
                                     value={option.toString()}

@@ -3,13 +3,14 @@ import { ErrorDisplay } from "@/components/shared/error-display"
 import GeneralLoadingScreen from "@/components/shared/general-loading-screen"
 import { summarizeMultiplePage } from "@/data-access/documents/summarize"
 import { useEffect, useRef, useState } from "react"
-import { useReactToPrint } from "react-to-print"
 import { usePdfSummarizerStore } from "../store"
 import PagesViewer from "./_components/pages-viewer"
 import { handleRefund } from "@/data-access/documents/handle-refund"
 import { useSearchParams } from "next/navigation"
+import { useRefetchUser } from "@/hooks/use-refetch-user"
 
 export default function Page() {
+    const refetchUser = useRefetchUser()
     const searchParams = useSearchParams()
     const startedGenerating = useRef(false)
     const [isStreaming, setIsStreaming] = useState(false)
@@ -57,6 +58,8 @@ export default function Page() {
             if (!didGenerate) {
                 setIsError(true)
                 handleRefund().catch(console.error)
+            } else {
+                refetchUser()
             }
         }
         const lang = searchParams.get("lang") || null
@@ -70,17 +73,10 @@ export default function Page() {
             handleRefund().catch(console.error)
             console.error(err)
         })
-    }, [getSelectedPages, searchParams])
+    }, [getSelectedPages, refetchUser, searchParams])
 
     const markdownRef = useRef<HTMLDivElement>(null)
 
-    const reactToPrintFn = useReactToPrint({
-        contentRef: markdownRef,
-        onAfterPrint: () => {},
-        onBeforePrint: async () => {
-            return
-        },
-    })
     if (isError) {
         return <ErrorDisplay />
     }

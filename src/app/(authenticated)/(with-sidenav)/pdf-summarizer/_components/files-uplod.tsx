@@ -14,7 +14,10 @@ pdfjsLib.GlobalWorkerOptions.workerSrc =
 export default function FilesUpload() {
     const [isDragging, setIsDragging] = useState(false)
     const addFileToState = usePdfSummarizerStore((s) => s.addFile)
+    const reset = usePdfSummarizerStore((s) => s.reset)
+    const selectPages = usePdfSummarizerStore((s) => s.selectPages)
     const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
+        reset()
         const selectedFiles = Array.from(e?.target?.files || []).filter(
             (file) => file.type === "application/pdf"
         )
@@ -48,10 +51,11 @@ export default function FilesUpload() {
                 Promise.all([getFileData(file), getFilePages(file)])
             )
             if (error) {
+                dismissToasts("loading")
                 return toastError(`Something went wrong with ${file.name}`)
             }
             const [fileData, pages] = result
-            addFileToState({
+            const fileToAdd = {
                 localId: crypto.randomUUID(),
                 file: fileData,
                 name: file.name,
@@ -60,7 +64,9 @@ export default function FilesUpload() {
                     localId: crypto.randomUUID(),
                     index: i,
                 })),
-            })
+            }
+            addFileToState(fileToAdd)
+            selectPages(fileToAdd.pages.map((item) => item.localId))
         }
 
         dismissToasts("loading")

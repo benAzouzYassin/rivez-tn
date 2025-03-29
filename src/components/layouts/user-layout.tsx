@@ -5,6 +5,7 @@ import { cn } from "@/lib/ui-utils"
 import { useSidenav } from "@/providers/sidenav-provider"
 import {
     BookOpen,
+    Brain,
     CopyIcon,
     FileText,
     Gamepad2Icon,
@@ -75,24 +76,15 @@ export default function UserLayout({ children }: Props) {
                     //     route: "/leaderboard",
                     // },
 
+                    // {
+                    //     name: "Flashcards",
+                    //     icon: <CopyIcon className="!w-6 !h-6" />,
+                    //     route: "/flash-cards",
+                    // },
                     {
-                        name: "Flashcards",
-                        icon: <CopyIcon className="!w-6 !h-6" />,
-                        route: "/flash-cards",
-                        subItems: [
-                            {
-                                icon: <LayoutListIcon className="!w-6 !h-6" />,
-                                name: "Flashcard List",
-                                route: "/flash-cards/list",
-                            },
-                            {
-                                icon: (
-                                    <WandSparklesIcon className="!w-6 !h-6" />
-                                ),
-                                name: "Generate",
-                                route: "/flash-cards/add",
-                            },
-                        ],
+                        name: "Mind maps",
+                        icon: <Brain className="!w-6 !h-6" />,
+                        route: "/mind-maps",
                     },
                     {
                         name: "Explain",

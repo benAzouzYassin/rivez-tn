@@ -8,6 +8,7 @@ import {
     loginUserWithPassword,
 } from "@/data-access/users/login"
 import { dismissToasts, toastError } from "@/lib/toasts"
+import { wait } from "@/utils/wait"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useQueryClient } from "@tanstack/react-query"
 import Link from "next/link"
@@ -59,10 +60,7 @@ export default function Page() {
             queryClient.invalidateQueries({
                 queryKey: ["current-user"],
             })
-            window.location.replace(
-                localStorage.getItem("afterAuthRedirect") ||
-                    process.env.NEXT_PUBLIC_SITE_URL!
-            )
+            router.replace(localStorage.getItem("afterAuthRedirect") || "/home")
         } else {
             toastError("Wrong email or password.")
         }
@@ -132,13 +130,14 @@ export default function Page() {
                     isLoading={isGoogleAuth}
                     onClick={async () => {
                         setIsGoogleAuth(true)
-                        queryClient.refetchQueries({
+                        queryClient.invalidateQueries({
                             queryKey: ["current-user"],
                         })
                         await loginUserWithGoogle({
                             redirectTo:
-                                localStorage.getItem("afterAuthRedirect") ||
-                                process.env.NEXT_PUBLIC_SITE_URL,
+                                window.location.origin +
+                                (localStorage.getItem("afterAuthRedirect") ||
+                                    "/home"),
                         })
                     }}
                     type="button"

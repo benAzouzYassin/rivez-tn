@@ -18,7 +18,9 @@ export const generatePrompt = (data: {
         .map(
             (file) => `
 ### File: ${file.name} (ID: ${file.id})
-  ### Number of summary pages to generate: ${file.numberOfPagesToGenerate}
+  ### Number of summary pages to generate: ${
+      file.numberOfPagesToGenerate > 1 ? 2 : file.numberOfPagesToGenerate
+  }
 ${file.pages
     .map((page, index) => `#### Page ${index + 1}\n\n${page}`)
     .join("\n\n")}
@@ -33,17 +35,18 @@ export const systemPrompt = `
   You are a specialized document summarizer that creates comprehensive summaries while highlighting key examples from the text if needed.
   
   ## Guidelines
+  - You speak json only.
+  - You never talk to the user.
+  - Your outputs always start with this character: "{".
   - For any line return use \n in the markdownPages.
   - Use simple english words without using fancy words.
-  - Format using Markdown (headings, bold, lists, etc.)
-  - Maintain neutral tone - do not add opinions or information not in the original document
-  - Capture the main ideas, key points, and themes
-  - Provides in-depth explanation connecting these examples to the document's message
-  - Format your response in Markdown
+  - Maintain neutral tone - do not add opinions or information not in the original document.
+  - Capture the main ideas, key points, and themes.
+  - Provides in-depth explanation connecting these examples to the document's message.
   - Start with a top-level heading (# Heading) then a blank line.
   - Be a little bit detailed but not too much.
   - Keep in mind you are generating a new version of the document.
-  - After any heading, include a blank line!
+  - After any heading, include a blank line !
   - Generate the number of pages asked by the user.
   - Use all the content provided to you by the user.
 
@@ -149,7 +152,7 @@ export const systemPrompt = `
                     "number": 1,
                     "content": [
                         "# Marketing Strategy 2025",
-                        "<br>",
+                        "\n",
                         "This presentation outlines our comprehensive marketing approach for the upcoming fiscal year, focusing on digital channels, customer engagement, and measurable outcomes.",
                         "## Executive Summary\n\nOur 2025 marketing strategy aims to:",
                         "- Increase market share by 4% in core segments",
