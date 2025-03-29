@@ -48,6 +48,7 @@ export default function Page() {
     const queryClient = useQueryClient()
     const refetchUser = useRefetchUser()
     const router = useRouter()
+    const [isStreaming, setIsStreaming] = useState(false)
     const [imageUrl, setImageUrl] = useState("")
     const [shouldUploadImage, setShouldUploadImage] = useState(false)
     const [isEditing, setIsEditing] = useState(false)
@@ -78,6 +79,7 @@ export default function Page() {
             let didGenerate = false
             setShouldGenerate(false)
             setIsLoading(true)
+            setIsStreaming(true)
             toastLoading("Generating your mindmap")
             const onChange = (data: TGeneratedMindmap) => {
                 didGenerate = true
@@ -102,7 +104,7 @@ export default function Page() {
                                               subItems: [],
                                               markdownContent: "",
                                               enableSheet: false,
-                                              enableDelete: false,
+                                              enableDelete: true,
                                           }
                                       })
                                     : []
@@ -115,6 +117,8 @@ export default function Page() {
                                 subItems: [
                                     ...(item.subItems?.map((subItem) => ({
                                         ...subItem,
+                                        enableSheet: false,
+                                        enableDelete: true,
                                     })) || []),
                                     ...loadingSubItems,
                                 ],
@@ -136,6 +140,7 @@ export default function Page() {
             const onStreamEnd = () => {
                 dismissToasts("loading")
                 setIsLoading(false)
+                setIsStreaming(false)
                 if (!didGenerate) {
                     setIsError(true)
                     toastError("Something went wrong")
@@ -255,7 +260,7 @@ export default function Page() {
                     </WarningDialog>
 
                     <Button
-                        disabled={isLoading}
+                        disabled={isLoading || isStreaming}
                         onClick={() => setIsEditing(true)}
                         className="font-bold"
                         variant={"blue"}
@@ -264,7 +269,7 @@ export default function Page() {
                         Modify
                     </Button>
                     <Button
-                        disabled={isLoading}
+                        disabled={isLoading || isStreaming}
                         isLoading={isSaving}
                         onClick={handleSave}
                         className="font-bold"
@@ -357,8 +362,10 @@ const ImageUploader = ({
     const { getNodes } = useReactFlow()
     useEffect(() => {
         if (shouldUpload && didUpload.current === false) {
-            uploadFlowImage(getNodes()).then(onUpload)
-            didUpload.current = true
+            wait(200).then(() => {
+                uploadFlowImage(getNodes()).then(onUpload)
+                didUpload.current = true
+            })
         }
     }, [getNodes, onUpload, shouldUpload])
     return null

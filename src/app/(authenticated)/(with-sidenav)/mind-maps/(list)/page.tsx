@@ -1,5 +1,6 @@
 "use client"
 import { ErrorDisplay } from "@/components/shared/error-display"
+import { Button } from "@/components/ui/button"
 import DashboardPagination from "@/components/ui/dashboard-pagination"
 import { readMindmaps } from "@/data-access/mindmaps/read"
 import { useCurrentUser } from "@/hooks/use-current-user"
@@ -7,18 +8,19 @@ import { useIsAdmin } from "@/hooks/use-is-admin"
 import { cn } from "@/lib/ui-utils"
 import { useSidenav } from "@/providers/sidenav-provider"
 import { useQuery } from "@tanstack/react-query"
-import { useRouter } from "nextjs-toploader/app"
+import { Plus } from "lucide-react"
 import { parseAsInteger, parseAsString, useQueryState } from "nuqs"
+import { useState } from "react"
 import AddDialog from "./_components/add-dialog"
 import Item from "./_components/item"
 import ItemSkeleton from "./_components/item-skeleton"
 import Search from "./_components/search"
 
 export default function Page() {
+    const [isAdding, setIsAdding] = useState(false)
     const { isSidenavOpen } = useSidenav()
     const isAdmin = useIsAdmin()
     const { data: userData } = useCurrentUser()
-    const router = useRouter()
     const [searchValue, setSearchValue] = useQueryState(
         "search-value",
         parseAsString.withDefault("")
@@ -89,7 +91,7 @@ export default function Page() {
                         />
                     </div>
 
-                    <AddDialog />
+                    <AddDialog isOpen={isAdding} setIsOpen={setIsAdding} />
                 </div>
             </div>
 
@@ -111,6 +113,16 @@ export default function Page() {
                             "grid grid-cols-3 rounded-2xl ml-auto px-2 py-2   gap-8 mb-2"
                         )}
                     >
+                        {!data?.length && !isFetching && (
+                            <div className="flex w-full items-center justify-center gap-4 h-80 col-span-3 flex-col">
+                                <p className="text-5xl font-bold text-neutral-400">
+                                    no items...
+                                </p>
+                                <Button onClick={() => setIsAdding(true)}>
+                                    <Plus /> Add mindmap
+                                </Button>
+                            </div>
+                        )}
                         {data?.map((item) => {
                             return <Item item={item} key={item.id} />
                         })}
