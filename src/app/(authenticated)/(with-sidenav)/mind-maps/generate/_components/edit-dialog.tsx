@@ -31,6 +31,9 @@ import { Edge, Node } from "@xyflow/react"
 import { useQueryState } from "nuqs"
 import { useRef, useState } from "react"
 import { convertItemsToNodes } from "../../_utils/convert-to-nodes"
+import { CHEAP_TYPES } from "../constants"
+import { handleMindMapRefund } from "@/data-access/mindmaps/handle-refund"
+import { useRefetchUser } from "@/hooks/use-refetch-user"
 
 interface Props {
     setNodes: (nodes: Node[]) => void
@@ -39,8 +42,10 @@ interface Props {
     mindMap: TGeneratedMindmap | undefined
     onOpenChange: (value: boolean) => void
     setAiResult: (data: TGeneratedMindmap) => void
+    contentType: string | null
 }
 export default function EditMindmapDialog(props: Props) {
+    const refetchUser = useRefetchUser()
     const [editInstructions, setEditInstructions] = useState("")
     const [language, setLanguage] = useQueryState("language")
     const newGeneratedResult = useRef<TGeneratedMindmap>(null)
@@ -106,11 +111,18 @@ export default function EditMindmapDialog(props: Props) {
             if (!didGenerate || !newGeneratedResult.current) {
                 toastError("Something went wrong")
                 handleFallBack()
-                // handleRefund().catch(console.error)
+                handleMindMapRefund({
+                    generationType: CHEAP_TYPES.includes(
+                        props.contentType as any
+                    )
+                        ? "CHEAP"
+                        : "NORMAL",
+                }).catch(console.error)
             } else {
                 props.setAiResult(newGeneratedResult.current)
 
                 toastSuccess("Modified successfully.")
+                refetchUser()
             }
         }
         generateEditedVersion(
@@ -124,7 +136,11 @@ export default function EditMindmapDialog(props: Props) {
         ).catch((err) => {
             dismissToasts("loading")
             toastError("Something went wrong")
-            // handleRefund().catch(console.error)
+            handleMindMapRefund({
+                generationType: CHEAP_TYPES.includes(props.contentType as any)
+                    ? "CHEAP"
+                    : "NORMAL",
+            }).catch(console.error)
         })
     }
     const handleFallBack = () => {

@@ -9,8 +9,10 @@ import {
 } from "@/components/ui/sheet"
 import { createNodeExplanation } from "@/data-access/mindmaps/create"
 import { explainNode } from "@/data-access/mindmaps/explain"
+import { handleMindMapRefund } from "@/data-access/mindmaps/handle-refund"
 import { readNodeExplanation } from "@/data-access/mindmaps/read"
 import { useCurrentUser } from "@/hooks/use-current-user"
+import { useRefetchUser } from "@/hooks/use-refetch-user"
 import { useQuery, useQueryClient } from "@tanstack/react-query"
 import { Download, Loader2 } from "lucide-react"
 import { useParams } from "next/navigation"
@@ -25,6 +27,7 @@ interface Props {
 }
 
 export default function NodeSheet(props: Props) {
+    const refetchUser = useRefetchUser()
     const params = useParams()
     const mindMapId = params.id as string
     const queryClient = useQueryClient()
@@ -64,8 +67,11 @@ export default function NodeSheet(props: Props) {
                     isFinishedStreaming.current = true
                     if (!didGenerate) {
                         setIsError(true)
-                        // handleRefund().catch(console.error)
+                        handleMindMapRefund({
+                            generationType: "CHEAP",
+                        }).catch(console.error)
                     } else {
+                        refetchUser()
                         createNodeExplanation({
                             author_id: userData?.id as string,
                             content: contentToInsert,
@@ -89,7 +95,12 @@ export default function NodeSheet(props: Props) {
                     },
                     onContentChange,
                     onStreamEnd
-                )
+                ).catch((err) => {
+                    console.error(err)
+                    handleMindMapRefund({
+                        generationType: "CHEAP",
+                    }).catch(console.error)
+                })
             } else {
                 setGeneratedContent(explanationData.content)
                 setIsLoading(false)
@@ -103,6 +114,7 @@ export default function NodeSheet(props: Props) {
         userData?.id,
         mindMapId,
         queryClient,
+        refetchUser,
     ])
 
     return (

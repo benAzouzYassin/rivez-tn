@@ -33,6 +33,7 @@ import {
 import dynamic from "next/dynamic"
 import { PdfInputLoading } from "./pdf-input-loading"
 import { useRouter } from "nextjs-toploader/app"
+import { wait } from "@/utils/wait"
 const PdfInput = dynamic(() => import("./pdf-input"), {
     loading: () => <PdfInputLoading />,
 })
@@ -46,6 +47,7 @@ export default function AddDialog() {
     const [pdfPages, setPdfPages] = useState<string[]>([])
     const [isSubmitting, setIsSubmitting] = useState(false)
     const router = useRouter()
+    const [isOpen, setIsOpen] = useState(false)
     const items = [
         {
             disabled: false,
@@ -95,6 +97,7 @@ export default function AddDialog() {
                 router.push(
                     `/mind-maps/generate?shouldGenerate=true&contentType=subject&topic=${topic}&language=${language}&additionalInstructions=${instructions}`
                 )
+                setIsOpen(false)
             } else if (currentTab === "document") {
                 // TODO implement this
                 console.log({
@@ -109,9 +112,18 @@ export default function AddDialog() {
             setIsSubmitting(false)
         }
     }
-
     return (
-        <Dialog>
+        <Dialog
+            onOpenChange={(value) => {
+                if (value === false) {
+                    wait(300).then(() => {
+                        setCurrentTab(null)
+                    })
+                }
+                setIsOpen(value)
+            }}
+            open={isOpen}
+        >
             <DialogTrigger asChild>
                 <Button className="text-base h-[3.2rem]">
                     <Plus className="-mr-1 !w-5 stroke-2 !h-5" /> Add Mind Map
