@@ -1,7 +1,9 @@
 import { supabase } from "@/lib/supabase-client-side"
 import { Database } from "@/types/database.types"
 
-export async function createMindMap(paramas: InsetQuizType) {
+export async function createMindMap(
+    paramas: Database["public"]["Tables"]["mindmaps"]["Insert"]
+) {
     const { data } = await supabase
         .from("mindmaps")
         .insert(paramas)
@@ -10,4 +12,13 @@ export async function createMindMap(paramas: InsetQuizType) {
     return data
 }
 
-type InsetQuizType = Database["public"]["Tables"]["mindmaps"]["Insert"]
+export async function createNodeExplanation(
+    paramas: Database["public"]["Tables"]["mindmap_node_explanation"]["Insert"]
+) {
+    const { data } = await supabase
+        .from("mindmap_node_explanation")
+        .insert(paramas)
+        .throwOnError()
+
+    return data
+}

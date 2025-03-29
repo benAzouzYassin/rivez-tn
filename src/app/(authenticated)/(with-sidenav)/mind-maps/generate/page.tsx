@@ -39,9 +39,14 @@ import { convertItemsToNodes } from "../_utils/convert-to-nodes"
 import EditMindmapDialog from "./_components/edit-dialog"
 import { uploadFlowImage } from "../_utils/upload-flow-image"
 import { wait } from "@/utils/wait"
+import { ErrorDisplay } from "@/components/shared/error-display"
+import { handleMindMapRefund } from "@/data-access/mindmaps/handle-refund"
+import { CHEAP_TYPES } from "./constants"
+import { useRefetchUser } from "@/hooks/use-refetch-user"
 
 export default function Page() {
     const queryClient = useQueryClient()
+    const refetchUser = useRefetchUser()
     const router = useRouter()
     const [imageUrl, setImageUrl] = useState("")
     const [shouldUploadImage, setShouldUploadImage] = useState(false)
@@ -65,7 +70,6 @@ export default function Page() {
         parseAsBoolean.withDefault(false)
     )
     const [contentType] = useQueryState("contentType")
-
     useEffect(() => {
         if (!shouldGenerate) return
         if (!contentType) return setIsError(true)
@@ -90,16 +94,20 @@ export default function Page() {
                                           length: loadingSubitemsCount,
                                       }).map((_) => {
                                           return {
+                                              language: language,
                                               isLoading: true,
                                               description: "",
                                               id: crypto.randomUUID(),
                                               title: "",
                                               subItems: [],
                                               markdownContent: "",
+                                              enableSheet: false,
+                                              enableDelete: false,
                                           }
                                       })
                                     : []
                             return {
+                                language: language || undefined,
                                 isLoading: false,
                                 description: item.description,
                                 id: item.id,
@@ -111,6 +119,8 @@ export default function Page() {
                                     ...loadingSubItems,
                                 ],
                                 markdownContent: "",
+                                enableSheet: false,
+                                enableDelete: true,
                             }
                         }),
                         null
@@ -129,10 +139,15 @@ export default function Page() {
                 if (!didGenerate) {
                     setIsError(true)
                     toastError("Something went wrong")
-                    // handleRefund().catch(console.error)
+                    handleMindMapRefund({
+                        generationType: CHEAP_TYPES.includes(contentType)
+                            ? "CHEAP"
+                            : "NORMAL",
+                    }).catch(console.error)
                 } else {
                     toastSuccess("Generated successfully.")
-                    wait(100).then(() => {
+                    refetchUser()
+                    wait(10).then(() => {
                         setShouldUploadImage(true)
                     })
                 }
@@ -148,7 +163,13 @@ export default function Page() {
             ).catch((err) => {
                 dismissToasts("loading")
                 toastError("Something went wrong")
-                // handleRefund().catch(console.error)
+                setIsLoading(false)
+                setIsError(true)
+                handleMindMapRefund({
+                    generationType: CHEAP_TYPES.includes(contentType)
+                        ? "CHEAP"
+                        : "NORMAL",
+                }).catch(() => console.error)
             })
         }
     }, [
@@ -161,6 +182,7 @@ export default function Page() {
         setNodes,
         setEdges,
         nodes,
+        refetchUser,
     ])
     const { data: userData } = useCurrentUser()
     const handleSave = () => {
@@ -169,9 +191,18 @@ export default function Page() {
         createMindMap({
             author_id: userData?.id,
             edges: edges as any,
-            nodes: nodes as any,
+            nodes: nodes.map((item) => ({
+                ...item,
+                data: {
+                    ...item.data,
+                    enableSheet: true,
+                    enableDelete: false,
+                    language: item.data.language,
+                },
+            })) as any,
             name: aiResult?.items?.[0].title,
             image: imageUrl,
+            language: language,
         })
             .then(() => {
                 toastSuccess("Added successfully.")
@@ -184,6 +215,9 @@ export default function Page() {
                 toastError("Something went wrong.")
             })
             .finally(() => setIsSaving(false))
+    }
+    if (isError) {
+        return <ErrorDisplay />
     }
     return (
         <section>
@@ -198,12 +232,13 @@ export default function Page() {
             >
                 <div className="w-full h-20 p-3 gap-2 border-b absolute bg-white z-10 flex items-center justify-end top-0">
                     <EditMindmapDialog
+                        setAiResult={setAiResult}
                         isOpen={isEditing}
                         mindMap={aiResult}
+                        setEdges={setEdges}
+                        setNodes={setNodes}
                         onOpenChange={setIsEditing}
-                        onSubmit={() => {
-                            // TODO implement this
-                        }}
+                        contentType={contentType}
                     />
                     <WarningDialog
                         isOpen={isCanceling}
@@ -220,6 +255,7 @@ export default function Page() {
                     </WarningDialog>
 
                     <Button
+                        disabled={isLoading}
                         onClick={() => setIsEditing(true)}
                         className="font-bold"
                         variant={"blue"}
@@ -228,6 +264,7 @@ export default function Page() {
                         Modify
                     </Button>
                     <Button
+                        disabled={isLoading}
                         isLoading={isSaving}
                         onClick={handleSave}
                         className="font-bold"

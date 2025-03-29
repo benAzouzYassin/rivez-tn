@@ -1,11 +1,11 @@
-import { TGenMindMapFromText } from "@/app/api/mindmap/generate/from-text/route"
+import { TEditMindMap } from "@/app/api/mindmap/generate/edit/route"
 import { partialParseJson } from "@/utils/json"
 import { readStream } from "@/utils/stream"
 import { readCurrentSession } from "../users/read"
 import { GeneratedMindmapSchema, TGeneratedMindmap } from "./constants"
 
-export const generateMindMapFromText = async (
-    data: TGenMindMapFromText,
+export const generateEditedVersion = async (
+    data: TEditMindMap,
     onChange: (newValue: TGeneratedMindmap) => void,
     onFinish?: () => void
 ) => {
@@ -16,7 +16,7 @@ export const generateMindMapFromText = async (
         throw new Error("Session error")
     }
 
-    const response = await fetch("/api/mindmap/generate/from-text", {
+    const response = await fetch("/api/mindmap/generate/edit", {
         method: "POST",
         headers: {
             "Content-Type": "application/json",

@@ -11,7 +11,9 @@ import { useEffect, useMemo, useRef, useState } from "react"
 import { usePdfSummarizerStore } from "../store"
 import { handleRefund } from "@/data-access/documents/handle-refund"
 import { useSearchParams } from "next/navigation"
+import { useRefetchUser } from "@/hooks/use-refetch-user"
 export default function Page() {
+    const refetchUser = useRefetchUser()
     const [isError, setIsError] = useState(false)
     const [result, setResult] = useState("")
     const [isLoading, setIsLoading] = useState(false)
@@ -47,6 +49,8 @@ export default function Page() {
             if (!didGenerate) {
                 setIsError(true)
                 handleRefund().catch(console.error)
+            } else {
+                refetchUser()
             }
         }
         const lang = searchParams.get("lang") || null
@@ -60,7 +64,7 @@ export default function Page() {
             console.error(err)
             handleRefund().catch(console.error)
         })
-    }, [pageContent, searchParams])
+    }, [pageContent, refetchUser, searchParams])
 
     const markdownRef = useRef<HTMLDivElement>(null)
     const reactToPrintFn = useReactToPrint({

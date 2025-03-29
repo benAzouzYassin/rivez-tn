@@ -46,6 +46,9 @@ export function convertItemsToNodes(
                 description: item.description,
                 details: item.markdownContent,
                 isLoading: item.isLoading,
+                enableSheet: item.enableSheet,
+                enableDelete: item.enableDelete,
+                parentId,
             },
         }
         nodes.push(node)
@@ -74,7 +77,6 @@ export function convertItemsToNodes(
 
         currentIndex += Math.max(1, subtreeWidth)
     }
-
     return [nodes, edges, currentIndex]
 }
 
@@ -115,4 +117,7 @@ export type Item = {
     markdownContent: string
     subItems: Item[]
     isLoading?: boolean
+    enableDelete: boolean
+    enableSheet: boolean
+    language?: string
 }

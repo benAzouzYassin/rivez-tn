@@ -4,34 +4,64 @@ import {
     Background,
     BackgroundVariant,
     Controls,
+    Edge,
     MiniMap,
+    Node,
     Panel,
     ReactFlow,
     useEdgesState,
     useNodesState,
 } from "@xyflow/react"
-import { useCallback } from "react"
+import { useCallback, useEffect } from "react"
 
+import { ErrorDisplay } from "@/components/shared/error-display"
+import { readMindMapById } from "@/data-access/mindmaps/read"
 import { cn } from "@/lib/ui-utils"
 import { useSidenav } from "@/providers/sidenav-provider"
+import { useQuery } from "@tanstack/react-query"
 import "@xyflow/react/dist/style.css"
+import { Loader2 } from "lucide-react"
+import { useParams } from "next/navigation"
 import CustomNode from "../_components/custom-node"
-import { convertItemsToNodes } from "../_utils/convert-to-nodes"
 
 const nodeTypes = {
     customNode: CustomNode,
 }
 
 export default function Page() {
-    const { isSidenavOpen } = useSidenav()
-    const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes)
-    const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges)
+    const params = useParams()
+    const id = Number((params.id as string) || "0")
 
+    const { data, isFetching } = useQuery({
+        queryKey: ["mindmpas", id],
+        queryFn: () => readMindMapById({ id }),
+    })
+    const { isSidenavOpen } = useSidenav()
+    const [nodes, setNodes, onNodesChange] = useNodesState([] as Node[])
+    const [edges, setEdges, onEdgesChange] = useEdgesState([] as Edge[])
+    useEffect(() => {
+        if (data && Array.isArray(data.nodes) && Array.isArray(data.edges)) {
+            setNodes(
+                data.nodes.map((n: any) => ({
+                    ...(n || {}),
+                    language: data.language,
+                })) as any
+            )
+            setEdges(data.edges as any)
+        }
+    }, [data, setEdges, setNodes])
     const onConnect = useCallback(
         (params: any) => setEdges((eds) => addEdge(params, eds)),
         [setEdges]
     )
-
+    if (!id) return <ErrorDisplay />
+    if (isFetching) {
+        return (
+            <div className="h-[92vh] flex items-center justify-center">
+                <Loader2 className="w-8 h-8 stroke-[2.5] stroke-blue-400 animate-spin duration-300" />
+            </div>
+        )
+    }
     return (
         <div
             className={cn("h-[92vh] -mt-2 border border-gray-300 relative", {
@@ -85,148 +115,6 @@ export default function Page() {
     )
 }
 
-const items = [
-    {
-        title: "Object-Oriented Programming in Java",
-        id: "OOP in Java",
-        description: "Principles and techniques of OOP in Java",
-        markdownContent:
-            '### Method Overloading\nMethod overloading allows multiple methods in the same class to have the same name but different parameters (either in number, type, or both). This is useful for improving code readability and reusability.\n\n#### Example:\n```java\nclass MathUtils {\n    int add(int a, int b) { return a + b; }\n    double add(double a, double b) { return a + b; }\n    int add(int a, int b, int c) { return a + b + c; }\n}\n\npublic class Main {\n    public static void main(String[] args) {\n        MathUtils math = new MathUtils();\n        System.out.println(math.add(2, 3)); // Calls int version\n        System.out.println(math.add(2.5, 3.5)); // Calls double version\n        System.out.println(math.add(1, 2, 3)); // Calls three-parameter version\n    }\n}\n```\n\n### Method Overriding\nMethod overriding allows a subclass to provide a specific implementation of a method defined in its superclass. This supports runtime polymorphism, ensuring the correct method is executed based on the object type.\n\n#### Example:\n```java\nclass Animal {\n    void makeSound() { System.out.println("Animal makes a sound"); }\n}\n\nclass Dog extends Animal {\n    @Override\n    void makeSound() { System.out.println("Dog barks"); }\n}\n\npublic class Main {\n    public static void main(String[] args) {\n        Animal myPet = new Dog(); // Upcasting\n        myPet.makeSound(); // Calls overridden method in Dog\n    }\n}\n```',
-        subItems: [
-            {
-                title: "Classes & Objects",
-                id: "Classes & Objects",
-                description:
-                    "The core of Object-Oriented Programming (OOP), representing real-world entities through classes and objects.",
-                markdownContent:
-                    '### Method Overloading\nMethod overloading allows multiple methods in the same class to have the same name but different parameters (either in number, type, or both). This is useful for improving code readability and reusability.\n\n#### Example:\n```java\nclass MathUtils {\n    int add(int a, int b) { return a + b; }\n    double add(double a, double b) { return a + b; }\n    int add(int a, int b, int c) { return a + b + c; }\n}\n\npublic class Main {\n    public static void main(String[] args) {\n        MathUtils math = new MathUtils();\n        System.out.println(math.add(2, 3)); // Calls int version\n        System.out.println(math.add(2.5, 3.5)); // Calls double version\n        System.out.println(math.add(1, 2, 3)); // Calls three-parameter version\n    }\n}\n```\n\n### Method Overriding\nMethod overriding allows a subclass to provide a specific implementation of a method defined in its superclass. This supports runtime polymorphism, ensuring the correct method is executed based on the object type.\n\n#### Example:\n```java\nclass Animal {\n    void makeSound() { System.out.println("Animal makes a sound"); }\n}\n\nclass Dog extends Animal {\n    @Override\n    void makeSound() { System.out.println("Dog barks"); }\n}\n\npublic class Main {\n    public static void main(String[] args) {\n        Animal myPet = new Dog(); // Upcasting\n        myPet.makeSound(); // Calls overridden method in Dog\n    }\n}\n```',
-                subItems: [
-                    {
-                        title: "Class Declaration",
-                        id: "Class Declaration",
-                        description:
-                            "Defining a class in Java, including abstract classes and interfaces.",
-                        markdownContent:
-                            '### Abstract Classes\nAn abstract class cannot be instantiated and is meant to be extended by other classes. It can have both abstract methods (without implementation) and concrete methods.\n\n#### Example:\n```java\nabstract class Animal {\n    abstract void makeSound();\n    void sleep() { System.out.println("Sleeping..."); }\n}\n\nclass Cat extends Animal {\n    @Override\n    void makeSound() { System.out.println("Meow"); }\n}\n\npublic class Main {\n    public static void main(String[] args) {\n        Animal myCat = new Cat();\n        myCat.makeSound(); // Outputs: Meow\n        myCat.sleep(); // Outputs: Sleeping...\n    }\n}\n```\n\n### Interfaces\nAn interface defines a contract for classes to implement. Interfaces support multiple inheritance and ensure that classes follow a specific structure.\n\n#### Example:\n```java\ninterface Vehicle {\n    void drive();\n}\n\nclass Bike implements Vehicle {\n    @Override\n    public void drive() { System.out.println("Bike is driving"); }\n}\n\npublic class Main {\n    public static void main(String[] args) {\n        Vehicle myBike = new Bike();\n        myBike.drive(); // Outputs: Bike is driving\n    }\n}\n```',
-                        subItems: [],
-                    },
-                    {
-                        title: "Object Instantiation",
-                        id: "Object Instantiation",
-                        description:
-                            "Creating an object from a class, including constructors and instantiation techniques.",
-                        markdownContent:
-                            '### Object Creation\nTo use a class in Java, you need to create an instance (object) using the \\`new\\` keyword.\n\n#### Example:\n\\`\\`\\`java\nclass Car {\n    String model;\n    int year;\n\n    // Constructor\n    Car(String model, int year) {\n        this.model = model;\n        this.year = year;\n    }\n\n    void displayInfo() {\n        System.out.println("Model: " + model + ", Year: " + year);\n    }\n}\n\npublic class Main {\n    public static void main(String[] args) {\n        Car myCar = new Car("Tesla Model 3", 2023);\n        myCar.displayInfo(); // Outputs: Model: Tesla Model 3, Year: 2023\n    }\n}\n\\`\\`\\`\n\n### Default vs. Parameterized Constructors\n- **Default Constructor**: If no constructor is defined, Java provides a default one.\n- **Parameterized Constructor**: Allows passing arguments during object creation.\n\n### Anonymous Objects\nAn object without a reference variable, used when the object is required only once.\n\n#### Example:\n\\`\\`\\`java\nnew Car("Ford Mustang", 2022).displayInfo(); // Outputs: Model: Ford Mustang, Year: 2022\n\\`\\`\\`\n\n### Getter & Setter Methods\nEncapsulation is achieved by making fields private and providing public getter and setter methods:\n\n#### Example:\n\\`\\`\\`java\nclass Person {\n    private String name;\n    \n    public String getName() { return name; }\n    public void setName(String name) { this.name = name; }\n}\n\\`\\`\\`',
-                        subItems: [],
-                    },
-                ],
-            },
-            {
-                title: "Inheritance",
-                id: "Inheritance",
-                description: "Mechanism where one class inherits from another.",
-                markdownContent: "",
-                subItems: [
-                    {
-                        title: "extends keyword",
-                        id: "extends keyword",
-                        description: "Used to inherit a class in Java.",
-                        markdownContent: "",
-                        subItems: [],
-                    },
-                    {
-                        title: "extends keyword",
-                        id: "aeaze",
-                        description: "Used to inherit a class in Java.",
-                        markdownContent: "",
-                        subItems: [],
-                    },
-                    {
-                        title: "extends keyword",
-                        id: "extenaeeazeeds keyword",
-                        description: "Used to inherit a class in Java.",
-                        markdownContent: "",
-                        subItems: [],
-                    },
-                    {
-                        title: "extends keyword",
-                        id: "azeaeee",
-                        description: "Used to inherit a class in Java.",
-                        markdownContent: "",
-                        subItems: [],
-                    },
-                ],
-            },
-            {
-                title: "Polymorphism",
-                id: "Polymorphism",
-                description: "Ability of an object to take many forms.",
-                markdownContent: "",
-                subItems: [
-                    {
-                        title: "Method Overloading",
-                        id: "Method Overloading",
-                        description:
-                            "Defining multiple methods with the same name but different parameters.",
-                        markdownContent: "",
-                        subItems: [],
-                    },
-                    {
-                        title: "Method Overriding",
-                        id: "Method Overriding",
-                        description: "Redefining a method in a subclass.",
-                        markdownContent: "",
-                        subItems: [],
-                    },
-                ],
-            },
-            {
-                title: "Encapsulation",
-                id: "Encapsulation",
-                description:
-                    "Hiding internal state and requiring all interaction through an object's methods.",
-                markdownContent: "",
-                subItems: [
-                    {
-                        title: "Getter & Setter Methods",
-                        id: "Getter & Setter Methods",
-                        description:
-                            "Methods to access and modify object properties.",
-                        markdownContent: "",
-                        subItems: [],
-                    },
-                ],
-            },
-            {
-                title: "Abstraction",
-                id: "Abstraction",
-                description:
-                    "Hiding complex implementation details while exposing only necessary features.",
-                markdownContent: "",
-                subItems: [
-                    {
-                        title: "Abstract Classes",
-                        id: "Abstract Classes",
-                        description:
-                            "A class that cannot be instantiated, meant to be extended.",
-                        markdownContent: "",
-                        subItems: [],
-                    },
-                    {
-                        title: "Interfaces",
-                        id: "Interfaces",
-                        description:
-                            "Defines a contract for classes to implement.",
-                        markdownContent: "",
-                        subItems: [],
-                        isLoading: true,
-                    },
-                ],
-            },
-        ],
-    },
-]
-
 export type Item = {
     id: string
     title: string
@@ -235,5 +123,3 @@ export type Item = {
     subItems: Item[]
     isLoading?: boolean
 }
-
-const [initialNodes, initialEdges] = convertItemsToNodes(items, null)

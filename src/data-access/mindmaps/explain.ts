@@ -1,12 +1,10 @@
-import { TGenMindMapFromText } from "@/app/api/mindmap/generate/from-text/route"
-import { partialParseJson } from "@/utils/json"
-import { readStream } from "@/utils/stream"
+import { TMindMapItemExplanation } from "@/app/api/mindmap/generate/explanation/route"
 import { readCurrentSession } from "../users/read"
-import { GeneratedMindmapSchema, TGeneratedMindmap } from "./constants"
+import { readStream } from "@/utils/stream"
 
-export const generateMindMapFromText = async (
-    data: TGenMindMapFromText,
-    onChange: (newValue: TGeneratedMindmap) => void,
+export const explainNode = async (
+    data: TMindMapItemExplanation,
+    onChange: (newValue: string) => void,
     onFinish?: () => void
 ) => {
     const {
@@ -16,7 +14,7 @@ export const generateMindMapFromText = async (
         throw new Error("Session error")
     }
 
-    const response = await fetch("/api/mindmap/generate/from-text", {
+    const response = await fetch("/api/mindmap/generate/explanation", {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
@@ -36,15 +34,7 @@ export const generateMindMapFromText = async (
             reader,
             (chunk) => {
                 result += chunk
-                try {
-                    const parsedJson = partialParseJson(result)
-
-                    const { data, success } =
-                        GeneratedMindmapSchema.safeParse(parsedJson)
-                    if (data && success) {
-                        onChange(parsedJson)
-                    }
-                } catch {}
+                onChange(result)
             },
             onFinish
         )

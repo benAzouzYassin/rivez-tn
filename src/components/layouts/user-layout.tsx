@@ -76,11 +76,11 @@ export default function UserLayout({ children }: Props) {
                     //     route: "/leaderboard",
                     // },
 
-                    {
-                        name: "Flashcards",
-                        icon: <CopyIcon className="!w-6 !h-6" />,
-                        route: "/flash-cards",
-                    },
+                    // {
+                    //     name: "Flashcards",
+                    //     icon: <CopyIcon className="!w-6 !h-6" />,
+                    //     route: "/flash-cards",
+                    // },
                     {
                         name: "Mind maps",
                         icon: <Brain className="!w-6 !h-6" />,
