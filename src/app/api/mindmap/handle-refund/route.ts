@@ -7,7 +7,7 @@ import { z } from "zod"
 const MONTHLY_ALLOWED_REFUNDS = Number(
     process.env.NEXT_PUBLIC_ALLOWED_REFUNDS_PER_MONTH || "0"
 )
-// TODO make this refund stricter
+
 export async function POST(req: NextRequest) {
     try {
         const accessToken = req.headers.get("access-token") || ""

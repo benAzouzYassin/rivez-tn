@@ -34,6 +34,7 @@ import dynamic from "next/dynamic"
 import { PdfInputLoading } from "./pdf-input-loading"
 import { useRouter } from "nextjs-toploader/app"
 import { wait } from "@/utils/wait"
+import { mindmapsContentDb } from "../../_utils/indexed-db"
 const PdfInput = dynamic(() => import("./pdf-input"), {
     loading: () => <PdfInputLoading />,
 })
@@ -102,12 +103,12 @@ export default function AddDialog(props: Props) {
                     `/mind-maps/generate?shouldGenerate=true&contentType=subject&topic=${topic}&language=${language}&additionalInstructions=${instructions}`
                 )
             } else if (currentTab === "document") {
-                // TODO implement this
-                console.log({
-                    type: "document",
+                const pdfPagesLocalId = await mindmapsContentDb.content.add({
                     pdfPages,
-                    language,
                 })
+                router.push(
+                    `/mind-maps/generate?shouldGenerate=true&contentType=document&pdfPagesLocalId=${pdfPagesLocalId}&language=${language}&additionalInstructions=${instructions}`
+                )
             }
         } catch (error) {
             console.error("Error submitting form:", error)
@@ -182,7 +183,7 @@ export default function AddDialog(props: Props) {
                         Back
                     </Button>
                 )}
-                {/* {currentTab === "document" && (
+                {currentTab === "document" && (
                     <form onSubmit={handleSubmit} className="mt-6">
                         <PdfInput
                             onPDFPagesChanges={(value: string[]) =>
@@ -225,11 +226,6 @@ export default function AddDialog(props: Props) {
                             Generate Mind Map
                         </Button>
                     </form>
-                )} */}
-                {currentTab === "document" && (
-                    <div className="h-64 text-5xl font-semibold text-neutral-400 flex items-center justify-center">
-                        Coming Soon...
-                    </div>
                 )}
                 {currentTab === "subject" && (
                     <form onSubmit={handleSubmit} className="mt-5 pb-0">

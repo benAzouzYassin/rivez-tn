@@ -22,7 +22,10 @@ import { Button } from "@/components/ui/button"
 import WarningDialog from "@/components/ui/warning-dialog"
 import { TGeneratedMindmap } from "@/data-access/mindmaps/constants"
 import { createMindMap } from "@/data-access/mindmaps/create"
-import { generateMindMapFromText } from "@/data-access/mindmaps/generate"
+import {
+    generateMindMapFromPDF,
+    generateMindMapFromText,
+} from "@/data-access/mindmaps/generate"
 import { useCurrentUser } from "@/hooks/use-current-user"
 import {
     dismissToasts,
@@ -43,10 +46,12 @@ import { ErrorDisplay } from "@/components/shared/error-display"
 import { handleMindMapRefund } from "@/data-access/mindmaps/handle-refund"
 import { CHEAP_TYPES } from "./constants"
 import { useRefetchUser } from "@/hooks/use-refetch-user"
+import { mindmapsContentDb } from "../_utils/indexed-db"
 
 export default function Page() {
     const queryClient = useQueryClient()
     const refetchUser = useRefetchUser()
+
     const router = useRouter()
     const [isStreaming, setIsStreaming] = useState(false)
     const [imageUrl, setImageUrl] = useState("")
@@ -71,10 +76,10 @@ export default function Page() {
         parseAsBoolean.withDefault(false)
     )
     const [contentType] = useQueryState("contentType")
+    const [pdfPagesLocalId] = useQueryState("pdfPagesLocalId")
     useEffect(() => {
         if (!shouldGenerate) return
         if (!contentType) return setIsError(true)
-        if (!topic) return setIsError(true)
         if (shouldGenerate === true) {
             let didGenerate = false
             setShouldGenerate(false)
@@ -141,6 +146,9 @@ export default function Page() {
                 dismissToasts("loading")
                 setIsLoading(false)
                 setIsStreaming(false)
+                setNodes((prev) =>
+                    prev.filter((node) => node.data.isLoading !== true)
+                )
                 if (!didGenerate) {
                     setIsError(true)
                     toastError("Something went wrong")
@@ -157,25 +165,65 @@ export default function Page() {
                     })
                 }
             }
-            generateMindMapFromText(
-                {
-                    topic,
-                    language,
-                    additionalInstructions,
-                },
-                onChange,
-                onStreamEnd
-            ).catch((err) => {
-                dismissToasts("loading")
-                toastError("Something went wrong")
-                setIsLoading(false)
+            if (contentType === "subject") {
+                if (!topic) return setIsError(true)
+                generateMindMapFromText(
+                    {
+                        topic,
+                        language,
+                        additionalInstructions,
+                    },
+                    onChange,
+                    onStreamEnd
+                ).catch((err) => {
+                    dismissToasts("loading")
+                    toastError("Something went wrong")
+                    setIsLoading(false)
+                    setIsError(true)
+                    handleMindMapRefund({
+                        generationType: CHEAP_TYPES.includes(contentType)
+                            ? "CHEAP"
+                            : "NORMAL",
+                    }).catch(() => console.error)
+                })
+            } else if (contentType === "document") {
+                mindmapsContentDb.content
+                    .where("id")
+                    .equals(Number(pdfPagesLocalId))
+                    .toArray()
+                    .then((result) => {
+                        const pdfPages = result[0].pdfPages
+                        if (pdfPages.length < 1) {
+                            setIsError(true)
+                            console.error("Pdf pages length should be > 1 ")
+                            return
+                        }
+                        generateMindMapFromPDF(
+                            {
+                                pdfPages,
+                                language,
+                                additionalInstructions,
+                            },
+                            onChange,
+                            onStreamEnd
+                        ).catch((err) => {
+                            dismissToasts("loading")
+                            toastError("Something went wrong")
+                            setIsLoading(false)
+                            setIsError(true)
+                            handleMindMapRefund({
+                                generationType: CHEAP_TYPES.includes(
+                                    contentType
+                                )
+                                    ? "CHEAP"
+                                    : "NORMAL",
+                            }).catch(() => console.error)
+                        })
+                    })
+            } else {
+                console.log("content type is not valid")
                 setIsError(true)
-                handleMindMapRefund({
-                    generationType: CHEAP_TYPES.includes(contentType)
-                        ? "CHEAP"
-                        : "NORMAL",
-                }).catch(() => console.error)
-            })
+            }
         }
     }, [
         topic,
@@ -188,6 +236,7 @@ export default function Page() {
         setEdges,
         nodes,
         refetchUser,
+        pdfPagesLocalId,
     ])
     const { data: userData } = useCurrentUser()
     const handleSave = () => {
