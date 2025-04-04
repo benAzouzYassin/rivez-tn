@@ -75,8 +75,6 @@ export default function Page() {
         })
     }, [getSelectedPages, refetchUser, searchParams])
 
-    const markdownRef = useRef<HTMLDivElement>(null)
-
     if (isError) {
         return <ErrorDisplay />
     }
