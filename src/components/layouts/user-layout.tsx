@@ -16,6 +16,7 @@ import {
     PlusCircle,
     Rocket,
     Telescope,
+    VideoIcon,
     WandSparklesIcon,
 } from "lucide-react"
 import { ReactNode } from "react"
@@ -46,11 +47,11 @@ export default function UserLayout({ children }: Props) {
                         icon: <Home className="!w-6 !h-6" />,
                         route: "/home",
                     },
-                    {
-                        name: "Courses",
-                        icon: <BookOpen className="!w-6 !h-6" />,
-                        route: "/courses/list",
-                    },
+                    // {
+                    //     name: "Courses",
+                    //     icon: <BookOpen className="!w-6 !h-6" />,
+                    //     route: "/courses/list",
+                    // },
                     {
                         name: "Quizzes",
                         icon: <Gamepad2Icon className="!w-6 !h-6" />,
@@ -87,20 +88,9 @@ export default function UserLayout({ children }: Props) {
                         route: "/mind-maps",
                     },
                     {
-                        name: "Explain",
+                        name: "Summarize",
                         icon: <Telescope className="!w-6 !h-6" />,
-                        subItems: [
-                            {
-                                icon: <FileText className="!w-6 !h-6" />,
-                                name: "Upload PDF",
-                                route: "/pdf-summarizer",
-                            },
-                            {
-                                icon: <ImageIcon className="!w-6 !h-6" />,
-                                name: "Upload Image",
-                                route: "/image-summarizer",
-                            },
-                        ],
+                        route: "/summarize",
                     },
                     {
                         name: "Our Offers",
