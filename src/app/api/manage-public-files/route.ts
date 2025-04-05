@@ -2,6 +2,7 @@ import { authenticateAdmin } from "@/data-access/users/is-admin"
 import { NextRequest, NextResponse } from "next/server"
 import { s3Client } from "@/lib/s3"
 import { DeleteObjectCommand, PutObjectCommand } from "@aws-sdk/client-s3"
+import { getUserInServerSide } from "@/data-access/users/authenticate-user-ssr"
 
 const S3_BUCKET_NAME = "public_files"
 // TODO make rate limits for normal users
@@ -19,14 +20,12 @@ export async function POST(req: NextRequest) {
                 { status: 401 }
             )
         }
-
-        // const isAdmin = await authenticateAdmin({ refreshToken, accessToken })
-        // if (!isAdmin) {
-        //     return NextResponse.json(
-        //         { message: "Unauthorized: Admin access required" },
-        //         { status: 403 }
-        //     )
-        // }
+        const userId = await getUserInServerSide({ refreshToken, accessToken })
+        if (!userId)
+            return NextResponse.json(
+                { message: "Unauthorized" },
+                { status: 401 }
+            )
 
         const formData = await req.formData()
         const file = formData.get("file") as File | null
@@ -46,7 +45,6 @@ export async function POST(req: NextRequest) {
         }
 
         const buffer = await file.arrayBuffer()
-
         const timestamp = Date.now()
         const filename = `${timestamp}-${file.name}`
 

@@ -71,10 +71,9 @@ export default function PdfInput(props: Props) {
                         or click to select a file
                     </p>
                     <p className="text-xs text-neutral-400 mt-2">
-                        Images (PNG, JPG, GIF) or Documents (PDF, DOC, DOCX,
-                        XLS, XLSX)
+                        PDF Documents
                     </p>
-                    <p className="text-xs text-neutral-400">up to 10MB</p>
+                    <p className="text-xs text-neutral-400">up to 5MB</p>
                 </>
             )}
         />

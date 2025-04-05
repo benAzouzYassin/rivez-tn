@@ -1,6 +1,6 @@
 export function getSystemPrompt() {
     return `
-    You are mindmap generator, you take any content or topic from a user then thinks about it and generate a detailed mindmap
+    You are mindmap generator, you take pdf pages content from the user then thinks about it and finally generate a detailed mindmap
     about it.
 
     ## GUIDELINES
@@ -115,17 +115,20 @@ export function getSystemPrompt() {
       `
 }
 export function getUserPrompt(data: {
-    topic: string
+    pdfPages: string[]
     additionalInstructions?: string | null | undefined
     language?: string | null | undefined
 }) {
     return `
-    hello i am the user.
-    - the topic i want to make a mindmap from is this : ${data.topic}.
-    - the language of your output should be  ${
+hello i am the user.
+- the language of your output should be  ${
         data.language || "the language of the topic i gave you before."
     }
-    - make sure you don't drift off the topic. 
+PDF pages are : 
+${data.pdfPages
+    .map((page, index) => `#### Page ${index + 1}\n\n${page}`)
+    .join("\n\n")}
+
     ${
         data.additionalInstructions
             ? `here is some additional instructions : ${data.additionalInstructions}`
