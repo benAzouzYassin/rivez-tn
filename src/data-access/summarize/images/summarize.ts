@@ -5,7 +5,7 @@ import { partialParseJson } from "@/utils/json"
 import { readStream } from "@/utils/stream"
 import { z } from "zod"
 
-const MAX_SIZE_BYTES = 3 * 1024 * 1024 // 3 MB
+const MAX_SIZE_BYTES = 5 * 1024 * 1024 // 5 MB
 
 export const summarizeImages = async (
     data: {

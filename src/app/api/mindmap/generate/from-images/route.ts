@@ -1,40 +1,17 @@
 import { getUserInServerSide } from "@/data-access/users/authenticate-user-ssr"
 import { cheapModel } from "@/lib/ai"
+import { supabaseAdminServerSide } from "@/lib/supabase-server-side"
 import { calculateBase64FileSize } from "@/utils/file"
 import { generateText, streamText } from "ai"
 import { NextRequest, NextResponse } from "next/server"
 import { z } from "zod"
-import { generatePrompt, systemPrompt } from "./prompt"
-import { supabaseAdminServerSide } from "@/lib/supabase-server-side"
-import { IMAGE_COST } from "./constants"
+import { NORMAL_COST } from "../constants"
+import { getSystemPrompt, getUserPrompt } from "./prompt"
 
 const MAX_SIZE_BYTES = 5 * 1024 * 1024 // 5 MB
 
 export async function POST(req: NextRequest) {
     try {
-        const body = await req.json()
-        const {
-            data: bodyData,
-            success,
-            error: parsingErr,
-        } = bodySchema.safeParse(body)
-        if (!success) {
-            return NextResponse.json({ error: parsingErr }, { status: 400 })
-        }
-        const language = bodyData.language || null
-        const imagesBase64 = bodyData.imagesBase64
-        let totalSize = 0
-
-        imagesBase64.forEach((img) => {
-            totalSize += calculateBase64FileSize(img)
-        })
-
-        if (totalSize >= MAX_SIZE_BYTES) {
-            return NextResponse.json(
-                { error: "Files combined size is too large" },
-                { status: 413 }
-            )
-        }
         const accessToken = req.headers.get("access-token") || ""
         const refreshToken = req.headers.get("refresh-token") || ""
         const userId = await getUserInServerSide({ accessToken, refreshToken })
@@ -44,6 +21,27 @@ export async function POST(req: NextRequest) {
                     error: "this feature is available for authenticated users only",
                 },
                 { status: 403 }
+            )
+        }
+        const supabaseAdmin = await supabaseAdminServerSide()
+
+        const body = await req.json()
+
+        const { success, data, error } = bodySchema.safeParse(body)
+
+        if (!success) {
+            return NextResponse.json({ error }, { status: 400 })
+        }
+        let totalSize = 0
+        const imagesBase64 = data.imagesBase64
+        imagesBase64.forEach((img) => {
+            totalSize += calculateBase64FileSize(img)
+        })
+
+        if (totalSize >= MAX_SIZE_BYTES) {
+            return NextResponse.json(
+                { error: "Files combined size is too large" },
+                { status: 413 }
             )
         }
         const result = await generateText({
@@ -73,19 +71,7 @@ export async function POST(req: NextRequest) {
             ],
         })
         const extractedText = result.text
-        const prompt = generatePrompt({
-            content: extractedText,
-            language: language,
-        })
-
-        const llmResponse = streamText({
-            model: cheapModel,
-            prompt,
-            temperature: 0.1,
-            system: systemPrompt,
-        })
-
-        const supabaseAdmin = await supabaseAdminServerSide()
+        const prompt = getUserPrompt({ ...data, content: extractedText })
 
         const userBalance = (
             await supabaseAdmin
@@ -96,8 +82,7 @@ export async function POST(req: NextRequest) {
                 .throwOnError()
         ).data.credit_balance
 
-        const totalCost = IMAGE_COST * imagesBase64.length
-        if (userBalance < totalCost) {
+        if (userBalance < NORMAL_COST) {
             return NextResponse.json(
                 {
                     error: "Insufficient balance.",
@@ -105,7 +90,7 @@ export async function POST(req: NextRequest) {
                 { status: 400 }
             )
         }
-        const newBalance = userBalance - totalCost
+        const newBalance = userBalance - NORMAL_COST
 
         await supabaseAdmin
             .from("user_profiles")
@@ -114,22 +99,25 @@ export async function POST(req: NextRequest) {
             })
             .eq("user_id", userId)
             .throwOnError()
-
-        await supabaseAdmin.from("document_summarizations").insert({
-            pages_count: imagesBase64.length || 0,
-            user_id: userId,
+        const llmResponse = streamText({
+            system: getSystemPrompt(),
+            model: cheapModel,
+            prompt,
+            temperature: 0.1,
         })
         return llmResponse.toTextStreamResponse()
     } catch (error) {
         console.error(error)
+
         return NextResponse.json({ error }, { status: 500 })
     }
 }
 
-export const maxDuration = 60
-
 const bodySchema = z.object({
     imagesBase64: z.array(z.string()),
-    language: z.string().optional().nullable(),
+    language: z.string().max(1000).optional().nullable(),
+    additionalInstructions: z.string().max(5000).optional().nullable(),
 })
-export type TSummarizeImages = z.infer<typeof bodySchema>
+
+export type TGenMindMapFromImages = z.infer<typeof bodySchema>
+export const maxDuration = 60

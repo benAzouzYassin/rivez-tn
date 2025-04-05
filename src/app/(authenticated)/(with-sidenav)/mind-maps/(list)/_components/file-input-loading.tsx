@@ -7,7 +7,7 @@ interface Props {
     containerClassName?: string
 }
 
-export function PdfInputLoading({ className, containerClassName }: Props) {
+export function FileInputLoading({ className, containerClassName }: Props) {
     return (
         <div
             className={cn(

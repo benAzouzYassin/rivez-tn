@@ -3,6 +3,7 @@ import Dexie, { type EntityTable } from "dexie"
 interface TContent {
     id: number
     pdfPages: string[]
+    imagesInBase64: string[]
 }
 
 const mindmapsContentDb = new Dexie("content-for-mindmaps") as Dexie & {
@@ -10,7 +11,7 @@ const mindmapsContentDb = new Dexie("content-for-mindmaps") as Dexie & {
 }
 
 mindmapsContentDb.version(1).stores({
-    content: "++id, pdfPages",
+    content: "++id, pdfPages, imagesInBase64",
 })
 
 export type { TContent as PdfContent }

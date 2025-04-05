@@ -23,6 +23,7 @@ import WarningDialog from "@/components/ui/warning-dialog"
 import { TGeneratedMindmap } from "@/data-access/mindmaps/constants"
 import { createMindMap } from "@/data-access/mindmaps/create"
 import {
+    generateMindMapFromImages,
     generateMindMapFromPDF,
     generateMindMapFromText,
 } from "@/data-access/mindmaps/generate"
@@ -77,6 +78,7 @@ export default function Page() {
     )
     const [contentType] = useQueryState("contentType")
     const [pdfPagesLocalId] = useQueryState("pdfPagesLocalId")
+    const [imagesInBase64Id] = useQueryState("imagesInBase64Id")
     useEffect(() => {
         if (!shouldGenerate) return
         if (!contentType) return setIsError(true)
@@ -192,15 +194,55 @@ export default function Page() {
                     .equals(Number(pdfPagesLocalId))
                     .toArray()
                     .then((result) => {
+                        mindmapsContentDb.content.delete(
+                            Number(pdfPagesLocalId)
+                        )
                         const pdfPages = result[0].pdfPages
                         if (pdfPages.length < 1) {
                             setIsError(true)
-                            console.error("Pdf pages length should be > 1 ")
+                            console.error("Pdf pages length should be >= 1 ")
                             return
                         }
                         generateMindMapFromPDF(
                             {
                                 pdfPages,
+                                language,
+                                additionalInstructions,
+                            },
+                            onChange,
+                            onStreamEnd
+                        ).catch((err) => {
+                            dismissToasts("loading")
+                            toastError("Something went wrong")
+                            setIsLoading(false)
+                            setIsError(true)
+                            handleMindMapRefund({
+                                generationType: CHEAP_TYPES.includes(
+                                    contentType
+                                )
+                                    ? "CHEAP"
+                                    : "NORMAL",
+                            }).catch(() => console.error)
+                        })
+                    })
+            } else if (contentType === "image") {
+                mindmapsContentDb.content
+                    .where("id")
+                    .equals(Number(imagesInBase64Id))
+                    .toArray()
+                    .then((result) => {
+                        mindmapsContentDb.content.delete(
+                            Number(imagesInBase64Id)
+                        )
+                        const imagesInBase64 = result[0].imagesInBase64
+                        if (imagesInBase64.length < 1) {
+                            setIsError(true)
+                            console.error("images length should be >= 1 ")
+                            return
+                        }
+                        generateMindMapFromImages(
+                            {
+                                imagesBase64: imagesInBase64,
                                 language,
                                 additionalInstructions,
                             },
@@ -237,6 +279,7 @@ export default function Page() {
         nodes,
         refetchUser,
         pdfPagesLocalId,
+        imagesInBase64Id,
     ])
     const { data: userData } = useCurrentUser()
     const handleSave = () => {
