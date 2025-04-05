@@ -26,6 +26,7 @@ import {
     generateMindMapFromImages,
     generateMindMapFromPDF,
     generateMindMapFromText,
+    generateMindMapFromYoutube,
 } from "@/data-access/mindmaps/generate"
 import { useCurrentUser } from "@/hooks/use-current-user"
 import {
@@ -79,6 +80,7 @@ export default function Page() {
     const [contentType] = useQueryState("contentType")
     const [pdfPagesLocalId] = useQueryState("pdfPagesLocalId")
     const [imagesInBase64Id] = useQueryState("imagesInBase64Id")
+    const [youtubeUrl] = useQueryState("youtubeUrl")
     useEffect(() => {
         if (!shouldGenerate) return
         if (!contentType) return setIsError(true)
@@ -262,6 +264,32 @@ export default function Page() {
                             }).catch(() => console.error)
                         })
                     })
+            }
+
+            if (contentType === "youtube") {
+                if (!youtubeUrl) {
+                    setIsError(true)
+                    return
+                }
+                generateMindMapFromYoutube(
+                    {
+                        youtubeUrl,
+                        language,
+                        additionalInstructions,
+                    },
+                    onChange,
+                    onStreamEnd
+                ).catch((err) => {
+                    dismissToasts("loading")
+                    toastError("Something went wrong")
+                    setIsLoading(false)
+                    setIsError(true)
+                    handleMindMapRefund({
+                        generationType: CHEAP_TYPES.includes(contentType)
+                            ? "CHEAP"
+                            : "NORMAL",
+                    }).catch(() => console.error)
+                })
             } else {
                 console.log("content type is not valid")
                 setIsError(true)
@@ -280,6 +308,7 @@ export default function Page() {
         refetchUser,
         pdfPagesLocalId,
         imagesInBase64Id,
+        youtubeUrl,
     ])
     const { data: userData } = useCurrentUser()
     const handleSave = () => {

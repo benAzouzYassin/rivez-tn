@@ -35,6 +35,7 @@ import { FileInputLoading } from "./file-input-loading"
 import { useRouter } from "nextjs-toploader/app"
 import { wait } from "@/utils/wait"
 import { mindmapsContentDb } from "../../_utils/indexed-db"
+import { Input } from "@/components/ui/input"
 const PdfInput = dynamic(() => import("./pdf-input"), {
     loading: () => <FileInputLoading />,
 })
@@ -55,6 +56,7 @@ export default function AddDialog(props: Props) {
     const [instructions, setInstructions] = useState("")
     const [pdfPages, setPdfPages] = useState<string[]>([])
     const [isSubmitting, setIsSubmitting] = useState(false)
+    const [youtubeUrl, setYoutubeUrl] = useState("")
     const router = useRouter()
     const items = [
         {
@@ -74,7 +76,7 @@ export default function AddDialog(props: Props) {
                 "Upload a PDF file to generate questions from its content.",
         },
         {
-            disabled: true,
+            disabled: false,
             value: "youtube",
             text: "YouTube Video",
             icon: <Video className="w-7 text-indigo-500 h-7" />,
@@ -82,7 +84,7 @@ export default function AddDialog(props: Props) {
                 "Convert a YouTube video into a mind map by entering its URL.",
         },
         {
-            disabled: false,
+            disabled: true,
             value: "image",
             text: "Extract from Images",
             icon: <ImageIcon className="w-7 text-indigo-500 h-7" />,
@@ -92,9 +94,7 @@ export default function AddDialog(props: Props) {
     ]
 
     const handleCardClick = (tab: string) => {
-        if (["subject", "document", "image"].includes(tab)) {
-            setCurrentTab(tab as any)
-        }
+        setCurrentTab(tab as any)
     }
 
     const handleSubmit = async (e: React.FormEvent) => {
@@ -121,7 +121,12 @@ export default function AddDialog(props: Props) {
                     imagesInBase64,
                 })
                 router.push(
-                    `/mind-maps/generate?shouldGenerate=true&contentType=image&imagesInBase64Id=${imagesBase64DbId}&language=${language}&additionalInstructions=${instructions}`
+                    `/mind-maps/generate?shouldGenerate=true&contentType=image&imagesInBase64Id=${imagesBase64DbId}&language=${language}&additionalInstructions=`
+                )
+            }
+            if (currentTab === "youtube") {
+                router.push(
+                    `/mind-maps/generate?youtubeUrl=${youtubeUrl}&shouldGenerate=true&contentType=youtube&language=${language}&additionalInstructions=`
                 )
             }
         } catch (error) {
@@ -352,6 +357,66 @@ export default function AddDialog(props: Props) {
                             className="text-lg h-[52px] w-full"
                             isLoading={isSubmitting}
                             disabled={!topic}
+                        >
+                            Generate Mind Map
+                        </Button>
+                    </form>
+                )}
+                {currentTab === "youtube" && (
+                    <form onSubmit={handleSubmit} className="mt-5 pb-0">
+                        <div>
+                            <label
+                                htmlFor="text"
+                                className="font-medium text-neutral-600"
+                            >
+                                Youtube url
+                                <span className="text-red-400 text-xl font-semibold">
+                                    *
+                                </span>
+                            </label>
+                            <Input
+                                errorMessage=""
+                                className="w-full"
+                                id="text"
+                                value={youtubeUrl}
+                                onChange={(e) => setYoutubeUrl(e.target.value)}
+                                placeholder="https://www.youtube.com/watch?v=something"
+                                required
+                            />
+                        </div>
+                        <div className="-mt-1">
+                            <label
+                                htmlFor="language"
+                                className="font-medium text-neutral-600"
+                            >
+                                Select Language
+                            </label>
+                            <Select
+                                onValueChange={setLanguage}
+                                value={language}
+                            >
+                                <SelectTrigger id="language" className="w-full">
+                                    <SelectValue placeholder="Choose a language" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    <SelectItem value="english">
+                                        English
+                                    </SelectItem>
+                                    <SelectItem value="arabic">
+                                        Arabic
+                                    </SelectItem>
+                                    <SelectItem value="french">
+                                        French
+                                    </SelectItem>
+                                </SelectContent>
+                            </Select>
+                        </div>
+
+                        <Button
+                            type="submit"
+                            className="text-lg h-[52px] w-full"
+                            isLoading={isSubmitting}
+                            disabled={!youtubeUrl}
                         >
                             Generate Mind Map
                         </Button>
