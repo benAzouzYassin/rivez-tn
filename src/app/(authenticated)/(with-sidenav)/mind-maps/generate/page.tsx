@@ -264,9 +264,7 @@ export default function Page() {
                             }).catch(() => console.error)
                         })
                     })
-            }
-
-            if (contentType === "youtube") {
+            } else if (contentType === "youtube") {
                 if (!youtubeUrl) {
                     setIsError(true)
                     return

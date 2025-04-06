@@ -2,7 +2,9 @@ import { getUserInServerSide } from "@/data-access/users/authenticate-user-ssr"
 import { llama4Maverick } from "@/lib/ai"
 import { supabaseAdminServerSide } from "@/lib/supabase-server-side"
 import { calculateBase64FileSize } from "@/utils/file"
-import { generateText, streamText } from "ai"
+import { extractImagesText } from "@/utils/image"
+import { tryCatchAsync } from "@/utils/try-catch"
+import { streamText } from "ai"
 import { NextRequest, NextResponse } from "next/server"
 import { z } from "zod"
 import { NORMAL_COST } from "../constants"
@@ -44,33 +46,20 @@ export async function POST(req: NextRequest) {
                 { status: 413 }
             )
         }
-        const result = await generateText({
-            temperature: 0,
-            model: llama4Maverick,
-            system: `for each image given to you extract it's text in details and without changes.
-            - never speak to the user.
-            - your output should strictly follow this zod schema : 
-            z.array(
-                z.object({
-                    imageText: z.string(),
-                })
-            )
-            `,
-            messages: [
+        const { data: extractedText } = await tryCatchAsync(
+            extractImagesText({
+                imagesBase64,
+                aiModel: llama4Maverick,
+            })
+        )
+        if (!extractedText) {
+            return NextResponse.json(
                 {
-                    role: "user",
-                    content: [
-                        ...imagesBase64.map((imgBase64) => {
-                            return {
-                                type: "image",
-                                image: `data:image/jpeg;base64,${imgBase64}`,
-                            }
-                        }),
-                    ] as any,
+                    error: "couldn't read image content",
                 },
-            ],
-        })
-        const extractedText = result.text
+                { status: 400 }
+            )
+        }
         const prompt = getUserPrompt({ ...data, content: extractedText })
 
         const userBalance = (
