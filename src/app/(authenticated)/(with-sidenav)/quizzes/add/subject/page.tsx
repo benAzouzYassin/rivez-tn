@@ -1,13 +1,12 @@
 "use client"
 
-import CategorySelect from "@/components/shared/category-select"
 import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
 import {
     Collapsible,
     CollapsibleContent,
     CollapsibleTrigger,
 } from "@/components/ui/collapsible"
+import { Input } from "@/components/ui/input"
 import {
     Select,
     SelectContent,
@@ -15,32 +14,26 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select"
-import {
-    ChevronDown,
-    ChevronLeft,
-    Edit,
-    ImageIcon,
-    ZapIcon,
-} from "lucide-react"
+import { ChevronDown, ChevronLeft, Edit, Sparkles, ZapIcon } from "lucide-react"
 import { Controller } from "react-hook-form"
 
+import { POSSIBLE_QUESTIONS } from "@/app/api/quiz/generate-quiz/constants"
+import { ErrorDisplay } from "@/components/shared/error-display"
+import GeneralLoadingScreen from "@/components/shared/general-loading-screen"
+import SearchSelectMultiple from "@/components/ui/search-select-multiple"
+import { Textarea } from "@/components/ui/textarea"
 import { createQuiz } from "@/data-access/quizzes/create"
 import { useCurrentUser } from "@/hooks/use-current-user"
 import { toastError, toastSuccess } from "@/lib/toasts"
+import { useSidenav } from "@/providers/sidenav-provider"
 import { zodResolver } from "@hookform/resolvers/zod"
+import { useQueryClient } from "@tanstack/react-query"
 import { useRouter } from "nextjs-toploader/app"
 import { useEffect, useMemo, useState } from "react"
 import { useForm } from "react-hook-form"
 import { z } from "zod"
-import { useSidenav } from "@/providers/sidenav-provider"
-import SearchSelectMultiple from "@/components/ui/search-select-multiple"
-import { Textarea } from "@/components/ui/textarea"
-import { POSSIBLE_QUESTIONS } from "@/app/api/quiz/generate-quiz/constants"
-import { default as useEditableQuizStore } from "../[id]/store"
 import { useQuestionsStore as useViewOnlyQuizStore } from "../../../../quizzes/[id]/store"
-import GeneralLoadingScreen from "@/components/shared/general-loading-screen"
-import { ErrorDisplay } from "@/components/shared/error-display"
-import { useQueryClient } from "@tanstack/react-query"
+import { default as useEditableQuizStore } from "../[id]/store"
 import { DifficultySelect } from "../_components/difficulty-select"
 import ImageUpload from "../_components/image-upload"
 
@@ -213,30 +206,7 @@ export default function SubjectForm() {
                     className="w-full"
                     errorMessage={form.formState.errors.mainTopic?.message}
                 />
-                <div className="grid grid-cols-2 -mt-1 gap-8">
-                    <Controller
-                        control={form.control}
-                        name="category"
-                        render={({ field: { onChange, value, onBlur } }) => (
-                            <CategorySelect
-                                placeholder="Category"
-                                enableAddButton
-                                inputClassName="w-full"
-                                selectedId={value}
-                                errorMessage={
-                                    form.formState.errors.category?.message
-                                }
-                                onSelect={({ id }) => {
-                                    onChange(id)
-                                    onBlur()
-                                }}
-                                onUnselect={() => {
-                                    onChange(null)
-                                    onBlur()
-                                }}
-                            />
-                        )}
-                    />
+                <div className=" -mt-1 gap-8">
                     <Select
                         defaultValue={form.getValues().language || undefined}
                         onValueChange={(val) => form.setValue("language", val)}
@@ -364,8 +334,8 @@ export default function SubjectForm() {
                     imageUrl={imageUrl}
                     onImageUrlChange={setImageUrl}
                 />
-                <div className="grid grid-cols-2 gap-5">
-                    <Button
+                <div className="grid  gap-5">
+                    {/* <Button
                         isLoading={isLoading}
                         disabled={isUploadingImage}
                         type="button"
@@ -378,7 +348,7 @@ export default function SubjectForm() {
                         variant="blue"
                     >
                         Generate and Take <ZapIcon className="!w-5 !h-5" />
-                    </Button>
+                    </Button> */}
                     <Button
                         isLoading={isLoading}
                         disabled={isUploadingImage}
@@ -390,7 +360,7 @@ export default function SubjectForm() {
                         }}
                         className="font-extrabold uppercase py-7 mt-5 text-sm"
                     >
-                        Generate And Modify <Edit className="!w-5 !h-5" />
+                        Generate Quiz <Sparkles className="!w-5 !h-5" />
                     </Button>
                 </div>
             </section>

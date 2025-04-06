@@ -41,6 +41,8 @@ import c from "react-syntax-highlighter/dist/cjs/languages/prism/c"
 import cpp from "react-syntax-highlighter/dist/cjs/languages/prism/cpp"
 
 import remarkGfm from "remark-gfm"
+import rehypeRaw from "rehype-raw"
+import rehypeSanitize from "rehype-sanitize"
 
 SyntaxHighlighter.registerLanguage("tsx", tsx)
 SyntaxHighlighter.registerLanguage("jsx", jsx)
@@ -92,11 +94,52 @@ SyntaxHighlighter.registerLanguage("c", c)
 SyntaxHighlighter.registerLanguage("cpp", cpp)
 SyntaxHighlighter.registerLanguage("c++", cpp)
 
+const sanitizeSchema = {
+    attributes: {
+        "*": ["className", "style"],
+        a: ["href", "title", "target"],
+        img: ["src", "alt", "width", "height", "style"],
+        table: [
+            "className",
+            "style",
+            "colspan",
+            "rowspan",
+            "rowwidth",
+            "colwidth",
+        ],
+        tr: [
+            "className",
+            "style",
+            "colspan",
+            "rowspan",
+            "rowwidth",
+            "colwidth",
+        ],
+        th: [
+            "className",
+            "style",
+            "colspan",
+            "rowspan",
+            "rowwidth",
+            "colwidth",
+        ],
+        td: [
+            "className",
+            "style",
+            "colspan",
+            "rowspan",
+            "rowWidth",
+            "colWidth",
+        ],
+    },
+}
+
 export function Markdown({ content }: { content: string }) {
     return (
         <div className="markdown-content">
             <ReactMarkdown
                 remarkPlugins={[remarkGfm]}
+                rehypePlugins={[rehypeRaw, [rehypeSanitize, sanitizeSchema]]}
                 components={MarkdownComponents}
             >
                 {content}

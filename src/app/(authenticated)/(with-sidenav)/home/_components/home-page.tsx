@@ -31,7 +31,7 @@ export default function HomePage() {
                                 </p>
                             </Button>
                         </Link>
-                        <Link href={"/quizzes/list"}>
+                        <Link href={"/quizzes"}>
                             <Button
                                 variant={"secondary"}
                                 className="p-4 px-4 py-6  items-start justify-start flex-col h-48"

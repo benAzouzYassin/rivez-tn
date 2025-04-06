@@ -4,7 +4,6 @@ import {
     FileTextIcon,
     ImageIcon,
     LetterTextIcon,
-    Link,
     Video,
 } from "lucide-react"
 import QuizType from "./_components/quiz-type"
@@ -54,15 +53,6 @@ const items = [
         icon: <Edit className="!w-7 text-indigo-500 !h-7" />,
         description:
             "Write your own questions and answers for complete control over quiz content.",
-    },
-
-    {
-        disabled: true,
-        value: "link",
-        text: "Website Content",
-        icon: <Link className="!w-7 text-indigo-500 !h-7" />,
-        description:
-            "Generate questions from any webpage by simply pasting a URL.",
     },
 
     {

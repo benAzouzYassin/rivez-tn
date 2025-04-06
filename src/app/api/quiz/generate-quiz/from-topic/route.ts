@@ -10,6 +10,7 @@ import { supabaseAdminServerSide } from "@/lib/supabase-server-side"
 const LOW_MODEL_LOW_COST_QUIZ = Number(
     process.env.NEXT_PUBLIC_MEDIUM_CREDIT_COST
 )
+const DEFAULT_MIN_QUESTIONS = 12
 export async function POST(req: NextRequest) {
     try {
         const accessToken = req.headers.get("access-token") || ""
@@ -48,7 +49,7 @@ export async function POST(req: NextRequest) {
         const minQuestions =
             data.minQuestions !== undefined && data.minQuestions !== null
                 ? Math.min(data.minQuestions, maxQuestionsFromConfig)
-                : 1
+                : DEFAULT_MIN_QUESTIONS
 
         const prompt = generateQuizPrompt({
             name: data.name,

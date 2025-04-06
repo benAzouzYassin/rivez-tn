@@ -1,7 +1,6 @@
 "use client"
 
 import { POSSIBLE_QUESTIONS } from "@/app/api/quiz/generate-quiz/constants"
-import CategorySelect from "@/components/shared/category-select"
 import { ErrorDisplay } from "@/components/shared/error-display"
 import GeneralLoadingScreen from "@/components/shared/general-loading-screen"
 import { Button } from "@/components/ui/button"
@@ -26,7 +25,7 @@ import { toastError, toastSuccess } from "@/lib/toasts"
 import { useSidenav } from "@/providers/sidenav-provider"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useQueryClient } from "@tanstack/react-query"
-import { ChevronDown, ChevronLeft, Edit, ZapIcon } from "lucide-react"
+import { ChevronDown, ChevronLeft, SparklesIcon } from "lucide-react"
 import dynamic from "next/dynamic"
 import { useRouter } from "nextjs-toploader/app"
 import { useEffect, useMemo, useState } from "react"
@@ -214,54 +213,25 @@ export default function Document() {
                     errorMessage={form.formState.errors.name?.message}
                 />
                 <PdfInput onPDFPagesChanges={setPdfPages} />
-                <div className="grid grid-cols-2 mt-4 gap-8">
-                    <Controller
-                        control={form.control}
-                        name="category"
-                        render={({ field: { onChange, value, onBlur } }) => (
-                            <CategorySelect
-                                placeholder="Category"
-                                enableAddButton
-                                inputClassName="w-full"
-                                selectedId={value}
-                                errorMessage={
-                                    form.formState.errors.category?.message
-                                }
-                                onSelect={({ id }) => {
-                                    onChange(id)
-                                    onBlur()
-                                }}
-                                onUnselect={() => {
-                                    onChange(null)
-                                    onBlur()
-                                }}
-                            />
-                        )}
-                    />
-                    <Select
-                        defaultValue={form.getValues().language || undefined}
-                        onValueChange={(val) => form.setValue("language", val)}
-                    >
-                        <SelectTrigger className="data-[placeholder]:text-neutral-400">
-                            <SelectValue placeholder="Language" />
-                        </SelectTrigger>
-                        <SelectContent>
-                            <SelectItem value="EN">English</SelectItem>
-                            <SelectItem disabled value="AR">
-                                Arabic{" "}
-                                <span className="text-sm italic">
-                                    (soon...)
-                                </span>
-                            </SelectItem>
-                            <SelectItem disabled value="FR">
-                                French{" "}
-                                <span className="text-sm italic">
-                                    (soon...)
-                                </span>
-                            </SelectItem>
-                        </SelectContent>
-                    </Select>
-                </div>
+                <Select
+                    defaultValue={form.getValues().language || undefined}
+                    onValueChange={(val) => form.setValue("language", val)}
+                >
+                    <SelectTrigger className="data-[placeholder]:text-neutral-400 mt-4">
+                        <SelectValue placeholder="Language" />
+                    </SelectTrigger>
+                    <SelectContent>
+                        <SelectItem value="EN">English</SelectItem>
+                        <SelectItem disabled value="AR">
+                            Arabic{" "}
+                            <span className="text-sm italic">(soon...)</span>
+                        </SelectItem>
+                        <SelectItem disabled value="FR">
+                            French{" "}
+                            <span className="text-sm italic">(soon...)</span>
+                        </SelectItem>
+                    </SelectContent>
+                </Select>
                 <Collapsible className="group ">
                     <CollapsibleTrigger className="w-full data-[state=open]:font-bold  data-[state=open]:text-neutral-500 data-[state=open]:bg-blue-300/80 data-[state=open]:border-transparent   mb-4 hover:bg-neutral-100 flex justify-between items-center rounded-xl transition-all duration-200 bg-[#F7F7F7]/50 font-medium border-2 p-3 h-12 border-[#E5E5E5] text-[#AFAFAF] cursor-pointer">
                         <span className="underline underline-offset-4">
@@ -365,8 +335,8 @@ export default function Document() {
                     imageUrl={imageUrl}
                     onImageUrlChange={setImageUrl}
                 />
-                <div className="grid grid-cols-2 gap-5">
-                    <Button
+                <div className="grid gap-5">
+                    {/* <Button
                         isLoading={isLoading}
                         disabled={isUploadingImage}
                         type="button"
@@ -379,7 +349,7 @@ export default function Document() {
                         variant="blue"
                     >
                         Generate and Take <ZapIcon className="!w-5 !h-5" />
-                    </Button>
+                    </Button> */}
                     <Button
                         isLoading={isLoading}
                         disabled={isUploadingImage}
@@ -391,7 +361,7 @@ export default function Document() {
                         }}
                         className="font-extrabold uppercase py-7 mt-5 text-sm"
                     >
-                        Generate And Modify <Edit className="!w-5 !h-5" />
+                        Generate Quiz <SparklesIcon className="!w-5 !h-5" />
                     </Button>
                 </div>
             </section>
