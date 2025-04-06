@@ -1,5 +1,5 @@
 import { authenticateAdmin } from "@/data-access/users/is-admin"
-import { cheapModel } from "@/lib/ai"
+import { llama4Maverick } from "@/lib/ai"
 import { streamText } from "ai"
 import { NextRequest, NextResponse } from "next/server"
 import { z } from "zod"
@@ -26,7 +26,7 @@ export async function POST(req: NextRequest) {
         }
         const prompt = generatePrompt(data)
         const llmResponse = streamText({
-            model: cheapModel,
+            model: llama4Maverick,
             prompt,
             temperature: 0,
             system: `

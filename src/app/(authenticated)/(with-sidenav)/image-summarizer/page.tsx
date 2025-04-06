@@ -10,7 +10,7 @@ import { ErrorDisplay } from "@/components/shared/error-display"
 import GeneralLoadingScreen from "@/components/shared/general-loading-screen"
 import { useRefetchUser } from "@/hooks/use-refetch-user"
 import PagesViewer from "./_components/pages-viewer"
-import { handleRefund } from "@/data-access/documents/handle-refund"
+import { handleRefund } from "@/data-access/summarize/images/handle-refund"
 
 export default function Page() {
     const refetchUser = useRefetchUser()

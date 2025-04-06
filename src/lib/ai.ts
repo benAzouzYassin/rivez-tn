@@ -6,8 +6,8 @@ const openRouter = createOpenRouter({
     baseURL: process.env.OPENROUTER_ENDPOINT,
 })
 
-export const cheapModel = openRouter("openai/gpt-4o-mini")
-// export const cheapModel = openRouter("featherless/qwerky-72b:free")
+export const gpt4oMini = openRouter("openai/gpt-4o-mini")
+export const llama4Maverick = openRouter("meta-llama/llama-4-maverick")
 // export const cheapModel = anthropic("claude-3-5-haiku-20241022")
 // export const cheapModel = openRouter(
 //     "mistralai/mistral-small-24b-instruct-2501"

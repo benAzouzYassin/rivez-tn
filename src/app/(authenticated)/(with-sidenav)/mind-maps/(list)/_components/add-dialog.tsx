@@ -84,7 +84,7 @@ export default function AddDialog(props: Props) {
                 "Convert a YouTube video into a mind map by entering its URL.",
         },
         {
-            disabled: true,
+            disabled: false,
             value: "image",
             text: "Extract from Images",
             icon: <ImageIcon className="w-7 text-indigo-500 h-7" />,

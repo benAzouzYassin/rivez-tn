@@ -130,6 +130,7 @@ export default function PagesViewer(props: Props) {
             </div>
             <div className="w-[21.5rem] min-w-[21.5rem]"></div>
             <div className="flex-1 max-w-[calc(100%-21.5rem)] pl-4 relative">
+                <div className="w-screen"></div>
                 <div
                     ref={contentRef}
                     className="bg-white p-5 rounded-lg h-[90vh]  overflow-y-auto pb-20 -mt-1 pt-8 border mx-auto"

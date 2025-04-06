@@ -1,14 +1,12 @@
 import { getUserInServerSide } from "@/data-access/users/authenticate-user-ssr"
-import { gpt4oMini, llama4Maverick } from "@/lib/ai"
-import { calculateBase64FileSize } from "@/utils/file"
-import { generateText, streamText } from "ai"
+import { gpt4oMini } from "@/lib/ai"
+import { supabaseAdminServerSide } from "@/lib/supabase-server-side"
+import { getYtVideoTranscriptions } from "@/utils/youtube"
+import { streamText } from "ai"
 import { NextRequest, NextResponse } from "next/server"
 import { z } from "zod"
 import { generatePrompt, systemPrompt } from "./prompt"
-import { supabaseAdminServerSide } from "@/lib/supabase-server-side"
-import { IMAGE_COST } from "./constants"
-
-const MAX_SIZE_BYTES = 5 * 1024 * 1024 // 5 MB
+import { COST } from "./constants"
 
 export async function POST(req: NextRequest) {
     try {
@@ -22,17 +20,13 @@ export async function POST(req: NextRequest) {
             return NextResponse.json({ error: parsingErr }, { status: 400 })
         }
         const language = bodyData.language || null
-        const imagesBase64 = bodyData.imagesBase64
-        let totalSize = 0
-
-        imagesBase64.forEach((img) => {
-            totalSize += calculateBase64FileSize(img)
-        })
-
-        if (totalSize >= MAX_SIZE_BYTES) {
+        const youtubeLink = bodyData.youtubeLink || null
+        if (!youtubeLink) {
             return NextResponse.json(
-                { error: "Files combined size is too large" },
-                { status: 413 }
+                {
+                    error: "invalid youtube link.",
+                },
+                { status: 400 }
             )
         }
         const accessToken = req.headers.get("access-token") || ""
@@ -46,35 +40,15 @@ export async function POST(req: NextRequest) {
                 { status: 403 }
             )
         }
-        const result = await generateText({
-            temperature: 0,
-            model: llama4Maverick,
-            system: `for each image given to you extract it's text in details and without changes.
-            - never speak to the user.
-            - your output should strictly follow this zod schema : 
-            z.array(
-                z.object({
-                    imageText: z.string(),
-                })
+        const extractedText = await getYtVideoTranscriptions(youtubeLink)
+        if (!extractedText) {
+            return NextResponse.json(
+                { error: "error while getting the video content." },
+                { status: 400 }
             )
-            `,
-            messages: [
-                {
-                    role: "user",
-                    content: [
-                        ...imagesBase64.map((imgBase64) => {
-                            return {
-                                type: "image",
-                                image: `data:image/jpeg;base64,${imgBase64}`,
-                            }
-                        }),
-                    ] as any,
-                },
-            ],
-        })
-        const extractedText = result.text
+        }
         const prompt = generatePrompt({
-            content: extractedText,
+            content: extractedText.join(" "),
             language: language,
         })
 
@@ -96,8 +70,7 @@ export async function POST(req: NextRequest) {
                 .throwOnError()
         ).data.credit_balance
 
-        const totalCost = IMAGE_COST * imagesBase64.length
-        if (userBalance < totalCost) {
+        if (userBalance < COST) {
             return NextResponse.json(
                 {
                     error: "Insufficient balance.",
@@ -105,7 +78,7 @@ export async function POST(req: NextRequest) {
                 { status: 400 }
             )
         }
-        const newBalance = userBalance - totalCost
+        const newBalance = userBalance - COST
 
         await supabaseAdmin
             .from("user_profiles")
@@ -116,9 +89,10 @@ export async function POST(req: NextRequest) {
             .throwOnError()
 
         await supabaseAdmin.from("document_summarizations").insert({
-            pages_count: imagesBase64.length || 0,
+            pages_count: 1,
             user_id: userId,
         })
+
         return llmResponse.toTextStreamResponse()
     } catch (error) {
         console.error(error)
@@ -129,7 +103,7 @@ export async function POST(req: NextRequest) {
 export const maxDuration = 60
 
 const bodySchema = z.object({
-    imagesBase64: z.array(z.string()),
+    youtubeLink: z.string(),
     language: z.string().optional().nullable(),
 })
-export type TSummarizeImages = z.infer<typeof bodySchema>
+export type TSummarizeYoutubeVideo = z.infer<typeof bodySchema>

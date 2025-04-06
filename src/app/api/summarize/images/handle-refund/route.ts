@@ -43,6 +43,18 @@ export async function POST(req: NextRequest) {
             )
         }
         const now = new Date()
+        if (
+            now.getTime() -
+                new Date(lastSummarization.data.created_at).getTime() >
+            5 * 60 * 1000
+        ) {
+            return NextResponse.json(
+                {
+                    error: "Refund can only be requested within 5 minutes of summarization",
+                },
+                { status: 400 }
+            )
+        }
         const firstDayOfMonth = new Date(
             now.getFullYear(),
             now.getMonth(),
@@ -81,7 +93,7 @@ export async function POST(req: NextRequest) {
             .from("refunds")
             .insert({
                 user_id: userId,
-                cause: "documents page summarization.",
+                cause: "images summarization.",
             })
             .throwOnError()
         supabaseAdmin

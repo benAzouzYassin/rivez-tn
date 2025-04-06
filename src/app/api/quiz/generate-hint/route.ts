@@ -1,5 +1,5 @@
 import { getUserInServerSide } from "@/data-access/users/authenticate-user-ssr"
-import { cheapModel } from "@/lib/ai"
+import { llama4Maverick } from "@/lib/ai"
 import { supabaseAdminServerSide } from "@/lib/supabase-server-side"
 import { streamText } from "ai"
 import { NextRequest, NextResponse } from "next/server"
@@ -29,7 +29,7 @@ export async function POST(req: NextRequest) {
 
         const prompt = generatePrompt(data)
         const llmResponse = streamText({
-            model: cheapModel,
+            model: llama4Maverick,
             prompt,
             temperature: 0.2,
             system: `
