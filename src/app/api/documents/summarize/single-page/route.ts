@@ -1,5 +1,5 @@
 import { getUserInServerSide } from "@/data-access/users/authenticate-user-ssr"
-import { cheapModel } from "@/lib/ai"
+import { gpt4oMini, llama4Maverick } from "@/lib/ai"
 import { supabaseAdminServerSide } from "@/lib/supabase-server-side"
 import { streamText } from "ai"
 import { NextRequest, NextResponse } from "next/server"
@@ -33,7 +33,7 @@ export async function POST(req: NextRequest) {
             language: data.language,
         })
         const llmResponse = streamText({
-            model: cheapModel,
+            model: gpt4oMini,
             prompt,
             temperature: 0.1,
             system: systemPrompt,

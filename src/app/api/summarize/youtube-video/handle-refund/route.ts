@@ -1,7 +1,7 @@
 import { getUserInServerSide } from "@/data-access/users/authenticate-user-ssr"
 import { supabaseAdminServerSide } from "@/lib/supabase-server-side"
 import { NextRequest, NextResponse } from "next/server"
-import { PAGE_COST } from "../constants"
+import { COST } from "../constants"
 
 const MONTHLY_ALLOWED_REFUNDS = Number(
     process.env.NEXT_PUBLIC_ALLOWED_REFUNDS_PER_MONTH || "0"
@@ -26,7 +26,7 @@ export async function POST(req: NextRequest) {
             .single()
             .throwOnError()
 
-        const lastDocumentSummarization = await supabaseAdmin
+        const lastSummarization = await supabaseAdmin
             .from("document_summarizations")
             .select("*")
             .order("created_at", {
@@ -36,16 +36,16 @@ export async function POST(req: NextRequest) {
             .single()
             .throwOnError()
 
-        if (lastDocumentSummarization?.data?.is_refunded) {
+        if (lastSummarization?.data?.is_refunded) {
             return NextResponse.json(
-                { error: "document already refunded" },
+                { error: "Already refunded" },
                 { status: 400 }
             )
         }
         const now = new Date()
         if (
             now.getTime() -
-                new Date(lastDocumentSummarization.data.created_at).getTime() >
+                new Date(lastSummarization.data.created_at).getTime() >
             5 * 60 * 1000
         ) {
             return NextResponse.json(
@@ -83,10 +83,7 @@ export async function POST(req: NextRequest) {
             .update({
                 credit_balance:
                     userBalance +
-                    PAGE_COST *
-                        Number(
-                            lastDocumentSummarization?.data?.pages_count || "0"
-                        ),
+                    COST * Number(lastSummarization?.data?.pages_count || "0"),
             })
             .eq("user_id", userId)
             .throwOnError()
@@ -95,7 +92,7 @@ export async function POST(req: NextRequest) {
             .from("refunds")
             .insert({
                 user_id: userId,
-                cause: "documents page summarization.",
+                cause: "youtube video summarization.",
             })
             .throwOnError()
         supabaseAdmin
@@ -103,7 +100,7 @@ export async function POST(req: NextRequest) {
             .update({
                 is_refunded: true,
             })
-            .eq("id", lastDocumentSummarization?.data?.id)
+            .eq("id", lastSummarization?.data?.id)
             .throwOnError()
         return NextResponse.json({ success: true }, { status: 200 })
     } catch (error) {

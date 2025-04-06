@@ -1,5 +1,5 @@
 import { getUserInServerSide } from "@/data-access/users/authenticate-user-ssr"
-import { cheapModel } from "@/lib/ai"
+import { llama4Maverick } from "@/lib/ai"
 import { supabaseAdminServerSide } from "@/lib/supabase-server-side"
 import { calculateBase64FileSize } from "@/utils/file"
 import { generateText, streamText } from "ai"
@@ -46,7 +46,7 @@ export async function POST(req: NextRequest) {
         }
         const result = await generateText({
             temperature: 0,
-            model: cheapModel,
+            model: llama4Maverick,
             system: `for each image given to you extract it's text in details and without changes.
             - never speak to the user.
             - your output should strictly follow this zod schema : 
@@ -101,7 +101,7 @@ export async function POST(req: NextRequest) {
             .throwOnError()
         const llmResponse = streamText({
             system: getSystemPrompt(),
-            model: cheapModel,
+            model: llama4Maverick,
             prompt,
             temperature: 0.1,
         })

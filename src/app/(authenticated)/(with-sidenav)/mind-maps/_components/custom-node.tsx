@@ -34,7 +34,14 @@ function CustomNode({ data }: CustomNodeProps) {
 
         if (currentParent && currentParent.data) {
             return getAllParentsTitles(
-                [(currentParent.data?.title as any) || "", ...result],
+                [
+                    `title : ${currentParent.data?.title} ${
+                        currentParent.data?.description
+                            ? `description : ${currentParent.data?.description}`
+                            : ""
+                    }` || "",
+                    ...result,
+                ],
                 currentParent.id
             )
         } else {

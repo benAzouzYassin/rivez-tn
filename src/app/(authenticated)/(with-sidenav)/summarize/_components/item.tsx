@@ -7,8 +7,9 @@ type Props = {
     icon: ReactNode
     text: string
     description: string
-    route: string
+    route?: string
     disabled: boolean
+    onClick?: () => void
 }
 
 export default function Item({
@@ -17,6 +18,7 @@ export default function Item({
     description,
     route,
     disabled,
+    onClick,
 }: Props) {
     const router = useRouter()
 
@@ -24,7 +26,11 @@ export default function Item({
         <Button
             disabled={disabled}
             onClick={() => {
-                router.push(route)
+                if (route) {
+                    router.push(route)
+                } else if (onClick) {
+                    onClick()
+                }
             }}
             variant={"secondary"}
             className="!p-3 h-64 flex  disabled:opacity-80 disabled:bg-neutral-200/70 w-full max-h-fit text-start  hover:border-blue-300 hover:bg-blue-100/70 hover:shadow-blue-300 transition-all rounded-3xl  "
