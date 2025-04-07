@@ -255,7 +255,7 @@ export async function readQuizQuestionsWithHints(params: { quizId: number }) {
     return response.data
 }
 
-export async function readQuizQuestionHints(params: { questionId: number }) {
+export async function readQuizQuestionHint(params: { questionId: number }) {
     const response = await supabase
         .from("questions_hints")
         .select(`*`)
@@ -264,5 +264,5 @@ export async function readQuizQuestionHints(params: { questionId: number }) {
             ascending: false,
         })
         .throwOnError()
-    return response.data
+    return response.data[0]
 }

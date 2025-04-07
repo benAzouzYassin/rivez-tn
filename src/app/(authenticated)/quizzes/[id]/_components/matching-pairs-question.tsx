@@ -183,7 +183,11 @@ export default function MatchingPairsQuestion(props: Props) {
     return (
         <>
             <div className="flex flex-col relative h-fit items-center justify-center">
-                <HintsSheet questionId={props.question.id} />
+                <HintsSheet
+                    questionContent={JSON.stringify(props.question.content)}
+                    questionText={props.question.question}
+                    questionId={props.question.id}
+                />
                 <div>
                     <p className="max-w-[1200px] mb-1 text-3xl font-extrabold top-0 text-neutral-700 text-left w-full left-0">
                         {props.question?.question || "Match the items :"}

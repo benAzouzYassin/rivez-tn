@@ -1,6 +1,5 @@
-import GeneralLoadingScreen from "@/components/shared/general-loading-screen"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent } from "@/components/ui/card"
+import { ErrorDisplay } from "@/components/shared/error-display"
+import Markdown from "@/components/shared/markdown"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import {
     Sheet,
@@ -9,43 +8,89 @@ import {
     SheetTitle,
     SheetTrigger,
 } from "@/components/ui/sheet"
-import { readQuizQuestionHints } from "@/data-access/quizzes/read"
+import { generateQuestionHint } from "@/data-access/quizzes/generate-question-hint"
+import { handleHintRefund } from "@/data-access/quizzes/handle-refund"
+import { readQuizQuestionHint } from "@/data-access/quizzes/read"
+import { addHintsToQuestions } from "@/data-access/quizzes/update"
+import { useCurrentUser } from "@/hooks/use-current-user"
+import { useRefetchUser } from "@/hooks/use-refetch-user"
 import { cn } from "@/lib/ui-utils"
 import { useQuery } from "@tanstack/react-query"
-import { ChevronLeft, Lightbulb } from "lucide-react"
-import dynamic from "next/dynamic"
-import { useMemo, useState } from "react"
-const RichTextEditor = dynamic(
-    () => import("@/components/shared/rich-text-editor"),
-    {
-        ssr: false,
-    }
-)
+import { Lightbulb, Loader2 } from "lucide-react"
+import { useEffect, useState } from "react"
 interface Props {
     questionId: number
+    questionText: string
+    questionContent: string
 }
 export default function HintsSheet(props: Props) {
-    const [selectedId, setSelectedId] = useState<number | null>(null)
+    const { data: userData } = useCurrentUser()
+    const refetchUser = useRefetchUser()
     const [isOpen, setIsOpen] = useState(false)
-    const { isFetching, data } = useQuery({
+    const [isError, setIsError] = useState(false)
+    const [isGenerating, setIsGenerating] = useState(false)
+    const [generatedContent, setGeneratedContent] = useState("")
+    const { isLoading, data } = useQuery({
+        queryKey: ["questions_hints", props.questionId],
         enabled: isOpen,
-        queryKey: ["questions_hints", "quizzes_questions", props.questionId],
-        queryFn: () => readQuizQuestionHints({ questionId: props.questionId }),
+        queryFn: () =>
+            readQuizQuestionHint({
+                questionId: props.questionId,
+            }),
     })
-    const selectedHint = useMemo(
-        () => data?.find((item) => item.id === selectedId),
-        [selectedId, data]
-    )
-    return (
-        <Sheet
-            open={isOpen}
-            onOpenChange={(val) => {
-                setIsOpen(val)
-                if (!val) {
-                    setSelectedId(null)
+    useEffect(() => {
+        if (!isLoading && !data && userData?.id && isOpen) {
+            let contentToSave = ""
+            setIsGenerating(true)
+            let didGenerate = false
+            const handleStreamChange = (chunk: string) => {
+                if (!didGenerate) didGenerate = true
+                setGeneratedContent((prev) => prev + chunk)
+                contentToSave += chunk
+                setIsGenerating(false)
+            }
+            const handleStreamEnd = () => {
+                if (!didGenerate) {
+                    setIsError(true)
+                    handleHintRefund().catch(console.error)
+                } else {
+                    refetchUser()
+                    addHintsToQuestions(
+                        [
+                            {
+                                author_id: userData.id,
+                                content: contentToSave,
+                                question_id: props.questionId,
+                            },
+                        ],
+                        userData.id
+                    )
                 }
-            }}
-        >
+            }
+            generateQuestionHint(
+                {
+                    questionOptions: props.questionContent,
+                    questionText: props.questionText,
+                },
+                handleStreamChange,
+                handleStreamEnd
+            ).catch(() => {
+                handleHintRefund().catch(console.error)
+            })
+        }
+    }, [
+        data,
+        isLoading,
+        props.questionContent,
+        props.questionId,
+        props.questionText,
+        refetchUser,
+        userData?.id,
+        setIsGenerating,
+        isOpen,
+    ])
+    return (
+        <Sheet open={isOpen} onOpenChange={setIsOpen}>
             <SheetTrigger asChild>
                 <button className="h-10 text-center hover:bg-blue-50 cursor-pointer active:scale-95 transition-all  text-blue-600/80 font-bold text-lg flex items-center justify-center fixed rounded-l-xl border-blue-500/70 top-44 border-r-0 right-0 w-20 gap-px border-2">
                     <Lightbulb className="w-6 h-6" />
@@ -53,55 +98,34 @@ export default function HintsSheet(props: Props) {
                 </button>
             </SheetTrigger>
             <SheetContent
-                className={cn("transition-all  p-5 w-96 min-w-[70vw]")}
+                className={cn(
+                    "transition-all overflow-hidden  px-2 py-0 w-96 min-w-[70vw]"
+                )}
             >
-                <SheetTitle></SheetTitle>
-                <SheetDescription></SheetDescription>
-                {!!selectedId && (
-                    <Button
-                        onClick={() => setSelectedId(null)}
-                        variant={"secondary"}
-                        className="w-fit min-h-[44px] absolute top-2"
-                    >
-                        <ChevronLeft className="stroke-3" />
-                        Back
-                    </Button>
-                )}
-                {isFetching && <GeneralLoadingScreen text={null} />}
-                {!selectedId && (
+                {isError ? (
+                    <ErrorDisplay hideButton />
+                ) : (
                     <>
-                        <h1 className="text-4xl mb-10 text-neutral-600 font-extrabold">
-                            Question Hints
-                        </h1>
-                        {data?.map((hint) => {
-                            return (
-                                <Card
-                                    onClick={() => {
-                                        setSelectedId(hint.id)
-                                    }}
-                                    key={hint.id}
-                                    className={`relative min-h-16 active:scale-95 flex rounded-2xl hover:bg-blue-100/70 pl-1 hover:border-blue-300 hover:shadow-blue-300 hover:pl-2 transition-all cursor-pointer  overflow-hidden`}
-                                >
-                                    <CardContent className="px-2   rounded-xl h-fit my-auto pb-0 !flex justify-center items-center gap-3">
-                                        <Lightbulb className="!w-7 stroke-3 !h-7 text-amber-400 mt-0.5 flex-shrink-0" />
-                                        <p className="text-lg grow  py-4 text-neutral-600 max-w-[90%] font-bold">
-                                            {hint.name}
-                                        </p>
-                                    </CardContent>
-                                </Card>
-                            )
-                        })}
+                        {isLoading ||
+                            (isGenerating && (
+                                <div className="w-full h-[70vh] flex items-center justify-center">
+                                    <Loader2 className="w-10 h-10   animate-spin duration-300 text-blue-400" />
+
+                                    <SheetDescription></SheetDescription>
+                                    <SheetTitle></SheetTitle>
+                                </div>
+                            ))}
+                        <ScrollArea className="px-4">
+                            {!isLoading && !isGenerating && (
+                                <Markdown
+                                    content={data?.content || generatedContent}
+                                />
+                            )}
+
+                            <SheetDescription></SheetDescription>
+                            <SheetTitle></SheetTitle>
+                        </ScrollArea>
                     </>
-                )}
-                {!!selectedHint && (
-                    <ScrollArea className="bg-white mt-5 px-4 ">
-                        <RichTextEditor
-                            contentClassName="!min-h-full pb-10 pt-6 h-full"
-                            containerClassName="h-full "
-                            readonly
-                            initialContent={selectedHint?.content || ""}
-                        />
-                    </ScrollArea>
                 )}
             </SheetContent>
         </Sheet>

@@ -46,7 +46,7 @@ export async function handleHintRefund() {
     }
 
     await axios.post(
-        `/api/quiz/handle-hint-refund`,
+        `/api/quiz/generate-hint/handle-refund`,
         {},
         {
             headers: {

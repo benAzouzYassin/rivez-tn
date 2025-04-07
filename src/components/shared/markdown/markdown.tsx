@@ -43,6 +43,7 @@ import cpp from "react-syntax-highlighter/dist/cjs/languages/prism/cpp"
 import remarkGfm from "remark-gfm"
 import rehypeRaw from "rehype-raw"
 import rehypeSanitize from "rehype-sanitize"
+import { containsArabic } from "@/utils/is-arabic"
 
 SyntaxHighlighter.registerLanguage("tsx", tsx)
 SyntaxHighlighter.registerLanguage("jsx", jsx)
@@ -135,8 +136,9 @@ const sanitizeSchema = {
 }
 
 export function Markdown({ content }: { content: string }) {
+    const isRtl = containsArabic(content)
     return (
-        <div className="markdown-content">
+        <div dir={isRtl ? "rtl" : undefined} className="markdown-content ">
             <ReactMarkdown
                 remarkPlugins={[remarkGfm]}
                 rehypePlugins={[rehypeRaw, [rehypeSanitize, sanitizeSchema]]}
