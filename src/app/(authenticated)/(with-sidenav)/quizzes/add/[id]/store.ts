@@ -47,8 +47,10 @@ interface Actions {
             pdfPages?: string[]
             imagesBase64?: string[]
             allowedQuestions?: string[] | null
+            youtubeLink?: string
+            content?: string
         },
-        method: "subject" | "pdf" | "images",
+        method: "subject" | "pdf" | "images" | "youtube" | "content",
         onSuccess: () => void
     ) => void
     setSelectedQuestion: (localId: string | null) => void

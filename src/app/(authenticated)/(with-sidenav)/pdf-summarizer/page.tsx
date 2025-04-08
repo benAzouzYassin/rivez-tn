@@ -27,13 +27,16 @@ export default function Page() {
 
     return (
         <section className=" relative items-center  min-h-[89vh] bg-neutral-50">
-            <Button
-                onClick={router.back}
-                className="absolute font-bold text-neutral-500 top-4 left-4 "
-                variant={"secondary"}
-            >
-                <ChevronLeft className="!w-5 !h-5 -mr-1 stroke-[2.5]" /> Back
-            </Button>
+            {!files.length && (
+                <Button
+                    onClick={router.back}
+                    className="absolute font-bold text-neutral-500 top-4 left-4 "
+                    variant={"secondary"}
+                >
+                    <ChevronLeft className="!w-5 !h-5 -mr-1 stroke-[2.5]" />{" "}
+                    Back
+                </Button>
+            )}
             {files.length ? (
                 <div className="px-6 bg-white ">
                     <PagesSelection />

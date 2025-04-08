@@ -313,6 +313,7 @@ export default function Page() {
         setIsSaving(true)
 
         createMindMap({
+            items: aiResult,
             author_id: userData?.id,
             edges: edges as any,
             nodes: nodes.map((item) => ({

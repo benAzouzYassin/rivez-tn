@@ -115,6 +115,7 @@ export type Database = {
           edges: Json | null
           id: number
           image: string | null
+          items: Json | null
           language: string | null
           name: string | null
           nodes: Json | null
@@ -126,6 +127,7 @@ export type Database = {
           edges?: Json | null
           id?: number
           image?: string | null
+          items?: Json | null
           language?: string | null
           name?: string | null
           nodes?: Json | null
@@ -137,6 +139,7 @@ export type Database = {
           edges?: Json | null
           id?: number
           image?: string | null
+          items?: Json | null
           language?: string | null
           name?: string | null
           nodes?: Json | null

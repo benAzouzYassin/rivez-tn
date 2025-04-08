@@ -56,8 +56,9 @@ interface Actions {
             allowedQuestions?: string[] | null
             quizId: number
             imagesBase64?: string[]
+            youtubeLink?: string
         },
-        method: "subject" | "pdf" | "images",
+        method: "subject" | "pdf" | "images" | "youtube" | "content",
         onSuccess: () => void
     ) => void
     setCurrentQuestionIndex: (index: number) => void
