@@ -40,7 +40,16 @@ export default function Page() {
     )
     return (
         <main className="flex relative flex-col items-center w-full min-h-screen p-6 bg-white">
-            <section className="grid grid-cols-1 sm:grid-cols-2 max-w-[1100px] gap-x-4 gap-y-5 mt-20 ">
+            <div className="max-w-3xl w-full text-center">
+                <h1 className="text-4xl font-extrabold text-neutral-700 pt-6">
+                    Summarize something
+                </h1>
+                <p className="text-lg text-gray-600 mt-2">
+                    Choose a method to create your summary quickly and easily.
+                </p>
+            </div>
+
+            <section className="grid    grid-cols-1 sm:grid-cols-2 max-w-[850px] gap-x-10 gap-y-7 mt-10 ">
                 {items.map((item) => (
                     <Item key={item.text} {...item} />
                 ))}

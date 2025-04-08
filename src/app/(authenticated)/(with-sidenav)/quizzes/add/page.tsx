@@ -4,7 +4,6 @@ import {
     FileTextIcon,
     ImageIcon,
     LetterTextIcon,
-    Link,
     Video,
 } from "lucide-react"
 import QuizType from "./_components/quiz-type"
@@ -58,15 +57,6 @@ const items = [
 
     {
         disabled: true,
-        value: "link",
-        text: "Website Content",
-        icon: <Link className="!w-7 text-indigo-500 !h-7" />,
-        description:
-            "Generate questions from any webpage by simply pasting a URL.",
-    },
-
-    {
-        disabled: true,
         value: "youtube",
         text: "YouTube Video",
         icon: <Video className="!w-7 text-indigo-500 !h-7" />,
@@ -74,7 +64,7 @@ const items = [
             "Transform any YouTube video into a comprehensive quiz by providing a URL.",
     },
     {
-        disabled: true,
+        disabled: false,
         value: "image",
         text: "From Images",
         icon: <ImageIcon className="!w-7 text-indigo-500 !h-7" />,

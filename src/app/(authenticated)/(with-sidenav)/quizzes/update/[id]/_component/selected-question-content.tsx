@@ -1,8 +1,7 @@
-import useUpdateQuizStore, { QuizQuestionType } from "../store"
+import useUpdateQuizStore from "../store"
 import AddQuestionsButton from "./add-question-button"
 import Buttons from "./buttons"
 import FillInTheBlankContentComp from "./fill-in-the-blank/fill-in-the-blank-content"
-import HintsSheet from "./hints-sheet"
 import LayoutSelect from "./layout-select"
 import MultipleChoiceContent from "./multiple-choice-question/multiple-choice-content"
 import MatchingPairsContent from "./pair-matchint-question/pair-matching-content"
@@ -16,18 +15,7 @@ export default function SelectedQuestionContent() {
     const selectedQuestion = allQuestions.find(
         (q) => q.localId === selectedQuestionId
     )
-    const updateQuestion = useUpdateQuizStore((s) => s.updateQuestion)
 
-    const setHints = (hints: QuizQuestionType["hints"]) => {
-        if (selectedQuestionId) {
-            updateQuestion(
-                {
-                    hints,
-                },
-                selectedQuestionId
-            )
-        }
-    }
     if (!selectedQuestion) {
         return (
             <section className="flex min-h-[70vh] items-center justify-center w-full h-full">
@@ -63,10 +51,6 @@ active:scale-95 transition-transform duration-150"
             {selectedQuestion.type === "FILL_IN_THE_BLANK" && (
                 <FillInTheBlankContentComp />
             )}
-            <HintsSheet
-                hints={selectedQuestion.hints || []}
-                setHints={setHints}
-            />
         </section>
     )
 }

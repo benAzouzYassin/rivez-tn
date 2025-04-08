@@ -4,7 +4,6 @@ import { cn } from "@/lib/ui-utils"
 import { useSidenav } from "@/providers/sidenav-provider"
 import {
     AppWindowIcon,
-    BookCopy,
     Gamepad2,
     Settings,
     SquareMousePointer,
@@ -32,11 +31,6 @@ export default function AdminLayout({ children }: Props) {
                         name: "Quizzes",
                         icon: <Gamepad2 className="!w-6 !h-6" />,
                         route: "/admin/quizzes",
-                    },
-                    {
-                        name: "Categories",
-                        icon: <BookCopy className="!w-6 !h-6" />,
-                        route: "/admin/categories",
                     },
                     {
                         name: "Submissions",

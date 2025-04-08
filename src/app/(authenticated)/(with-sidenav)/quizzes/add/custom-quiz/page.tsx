@@ -1,16 +1,14 @@
 "use client"
 
 import { Button } from "@/components/ui/button"
-import { ChevronLeft } from "lucide-react"
-import { useRouter } from "nextjs-toploader/app"
-
-import CategorySelect from "@/components/shared/category-select"
 import { Input } from "@/components/ui/input"
 import { createQuiz } from "@/data-access/quizzes/create"
 import { useCurrentUser } from "@/hooks/use-current-user"
 import { toastError } from "@/lib/toasts"
 import { useSidenav } from "@/providers/sidenav-provider"
 import { zodResolver } from "@hookform/resolvers/zod"
+import { ChevronLeft, Edit } from "lucide-react"
+import { useRouter } from "nextjs-toploader/app"
 import { useMemo, useState } from "react"
 import { Controller, useForm } from "react-hook-form"
 import { z } from "zod"
@@ -96,27 +94,7 @@ export default function Page() {
                     className="w-full"
                     errorMessage={errors.name?.message}
                 />
-                <Controller
-                    control={control}
-                    name="category"
-                    render={({ field: { onChange, value, onBlur } }) => (
-                        <CategorySelect
-                            placeholder="Category"
-                            enableAddButton
-                            inputClassName="w-full "
-                            selectedId={value}
-                            errorMessage={errors.category?.message}
-                            onSelect={({ id }) => {
-                                onChange(id)
-                                onBlur()
-                            }}
-                            onUnselect={() => {
-                                onChange(null)
-                                onBlur()
-                            }}
-                        />
-                    )}
-                />
+
                 <Controller
                     control={control}
                     name="difficulty"
@@ -137,10 +115,9 @@ export default function Page() {
                     isLoading={isSubmitting || isLoading}
                     type="button"
                     onClick={handleSubmit(onSubmit)}
-                    className="font-extrabold mt-4 uppercase text-sm"
-                    variant="blue"
+                    className="font-extrabold uppercase py-7 mt-5 text-sm"
                 >
-                    Create Quiz
+                    Create Quiz <Edit />
                 </Button>
             </section>
         </main>

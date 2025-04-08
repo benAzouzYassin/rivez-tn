@@ -100,10 +100,13 @@
         "react-to-print": "^3.0.5",
         "react-virtuoso": "^4.12.3",
         "recharts": "^2.15.0",
+        "rehype-raw": "^7.0.0",
+        "rehype-sanitize": "^6.0.0",
         "remark-gfm": "^4.0.1",
         "sanitize-html": "^2.15.0",
         "server-only": "^0.0.1",
         "tiptap-extension-resize-image": "^1.2.1",
+        "tiptap-markdown": "^0.8.10",
         "use-debounce": "^10.0.4",
         "zod": "^3.24.1",
         "zustand": "^5.0.3"

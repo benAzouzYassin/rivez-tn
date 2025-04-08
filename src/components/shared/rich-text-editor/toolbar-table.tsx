@@ -179,7 +179,7 @@ export default function ToolbarTable({ editor }: ToolbarTableProps) {
                         </div>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent className="!min-w-64">
-                        <DropdownMenuItem
+                        {/* <DropdownMenuItem
                             className="font-semibold hover:bg-neutral-200/70 cursor-pointer"
                             onClick={toggleHeaderRow}
                         >
@@ -212,7 +212,7 @@ export default function ToolbarTable({ editor }: ToolbarTableProps) {
                             <LucideArrowRightLeft className="mr-2 h-4 w-4" />
                             Merge or Split Cells
                         </DropdownMenuItem>
-                        <DropdownMenuSeparator />
+                        <DropdownMenuSeparator /> */}
                         <DropdownMenuItem
                             className="font-semibold cursor-pointer hover:bg-neutral-200/70"
                             onClick={addRowBefore}

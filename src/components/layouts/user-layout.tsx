@@ -56,20 +56,6 @@ export default function UserLayout({ children }: Props) {
                         name: "Quizzes",
                         icon: <Gamepad2Icon className="!w-6 !h-6" />,
                         route: "/quizzes",
-                        subItems: [
-                            {
-                                icon: <LayoutListIcon className="!w-6 !h-6" />,
-                                name: "Quizzes List",
-                                route: "/quizzes/list",
-                            },
-                            {
-                                icon: (
-                                    <WandSparklesIcon className="!w-6 !h-6" />
-                                ),
-                                name: "Generate quiz",
-                                route: "/quizzes/add",
-                            },
-                        ],
                     },
                     // {
                     //     name: "Leaderboard",

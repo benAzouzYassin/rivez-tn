@@ -3,12 +3,10 @@ import ImageWithPreview from "@/components/ui/img-with-preview"
 import { cn } from "@/lib/ui-utils"
 import { formatDate } from "@/utils/date"
 import { ColumnDef } from "@tanstack/react-table"
-import CategoryButton from "./_components/category"
+import IsFeaturedSwitch from "./_components/is-featured-switch"
 import MoreButton from "./_components/more-button"
 import StatusButton from "./_components/status-button"
 import { Item } from "./page"
-import IsFeaturedSwitch from "./_components/is-featured-switch"
-import { Badge } from "@/components/ui/badge"
 
 export const columns: ColumnDef<Item>[] = [
     {
@@ -48,7 +46,7 @@ export const columns: ColumnDef<Item>[] = [
         header: () => <div className="text-center -translate-x-10">Name</div>,
         cell: ({ row }) => {
             return (
-                <div className="flex items-center gap-4">
+                <div className="flex items-center max-w-[200px] gap-4">
                     <div
                         className={cn(
                             "min-h-14  h-14 ml-4 relative w-14 min-w-14 rounded-xl",
@@ -65,7 +63,7 @@ export const columns: ColumnDef<Item>[] = [
                             </div>
                         )}
                     </div>
-                    <p className="text-center text-base font-semibold">
+                    <p className=" line-clamp-3  text-base font-semibold">
                         {row.original.name}
                     </p>
                 </div>
@@ -92,19 +90,6 @@ export const columns: ColumnDef<Item>[] = [
                 </p>
             )
         },
-    },
-    {
-        header: "Category",
-        cell: ({ row }) => (
-            <div className="flex items-center !text-base font-semibold justify-center">
-                <div className="translate-y-2">
-                    <CategoryButton
-                        itemId={row.original.id}
-                        categoryId={row.original.category?.id || null}
-                    />
-                </div>
-            </div>
-        ),
     },
     {
         header: "Questions",

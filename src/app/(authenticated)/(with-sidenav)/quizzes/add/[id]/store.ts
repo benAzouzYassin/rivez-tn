@@ -45,9 +45,10 @@ interface Actions {
             minQuestions: number | null
             notes: string | null
             pdfPages?: string[]
+            imagesBase64?: string[]
             allowedQuestions?: string[] | null
         },
-        method: "subject" | "pdf",
+        method: "subject" | "pdf" | "images",
         onSuccess: () => void
     ) => void
     setSelectedQuestion: (localId: string | null) => void
@@ -161,6 +162,8 @@ const useQuizStore = create<Store>((set, get) => ({
                     isGenerationQuizError: true,
                     shadowQuestionsCount: 0,
                 })
+                console.log("refund when timeout ")
+
                 await handleQuizRefund({
                     cause: "timed out",
                     quizId: data.quizId,
@@ -254,6 +257,7 @@ const useQuizStore = create<Store>((set, get) => ({
                             isGenerationQuizError: true,
                             shadowQuestionsCount: 0,
                         })
+                        console.log("refund when stream end ")
                         handleQuizRefund({
                             cause: "",
                             quizId: data.quizId,
@@ -275,6 +279,8 @@ const useQuizStore = create<Store>((set, get) => ({
                 isGenerationQuizError: true,
                 shadowQuestionsCount: 0,
             })
+            console.log("refund when catch error end ")
+
             await handleQuizRefund({
                 cause: JSON.stringify(error),
                 quizId: data.quizId,

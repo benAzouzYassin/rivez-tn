@@ -1,11 +1,11 @@
 import { getUserInServerSide } from "@/data-access/users/authenticate-user-ssr"
 import { supabaseAdminServerSide } from "@/lib/supabase-server-side"
 import { NextRequest, NextResponse } from "next/server"
+import { COST } from "../constants"
 
 const MONTHLY_ALLOWED_REFUNDS = Number(
     process.env.NEXT_PUBLIC_ALLOWED_REFUNDS_PER_MONTH || "0"
 )
-const COST = Number(process.env.NEXT_PUBLIC_LOW_CREDIT_COST || 0.2)
 export async function POST(req: NextRequest) {
     try {
         const accessToken = req.headers.get("access-token") || ""
@@ -26,7 +26,29 @@ export async function POST(req: NextRequest) {
             .single()
             .throwOnError()
 
+        const lastHintGeneration = await supabaseAdmin
+            .from("questions_hints")
+            .select("*")
+            .order("created_at", {
+                ascending: false,
+            })
+            .eq("user_id", userId)
+            .single()
+            .throwOnError()
+
         const now = new Date()
+        if (
+            now.getTime() -
+                new Date(lastHintGeneration.data.created_at).getTime() >
+            5 * 60 * 1000
+        ) {
+            return NextResponse.json(
+                {
+                    error: "Refund can only be requested within 5 minutes of hint generation",
+                },
+                { status: 400 }
+            )
+        }
         const firstDayOfMonth = new Date(
             now.getFullYear(),
             now.getMonth(),
@@ -62,7 +84,7 @@ export async function POST(req: NextRequest) {
             .from("refunds")
             .insert({
                 user_id: userId,
-                cause: "hint generation error",
+                cause: "hint generation.",
             })
             .throwOnError()
 

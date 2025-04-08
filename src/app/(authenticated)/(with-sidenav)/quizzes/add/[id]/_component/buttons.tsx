@@ -164,7 +164,7 @@ export default function Buttons() {
                 queryClient.invalidateQueries({
                     queryKey: ["quizzes"],
                 })
-                router.replace("/quizzes/list")
+                router.replace("/quizzes")
                 reset()
             }
         } catch (error) {
@@ -220,8 +220,8 @@ export default function Buttons() {
         handleSave(action)
     }
     return (
-        <div className=" w-full  fixed flex items-center justify-end right-0 top-24 ">
-            <div className="flex   items-center gap-2 bg-white p-2 rounded-2xl">
+        <div className=" w-full z-50   fixed flex items-center justify-end right-0 top-24 ">
+            <div className="flex z-50   items-center gap-2 bg-white p-2 rounded-2xl">
                 <WarningDialog
                     isOpen={isCanceling}
                     onOpenChange={setIsCanceling}

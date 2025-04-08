@@ -7,10 +7,12 @@ import { useEffect } from "react"
 
 interface ErrorDisplayProps {
     message?: string
+    hideButton?: boolean
 }
 
 export const ErrorDisplay: React.FC<ErrorDisplayProps> = ({
     message = "An error has occurred",
+    hideButton,
 }) => {
     const router = useRouter()
 
@@ -86,17 +88,19 @@ export const ErrorDisplay: React.FC<ErrorDisplayProps> = ({
             </motion.p>
 
             {/* Button */}
-            <motion.div
-                className="mt-8 w-full max-w-[300px]"
-                variants={itemVariants}
-            >
-                <Button
-                    onClick={router.back}
-                    className="w-full col-span-3 text-xl h-14 bg-neutral-800 border-neutral-500 shadow-neutral-500"
+            {!hideButton && (
+                <motion.div
+                    className="mt-8 w-full max-w-[300px]"
+                    variants={itemVariants}
                 >
-                    Go back
-                </Button>
-            </motion.div>
+                    <Button
+                        onClick={router.back}
+                        className="w-full col-span-3 text-xl h-14 bg-neutral-800 border-neutral-500 shadow-neutral-500"
+                    >
+                        Go back
+                    </Button>
+                </motion.div>
+            )}
         </motion.section>
     )
 }

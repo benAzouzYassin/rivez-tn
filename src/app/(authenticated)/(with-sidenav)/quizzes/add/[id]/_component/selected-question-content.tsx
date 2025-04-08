@@ -3,7 +3,6 @@ import useQuizStore, { QuizQuestionType } from "../store"
 import AddQuestionButton from "./add-question-button"
 import Buttons from "./buttons"
 import FillInTheBlankContent from "./fill-in-the-blank/fill-in-the-blank-content"
-import HintsSheet from "./hints-sheet"
 import LayoutSelect from "./layout-select"
 import MultipleChoiceContent from "./multiple-choice-question/multiple-choice-content"
 import MatchingPairsContent from "./pair-matchint-question/pair-matching-content"
@@ -62,11 +61,6 @@ export default function SelectedQuestionContent() {
             {selectedQuestion.type === "FILL_IN_THE_BLANK" && (
                 <FillInTheBlankContent />
             )}
-            <HintsSheet
-                selectedQuestion={selectedQuestion}
-                hints={selectedQuestion.hints || []}
-                setHints={setHints}
-            />
         </section>
     )
 }

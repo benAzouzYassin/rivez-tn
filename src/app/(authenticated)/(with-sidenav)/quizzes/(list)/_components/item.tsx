@@ -1,9 +1,8 @@
 import { Badge } from "@/components/ui/badge"
-import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader } from "@/components/ui/card"
 import { cn } from "@/lib/ui-utils"
-import { BookOpen, FileQuestion, Users, Zap } from "lucide-react"
-import Link from "next/link"
+import { BookOpen, FileQuestion, Users } from "lucide-react"
+import { useRouter } from "nextjs-toploader/app"
 import { ItemType } from "../page"
 import MoreButton from "./more-button"
 
@@ -12,6 +11,7 @@ interface Props {
 }
 
 export default function Item({ item }: Props) {
+    const router = useRouter()
     const background = `linear-gradient(135deg, hsl(${
         item.id * 50
     }, 70%, 90%), hsl(${item.id * 50}, 70%, 75%))`
@@ -21,15 +21,15 @@ export default function Item({ item }: Props) {
 
     return (
         <Card
+            onClick={() => router.push(`/quizzes/${item.id}`)}
             className={
-                "relative h-[420px] flex rounded-3xl  flex-col  transition-shadow"
+                "relative active:translate-y-1 active:shadow-[0px_2px_0px] transition-all hover:cursor-pointer hover:bg-neutral-100 hover:shadow-neutral-300 hover:border-neutral-300 h-[360px] flex rounded-3xl  flex-col  "
             }
         >
             <div
                 className={`h-48 min-h-48 hover:cursor-pointer transition-all relative bg-gray-100  overflow-hidden`}
             >
-                <Link
-                    href={`/quizzes/${item.id}`}
+                <div
                     className={cn(
                         "absolute inset-0  flex active:scale-140 hover:scale-150 transition-all items-center justify-center",
                         {
@@ -44,12 +44,12 @@ export default function Item({ item }: Props) {
                         <img
                             src={item.image}
                             alt={item.name}
-                            className="absolute top-1/2 -translate-x-1/2 -translate-y-1/2 left-1/2 object-center w-[90%] object-contain h-[90%]"
+                            className="absolute top-1/2 -translate-x-1/2 -translate-y-1/2 left-1/2 object-center  object-cover "
                         />
                     ) : (
                         <BookOpen className="w-12 h-12 text-white/70" />
                     )}
-                </Link>
+                </div>
             </div>
 
             <div className="flex flex-col">
@@ -61,8 +61,8 @@ export default function Item({ item }: Props) {
                         className="scale-90 absolute right-3"
                     />
                     <div className="flex  justify-between items-start">
-                        <div className="">
-                            <h2 className="text-2xl pb-2 line-clamp-1 first-letter:uppercase font-bold">
+                        <div className=" max-w-[90%]">
+                            <h2 className="text-2xl truncate pb-2   first-letter:uppercase font-bold">
                                 {item.name}
                             </h2>
                             {!!item.category?.name && (
@@ -102,21 +102,6 @@ export default function Item({ item }: Props) {
                         </Badge>
                     </div>
                 </CardContent>
-
-                <div className="block pt-4 mt-auto h-20 gap-1">
-                    <Link
-                        href={`/quizzes/${item.id}`}
-                        className="w-full absolute px-4 bottom-6 flex"
-                    >
-                        <Button
-                            className="grow text-lg font-bold group"
-                            variant={"blue"}
-                        >
-                            Get started{" "}
-                            <Zap className="w-5 h-5 ml-2 group-hover:animate-pulse" />
-                        </Button>
-                    </Link>
-                </div>
             </div>
         </Card>
     )

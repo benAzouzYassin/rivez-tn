@@ -11,6 +11,7 @@ const MAX_CHARS_PER_PDF = 300_000
 const LOW_MODEL_HIGH_COST_QUIZ = Number(
     process.env.NEXT_PUBLIC_HIGH_CREDIT_COST
 )
+const DEFAULT_MIN_QUESTIONS = 12
 export async function POST(req: NextRequest) {
     try {
         const accessToken = req.headers.get("access-token") || ""
@@ -34,7 +35,7 @@ export async function POST(req: NextRequest) {
             return NextResponse.json({ error }, { status: 400 })
         }
 
-        const quizLanguage = data.language || "english"
+        const quizLanguage = data.language || ""
         const notes = data.notes || null
 
         const maxQuestionsFromConfig = Number(
@@ -48,7 +49,7 @@ export async function POST(req: NextRequest) {
         const minQuestions =
             data.minQuestions !== undefined && data.minQuestions !== null
                 ? Math.min(data.minQuestions, maxQuestionsFromConfig)
-                : 1
+                : DEFAULT_MIN_QUESTIONS
 
         const charCount = data.pdfPages.join("").length
 

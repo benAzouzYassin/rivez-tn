@@ -158,7 +158,6 @@ export type Database = {
           content: string | null
           created_at: string
           id: number
-          name: string | null
           question_id: number | null
         }
         Insert: {
@@ -166,7 +165,6 @@ export type Database = {
           content?: string | null
           created_at?: string
           id?: number
-          name?: string | null
           question_id?: number | null
         }
         Update: {
@@ -174,7 +172,6 @@ export type Database = {
           content?: string | null
           created_at?: string
           id?: number
-          name?: string | null
           question_id?: number | null
         }
         Relationships: [

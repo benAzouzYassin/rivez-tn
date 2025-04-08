@@ -415,7 +415,7 @@ const useUpdateQuizStore = create<Store>((set, get) => ({
                             q.questions_hints.map((hint) => ({
                                 content: hint.content || "",
                                 id: hint.id,
-                                name: hint.name || "",
+                                name: "",
                                 isNew: false,
                                 localId: String(hint.id),
                             })) || [],

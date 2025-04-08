@@ -133,29 +133,6 @@ export default function UpdateQuizDialog(props: Props) {
                             className="w-full"
                             errorMessage={errors.name?.message}
                         />
-                        <Controller
-                            control={control}
-                            name="category"
-                            render={({
-                                field: { onChange, value, onBlur },
-                            }) => (
-                                <CategorySelect
-                                    placeholder="Category"
-                                    enableAddButton
-                                    inputClassName="w-full "
-                                    selectedId={value}
-                                    errorMessage={errors.category?.message}
-                                    onSelect={({ id }) => {
-                                        onChange(id)
-                                        onBlur()
-                                    }}
-                                    onUnselect={() => {
-                                        onChange(null)
-                                        onBlur()
-                                    }}
-                                />
-                            )}
-                        />
 
                         <Textarea
                             {...register("description")}

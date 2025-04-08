@@ -119,7 +119,11 @@ export default function MultipleAnswerQuestion(props: Props) {
                     "flex flex-col relative h-fit items-center justify-center pb-44"
                 )}
             >
-                <HintsSheet questionId={props.question.id} />
+                <HintsSheet
+                    questionContent={JSON.stringify(props.question.content)}
+                    questionText={props.question.question}
+                    questionId={props.question.id}
+                />
                 <div
                     className={cn("", {
                         "flex flex-col w-full  items-center justify-center":

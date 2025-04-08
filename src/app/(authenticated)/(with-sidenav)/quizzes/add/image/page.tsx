@@ -1,5 +1,8 @@
 "use client"
 
+import { POSSIBLE_QUESTIONS } from "@/app/api/quiz/generate-quiz/constants"
+import { ErrorDisplay } from "@/components/shared/error-display"
+import GeneralLoadingScreen from "@/components/shared/general-loading-screen"
 import { Button } from "@/components/ui/button"
 import {
     Collapsible,
@@ -7,6 +10,7 @@ import {
     CollapsibleTrigger,
 } from "@/components/ui/collapsible"
 import { Input } from "@/components/ui/input"
+import SearchSelectMultiple from "@/components/ui/search-select-multiple"
 import {
     Select,
     SelectContent,
@@ -14,13 +18,6 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select"
-import { ChevronDown, ChevronLeft, Edit, Sparkles, ZapIcon } from "lucide-react"
-import { Controller } from "react-hook-form"
-
-import { POSSIBLE_QUESTIONS } from "@/app/api/quiz/generate-quiz/constants"
-import { ErrorDisplay } from "@/components/shared/error-display"
-import GeneralLoadingScreen from "@/components/shared/general-loading-screen"
-import SearchSelectMultiple from "@/components/ui/search-select-multiple"
 import { Textarea } from "@/components/ui/textarea"
 import { createQuiz } from "@/data-access/quizzes/create"
 import { useCurrentUser } from "@/hooks/use-current-user"
@@ -28,16 +25,23 @@ import { toastError, toastSuccess } from "@/lib/toasts"
 import { useSidenav } from "@/providers/sidenav-provider"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useQueryClient } from "@tanstack/react-query"
+import { ChevronDown, ChevronLeft, SparklesIcon } from "lucide-react"
+import dynamic from "next/dynamic"
 import { useRouter } from "nextjs-toploader/app"
 import { useEffect, useMemo, useState } from "react"
-import { useForm } from "react-hook-form"
+import { Controller, useForm } from "react-hook-form"
 import { z } from "zod"
 import { useQuestionsStore as useViewOnlyQuizStore } from "../../../../quizzes/[id]/store"
 import { default as useEditableQuizStore } from "../[id]/store"
 import { DifficultySelect } from "../_components/difficulty-select"
 import ImageUpload from "../_components/image-upload"
-
+import ImagesInputLoading from "./_components/images-input-loading"
 const POSSIBLE_QUESTIONS_TYPES = Object.keys(POSSIBLE_QUESTIONS)
+
+const ImagesInput = dynamic(() => import("./_components/images-input"), {
+    loading: () => <ImagesInputLoading />,
+})
+
 export type FormValues = {
     category: string | null
     name: string
@@ -45,16 +49,16 @@ export type FormValues = {
     language: string | null
     maxQuestions: number | null
     minQuestions: number | null
-    pdfName: string | null
     notes: string | null
     allowedQuestions?: string[] | null
     difficulty: string | null
 }
 
-export default function SubjectForm() {
+export default function Document() {
     const sideNav = useSidenav()
     const queryClient = useQueryClient()
     const [imageUrl, setImageUrl] = useState<string | null>(null)
+    const [imagesBase64, setImagesBase64] = useState<string[]>([])
     const [isUploadingImage, setIsUploadingImage] = useState(false)
     const [isLoading, setIsLoading] = useState(false)
     const user = useCurrentUser()
@@ -89,17 +93,14 @@ export default function SubjectForm() {
                     .optional()
                     .nullable(),
                 notes: z.string().nullable(),
+                difficulty: z.string().nullable().optional(),
+
                 name: z
                     .string()
                     .min(1, "Name is required")
                     .max(100, "Input exceeds maximum length"),
-                mainTopic: z
-                    .string()
-                    .min(1, "The quiz subject is required")
-                    .max(100, "Input exceeds maximum length"),
                 category: z.string().nullable().optional(),
                 language: z.string().nullable().optional(),
-                difficulty: z.string().nullable().optional(),
                 maxQuestions: z.coerce.number().max(999).nullable().optional(),
                 minQuestions: z.coerce
                     .number()
@@ -119,7 +120,6 @@ export default function SubjectForm() {
             mainTopic: "",
             maxQuestions: null,
             minQuestions: null,
-            allowedQuestions: null,
         },
     })
 
@@ -143,27 +143,36 @@ export default function SubjectForm() {
                     sideNav.toggleSidenav()
                 }
                 router.push(`/quizzes/add/${quizId}?isGeneratingWithAi=true`)
-                addToEditQuizWithAi({ ...data, quizId }, "subject", () => {
-                    // on success
-                    queryClient.refetchQueries({
-                        predicate: (query) =>
-                            query.queryKey.includes("current-user"),
-                    })
-                })
+                addToEditQuizWithAi(
+                    { ...data, quizId, imagesBase64: imagesBase64 },
+                    "images",
+                    () => {
+                        // on success
+                        queryClient.refetchQueries({
+                            predicate: (query) =>
+                                query.queryKey.includes("current-user"),
+                        })
+                    }
+                )
             }
 
             if (type === "generate-and-take") {
-                addToTakeQuizWithAi({ ...data, quizId }, "subject", () => {
-                    // on success
-                    toastSuccess("Quiz generated successfully")
-                    router.push(`/quizzes/${quizId}?isGeneratingWithAi=true`)
-                    queryClient.refetchQueries({
-                        predicate: (query) =>
-                            query.queryKey.includes("current-user"),
-                    })
-                })
+                addToTakeQuizWithAi(
+                    { ...data, quizId, imagesBase64: imagesBase64 },
+                    "images",
+                    () => {
+                        // on success
+                        toastSuccess("Quiz generated successfully")
+                        router.push(
+                            `/quizzes/${quizId}?isGeneratingWithAi=true`
+                        )
+                        queryClient.refetchQueries({
+                            predicate: (query) =>
+                                query.queryKey.includes("current-user"),
+                        })
+                    }
+                )
             }
-
             setImageUrl(null)
         } catch (error) {
             toastError("Something wrong happened.")
@@ -178,10 +187,11 @@ export default function SubjectForm() {
     if (isToTakeQuizError) {
         return <ErrorDisplay message="Something went wrong..." />
     }
+
     return (
         <main className="flex relative items-center pb-20  flex-col">
             <h1 className="mt-10 text-neutral-600 text-3xl font-extrabold">
-                Generate from subject
+                Generate from pdf
             </h1>
             <div className="flex items-center  h-0">
                 <Button
@@ -200,37 +210,26 @@ export default function SubjectForm() {
                     className="w-full"
                     errorMessage={form.formState.errors.name?.message}
                 />
-                <Input
-                    {...form.register("mainTopic")}
-                    placeholder="Subject"
-                    className="w-full"
-                    errorMessage={form.formState.errors.mainTopic?.message}
-                />
-                <div className=" -mt-1 gap-8">
-                    <Select
-                        defaultValue={form.getValues().language || undefined}
-                        onValueChange={(val) => form.setValue("language", val)}
-                    >
-                        <SelectTrigger className="data-[placeholder]:text-neutral-400">
-                            <SelectValue placeholder="Language" />
-                        </SelectTrigger>
-                        <SelectContent>
-                            <SelectItem value="EN">English</SelectItem>
-                            <SelectItem disabled value="AR">
-                                Arabic{" "}
-                                <span className="text-sm italic">
-                                    (soon...)
-                                </span>
-                            </SelectItem>
-                            <SelectItem disabled value="FR">
-                                French{" "}
-                                <span className="text-sm italic">
-                                    (soon...)
-                                </span>
-                            </SelectItem>
-                        </SelectContent>
-                    </Select>
-                </div>
+                <ImagesInput onChange={setImagesBase64} />
+                <Select
+                    defaultValue={form.getValues().language || undefined}
+                    onValueChange={(val) => form.setValue("language", val)}
+                >
+                    <SelectTrigger className="data-[placeholder]:text-neutral-400 mt-4">
+                        <SelectValue placeholder="Language" />
+                    </SelectTrigger>
+                    <SelectContent>
+                        <SelectItem value="EN">English</SelectItem>
+                        <SelectItem disabled value="AR">
+                            Arabic{" "}
+                            <span className="text-sm italic">(soon...)</span>
+                        </SelectItem>
+                        <SelectItem disabled value="FR">
+                            French{" "}
+                            <span className="text-sm italic">(soon...)</span>
+                        </SelectItem>
+                    </SelectContent>
+                </Select>
                 <Collapsible className="group ">
                     <CollapsibleTrigger className="w-full data-[state=open]:font-bold  data-[state=open]:text-neutral-500 data-[state=open]:bg-blue-300/80 data-[state=open]:border-transparent   mb-4 hover:bg-neutral-100 flex justify-between items-center rounded-xl transition-all duration-200 bg-[#F7F7F7]/50 font-medium border-2 p-3 h-12 border-[#E5E5E5] text-[#AFAFAF] cursor-pointer">
                         <span className="underline underline-offset-4">
@@ -310,21 +309,21 @@ export default function SubjectForm() {
                                             ?.message
                                     }
                                 />
-                            </div>
-                            <div className="col-span-2">
-                                <Controller
-                                    control={form.control}
-                                    name="difficulty"
-                                    render={({
-                                        field: { onChange, value, onBlur },
-                                    }) => (
-                                        <DifficultySelect
-                                            selected={value as any}
-                                            setSelected={onChange}
-                                            className="col-span-2"
-                                        />
-                                    )}
-                                />
+                                <div className="col-span-2  -mt-7">
+                                    <Controller
+                                        control={form.control}
+                                        name="difficulty"
+                                        render={({
+                                            field: { onChange, value, onBlur },
+                                        }) => (
+                                            <DifficultySelect
+                                                selected={value as any}
+                                                setSelected={onChange}
+                                                className="col-span-2"
+                                            />
+                                        )}
+                                    />
+                                </div>
                             </div>
                         </div>
                     </CollapsibleContent>
@@ -334,7 +333,7 @@ export default function SubjectForm() {
                     imageUrl={imageUrl}
                     onImageUrlChange={setImageUrl}
                 />
-                <div className="grid  gap-5">
+                <div className="grid gap-5">
                     {/* <Button
                         isLoading={isLoading}
                         disabled={isUploadingImage}
@@ -360,7 +359,7 @@ export default function SubjectForm() {
                         }}
                         className="font-extrabold uppercase py-7 mt-5 text-sm"
                     >
-                        Generate Quiz <Sparkles className="!w-5 !h-5" />
+                        Generate Quiz <SparklesIcon className="!w-5 !h-5" />
                     </Button>
                 </div>
             </section>
