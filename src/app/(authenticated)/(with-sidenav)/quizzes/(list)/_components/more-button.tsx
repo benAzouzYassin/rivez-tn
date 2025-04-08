@@ -65,9 +65,7 @@ export default function MoreButton(props: Props) {
                             icon: <Info className="w-5 h-5" />,
                             label: "Details",
                             onClick: () =>
-                                router.push(
-                                    `/admin/quizzes/details/${props.itemId}`
-                                ),
+                                router.push(`/quizzes/details/${props.itemId}`),
                         },
                         {
                             icon: <Trash2 className="w-5 h-5" />,

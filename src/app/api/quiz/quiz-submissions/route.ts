@@ -57,6 +57,7 @@ export async function POST(req: NextRequest) {
                 submissionData.answersData.map((item) => ({
                     ...item,
                     quiz_submission: insertedSubmissionId,
+                    user_id: userId,
                 }))
             )
             .throwOnError()

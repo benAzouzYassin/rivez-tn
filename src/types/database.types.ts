@@ -205,6 +205,7 @@ export type Database = {
           quiz_submission: number | null
           responses: Json | null
           seconds_spent: number | null
+          user_id: string | null
         }
         Insert: {
           created_at?: string
@@ -216,6 +217,7 @@ export type Database = {
           quiz_submission?: number | null
           responses?: Json | null
           seconds_spent?: number | null
+          user_id?: string | null
         }
         Update: {
           created_at?: string
@@ -227,6 +229,7 @@ export type Database = {
           quiz_submission?: number | null
           responses?: Json | null
           seconds_spent?: number | null
+          user_id?: string | null
         }
         Relationships: [
           {
@@ -242,6 +245,13 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "quiz_submissions"
             referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "quiz_submission_answers_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["user_id"]
           },
         ]
       }

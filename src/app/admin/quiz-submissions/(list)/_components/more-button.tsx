@@ -45,7 +45,7 @@ export default function MoreButton(props: Props) {
                         label: "Details",
                         onClick: () =>
                             router.push(
-                                `/admin/quiz-submissions/details/${props.itemId}`
+                                `/quizzes/submission-details/${props.itemId}`
                             ),
                     },
                     {

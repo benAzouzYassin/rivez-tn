@@ -9,7 +9,6 @@ import { Check, Clock, SkipForward, X } from "lucide-react"
 import { useParams } from "next/navigation"
 import Submissions from "./_components/submissions"
 import { QuestionsBarChart } from "./_components/questions-bar-chart"
-import StatusButton from "../../(list)/_components/status-button"
 
 export default function Page() {
     const params = useParams()
@@ -57,14 +56,6 @@ export default function Page() {
                     <p className="text-base font-bold text-neutral-500">
                         {data?.quizData.category?.name}
                     </p>
-                </div>
-                <div className=" ml-auto scale-125 mr-4">
-                    {data?.quizData && (
-                        <StatusButton
-                            itemId={data?.quizData.id}
-                            status={data?.quizData.publishing_status}
-                        />
-                    )}
                 </div>
             </div>
             <section className="grid gap-5 mt-10 grid-cols-4">
