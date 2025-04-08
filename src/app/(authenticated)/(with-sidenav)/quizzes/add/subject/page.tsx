@@ -14,7 +14,7 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select"
-import { ChevronDown, ChevronLeft, Edit, Sparkles, ZapIcon } from "lucide-react"
+import { ChevronDown, ChevronLeft, Sparkles } from "lucide-react"
 import { Controller } from "react-hook-form"
 
 import { POSSIBLE_QUESTIONS } from "@/app/api/quiz/generate-quiz/constants"
@@ -38,6 +38,7 @@ import { DifficultySelect } from "../_components/difficulty-select"
 import ImageUpload from "../_components/image-upload"
 
 const POSSIBLE_QUESTIONS_TYPES = Object.keys(POSSIBLE_QUESTIONS)
+
 export type FormValues = {
     category: string | null
     name: string

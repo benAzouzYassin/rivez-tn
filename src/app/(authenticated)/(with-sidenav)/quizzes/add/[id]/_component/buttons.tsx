@@ -229,7 +229,7 @@ export default function Buttons() {
                     onConfirm={async () => {
                         await softDeleteQuizById(quizId)
                         reset()
-                        router.back()
+                        router.replace("/quizzes")
                     }}
                 >
                     <Button className="text-base font-extrabold" variant="red">

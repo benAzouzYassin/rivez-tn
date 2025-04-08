@@ -2,17 +2,17 @@ import Markdown from "@/components/shared/markdown"
 import { Button } from "@/components/ui/button"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { cn } from "@/lib/ui-utils"
+import { wait } from "@/utils/wait"
 import {
     ChevronLeft,
     ChevronRight,
-    Download,
     DownloadIcon,
-    Loader2,
+    HelpCircle,
 } from "lucide-react"
 import { useRef, useState } from "react"
-import SideItem from "./side-item"
 import { useReactToPrint } from "react-to-print"
-import { wait } from "@/utils/wait"
+import SideItem from "./side-item"
+import GenerateQuizDialog from "../../_components/generate-quiz-dialog"
 
 interface Props {
     files: {
@@ -24,6 +24,7 @@ interface Props {
 }
 
 export default function PagesViewer(props: Props) {
+    const [isQuizDialogOpen, setIsQuizDialogOpen] = useState(false)
     const [isPrinting, setIsPrinting] = useState(false)
     const contentRef = useRef<HTMLDivElement>(null)
     const [activePage, setActivePage] = useState({
@@ -105,6 +106,11 @@ export default function PagesViewer(props: Props) {
             setIsPrinting(false)
         },
     })
+
+    const handleConvertToQuiz = async () => {
+        setIsQuizDialogOpen(true)
+    }
+
     return (
         <div className="flex h-[89vh] overflow-hidden bg-gray-50">
             <div className="w-[360px] h-[95vh] overflow-y-hidden fixed pb-20 bg-white">
@@ -131,6 +137,7 @@ export default function PagesViewer(props: Props) {
             <div className="w-[21.5rem] min-w-[21.5rem]"></div>
             <div className="flex-1 max-w-[calc(100%-21.5rem)] pl-4 relative">
                 <div className="w-screen"></div>
+
                 <div
                     ref={contentRef}
                     className="bg-white p-5 rounded-lg h-[90vh]  overflow-y-auto pb-20 -mt-1 pt-8 border mx-auto"
@@ -173,21 +180,29 @@ export default function PagesViewer(props: Props) {
                             <ChevronRight className="min-w-5 min-h-5 -ml-2 stroke-3" />
                         </Button>
                     </div>
-                    <Button
-                        isLoading={isPrinting}
-                        onClick={() => {
-                            setIsPrinting(true)
-                            wait(100).then(() => {
-                                reactToPrintFn()
-                            })
-                        }}
-                        className=" "
-                        variant={"secondary"}
-                    >
-                        Save <DownloadIcon />
-                    </Button>
+                    <div className="flex  justify-end gap-2">
+                        <Button
+                            isLoading={isPrinting}
+                            onClick={() => {
+                                setIsPrinting(true)
+                                wait(100).then(() => {
+                                    reactToPrintFn()
+                                })
+                            }}
+                        >
+                            Save <DownloadIcon className="ml-1" />
+                        </Button>
+                        <Button onClick={handleConvertToQuiz} variant={"blue"}>
+                            Convert to Quiz <HelpCircle className="ml-1" />
+                        </Button>
+                    </div>
                 </div>
             </div>
+            <GenerateQuizDialog
+                content={JSON.stringify(props.files)}
+                isOpen={isQuizDialogOpen}
+                onOpenChange={setIsQuizDialogOpen}
+            />
         </div>
     )
 }

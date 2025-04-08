@@ -58,7 +58,7 @@ interface Actions {
             imagesBase64?: string[]
             youtubeLink?: string
         },
-        method: "subject" | "pdf" | "images" | "youtube",
+        method: "subject" | "pdf" | "images" | "youtube" | "content",
         onSuccess: () => void
     ) => void
     setCurrentQuestionIndex: (index: number) => void
