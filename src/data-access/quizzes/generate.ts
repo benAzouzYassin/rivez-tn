@@ -7,7 +7,7 @@ import { readCurrentSession } from "../users/read"
 import { CodeSnippetsResponse } from "@/app/api/quiz/generate-code-snippets/route"
 
 export const generateQuiz = async (
-    method: "subject" | "pdf",
+    method: "subject" | "pdf" | "images",
     data: GenerateFromSubjectBody | GenerateFromPdfBody,
     onChange: (newValue: z.infer<typeof quizQuestionSchema> | null) => void,
     onFinish?: () => void
@@ -24,6 +24,9 @@ export const generateQuiz = async (
     }
     if (method === "pdf") {
         endpoint = "/api/quiz/generate-quiz/from-pdf"
+    }
+    if (method === "images") {
+        endpoint = "/api/quiz/generate-quiz/from-images"
     }
     const response = await fetch(endpoint, {
         method: "POST",

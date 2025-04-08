@@ -28,7 +28,7 @@ export async function POST(req: NextRequest) {
         const { data: quizData } = await supabaseAdmin
             .from("quizzes")
             .select(
-                "id,credit_cost,author_id,created_at,quizzes_refunds(count),quizzes_questions(count),quiz_submissions(count)",
+                "id,credit_cost,author_id,created_at,refunds(count),quizzes_questions(count),quiz_submissions(count)",
                 { count: "exact" }
             )
             .eq("id", data.quizId)

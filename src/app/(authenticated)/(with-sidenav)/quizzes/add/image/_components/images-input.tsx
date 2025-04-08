@@ -9,7 +9,7 @@ import { useState } from "react"
 type Props = {
     onChange: (base64Images: string[]) => void
 }
-export default function ImageInput(props: Props) {
+export default function ImagesInput(props: Props) {
     const [isUploading, setIsUploading] = useState(false)
     return (
         <MultipleFileInput

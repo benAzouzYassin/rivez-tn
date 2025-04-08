@@ -6,6 +6,7 @@ import { FileTextIcon, Loader2, Upload, X } from "lucide-react"
 import { ReactNode, useCallback, useState } from "react"
 import { useDropzone } from "react-dropzone"
 import { Button } from "./button"
+import ImageWithPreview from "./img-with-preview"
 
 interface Props {
     onChange: (files: File[]) => void
@@ -216,7 +217,11 @@ export function MultipleFileInput({
                     </div>
                 )}
             </div>
-            <div className={cn("min-h-20 overflow-y-auto pt-2 w-full ")}>
+            <div
+                className={cn(" overflow-y-auto pt-2 w-full ", {
+                    "min-h-20": localPreviewUrls.length,
+                })}
+            >
                 <div className="relative min-w-[350px] w-full gap-4 flex h-full flex-wrap">
                     {localPreviewUrls.map((previewUrl, index) => (
                         <div
@@ -224,12 +229,8 @@ export function MultipleFileInput({
                             className="relative w-20 border-2 rounded-lg h-20"
                         >
                             {previewUrl.startsWith("data:image") && (
-                                <img
-                                    src={
-                                        previewUrl === "document"
-                                            ? ""
-                                            : previewUrl
-                                    }
+                                <ImageWithPreview
+                                    src={previewUrl}
                                     alt={`Preview ${index}`}
                                     className={cn(
                                         "rounded-lg  top-0 left-0 h-full  absolute w-full object-cover object-center",

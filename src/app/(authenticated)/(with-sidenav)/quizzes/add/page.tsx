@@ -64,7 +64,7 @@ const items = [
             "Transform any YouTube video into a comprehensive quiz by providing a URL.",
     },
     {
-        disabled: true,
+        disabled: false,
         value: "image",
         text: "From Images",
         icon: <ImageIcon className="!w-7 text-indigo-500 !h-7" />,

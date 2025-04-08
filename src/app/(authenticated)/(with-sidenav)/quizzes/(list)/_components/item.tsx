@@ -1,13 +1,10 @@
 import { Badge } from "@/components/ui/badge"
-import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader } from "@/components/ui/card"
 import { cn } from "@/lib/ui-utils"
-import { BookOpen, FileQuestion, Users, Zap } from "lucide-react"
-import Link from "next/link"
+import { BookOpen, FileQuestion, Users } from "lucide-react"
+import { useRouter } from "nextjs-toploader/app"
 import { ItemType } from "../page"
 import MoreButton from "./more-button"
-import ImageWithPreview from "@/components/ui/img-with-preview"
-import { useRouter } from "nextjs-toploader/app"
 
 interface Props {
     item: ItemType
@@ -44,8 +41,7 @@ export default function Item({ item }: Props) {
                     }}
                 >
                     {item.image ? (
-                        <ImageWithPreview
-                            onClick={(e) => e.stopPropagation()}
+                        <img
                             src={item.image}
                             alt={item.name}
                             className="absolute top-1/2 -translate-x-1/2 -translate-y-1/2 left-1/2 object-center  object-cover "

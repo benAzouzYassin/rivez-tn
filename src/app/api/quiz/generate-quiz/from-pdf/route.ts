@@ -35,7 +35,7 @@ export async function POST(req: NextRequest) {
             return NextResponse.json({ error }, { status: 400 })
         }
 
-        const quizLanguage = data.language || "english"
+        const quizLanguage = data.language || ""
         const notes = data.notes || null
 
         const maxQuestionsFromConfig = Number(

@@ -31,7 +31,7 @@ export async function POST(req: NextRequest) {
         }
 
         // question generation
-        const questionLanguage = data.language || "english"
+        const questionLanguage = data.language || ""
         const notes = data.notes || null
 
         const prompt = generateSingleQuestionPrompt({

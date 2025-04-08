@@ -55,8 +55,9 @@ interface Actions {
             pdfPages?: string[]
             allowedQuestions?: string[] | null
             quizId: number
+            imagesBase64?: string[]
         },
-        method: "subject" | "pdf",
+        method: "subject" | "pdf" | "images",
         onSuccess: () => void
     ) => void
     setCurrentQuestionIndex: (index: number) => void

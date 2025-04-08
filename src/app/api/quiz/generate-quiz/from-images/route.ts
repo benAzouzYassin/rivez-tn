@@ -1,14 +1,17 @@
-import { llama4Maverick } from "@/lib/ai"
+import { gpt4oMini, llama4Maverick } from "@/lib/ai"
 import { streamText } from "ai"
 import { NextRequest, NextResponse } from "next/server"
 import { z } from "zod"
-import { generateQuizPrompt } from "./utils"
 import { POSSIBLE_QUESTIONS } from "../constants"
+import { generateQuizPrompt } from "./utils"
 import { getUserInServerSide } from "@/data-access/users/authenticate-user-ssr"
 import { supabaseAdminServerSide } from "@/lib/supabase-server-side"
+import { calculateBase64FileSize } from "@/utils/file"
+import { extractImagesText } from "@/utils/image"
 
-const LOW_MODEL_LOW_COST_QUIZ = Number(
-    process.env.NEXT_PUBLIC_MEDIUM_CREDIT_COST
+const MAX_SIZE_BYTES = 5 * 1024 * 1024 // 5 MB
+const LOW_MODEL_HIGH_COST_QUIZ = Number(
+    process.env.NEXT_PUBLIC_HIGH_CREDIT_COST
 )
 const DEFAULT_MIN_QUESTIONS = 12
 export async function POST(req: NextRequest) {
@@ -33,8 +36,18 @@ export async function POST(req: NextRequest) {
         if (!success) {
             return NextResponse.json({ error }, { status: 400 })
         }
+        let totalSize = 0
 
-        // quiz generation
+        data.imagesBase64.forEach((img) => {
+            totalSize += calculateBase64FileSize(img)
+        })
+
+        if (totalSize >= MAX_SIZE_BYTES) {
+            return NextResponse.json(
+                { error: "Files combined size is too large" },
+                { status: 413 }
+            )
+        }
         const quizLanguage = data.language || ""
         const notes = data.notes || null
 
@@ -50,15 +63,27 @@ export async function POST(req: NextRequest) {
             data.minQuestions !== undefined && data.minQuestions !== null
                 ? Math.min(data.minQuestions, maxQuestionsFromConfig)
                 : DEFAULT_MIN_QUESTIONS
-
+        const imagesContent = await extractImagesText({
+            imagesBase64: data.imagesBase64,
+            aiModel: gpt4oMini,
+            outputJson: false,
+        })
+        if (!imagesContent) {
+            return NextResponse.json(
+                {
+                    error: "Couldn't extract images content.",
+                },
+                { status: 500 }
+            )
+        }
         const prompt = generateQuizPrompt({
             name: data.name,
-            mainTopic: data.mainTopic,
             language: quizLanguage,
             notes,
+            allowQuestions: (data.allowedQuestions as any) || "ALL",
             minQuestions,
             maxQuestions,
-            allowQuestions: (data.allowedQuestions as any) || "ALL",
+            imagesContent,
         })
 
         const userBalance = (
@@ -70,7 +95,7 @@ export async function POST(req: NextRequest) {
                 .throwOnError()
         ).data.credit_balance
 
-        if (userBalance < LOW_MODEL_LOW_COST_QUIZ) {
+        if (userBalance < LOW_MODEL_HIGH_COST_QUIZ) {
             return NextResponse.json(
                 {
                     error: "Insufficient balance.",
@@ -78,12 +103,13 @@ export async function POST(req: NextRequest) {
                 { status: 400 }
             )
         }
-        const newBalance = userBalance - LOW_MODEL_LOW_COST_QUIZ
+
+        const newBalance = userBalance - LOW_MODEL_HIGH_COST_QUIZ
 
         await supabaseAdmin
             .from("quizzes")
             .update({
-                credit_cost: LOW_MODEL_LOW_COST_QUIZ,
+                credit_cost: LOW_MODEL_HIGH_COST_QUIZ,
             })
             .eq("id", data.quizId)
             .throwOnError()
@@ -98,30 +124,28 @@ export async function POST(req: NextRequest) {
         const llmResponse = streamText({
             system: `
             You are a quiz generator that follows the rules.
-            RULES:
+            RULES :
                 - Your answer should start with this character "{".
                 - If there is a question typed "FILL_IN_THE_BLANK" use all the content.options inside content.correct (only applied in "FILL_IN_THE_BLANK" question type ).
-                - Your answer should not include any template strings.
-                - Your response should be valid JSON that can be used like this : JSON.parse(response)
+                - your answer should not include any template strings.
                 - You should escape special characters for the special characters since your response will be parse with JSON.parse()
                 - Your response should not be markdown. 
                 - Your responses shouldn't include any example content provided to you. 
                 - You should follow any user notes when generating quiz questions.
+                - The quiz questions should always be base on the content provided by the user.
                 - The content of the questions options should and the question should be simple and clear.
-                - Any code comment that starts with "//" is important and should not be ignored.
+                - Any code comment that starts with "//" is important and should not be ignored
                 - Difficulty of the questions should be ${
                     data.difficulty || "NORMAL"
                 }
             `,
-
             model: llama4Maverick,
             prompt,
-            temperature: 0.1,
+            temperature: 0,
         })
         return llmResponse.toTextStreamResponse()
     } catch (error) {
         console.error(error)
-
         return NextResponse.json({ error }, { status: 500 })
     }
 }
@@ -132,13 +156,10 @@ const bodySchema = z.object({
         .min(1, "Name is required")
         .max(100, "Input exceeds maximum length"),
     quizId: z.number(),
-    mainTopic: z
-        .string()
-        .min(1, "Main topic is required")
-        .max(100, "Input exceeds maximum length"),
+    imagesBase64: z.array(z.string()),
     language: z.string().nullable().optional(),
-    notes: z.string().nullable().optional(),
     difficulty: z.string().nullable().optional(),
+    notes: z.string().nullable().optional(),
     maxQuestions: z.coerce.number().max(999).nullable().optional(),
     minQuestions: z.coerce.number().max(20).nullable().optional(),
     allowedQuestions: z
@@ -151,6 +172,32 @@ const bodySchema = z.object({
         .nullable(),
 })
 
-export type GenerateQuizBodyType = z.infer<typeof bodySchema>
+const quizQuestionSchema = z.object({
+    questionsCount: z.number(),
+    questions: z.array(
+        z.union([
+            z.object({
+                questionText: z.string(),
+                type: z.literal("MATCHING_PAIRS"),
+                content: z.object({
+                    correct: z.array(z.array(z.string())),
+                    leftSideOptions: z.array(z.string()),
+                    rightSideOptions: z.array(z.string()),
+                }),
+            }),
+            z.object({
+                questionText: z.string(),
+                type: z.literal("MULTIPLE_CHOICE"),
+                content: z.object({
+                    correct: z.array(z.string()),
+                    options: z.array(z.string()),
+                }),
+            }),
+        ])
+    ),
+})
+
+export type GeneratedQuizResponse = z.infer<typeof quizQuestionSchema>
+export type GenerateQuizBodyFromImagesType = z.infer<typeof bodySchema>
 
 export const maxDuration = 60
