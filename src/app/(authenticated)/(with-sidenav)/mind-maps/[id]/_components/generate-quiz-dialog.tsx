@@ -32,9 +32,9 @@ import { useRouter } from "nextjs-toploader/app"
 import { useEffect, useMemo, useState } from "react"
 import { Controller, useForm } from "react-hook-form"
 import { z } from "zod"
-import useQuizStore from "../../quizzes/add/[id]/store"
 import { DifficultySelect } from "./difficulty-select"
 import ImageUpload from "./image-upload"
+import useQuizStore from "../../../quizzes/add/[id]/store"
 
 const POSSIBLE_QUESTIONS_TYPES = Object.keys(POSSIBLE_QUESTIONS)
 
@@ -62,7 +62,6 @@ export default function GenerateQuizDialog(props: Props) {
     const [isLoading, setIsLoading] = useState(false)
     const [imageUrl, setImageUrl] = useState<string | null>(null)
     const router = useRouter()
-    const generateQuizWithAi = useQuizStore((s) => s.generateQuizWithAi)
     const { isSidenavOpen, toggleSidenav } = useSidenav()
     const resetEditableQuizStore = useQuizStore((s) => s.reset)
     const addToEditQuizWithAi = useQuizStore((s) => s.generateQuizWithAi)

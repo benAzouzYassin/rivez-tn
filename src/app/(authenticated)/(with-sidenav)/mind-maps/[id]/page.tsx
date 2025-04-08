@@ -12,7 +12,7 @@ import {
     useEdgesState,
     useNodesState,
 } from "@xyflow/react"
-import { useCallback, useEffect } from "react"
+import { useCallback, useEffect, useState } from "react"
 
 import { ErrorDisplay } from "@/components/shared/error-display"
 import { readMindMapById } from "@/data-access/mindmaps/read"
@@ -20,15 +20,18 @@ import { cn } from "@/lib/ui-utils"
 import { useSidenav } from "@/providers/sidenav-provider"
 import { useQuery } from "@tanstack/react-query"
 import "@xyflow/react/dist/style.css"
-import { Loader2 } from "lucide-react"
+import { Loader2, Sparkles } from "lucide-react"
 import { useParams } from "next/navigation"
 import CustomNode from "../_components/custom-node"
+import { Button } from "@/components/ui/button"
+import GenerateQuizDialog from "./_components/generate-quiz-dialog"
 
 const nodeTypes = {
     customNode: CustomNode,
 }
 
 export default function Page() {
+    const [isQuizzesDialogOpen, setIsQuizzesDialogOpen] = useState(false)
     const params = useParams()
     const id = Number((params.id as string) || "0")
 
@@ -54,6 +57,9 @@ export default function Page() {
         (params: any) => setEdges((eds) => addEdge(params, eds)),
         [setEdges]
     )
+    const handleGenerateQuiz = () => {
+        setIsQuizzesDialogOpen(true)
+    }
     if (!id) return <ErrorDisplay />
     if (isFetching) {
         return (
@@ -69,6 +75,22 @@ export default function Page() {
                 "w-[calc(100vw-100px)]": !isSidenavOpen,
             })}
         >
+            {data?.items && (
+                <>
+                    <Button
+                        className="text-base absolute top-5 right-5 z-50"
+                        variant={"blue"}
+                        onClick={handleGenerateQuiz}
+                    >
+                        Convert quiz <Sparkles />
+                    </Button>
+                    <GenerateQuizDialog
+                        content={JSON.stringify(data?.items)}
+                        isOpen={isQuizzesDialogOpen}
+                        onOpenChange={setIsQuizzesDialogOpen}
+                    />
+                </>
+            )}{" "}
             <ReactFlow
                 nodeTypes={nodeTypes}
                 nodes={nodes}
