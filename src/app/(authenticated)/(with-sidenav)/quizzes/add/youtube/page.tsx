@@ -35,17 +35,12 @@ import { useQuestionsStore as useViewOnlyQuizStore } from "../../../../quizzes/[
 import { default as useEditableQuizStore } from "../[id]/store"
 import { DifficultySelect } from "../_components/difficulty-select"
 import ImageUpload from "../_components/image-upload"
-import ImagesInputLoading from "./_components/images-input-loading"
 const POSSIBLE_QUESTIONS_TYPES = Object.keys(POSSIBLE_QUESTIONS)
-
-const ImagesInput = dynamic(() => import("./_components/images-input"), {
-    loading: () => <ImagesInputLoading />,
-})
 
 export type FormValues = {
     category: string | null
     name: string
-    mainTopic: string
+    youtubeLink: string
     language: string | null
     maxQuestions: number | null
     minQuestions: number | null
@@ -58,8 +53,6 @@ export default function Document() {
     const sideNav = useSidenav()
     const queryClient = useQueryClient()
     const [imageUrl, setImageUrl] = useState<string | null>(null)
-    const [imagesBase64, setImagesBase64] = useState<string[]>([])
-    const [isUploadingImage, setIsUploadingImage] = useState(false)
     const [isLoading, setIsLoading] = useState(false)
     const user = useCurrentUser()
     const router = useRouter()
@@ -99,6 +92,10 @@ export default function Document() {
                     .string()
                     .min(1, "Name is required")
                     .max(100, "Input exceeds maximum length"),
+                youtubeLink: z
+                    .string()
+                    .min(1, "Youtube link is required")
+                    .max(10000, "Input exceeds maximum length"),
                 category: z.string().nullable().optional(),
                 language: z.string().nullable().optional(),
                 maxQuestions: z.coerce.number().max(999).nullable().optional(),
@@ -117,7 +114,6 @@ export default function Document() {
             notes: "",
             category: "",
             language: null,
-            mainTopic: "",
             maxQuestions: null,
             minQuestions: null,
         },
@@ -144,8 +140,8 @@ export default function Document() {
                 }
                 router.push(`/quizzes/add/${quizId}?isGeneratingWithAi=true`)
                 addToEditQuizWithAi(
-                    { ...data, quizId, imagesBase64: imagesBase64 },
-                    "images",
+                    { ...data, quizId, mainTopic: "" },
+                    "youtube",
                     () => {
                         // on success
                         queryClient.refetchQueries({
@@ -158,8 +154,8 @@ export default function Document() {
 
             if (type === "generate-and-take") {
                 addToTakeQuizWithAi(
-                    { ...data, quizId, imagesBase64: imagesBase64 },
-                    "images",
+                    { ...data, quizId, mainTopic: "" },
+                    "youtube",
                     () => {
                         // on success
                         toastSuccess("Quiz generated successfully")
@@ -191,7 +187,7 @@ export default function Document() {
     return (
         <main className="flex relative items-center pb-20  flex-col">
             <h1 className="mt-10 text-neutral-600 text-3xl font-extrabold">
-                Generate from an image
+                Generate from youtube video
             </h1>
             <div className="flex items-center  h-0">
                 <Button
@@ -210,12 +206,17 @@ export default function Document() {
                     className="w-full"
                     errorMessage={form.formState.errors.name?.message}
                 />
-                <ImagesInput onChange={setImagesBase64} />
+                <Input
+                    {...form.register("youtubeLink")}
+                    placeholder="Youtube Video Link"
+                    className="w-full"
+                    errorMessage={form.formState.errors.name?.message}
+                />
                 <Select
                     defaultValue={form.getValues().language || undefined}
                     onValueChange={(val) => form.setValue("language", val)}
                 >
-                    <SelectTrigger className="data-[placeholder]:text-neutral-400 mt-4">
+                    <SelectTrigger className="data-[placeholder]:text-neutral-400 ">
                         <SelectValue placeholder="Language" />
                     </SelectTrigger>
                     <SelectContent>
@@ -350,7 +351,6 @@ export default function Document() {
                     </Button> */}
                     <Button
                         isLoading={isLoading}
-                        disabled={isUploadingImage}
                         type="button"
                         onClick={() => {
                             form.handleSubmit((data) =>

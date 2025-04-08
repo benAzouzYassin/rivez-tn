@@ -5,10 +5,16 @@ import { readStream } from "@/utils/stream"
 import { z } from "zod"
 import { readCurrentSession } from "../users/read"
 import { CodeSnippetsResponse } from "@/app/api/quiz/generate-code-snippets/route"
+import { GenerateQuizBodyFromYoutubeType } from "../../app/api/quiz/generate-quiz/from-youtube/route"
+import { GenerateQuizBodyFromImagesType } from "@/app/api/quiz/generate-quiz/from-images/route"
 
 export const generateQuiz = async (
-    method: "subject" | "pdf" | "images",
-    data: GenerateFromSubjectBody | GenerateFromPdfBody,
+    method: "subject" | "pdf" | "images" | "youtube",
+    data:
+        | GenerateFromSubjectBody
+        | GenerateFromPdfBody
+        | GenerateQuizBodyFromYoutubeType
+        | GenerateQuizBodyFromImagesType,
     onChange: (newValue: z.infer<typeof quizQuestionSchema> | null) => void,
     onFinish?: () => void
 ) => {
@@ -27,6 +33,9 @@ export const generateQuiz = async (
     }
     if (method === "images") {
         endpoint = "/api/quiz/generate-quiz/from-images"
+    }
+    if (method === "youtube") {
+        endpoint = "/api/quiz/generate-quiz/from-youtube"
     }
     const response = await fetch(endpoint, {
         method: "POST",

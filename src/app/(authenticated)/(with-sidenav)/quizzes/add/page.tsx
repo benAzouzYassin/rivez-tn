@@ -56,7 +56,7 @@ const items = [
     },
 
     {
-        disabled: true,
+        disabled: false,
         value: "youtube",
         text: "YouTube Video",
         icon: <Video className="!w-7 text-indigo-500 !h-7" />,
