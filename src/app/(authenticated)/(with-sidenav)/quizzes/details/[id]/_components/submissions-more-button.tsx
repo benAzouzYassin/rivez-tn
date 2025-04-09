@@ -1,5 +1,6 @@
 import PopoverList from "@/components/ui/popover-list"
 import { deleteQuizSubmissionById } from "@/data-access/quiz_submissions/delete"
+import { useIsAdmin } from "@/hooks/use-is-admin"
 import {
     dismissToasts,
     toastError,
@@ -14,6 +15,7 @@ interface Props {
     itemId: number
 }
 export default function SubmissionsMoreButton(props: Props) {
+    const isAdmin = useIsAdmin()
     const router = useRouter()
     const queryClient = useQueryClient()
     const handleDelete = () => {
@@ -29,6 +31,17 @@ export default function SubmissionsMoreButton(props: Props) {
                 toastError("Something went wrong.")
             })
     }
+    const adminItems = isAdmin
+        ? [
+              {
+                  icon: <Trash2 className="w-5 h-5" />,
+                  label: "Delete",
+                  className: "focus:bg-red-200",
+                  isDanger: true,
+                  onClick: handleDelete,
+              },
+          ]
+        : []
     return (
         <>
             <PopoverList
@@ -39,16 +52,10 @@ export default function SubmissionsMoreButton(props: Props) {
                         label: "Details",
                         onClick: () =>
                             router.push(
-                                `/admin/quiz-submissions/details/${props.itemId}`
+                                `/quizzes/submission-details/${props.itemId}`
                             ),
                     },
-                    {
-                        icon: <Trash2 className="w-5 h-5" />,
-                        label: "Delete",
-                        className: "focus:bg-red-200",
-                        isDanger: true,
-                        onClick: handleDelete,
-                    },
+                    ...adminItems,
                 ]}
             >
                 <button

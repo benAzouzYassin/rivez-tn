@@ -1,6 +1,5 @@
 "use client"
 
-import CategorySelect from "@/components/shared/category-select"
 import ImageUpload from "@/components/shared/image-upload"
 import { Button } from "@/components/ui/button"
 import {
@@ -13,18 +12,20 @@ import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { readQuizById } from "@/data-access/quizzes/read"
 import { updateQuiz } from "@/data-access/quizzes/update"
+import { PublishingStatusType } from "@/data-access/types"
 import { useCurrentUser } from "@/hooks/use-current-user"
 import { toastError } from "@/lib/toasts"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useQueryClient } from "@tanstack/react-query"
 import { Loader2 } from "lucide-react"
 import { useEffect, useMemo, useState } from "react"
-import { Controller, useForm } from "react-hook-form"
+import { useForm } from "react-hook-form"
 import { z } from "zod"
 import StatusButton from "./status-button"
-import { PublishingStatusType } from "@/data-access/types"
+import { useIsAdmin } from "@/hooks/use-is-admin"
 
 export default function UpdateQuizDialog(props: Props) {
+    const isAdmin = useIsAdmin()
     const [imageUrl, setImageUrl] = useState<string | null>(null)
     const [createdAt, setCreatedAt] = useState<string>("")
     const [isUploadingImage, setIsUploadingImage] = useState(false)
@@ -118,15 +119,17 @@ export default function UpdateQuizDialog(props: Props) {
                     </div>
                 ) : (
                     <section className="flex relative  flex-col gap-4">
-                        <div className="w-fit flex items-center justify-start h-10">
-                            <p className="text-nowrap mr-2 text-lg font-semibold">
-                                Status :{" "}
-                            </p>
-                            <StatusButton
-                                itemId={props.quizId}
-                                status={props.status}
-                            />
-                        </div>
+                        {isAdmin && (
+                            <div className="w-fit flex items-center justify-start h-10">
+                                <p className="text-nowrap mr-2 text-lg font-semibold">
+                                    Status :{" "}
+                                </p>
+                                <StatusButton
+                                    itemId={props.quizId}
+                                    status={props.status}
+                                />
+                            </div>
+                        )}
                         <Input
                             {...register("name")}
                             placeholder="Quiz Name"

@@ -19,16 +19,43 @@ export async function POST(req: NextRequest) {
     try {
         const supabase = await supabaseAdminServerSide()
         const accessToken = req.headers.get("access-token") || ""
-        const userId = verify(accessToken, process.env.SUPABASE_JWT_SECRET!).sub
+        const userId = String(
+            verify(accessToken, process.env.SUPABASE_JWT_SECRET!).sub
+        )
         if (!userId) {
             return NextResponse.json({ success: false }, { status: 400 })
         }
 
         const { submissionData } = (await req.json()) as BodyType
-        if (userId !== submissionData.submissionData.user) {
+        if (!userId) {
             return NextResponse.json({ success: false }, { status: 403 })
         }
+
         const quizId = Number(submissionData.submissionData.quiz)
+        const quizOwner = (
+            await supabase
+                .from("quizzes")
+                .select("author_id(*)")
+                .eq("id", quizId)
+                .single()
+                .throwOnError()
+        ).data.author_id
+
+        const getUserToSubmitName = async () => {
+            const userName = (
+                await supabase
+                    .from("user_profiles")
+                    .select("username")
+                    .eq("user_id", userId)
+                    .single()
+                    .throwOnError()
+            ).data.username
+            return userName
+        }
+        const userToSubmitName =
+            quizOwner?.user_id === userId
+                ? quizOwner.username
+                : await getUserToSubmitName()
         const { count: oldSubmissionCount, data: oldSubmissionsData } =
             await supabase
                 .from("quiz_submissions")
@@ -46,7 +73,11 @@ export async function POST(req: NextRequest) {
 
         const insertedSubmission = await supabase
             .from("quiz_submissions")
-            .insert(submissionData.submissionData)
+            .insert({
+                ...submissionData.submissionData,
+                user_submit_name: userToSubmitName,
+                quiz_owner_id: quizOwner?.user_id,
+            })
             .select("id")
             .throwOnError()
         const insertedSubmissionId = Number(insertedSubmission.data[0].id)
@@ -57,6 +88,7 @@ export async function POST(req: NextRequest) {
                 submissionData.answersData.map((item) => ({
                     ...item,
                     quiz_submission: insertedSubmissionId,
+                    quiz_owner_id: quizOwner?.user_id,
                 }))
             )
             .throwOnError()

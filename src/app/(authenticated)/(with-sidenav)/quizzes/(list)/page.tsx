@@ -7,11 +7,12 @@ import DashboardPagination from "@/components/ui/dashboard-pagination"
 import {
     QuizWithCategory,
     readQuizzesWithDetails,
+    readSharedQuizzesWithDetails,
 } from "@/data-access/quizzes/read"
 import { useIsAdmin } from "@/hooks/use-is-admin"
 import { cn } from "@/lib/ui-utils"
 import { useQuery } from "@tanstack/react-query"
-import { BookOpen, ChevronRight, Plus, ZapIcon } from "lucide-react"
+import { BookOpen, ChevronRight, Plus, Share2Icon, ZapIcon } from "lucide-react"
 import Link from "next/link"
 import { useRouter } from "nextjs-toploader/app"
 import { parseAsInteger, parseAsString, useQueryState } from "nuqs"
@@ -21,6 +22,7 @@ import ItemSkeleton from "./_components/item-skeleton"
 import Search from "./_components/search"
 import { useCurrentUser } from "@/hooks/use-current-user"
 import { useSidenav } from "@/providers/sidenav-provider"
+import ShareQuizDialog from "./_components/share-quiz-dialog"
 
 export default function Page() {
     const { isSidenavOpen } = useSidenav()
@@ -59,27 +61,48 @@ export default function Page() {
             isAdmin,
             userData,
         ],
-        queryFn: () =>
-            readQuizzesWithDetails({
-                isAdmin,
-                userId: userData?.id || "",
-                filters: {
-                    name: searchValue || undefined,
-                    isFeatured: activeTab === "popular",
-                },
-                pagination: {
-                    itemsPerPage,
-                    currentPage,
-                },
-            }),
+        queryFn: async () => {
+            if (activeTab === "personal") {
+                return await readQuizzesWithDetails({
+                    isAdmin,
+                    userId: userData?.id || "",
+                    filters: {
+                        name: searchValue || undefined,
+                    },
+                    pagination: {
+                        itemsPerPage,
+                        currentPage,
+                    },
+                })
+            } else {
+                const result = await readSharedQuizzesWithDetails({
+                    isAdmin,
+                    userId: userData?.id || "",
+                    filters: {
+                        name: searchValue || undefined,
+                    },
+                    pagination: {
+                        itemsPerPage,
+                        currentPage,
+                    },
+                })
+                const formatted = {
+                    data:
+                        result.data.flatMap((item) => item.quizzes) ||
+                        ([] as any),
+                    count: result.count,
+                }
+                return formatted
+            }
+        },
     })
     const data = response?.data
 
     const tabs = [
         {
-            id: "popular",
-            label: "Popular Quizzes ",
-            icon: <ZapIcon size={18} />,
+            id: "shared",
+            label: "Shared Quizzes ",
+            icon: <Share2Icon size={18} />,
             count: response?.count || 0,
         },
         {
@@ -165,7 +188,13 @@ export default function Page() {
                         )}
                     >
                         {data?.map((item) => {
-                            return <Item item={item} key={item.id} />
+                            return (
+                                <Item
+                                    item={item as any}
+                                    disableMoreBtn={activeTab === "shared"}
+                                    key={item.id}
+                                />
+                            )
                         })}
                     </div>
                 </div>

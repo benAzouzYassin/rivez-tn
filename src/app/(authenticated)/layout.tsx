@@ -3,6 +3,7 @@
 import AnimatedLoader from "@/components/ui/animated-loader"
 import { readCurrentSession } from "@/data-access/users/read"
 import { wait } from "@/utils/wait"
+import { useSearchParams } from "next/navigation"
 import { useRouter } from "nextjs-toploader/app"
 import { useEffect, useState } from "react"
 export const dynamic = "force-static"
@@ -13,6 +14,7 @@ export default function PrivateLayout({
     children: React.ReactNode
 }>) {
     const router = useRouter()
+    const searchParams = useSearchParams()
     const [allowedToEnter, setAllowedToEnter] = useState<boolean | null>(null)
     useEffect(() => {
         wait(100).then(() => {
@@ -22,13 +24,13 @@ export default function PrivateLayout({
                 } else {
                     localStorage.setItem(
                         "afterAuthRedirect",
-                        window.location.pathname
+                        window.location.pathname + "?" + searchParams.toString()
                     )
                     router.replace("/auth/register")
                 }
             })
         })
-    }, [router])
+    }, [router, searchParams])
     if (allowedToEnter === null) {
         return (
             <main className=" flex min-h-[100vh] items-center justify-center">

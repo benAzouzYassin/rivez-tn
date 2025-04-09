@@ -99,7 +99,9 @@ export default function Page() {
                 </div>
                 <div>
                     <h1 className="text-left text-2xl font-bold">
-                        {data?.user?.username || data?.user?.email}
+                        {data?.user?.username ||
+                            data?.user?.email ||
+                            data?.user_submit_name}
                     </h1>
                     <p className="font-semibold">
                         {formatDate(data?.created_at)}

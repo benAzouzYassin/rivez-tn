@@ -3,7 +3,6 @@ import ImageWithPreview from "@/components/ui/img-with-preview"
 import { cn } from "@/lib/ui-utils"
 import { formatDate } from "@/utils/date"
 import { ColumnDef } from "@tanstack/react-table"
-import IsFeaturedSwitch from "./_components/is-featured-switch"
 import MoreButton from "./_components/more-button"
 import StatusButton from "./_components/status-button"
 import { Item } from "./page"
@@ -112,19 +111,7 @@ export const columns: ColumnDef<Item>[] = [
             )
         },
     },
-    {
-        header: "Featured",
-        cell: ({ row }) => {
-            return (
-                <div className="flex items-center !text-base font-semibold justify-center ">
-                    <IsFeaturedSwitch
-                        initialIsFeatured={row.original.is_featured || false}
-                        itemId={row.original.id}
-                    />
-                </div>
-            )
-        },
-    },
+
     {
         header: "Created At",
         cell: ({ row }) => {

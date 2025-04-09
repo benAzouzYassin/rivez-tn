@@ -202,6 +202,7 @@ export type Database = {
           is_answered_correctly: boolean | null
           is_skipped: boolean
           question: number | null
+          quiz_owner_id: string | null
           quiz_submission: number | null
           responses: Json | null
           seconds_spent: number | null
@@ -213,6 +214,7 @@ export type Database = {
           is_answered_correctly?: boolean | null
           is_skipped?: boolean
           question?: number | null
+          quiz_owner_id?: string | null
           quiz_submission?: number | null
           responses?: Json | null
           seconds_spent?: number | null
@@ -224,6 +226,7 @@ export type Database = {
           is_answered_correctly?: boolean | null
           is_skipped?: boolean
           question?: number | null
+          quiz_owner_id?: string | null
           quiz_submission?: number | null
           responses?: Json | null
           seconds_spent?: number | null
@@ -235,6 +238,13 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "quizzes_questions"
             referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "quiz_submission_answers_quiz_owner_id_fkey"
+            columns: ["quiz_owner_id"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["user_id"]
           },
           {
             foreignKeyName: "quiz_submission_answers_quiz_submission_fkey"
@@ -250,24 +260,30 @@ export type Database = {
           created_at: string
           id: number
           quiz: number | null
+          quiz_owner_id: string | null
           seconds_spent: number | null
           user: string | null
+          user_submit_name: string | null
           xp_gained: number | null
         }
         Insert: {
           created_at?: string
           id?: number
           quiz?: number | null
+          quiz_owner_id?: string | null
           seconds_spent?: number | null
           user?: string | null
+          user_submit_name?: string | null
           xp_gained?: number | null
         }
         Update: {
           created_at?: string
           id?: number
           quiz?: number | null
+          quiz_owner_id?: string | null
           seconds_spent?: number | null
           user?: string | null
+          user_submit_name?: string | null
           xp_gained?: number | null
         }
         Relationships: [
@@ -297,7 +313,6 @@ export type Database = {
           difficulty: Database["public"]["Enums"]["difficulty"] | null
           id: number
           image: string | null
-          is_featured: boolean
           name: string
           publishing_status: Database["public"]["Enums"]["publishing_status"]
         }
@@ -310,7 +325,6 @@ export type Database = {
           difficulty?: Database["public"]["Enums"]["difficulty"] | null
           id?: number
           image?: string | null
-          is_featured?: boolean
           name: string
           publishing_status?: Database["public"]["Enums"]["publishing_status"]
         }
@@ -323,7 +337,6 @@ export type Database = {
           difficulty?: Database["public"]["Enums"]["difficulty"] | null
           id?: number
           image?: string | null
-          is_featured?: boolean
           name?: string
           publishing_status?: Database["public"]["Enums"]["publishing_status"]
         }
@@ -430,6 +443,39 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "quizzes"
             referencedColumns: ["id"]
+          },
+        ]
+      }
+      quizzes_shares: {
+        Row: {
+          created_at: string
+          quiz_id: number
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          quiz_id: number
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          quiz_id?: number
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "quizzes_shares_quiz_id_fkey"
+            columns: ["quiz_id"]
+            isOneToOne: false
+            referencedRelation: "quizzes"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "quizzes_shares_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["user_id"]
           },
         ]
       }

@@ -4,8 +4,9 @@ import TimeIcon from "@/components/icons/time"
 import XpIcon from "@/components/icons/xp"
 import { Button } from "@/components/ui/button"
 import { formatSeconds } from "@/utils/date"
+import { useQueryClient } from "@tanstack/react-query"
 import { motion } from "framer-motion"
-import Link from "next/link"
+import { useRouter } from "nextjs-toploader/app"
 
 type Props = {
     secondsSpent: number
@@ -13,6 +14,8 @@ type Props = {
     xpGained: number
 }
 export default function ResultPage(props: Props) {
+    const queryClient = useQueryClient()
+    const router = useRouter()
     const containerVariants = {
         hidden: { opacity: 0 },
         visible: {
@@ -65,7 +68,17 @@ export default function ResultPage(props: Props) {
             iconClass: "w-10 h-10",
         },
     ]
-
+    const handleBackBtn = () => {
+        queryClient.invalidateQueries({
+            predicate: (q) => {
+                return (
+                    q.queryKey.includes("quiz_submission_answers") ||
+                    q.queryKey.includes("quiz_submission")
+                )
+            },
+        })
+        router.push("/home")
+    }
     return (
         <motion.section
             className="h-fit "
@@ -134,14 +147,13 @@ export default function ResultPage(props: Props) {
                         </p>
                     </motion.div>
                 ))}
-                <Link href={"/home"} className="col-span-3">
-                    <Button
-                        variant={"green"}
-                        className="w-full col-span-3 text-xl h-14 bg-neutral-800 border-neutral-500 shadow-neutral-500"
-                    >
-                        Back to home
-                    </Button>
-                </Link>
+                <Button
+                    onClick={handleBackBtn}
+                    variant={"green"}
+                    className="w-full col-span-3 text-xl h-14 bg-neutral-800 border-neutral-500 shadow-neutral-500"
+                >
+                    Back to home
+                </Button>
             </motion.div>
         </motion.section>
     )

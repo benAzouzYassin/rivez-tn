@@ -25,7 +25,6 @@ export async function readQuizzesWithDetails(config?: {
     userId: string | null
     filters?: {
         name?: string | null
-        isFeatured?: boolean
     }
     pagination?: {
         currentPage: number
@@ -55,10 +54,6 @@ export async function readQuizzesWithDetails(config?: {
                     ascending: false,
                 })
                 .neq("publishing_status", "ARCHIVED")
-                .in(
-                    "is_featured",
-                    config.filters?.isFeatured ? [true] : [false, true]
-                )
                 .throwOnError()
             return { data: response.data, count: response.count }
         }
@@ -80,10 +75,6 @@ export async function readQuizzesWithDetails(config?: {
                 ascending: false,
             })
             .neq("publishing_status", "ARCHIVED")
-            .in(
-                "is_featured",
-                config.filters?.isFeatured ? [true] : [false, true]
-            )
             .eq("author_id", config.userId!)
             .throwOnError()
         return { data: response.data, count: response.count }
@@ -265,4 +256,77 @@ export async function readQuizQuestionHint(params: { questionId: number }) {
         })
         .throwOnError()
     return response.data[0]
+}
+
+export async function readSharedQuizzesWithDetails(config?: {
+    isAdmin: boolean | null
+    userId: string | null
+    filters?: {
+        name?: string | null
+    }
+    pagination?: {
+        currentPage: number
+        itemsPerPage: number
+    }
+}) {
+    // when is Featured == false and isAdmin == false we should only return the quizzes with author_id == currentUser.id
+    const isFiltering = !!config?.filters?.name
+    if (config?.pagination && !isFiltering) {
+        if (config.isAdmin) {
+            const response = await supabase
+                .from("quizzes_shares")
+                .select(
+                    `*,quizzes(*,quizzes_questions(count),quiz_submissions(count))`,
+                    {
+                        count: "exact",
+                    }
+                )
+                .range(
+                    (config.pagination.currentPage - 1) *
+                        config.pagination.itemsPerPage,
+                    config.pagination.currentPage *
+                        config.pagination.itemsPerPage -
+                        1
+                )
+                .order("created_at", {
+                    ascending: false,
+                    referencedTable: "quizzes",
+                })
+                .neq("quizzes.publishing_status", "ARCHIVED")
+                .throwOnError()
+            return { data: response.data, count: response.count }
+        }
+        const response = await supabase
+            .from("quizzes_shares")
+            .select(
+                `*,quizzes(*,quizzes_questions(count),quiz_submissions(count))`,
+                {
+                    count: "exact",
+                }
+            )
+            .range(
+                (config.pagination.currentPage - 1) *
+                    config.pagination.itemsPerPage,
+                config.pagination.currentPage * config.pagination.itemsPerPage -
+                    1
+            )
+            .order("created_at", {
+                ascending: false,
+                referencedTable: "quizzes",
+            })
+            .neq("quizzes.publishing_status", "ARCHIVED")
+            .throwOnError()
+        return { data: response.data, count: response.count }
+    }
+    const response = await supabase
+        .from("quizzes_shares")
+        .select(`*,quizzes(*,quizzes_questions(count),quiz_submissions(count))`)
+        .ilike("name", `%${config?.filters?.name || ""}%`)
+        .neq("quizzes.publishing_status", "ARCHIVED")
+        .order("created_at", {
+            ascending: false,
+            referencedTable: "quizzes",
+        })
+        .throwOnError()
+    return { data: response.data }
 }
