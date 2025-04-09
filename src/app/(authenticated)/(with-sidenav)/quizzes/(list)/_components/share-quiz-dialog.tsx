@@ -1,18 +1,15 @@
-import { useEffect, useState } from "react"
+import { ErrorDisplay } from "@/components/shared/error-display"
 import {
     Dialog,
     DialogContent,
     DialogDescription,
     DialogTitle,
 } from "@/components/ui/dialog"
-import { Copy, Check } from "lucide-react"
-import MessengerIcon from "./messenger-icon"
-import WhatsAppIcon from "./whatsapp-icon"
-import InstaIcon from "./insta-icon"
 import TooltipWrapper from "@/components/ui/tooltip"
-import { PublishingStatusType } from "@/data-access/types"
 import { updateQuiz } from "@/data-access/quizzes/update"
-import { ErrorDisplay } from "@/components/shared/error-display"
+import { PublishingStatusType } from "@/data-access/types"
+import { Check, Copy } from "lucide-react"
+import { useEffect, useState } from "react"
 import ShareDialogSkeleton from "./share-dialog-skeleton"
 
 interface Props {
@@ -98,48 +95,6 @@ export default function ShareQuizDialog(props: Props) {
                                     </span>
                                 </button>
                             </TooltipWrapper>
-                        </div>
-
-                        <div className="mt-2 text-center">
-                            <div className="relative">
-                                <div className="absolute inset-0 flex items-center">
-                                    <div className="w-full border-t border-gray-300"></div>
-                                </div>
-                                <div className="relative flex justify-center">
-                                    <span className="bg-white px-4  text-gray-500">
-                                        or share directly
-                                    </span>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div className="-mt-2 flex justify-center">
-                            <div className="flex gap-8">
-                                <div className="flex cursor-pointer flex-col items-center">
-                                    <button className="group p-3 cursor-pointer rounded-full bg-blue-50 hover:bg-blue-100 transition-all duration-300">
-                                        <MessengerIcon className="w-10 h-10 text-blue-500 group-hover:scale-110 transition-transform duration-300" />
-                                    </button>
-                                    <span className="mt-2 text-sm font-medium text-gray-600">
-                                        Messenger
-                                    </span>
-                                </div>
-                                <div className="cursor-pointer flex flex-col items-center">
-                                    <button className="group p-3 cursor-pointer rounded-full bg-purple-50 hover:bg-purple-100 transition-all duration-300">
-                                        <InstaIcon className="w-10 h-10 text-purple-500 group-hover:scale-110 transition-transform duration-300" />
-                                    </button>
-                                    <span className="mt-2 text-sm font-medium text-gray-600">
-                                        Instagram
-                                    </span>
-                                </div>
-                                <div className="flex cursor-pointer flex-col items-center">
-                                    <button className="group cursor-pointer p-3 rounded-full bg-green-50 hover:bg-green-100 transition-all duration-300">
-                                        <WhatsAppIcon className="w-10 h-10 text-green-500 group-hover:scale-110 transition-transform duration-300" />
-                                    </button>
-                                    <span className="mt-2 text-sm font-medium text-gray-600">
-                                        WhatsApp
-                                    </span>
-                                </div>
-                            </div>
                         </div>
                     </>
                 )}
