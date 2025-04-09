@@ -7,15 +7,36 @@ import { readQuizWithQuestionsById } from "@/data-access/quizzes/read"
 import { cn } from "@/lib/ui-utils"
 import { useQuery } from "@tanstack/react-query"
 import { useParams } from "next/navigation"
-import { useEffect } from "react"
+import { useQueryState } from "nuqs"
+import { useEffect, useState } from "react"
 import Questions from "./_components/questions"
 import Result from "./_components/result"
 import ResultLoadingPage from "./_components/result-loading-page"
 import { useQuestionsStore } from "./store"
+import { shareQuiz } from "@/data-access/quizzes/share"
+import { useCurrentUser } from "@/hooks/use-current-user"
 
 export default function Page() {
+    const { data: currentUser } = useCurrentUser()
+    const [isLoading, setIsLoading] = useState(false)
     const params = useParams()
     const id = Number(params.id)
+    const [share] = useQueryState("share")
+    const isSharing = share === "true"
+    useEffect(() => {
+        if (isSharing && currentUser?.id) {
+            setIsLoading(true)
+            shareQuiz({ userId: currentUser.id, quizId: id })
+                .catch((err) => {
+                    console.error(err)
+                })
+                .finally(() => {
+                    setIsLoading(false)
+                })
+        } else {
+            setIsLoading(false)
+        }
+    }, [currentUser?.id, id, isSharing])
 
     const {
         data,
@@ -67,11 +88,12 @@ export default function Page() {
                     "overflow-x-hidden mt-0": isFinished,
                 })}
             >
-                {isLoadingQuestions && (
-                    <div className=" h-[100vh] flex items-center justify-center">
-                        <AnimatedLoader />
-                    </div>
-                )}
+                {isLoadingQuestions ||
+                    (isLoading && (
+                        <div className=" h-[100vh] flex items-center justify-center">
+                            <AnimatedLoader />
+                        </div>
+                    ))}
                 {isSavingResults && <ResultLoadingPage />}
                 {isSavingError && <ErrorDisplay />}
 

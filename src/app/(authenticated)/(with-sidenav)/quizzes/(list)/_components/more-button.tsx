@@ -11,9 +11,15 @@ import {
 } from "@/lib/toasts"
 import { cn } from "@/lib/ui-utils"
 import { useQueryClient } from "@tanstack/react-query"
-import { Edit, Edit2, Info, MoreVerticalIcon, Trash2 } from "lucide-react"
+import {
+    Edit,
+    Edit2,
+    Info,
+    MoreVerticalIcon,
+    Share2Icon,
+    Trash2,
+} from "lucide-react"
 import { useRouter } from "nextjs-toploader/app"
-import { useState } from "react"
 import UpdateQuizDialog from "./update-quiz-dialog"
 
 interface Props {
@@ -21,14 +27,18 @@ interface Props {
     className?: string
     authorId?: string | null
     status: PublishingStatusType
+    isUpdateDialogOpen: boolean
+    setIsUpdateDialogOpen: (value: boolean) => void
+    isSharing: boolean
+    setIsSharing: (value: boolean) => void
 }
+
 export default function MoreButton(props: Props) {
     const { data: userData } = useCurrentUser()
     const isOwner = userData?.id === props.authorId
     const isAdmin = useIsAdmin()
     const queryClient = useQueryClient()
     const router = useRouter()
-    const [isUpdating, setIsUpdating] = useState(false)
     const handleDelete = () => {
         toastLoading("Deleting...")
         softDeleteQuizById(props.itemId)
@@ -43,6 +53,9 @@ export default function MoreButton(props: Props) {
                 dismissToasts("loading")
                 toastError("Something went wrong.")
             })
+    }
+    const handleShare = () => {
+        props.setIsSharing(true)
     }
     if (isOwner || isAdmin)
         return (
@@ -59,13 +72,20 @@ export default function MoreButton(props: Props) {
                         {
                             icon: <Edit2 className="w-5 h-5" />,
                             label: "Update information",
-                            onClick: () => setIsUpdating(true),
+                            onClick: () => props.setIsUpdateDialogOpen(true),
                         },
                         {
                             icon: <Info className="w-5 h-5" />,
                             label: "Details",
                             onClick: () =>
                                 router.push(`/quizzes/details/${props.itemId}`),
+                        },
+
+                        {
+                            icon: <Share2Icon className="w-5 h-5" />,
+                            label: "Share",
+                            className: "focus:bg-red-200",
+                            onClick: handleShare,
                         },
                         {
                             icon: <Trash2 className="w-5 h-5" />,
@@ -88,8 +108,8 @@ export default function MoreButton(props: Props) {
                 </PopoverList>
                 <UpdateQuizDialog
                     status={props.status}
-                    isOpen={isUpdating}
-                    onOpenChange={setIsUpdating}
+                    isOpen={props.isUpdateDialogOpen}
+                    onOpenChange={props.setIsUpdateDialogOpen}
                     quizId={props.itemId}
                 />
             </>

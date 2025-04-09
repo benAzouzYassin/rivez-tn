@@ -9,12 +9,10 @@ const nextConfig: NextConfig = {
         }
         return config
     },
-    experimental: {
-        turbo: {
-            resolveAlias: {
-                canvas: "false",
-                encoding: "false",
-            },
+    turbopack: {
+        resolveAlias: {
+            canvas: "false",
+            encoding: "false",
         },
     },
     images: {

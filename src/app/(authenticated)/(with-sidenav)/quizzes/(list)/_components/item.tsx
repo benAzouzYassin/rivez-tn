@@ -5,12 +5,17 @@ import { BookOpen, FileQuestion, Users } from "lucide-react"
 import { useRouter } from "nextjs-toploader/app"
 import { ItemType } from "../page"
 import MoreButton from "./more-button"
+import { useState } from "react"
+import ShareQuizDialog from "./share-quiz-dialog"
 
 interface Props {
     item: ItemType
+    disableMoreBtn?: boolean
 }
 
-export default function Item({ item }: Props) {
+export default function Item({ item, disableMoreBtn }: Props) {
+    const [isUpdateDialogOpen, setIsUpdateDialogOpen] = useState(false)
+    const [isSharing, setIsSharing] = useState(false)
     const router = useRouter()
     const background = `linear-gradient(135deg, hsl(${
         item.id * 50
@@ -18,10 +23,14 @@ export default function Item({ item }: Props) {
 
     const questionCount = item.quizzes_questions[0].count
     const submissionCount = item.quiz_submissions[0].count
-
+    const handleClick = () => {
+        if (!isUpdateDialogOpen && !isSharing) {
+            router.push(`/quizzes/${item.id}`)
+        }
+    }
     return (
         <Card
-            onClick={() => router.push(`/quizzes/${item.id}`)}
+            onClick={handleClick}
             className={
                 "relative active:translate-y-1 active:shadow-[0px_2px_0px] transition-all hover:cursor-pointer hover:bg-neutral-100 hover:shadow-neutral-300 hover:border-neutral-300 h-[360px] flex rounded-3xl  flex-col  "
             }
@@ -54,12 +63,18 @@ export default function Item({ item }: Props) {
 
             <div className="flex flex-col">
                 <CardHeader className="-mt-3">
-                    <MoreButton
-                        authorId={item.author_id}
-                        status={item.publishing_status}
-                        itemId={item.id}
-                        className="scale-90 absolute right-3"
-                    />
+                    {!disableMoreBtn && (
+                        <MoreButton
+                            isSharing={isSharing}
+                            setIsSharing={setIsSharing}
+                            isUpdateDialogOpen={isUpdateDialogOpen}
+                            setIsUpdateDialogOpen={setIsUpdateDialogOpen}
+                            authorId={item.author_id}
+                            status={item.publishing_status}
+                            itemId={item.id}
+                            className="scale-90 absolute right-3"
+                        />
+                    )}
                     <div className="flex  justify-between items-start">
                         <div className=" max-w-[90%]">
                             <h2 className="text-2xl truncate pb-2   first-letter:uppercase font-bold">
@@ -103,6 +118,12 @@ export default function Item({ item }: Props) {
                     </div>
                 </CardContent>
             </div>
+            <ShareQuizDialog
+                id={item.id}
+                isOpen={isSharing}
+                onOpenChange={setIsSharing}
+                status={item.publishing_status}
+            />
         </Card>
     )
 }
