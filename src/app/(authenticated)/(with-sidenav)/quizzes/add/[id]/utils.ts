@@ -149,10 +149,7 @@ export const formatGeneratedQuizQuestions = (
                         }
                     }),
                 },
-                localId:
-                    getState().allQuestions.find(
-                        (item) => item.questionText === q.questionText
-                    )?.localId || crypto.randomUUID(),
+                localId: crypto.randomUUID(),
                 questionText: q.questionText,
                 imageUrl: null,
                 type: q.type,

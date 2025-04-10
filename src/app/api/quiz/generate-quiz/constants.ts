@@ -205,7 +205,7 @@ export const POSSIBLE_QUESTIONS = {
         name: "FILL_IN_THE_BLANK",
         examples: [
             {
-                questionText: "Complete the sentence:",
+                questionText: "Fill in the missing parts:",
                 type: "FILL_IN_THE_BLANK",
                 content: {
                     parts: ["The capital of France is ", "."],
@@ -219,7 +219,7 @@ export const POSSIBLE_QUESTIONS = {
                 },
             },
             {
-                questionText: "Fill in the missing parts of the definition:",
+                questionText: "Fill in the missing parts:",
                 type: "FILL_IN_THE_BLANK",
                 content: {
                     parts: [
@@ -262,16 +262,16 @@ export const POSSIBLE_QUESTIONS = {
         }),
 
         schemaString: `z.object({
-                questionText: z.string(),
+                questionText: z.string() // should be this sentence "Fill in the missing parts" but in the language of the parts. ,
                 type: z.literal("FILL_IN_THE_BLANK"),
                 content: z.object({
                     parts: z.array(z.string()).min(4), //example : if we want "this___fill in the example." we will get this array ["this" , "fill in the blank example."] 
-                    options: z.array(z.string()),
+                    options: z.array(z.string()) // IMPORTANT should not include the the correct options,
                     correct: z.array(
                         z.object({
                             option: z.string(),
                             index: z.number(), // index always stars from 0
-                        })
+                        }) // IMPORTANT the length of the correct array should equal the parts length - 1
                     ).min(3),
                 }),
             })`,
