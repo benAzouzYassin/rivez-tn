@@ -164,7 +164,6 @@ const useQuizStore = create<Store>((set, get) => ({
                     isGenerationQuizError: true,
                     shadowQuestionsCount: 0,
                 })
-                console.log("refund when timeout ")
 
                 await handleQuizRefund({
                     cause: "timed out",

@@ -110,6 +110,7 @@ export async function POST(req: NextRequest) {
             system: `
             You are a quiz generator that follows the rules.
             RULES :
+                - IMPORTANT do not respond with markdown and only respond with json.
                 - Your answer should start with this character "{".
                 - If there is a question typed "FILL_IN_THE_BLANK" use all the content.options inside content.correct (only applied in "FILL_IN_THE_BLANK" question type ).
                 - your answer should not include any template strings.

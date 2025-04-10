@@ -70,6 +70,7 @@ export async function POST(req: NextRequest) {
             .throwOnError()
         const llmResponse = await generateText({
             system: `
+            - IMPORTANT do not respond with markdown and only respond with json.
             - Your answer should start with this character "{".
             - Your answer should not include any template strings.
             - Your response should be valid JSON that can be used like this : JSON.parse(response)

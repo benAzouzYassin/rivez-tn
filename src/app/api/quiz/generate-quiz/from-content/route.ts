@@ -96,6 +96,7 @@ export async function POST(req: NextRequest) {
             system: `
             You are a quiz generator that follows the rules.
             RULES :
+                - IMPORTANT do not respond with markdown and only respond with json.
                 - Do not mention the filenames or content given to you by the user.
                 - Base your knowledge from the content given to you by the user.
                 - Your answer should start with this character "{".
