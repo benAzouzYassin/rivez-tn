@@ -98,7 +98,7 @@ export default function Page() {
             <div className="w-full  min-h-screen mt-18  ">
                 <div
                     className={cn(
-                        "grid  rounded-2xl  grid-cols-3 ml-auto px-2 py-2   gap-8 mb-2"
+                        "grid  rounded-2xl  grid-cols-3  min-[1700px]:grid-cols-4 ml-auto px-2 py-2   gap-8 mb-2"
                     )}
                 >
                     {isFetching &&
@@ -110,7 +110,7 @@ export default function Page() {
                 <div className="mb-4 ">
                     <div
                         className={cn(
-                            "grid grid-cols-3 rounded-2xl ml-auto px-2 py-2   gap-8 mb-2"
+                            "grid grid-cols-3 min-[1700px]:grid-cols-4 rounded-2xl ml-auto px-2 py-2   gap-8 mb-2"
                         )}
                     >
                         {!data?.length && !isFetching && (
