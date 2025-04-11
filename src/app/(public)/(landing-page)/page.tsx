@@ -74,7 +74,7 @@ function Page() {
                 <div className="min-[2200px]"></div>
                 <div
                     id="tools"
-                    className="bg-white max-w-[2200px]  mx-auto   sm:px-5 py-6 gap-10  w-full grid md:grid-cols-2 grid-cols-1 xl:grid-cols-4 md:h-80 mt-3 rounded-[50px] shadow-[0px_5px_10px] border-sky-200 shadow-sky-200"
+                    className="bg-white max-w-[2200px]  mx-auto   sm:px-5 py-6 gap-10  w-full grid md:grid-cols-2 grid-cols-1 xl:grid-cols-4 md:h-80 sm:mt-40 mt-3 rounded-[50px] shadow-[0px_5px_10px] border-sky-200 shadow-sky-200"
                 >
                     <div className="h-full hover:bg-[#E6F9FF] px-4 rounded-3xl">
                         <div className="h-24 w-24 mt-10  border flex items-center justify-center rounded-2xl mx-auto">
