@@ -498,3 +498,8 @@ article,
 .react-flow svg {
   overflow: visible !important;
 }
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding: 200px;
+}

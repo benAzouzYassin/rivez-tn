@@ -3,7 +3,10 @@
 import { useState, useEffect, useRef } from "react"
 import { motion } from "framer-motion"
 
-export default function GeneralLoadingScreen() {
+interface Props {
+    text: string
+}
+export default function GeneralLoadingScreen(props: Props) {
     const [progress, setProgress] = useState(0)
     const [loading, setLoading] = useState(true)
     const initialTimestamp = useRef(Date.now())

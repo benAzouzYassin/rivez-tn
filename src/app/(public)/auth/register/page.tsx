@@ -79,6 +79,7 @@ export default function Page() {
         <main className="flex min-h-[100vh] relative flex-col items-center justify-center">
             <section>
                 <Button
+                    onClick={router.back}
                     className="absolute h-10 w-10 top-8 left-16"
                     variant={"ghost"}
                 >
