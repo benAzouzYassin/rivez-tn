@@ -61,7 +61,7 @@ function Page() {
             </section>
             <section className="  mx-auto  px-2 sm:px-20 pb-10 bg-[#EEFBFC] overflow-hidden  relative  w-full">
                 <svg
-                    className="max-w-[2700px] w-screen  absolute left-0 rotate-180  top-0 min-[1200px]:-top-36  min-[1600px]:-top-32 min-[1800px]:-top-48     z-50 "
+                    className="max-w-[2700px] w-screen md:block hidden  absolute left-0 rotate-180  top-0 min-[1200px]:-top-36  min-[1600px]:-top-32 min-[1800px]:-top-48     z-50 "
                     viewBox="0 0 900 140"
                     fill="none"
                     xmlns="http://www.w3.org/2000/svg"
@@ -74,7 +74,7 @@ function Page() {
                 <div className="min-[2200px]"></div>
                 <div
                     id="tools"
-                    className="bg-white max-w-[2200px]  mx-auto   sm:px-5 py-6 gap-10  w-full grid md:grid-cols-2 grid-cols-1 xl:grid-cols-4 md:h-80 mt-20 rounded-[50px] shadow-[0px_5px_10px] border-sky-200 shadow-sky-200"
+                    className="bg-white max-w-[2200px]  mx-auto   sm:px-5 py-6 gap-10  w-full grid md:grid-cols-2 grid-cols-1 xl:grid-cols-4 md:h-80 mt-3 rounded-[50px] shadow-[0px_5px_10px] border-sky-200 shadow-sky-200"
                 >
                     <div className="h-full hover:bg-[#E6F9FF] px-4 rounded-3xl">
                         <div className="h-24 w-24 mt-10  border flex items-center justify-center rounded-2xl mx-auto">
