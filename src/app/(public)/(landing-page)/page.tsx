@@ -25,16 +25,16 @@ function Page() {
                         <p className="text-[#33b7d1] text-2xl mt-4 xl:block hidden max-[1650px]:text-[1.5rem] max-[1300px]:text-[1.2rem] max-[1250px]:text-center">
                             Let ai help you prepare for exams
                         </p>
-                        <div className="flex xl:justify-start justify-center   items-center gap-4">
+                        <div className="flex xl:justify-start justify-center   items-center gap-4 px-4 xl:px-0">
                             <Link
                                 href={"/auth/login"}
-                                className="bg-amber-400 flex items-center justify-center z-10 h-14 md:h-16 px-9 rounded-full  shadow-amber-300 text-white/95 shadow-[0px_3px_7px] font-bold hover:text-white hover:cursor-pointer hover:scale-105 transition-all hover:bg-amber-400/95 text-xl mt-10 active:scale-100 "
+                                className="bg-amber-400  items-center justify-center z-10 h-14  md:h-16 md:flex hidden px-9 rounded-full  shadow-amber-300 text-white/95 shadow-[0px_3px_7px] font-bold hover:text-white hover:cursor-pointer hover:scale-105 transition-all hover:bg-amber-400/95 text-xl mt-10 active:scale-100 "
                             >
                                 Sign In
                             </Link>
                             <Link
                                 href={"/auth/register"}
-                                className="bg-blue-400 z-10 h-14 md:h-16 px-9 flex items-center justify-center rounded-full  shadow-blue-300 text-white shadow-[0px_3px_7px] font-bold hover:text-white/90 hover:cursor-pointer hover:scale-105 transition-all hover:bg-blue-400/95 text-xl mt-10 active:scale-100 "
+                                className="bg-blue-400 z-10 h-14 md:h-16 px-9 flex items-center md:w-auto w-full justify-center rounded-full  shadow-blue-300 text-white shadow-[0px_3px_7px] font-bold hover:text-white/90 hover:cursor-pointer hover:scale-105 transition-all hover:bg-blue-400/95 text-xl mt-10 active:scale-100 "
                             >
                                 Get started
                             </Link>
@@ -74,7 +74,7 @@ function Page() {
                 <div className="min-[2200px]"></div>
                 <div
                     id="tools"
-                    className="bg-white max-w-[2200px]  mx-auto   sm:px-5 py-6 gap-10  w-full grid md:grid-cols-2 grid-cols-1 xl:grid-cols-4 md:h-80 mt-40 rounded-[50px] shadow-[0px_5px_10px] border-sky-200 shadow-sky-200"
+                    className="bg-white max-w-[2200px]  mx-auto   sm:px-5 py-6 gap-10  w-full grid md:grid-cols-2 grid-cols-1 xl:grid-cols-4 md:h-80 mt-20 rounded-[50px] shadow-[0px_5px_10px] border-sky-200 shadow-sky-200"
                 >
                     <div className="h-full hover:bg-[#E6F9FF] px-4 rounded-3xl">
                         <div className="h-24 w-24 mt-10  border flex items-center justify-center rounded-2xl mx-auto">
