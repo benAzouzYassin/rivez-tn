@@ -1,29 +1,63 @@
 "use client"
 
+import { useState, useEffect, useRef } from "react"
 import { motion } from "framer-motion"
-type Props = {
-    text?: string | null
+
+interface Props {
+    text: string
 }
 export default function GeneralLoadingScreen(props: Props) {
+    const [progress, setProgress] = useState(0)
+    const [loading, setLoading] = useState(true)
+    const initialTimestamp = useRef(Date.now())
+    const animationFrame = useRef<number>(null)
+
+    useEffect(() => {
+        const simulateTopLoader = () => {
+            const now = Date.now()
+            const elapsedMs = now - initialTimestamp.current
+
+            if (elapsedMs < 2000) {
+                setProgress(Math.min(30, elapsedMs / 66.67))
+            } else if (elapsedMs < 5000) {
+                const additionalProgress = (elapsedMs - 2000) / 150
+                setProgress(Math.min(50, 30 + additionalProgress))
+            } else if (elapsedMs < 10000) {
+                const additionalProgress = (elapsedMs - 5000) / 250
+                setProgress(Math.min(70, 50 + additionalProgress))
+            } else if (elapsedMs < 15000) {
+                const additionalProgress = (elapsedMs - 10000) / 333.33
+                setProgress(Math.min(85, 70 + additionalProgress))
+            } else if (elapsedMs < 20000) {
+                const additionalProgress = (elapsedMs - 15000) / 500
+                setProgress(Math.min(95, 85 + additionalProgress))
+            } else if (elapsedMs < 25000) {
+                const additionalProgress = (elapsedMs - 20000) / 1666.67
+                setProgress(Math.min(98, 95 + additionalProgress))
+            } else {
+                setProgress(99)
+                setLoading(false)
+                return
+            }
+
+            animationFrame.current = requestAnimationFrame(simulateTopLoader)
+        }
+
+        animationFrame.current = requestAnimationFrame(simulateTopLoader)
+
+        return () => {
+            if (animationFrame.current) {
+                cancelAnimationFrame(animationFrame.current)
+            }
+        }
+    }, [])
+
     const containerVariants = {
         hidden: { opacity: 0 },
         visible: {
             opacity: 1,
             transition: {
                 staggerChildren: 0.2,
-            },
-        },
-    }
-
-    const pulseVariants = {
-        hidden: { opacity: 0, scale: 0.8 },
-        visible: {
-            opacity: [0.3, 0.6, 0.3],
-            scale: [0.8, 1, 0.8],
-            transition: {
-                duration: 2.5,
-                repeat: Infinity,
-                ease: "easeInOut",
             },
         },
     }
@@ -42,34 +76,21 @@ export default function GeneralLoadingScreen(props: Props) {
 
     return (
         <motion.main
-            className="min-h-[70vh] flex items-center justify-center  bg-white"
+            className="min-h-[70vh] flex items-center justify-center bg-white"
             initial="hidden"
             animate="visible"
             variants={containerVariants}
         >
             <motion.div
-                className="flex flex-col -translate-y-20  items-center justify-center"
+                className="flex flex-col -translate-y-20 items-center justify-center"
                 variants={containerVariants}
             >
-                {props.text !== null && (
-                    <motion.h2
-                        className="text-5xl pb-1 flex  items-end font-black text-transparent bg-clip-text bg-gradient-to-r from-neutral-600 to-neutral-800"
-                        variants={circleVariants}
-                    >
-                        {props.text || "Loading "}{" "}
-                        <div className="flex items-center gap-1 -translate-y-2 ml-1">
-                            <div className="w-3 h-3 bg-neutral-700 rounded-full"></div>
-                            <div className="w-3 h-3 bg-neutral-700 rounded-full"></div>
-                            <div className="w-3 h-3 bg-neutral-700 rounded-full"></div>
-                        </div>
-                    </motion.h2>
-                )}
                 <motion.div
                     className="mt-5 flex flex-col items-center gap-3"
                     variants={containerVariants}
                 >
                     <motion.div
-                        className=" relative  w-screen  flex items-center justify-center gap-2"
+                        className="relative w-screen flex items-center justify-center gap-2"
                         variants={containerVariants}
                         initial="hidden"
                         animate="visible"
@@ -84,21 +105,51 @@ export default function GeneralLoadingScreen(props: Props) {
                                 damping: 20,
                             }}
                         >
-                            {/* Pulsing circles with neutral colors */}
-                            <motion.div
-                                className="absolute left-1/2 -translate-x-1/2 -translatye top-0 w-24 h-24 bg-gradient-to-r from-blue-300 to-blue-300 rounded-full blur-sm"
-                                variants={pulseVariants}
-                            />
-                            <motion.div
-                                className="absolute left-1/2 -translate-x-1/2 top-0 w-24 h-24 bg-gradient-to-r from-blue-300 to-blue-400 rounded-full blur-sm"
-                                variants={pulseVariants}
-                                style={{ animationDelay: "0.3s" }}
-                            />
-                            <motion.div
-                                className="absolute left-1/2 -translate-x-1/2 top-0 w-24 h-24 bg-gradient-to-r from-blue-400 to-blue-500 rounded-full blur-sm"
-                                variants={pulseVariants}
-                                style={{ animationDelay: "0.6s" }}
-                            />
+                            <div className="relative w-48 h-48">
+                                <div className="absolute w-48 h-48 rounded-full"></div>
+                                <svg
+                                    className="absolute w-48 h-48"
+                                    viewBox="0 0 100 100"
+                                >
+                                    <circle
+                                        cx="50"
+                                        cy="50"
+                                        r="38"
+                                        fill="#f5f5f5"
+                                        stroke="url(#blueGradient)"
+                                        strokeWidth="8"
+                                        strokeDasharray="239.5"
+                                        strokeDashoffset={
+                                            239.5 -
+                                            (239.5 * Math.min(progress, 99)) /
+                                                100
+                                        }
+                                        strokeLinecap="round"
+                                        transform="rotate(-90 50 50)"
+                                    />
+                                    <defs>
+                                        <linearGradient
+                                            id="blueGradient"
+                                            x1="0%"
+                                            y1="0%"
+                                            x2="100%"
+                                            y2="0%"
+                                        >
+                                            <stop
+                                                offset="0%"
+                                                stopColor="#93c5fd"
+                                            />{" "}
+                                            <stop
+                                                offset="100%"
+                                                stopColor="#3b82f6"
+                                            />{" "}
+                                        </linearGradient>
+                                    </defs>
+                                </svg>
+                                <div className="absolute text-3xl font-extrabold text-neutral-500 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
+                                    {Math.round(progress)}%{" "}
+                                </div>
+                            </div>
                         </motion.div>
                     </motion.div>
                 </motion.div>
