@@ -22,9 +22,14 @@ export default function PrivateLayout({
                 if (data.session) {
                     setAllowedToEnter(true)
                 } else {
+                    const afterAuthUrl = ["/", ""].includes(
+                        window.location.pathname
+                    )
+                        ? "/home"
+                        : window.location.pathname
                     localStorage.setItem(
                         "afterAuthRedirect",
-                        window.location.pathname + "?" + searchParams.toString()
+                        afterAuthUrl + "?" + searchParams.toString()
                     )
                     router.replace("/auth/register")
                 }
