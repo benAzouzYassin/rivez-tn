@@ -10,8 +10,9 @@ export function getSystemPrompt() {
     - Your responses stars with this character : "{" .
     - Your responses follows the EXAMPLES structures bellow.
     - Your responses follows the ZOD SCHEMA bellow.
-    - Descriptions should be brief and small.
-    
+ - Include all details of the content provided to you by the user.
+    - Highlight the essential parts of the content provided to you by the user.    
+        
   ## ZOD SCHEMA
     z.object({
         itemsCount: z.number(),
