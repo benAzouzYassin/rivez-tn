@@ -1,5 +1,5 @@
 import { getUserInServerSide } from "@/data-access/users/authenticate-user-ssr"
-import { gpt4oMini } from "@/lib/ai"
+import { normalModel } from "@/lib/ai"
 import { supabaseAdminServerSide } from "@/lib/supabase-server-side"
 import { getYtVideoTranscriptions } from "@/utils/youtube"
 import { streamText } from "ai"
@@ -53,7 +53,7 @@ export async function POST(req: NextRequest) {
         })
 
         const llmResponse = streamText({
-            model: gpt4oMini,
+            model: normalModel,
             prompt,
             temperature: 0.1,
             system: systemPrompt,
