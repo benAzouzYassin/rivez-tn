@@ -1,22 +1,20 @@
 "use client"
+import {
+    Drawer,
+    DrawerContent,
+    DrawerDescription,
+    DrawerHeader,
+    DrawerTitle,
+} from "@/components/ui/drawer"
+import { useCurrentUser } from "@/hooks/use-current-user"
 import { cn } from "@/lib/ui-utils"
+import { AlignRight } from "lucide-react"
 import { useMotionValueEvent, useScroll } from "motion/react"
 import Link from "next/link"
 import { useState } from "react"
-import { AlignRight, Menu, X } from "lucide-react"
-import {
-    Drawer,
-    DrawerClose,
-    DrawerContent,
-    DrawerDescription,
-    DrawerFooter,
-    DrawerHeader,
-    DrawerTitle,
-    DrawerTrigger,
-} from "@/components/ui/drawer"
-import { Button } from "@/components/ui/button"
 
 export default function Nav() {
+    const isAuthenticated = useCurrentUser()
     const { scrollY } = useScroll()
     const [isScrolled, setIsScrolled] = useState(false)
     const [isOpen, setIsOpen] = useState(false)
@@ -105,14 +103,16 @@ export default function Nav() {
 
             {/* Desktop Auth Buttons */}
             <div className="hidden md:flex items-center gap-4">
+                {!isAuthenticated && (
+                    <Link
+                        href={"/auth/login"}
+                        className="to-[#ada3fc] flex items-center justify-center z-50 hover:font-semibold font-medium active:scale-100 hover:to-[#a99dffe4] text-white font-sans bg-gradient-to-tl from-[#7654fc] hover:from-[#7654fc] h-9 md:h-10 lg:h-11 px-4 md:px-6 lg:px-8 cursor-pointer hover:scale-105 transition-all duration-250 rounded-full hover:shadow-[0_2px_7px_rgba(118,84,252,0.6)] text-sm lg:text-base"
+                    >
+                        Login
+                    </Link>
+                )}
                 <Link
-                    href={"/auth/login"}
-                    className="to-[#ada3fc] flex items-center justify-center z-50 hover:font-semibold font-medium active:scale-100 hover:to-[#a99dffe4] text-white font-sans bg-gradient-to-tl from-[#7654fc] hover:from-[#7654fc] h-9 md:h-10 lg:h-11 px-4 md:px-6 lg:px-8 cursor-pointer hover:scale-105 transition-all duration-250 rounded-full hover:shadow-[0_2px_7px_rgba(118,84,252,0.6)] text-sm lg:text-base"
-                >
-                    Login
-                </Link>
-                <Link
-                    href={"/auth/register"}
+                    href={isAuthenticated ? "/home" : "/auth/register"}
                     className="to-[#70e8f8] flex items-center justify-center active:scale-100 z-50 hover:font-semibold font-medium hover:to-[#7beefde3] text-white font-sans bg-gradient-to-tl from-[#12abde] hover:from-[#12abde] h-9 md:h-10 lg:h-11 px-4 md:px-6 lg:px-8 cursor-pointer hover:scale-105 transition-all rounded-full duration-250 hover:shadow-[0_2px_7px_rgba(18,171,222,0.6)] text-sm lg:text-base"
                 >
                     Get started
