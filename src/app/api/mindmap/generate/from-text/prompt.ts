@@ -10,7 +10,7 @@ export function getSystemPrompt() {
     - Your responses stars with this character : "{" .
     - Your responses follows the EXAMPLES structures bellow.
     - Your responses follows the ZOD SCHEMA bellow.
- - Include all details of the content provided to you by the user.
+    - Include all details of the content provided to you by the user.
     - Highlight the essential parts of the content provided to you by the user.    
         
   ## ZOD SCHEMA

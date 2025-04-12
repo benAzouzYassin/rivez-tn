@@ -103,7 +103,6 @@ export default function LatestQuizzesMindmaps() {
                                         ) : (
                                             <div className="w-44 bg-neutral-200 rounded-2xl h-32 mr-6"></div>
                                         )}
-                                        {item.image}
                                         <div>
                                             <h3 className="text-[1.4rem] text-neutral-700 font-extrabold">
                                                 {item.title}
