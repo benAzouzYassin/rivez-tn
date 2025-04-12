@@ -66,7 +66,13 @@ export default function PagesSelection() {
     }
     const handleCheckbox = (value: boolean) => {
         if (value) {
-            selectPages(selectedFile?.pages.map((p) => p.localId) || [])
+            selectPages(
+                selectedFile?.pages
+                    .filter((p) => {
+                        return selectedPages.includes(p.localId) === false
+                    })
+                    .map((p) => p.localId) || []
+            )
         } else {
             unSelectPages(selectedFile?.pages.map((p) => p.localId) || [])
         }

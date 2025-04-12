@@ -33,7 +33,7 @@ export default function Item({
                 }
             }}
             variant={"secondary"}
-            className="!p-3 h-56 flex   disabled:opacity-80 disabled:bg-neutral-200/70 w-full max-h-fit text-start  hover:border-blue-300 hover:bg-blue-100/70 hover:shadow-blue-300 transition-all rounded-3xl  "
+            className="!p-3 h-56 min-h-56 flex   disabled:opacity-80 disabled:bg-neutral-200/70 w-full  text-start  hover:border-blue-300 hover:bg-blue-100/70 hover:shadow-blue-300 transition-all rounded-3xl  "
         >
             <div className=" items-start gap-4 flex justify-center flex-col">
                 <div className=" min-h-10 min-w-10 w-fit flex items-center mx-auto justify-center p-2 border-2  rounded-xl">
