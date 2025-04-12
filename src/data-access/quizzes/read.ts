@@ -331,7 +331,7 @@ export async function readSharedQuizzesWithDetails(config?: {
     return { data: response.data }
 }
 
-export async function readLastNQuizzes(number: number) {
+export async function readLastNQuizzes(number: number, userId: string) {
     const response = await supabase
         .from("quizzes")
         .select(`*`)
@@ -339,6 +339,7 @@ export async function readLastNQuizzes(number: number) {
         .order("created_at", {
             ascending: false,
         })
+        .eq("author_id", userId)
         .throwOnError()
     return response.data
 }

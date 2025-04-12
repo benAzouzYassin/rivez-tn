@@ -10,20 +10,25 @@ import {
 import { Skeleton } from "@/components/ui/skeleton"
 import { readLastNMindmaps } from "@/data-access/mindmaps/read"
 import { readLastNQuizzes } from "@/data-access/quizzes/read"
+import { useCurrentUser } from "@/hooks/use-current-user"
 import { formatDate } from "@/utils/date"
 import { useQueries } from "@tanstack/react-query"
 import { useRouter } from "nextjs-toploader/app"
 
 export default function LatestQuizzesMindmaps() {
+    const { data: currentUser } = useCurrentUser()
     const [quizzesQuery, mindMapsQuery] = useQueries({
         queries: [
             {
-                queryKey: ["quizzes"],
-                queryFn: () => readLastNQuizzes(3),
+                enabled: !!currentUser?.id,
+                queryKey: ["quizzes", currentUser?.id],
+                queryFn: () => readLastNQuizzes(3, currentUser?.id as string),
             },
             {
-                queryKey: ["mindmaps"],
-                queryFn: () => readLastNMindmaps(3),
+                enabled: !!currentUser?.id,
+
+                queryKey: ["mindmaps", currentUser?.id],
+                queryFn: () => readLastNMindmaps(3, currentUser?.id as string),
             },
         ],
     })
