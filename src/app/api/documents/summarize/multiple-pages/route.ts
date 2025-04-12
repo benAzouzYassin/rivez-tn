@@ -30,15 +30,8 @@ export async function POST(req: NextRequest) {
         const prompt = generatePrompt({
             language: data.language,
             files: data.files.map((f) => {
-                const numberOfPagesToGenerate = parseInt(
-                    (f.pages.length / 3).toFixed(0)
-                )
                 return {
                     ...f,
-                    numberOfPagesToGenerate:
-                        numberOfPagesToGenerate > 9
-                            ? numberOfPagesToGenerate
-                            : numberOfPagesToGenerate - 2 || 1,
                 }
             }),
         })

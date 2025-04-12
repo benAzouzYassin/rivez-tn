@@ -15,7 +15,9 @@ export default function FileItem(props: Props) {
         e.stopPropagation()
         deleteFile(props.localId)
     }
-    const handleSelect = () => setSelected(props.localId)
+    const handleSelect = () => {
+        setSelected(props.localId)
+    }
     return (
         <div
             onClick={handleSelect}
@@ -28,7 +30,7 @@ export default function FileItem(props: Props) {
             )}
         >
             <FileText className="text-red-400/70  min-w-6 min-h-6" />
-            <p className="line-clamp-1 ml-2">{props.name}</p>
+            <p className=" ml-2 max-w-[150px] truncate">{props.name}</p>
             <button
                 onClick={handleDelete}
                 className=" active:scale-95 ml-auto opacity-70 hover:opacity-100 transition-all cursor-pointer hover:bg-red-200  text-red-400  rounded-full  p-[2px]"
