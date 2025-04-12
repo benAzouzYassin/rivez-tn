@@ -51,6 +51,8 @@ export const systemPrompt = `
   - After any heading, include a blank line !
   - Generate the number of pages asked by the user.
   - Use all the content provided to you by the user.
+  - Include all details of the content provided to you by the user.
+  - Highlight the essential parts of the content provided to you by the user.    
 
   ## Markdown Support
   Your response should leverage Markdown's formatting capabilities including:
