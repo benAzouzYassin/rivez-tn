@@ -330,3 +330,15 @@ export async function readSharedQuizzesWithDetails(config?: {
         .throwOnError()
     return { data: response.data }
 }
+
+export async function readLastNQuizzes(number: number) {
+    const response = await supabase
+        .from("quizzes")
+        .select(`*`)
+        .limit(number)
+        .order("created_at", {
+            ascending: false,
+        })
+        .throwOnError()
+    return response.data
+}

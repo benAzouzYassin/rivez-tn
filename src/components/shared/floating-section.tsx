@@ -1,9 +1,8 @@
-import ProgressBar from "@/components/shared/progress-bar"
 import { Button } from "@/components/ui/button"
+import { useCurrentUser } from "@/hooks/use-current-user"
 import { cn } from "@/lib/ui-utils"
 import Link from "next/link"
 import XpIcon from "../icons/xp"
-import { useCurrentUser } from "@/hooks/use-current-user"
 interface Props {
     fixed?: boolean
 }
@@ -11,24 +10,10 @@ export default function FloatingSection(props: Props) {
     const { data: userData } = useCurrentUser()
     return (
         <section className="  col-span-4  py-4 pr-4 pl-5 ">
-            <div className={cn({ " fixed top-30 pr-4": props.fixed })}>
-                <div className="border-neutral-200 flex flex-col min-h-[25.5rem] gap-4  border py-5 px-3 rounded-3xl">
-                    <Link
-                        href={"#"}
-                        className=" hover:bg-neutral-100 active:scale-95 transition-all flex gap-5 border-2 px-4 py-3 rounded-2xl justify-between "
-                    >
-                        <div className="grow">
-                            <p className="text-xl font-extrabold  text-neutral-500">
-                                React course
-                            </p>
-                            <ProgressBar percentage={40} className="mt-2" />
-                        </div>
-                        <div className="bg-neutral-300 w-14  h-14   rounded-xl"></div>
-                    </Link>
+            <div className={cn({ " fixed top-30 pr-4 ": props.fixed })}>
+                <div className="border-neutral-200  flex flex-col min-h-[24.5rem] gap-4  border py-5 px-3 rounded-3xl">
                     <div
-                        onClick={() => {
-                            // TODO open invite friend dialog
-                        }}
+                        onClick={() => {}}
                         className="  transition-all  gap-5 border-2 px-4 py-3 rounded-2xl justify-between "
                     >
                         <div className="flex">
@@ -57,6 +42,7 @@ export default function FloatingSection(props: Props) {
                             Invite friend
                         </Button>
                     </div>
+
                     <Link
                         href={"#"}
                         className=" hover:bg-neutral-100 active:scale-95 transition-all flex gap-5 border-2 px-4 items-center py-3 rounded-2xl justify-between "
@@ -66,9 +52,9 @@ export default function FloatingSection(props: Props) {
                                 XP Points :
                             </p>
                         </div>
-                        <div className="flex items-center text-2xl font-black text-[#f5b237] gap-1">
+                        <div className="flex items-center text-xl text-[#f5b237] font-black  gap-1">
                             {userData?.xp_points || 0}
-                            <div className="w-8 h-8  -mt-px rounded-xl">
+                            <div className="w-8 h-8 text-[#f5b237]  -mt-px rounded-xl">
                                 <XpIcon className="w-7 h-7" />
                             </div>
                         </div>

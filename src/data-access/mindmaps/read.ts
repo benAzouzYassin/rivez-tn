@@ -62,3 +62,15 @@ export async function readNodeExplanation(params: { nodeId: string }) {
         .throwOnError()
     return response.data
 }
+
+export async function readLastNMindmaps(number: number) {
+    const response = await supabase
+        .from("mindmaps")
+        .select(`*`)
+        .limit(number)
+        .order("created_at", {
+            ascending: false,
+        })
+        .throwOnError()
+    return response.data
+}

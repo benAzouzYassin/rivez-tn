@@ -20,7 +20,7 @@ export default function Layout({
             setAllowedToEnter(true)
         }
         if (!user.isLoading && user.data?.user_role !== "ADMIN") {
-            router.replace("/")
+            router.replace("/home")
         }
     }, [router, user])
 
