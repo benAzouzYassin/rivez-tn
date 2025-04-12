@@ -6,9 +6,5 @@ const openRouter = createOpenRouter({
     baseURL: process.env.OPENROUTER_ENDPOINT,
 })
 
-export const gpt4oMini = openRouter("openai/gpt-4o-mini")
-export const llama4Maverick = openRouter("meta-llama/llama-4-maverick")
-// export const cheapModel = anthropic("claude-3-5-haiku-20241022")
-// export const cheapModel = openRouter(
-//     "mistralai/mistral-small-24b-instruct-2501"
-// )
+export const normalModel = openRouter("openai/gpt-4o-2024-11-20")
+export const premiumModel = openRouter("openai/gpt-4o-2024-11-20")

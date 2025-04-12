@@ -1,5 +1,5 @@
 import { getUserInServerSide } from "@/data-access/users/authenticate-user-ssr"
-import { llama4Maverick } from "@/lib/ai"
+import { premiumModel } from "@/lib/ai"
 import { supabaseAdminServerSide } from "@/lib/supabase-server-side"
 import { getYtVideoTranscriptions } from "@/utils/youtube"
 import { streamText } from "ai"
@@ -123,7 +123,7 @@ export async function POST(req: NextRequest) {
                     data.difficulty || "NORMAL"
                 }
             `,
-            model: llama4Maverick,
+            model: premiumModel,
             prompt,
             temperature: 0,
         })

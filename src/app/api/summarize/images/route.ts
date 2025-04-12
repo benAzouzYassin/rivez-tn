@@ -1,5 +1,5 @@
 import { getUserInServerSide } from "@/data-access/users/authenticate-user-ssr"
-import { gpt4oMini, llama4Maverick } from "@/lib/ai"
+import { normalModel, premiumModel } from "@/lib/ai"
 import { calculateBase64FileSize } from "@/utils/file"
 import { generateText, streamText } from "ai"
 import { NextRequest, NextResponse } from "next/server"
@@ -48,7 +48,7 @@ export async function POST(req: NextRequest) {
         }
         const result = await generateText({
             temperature: 0,
-            model: llama4Maverick,
+            model: premiumModel,
             system: `for each image given to you extract it's text in details and without changes.
             - never speak to the user.
             - your output should strictly follow this zod schema : 
@@ -79,7 +79,7 @@ export async function POST(req: NextRequest) {
         })
 
         const llmResponse = streamText({
-            model: gpt4oMini,
+            model: normalModel,
             prompt,
             temperature: 0.1,
             system: systemPrompt,

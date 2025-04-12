@@ -1,4 +1,4 @@
-import { llama4Maverick } from "@/lib/ai"
+import { premiumModel } from "@/lib/ai"
 import { generateText } from "ai"
 import { NextRequest, NextResponse } from "next/server"
 import { z } from "zod"
@@ -85,7 +85,7 @@ export async function POST(req: NextRequest) {
             }
             `,
 
-            model: llama4Maverick,
+            model: premiumModel,
             prompt,
             temperature: 0.1,
         })
