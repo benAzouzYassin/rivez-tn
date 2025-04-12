@@ -63,7 +63,7 @@ export async function readNodeExplanation(params: { nodeId: string }) {
     return response.data
 }
 
-export async function readLastNMindmaps(number: number) {
+export async function readLastNMindmaps(number: number, userId: string) {
     const response = await supabase
         .from("mindmaps")
         .select(`*`)
@@ -71,6 +71,7 @@ export async function readLastNMindmaps(number: number) {
         .order("created_at", {
             ascending: false,
         })
+        .eq("author_id", userId)
         .throwOnError()
     return response.data
 }
