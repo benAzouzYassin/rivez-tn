@@ -1,5 +1,7 @@
+"use client"
 import Link from "next/link"
 import Nav from "./_components/nav"
+import { motion } from "framer-motion"
 
 function Page() {
     return (
@@ -16,16 +18,38 @@ function Page() {
                             className="z-10 xl:hidden block -mt-20 mx-auto h-[280px]"
                             src="/hero-img.svg"
                         />
-                        <p className="text-[#8459DF] text-2xl  max-[1650px]:text-[1.5rem] max-[1300px]:text-[1.2rem] max-[1250px]:text-center">
+                        <motion.p
+                            initial={{ y: 40, opacity: 0 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{
+                                duration: 0.25,
+                            }}
+                            className="text-[#8459DF] text-2xl  max-[1650px]:text-[1.5rem] max-[1300px]:text-[1.2rem] max-[1250px]:text-center"
+                        >
                             Rivez.tn for easier exam preparing
-                        </p>
-                        <h1 className="xl:text-[4rem] lg:text-6xl md:text-5xl text-4xl xl:text-left text-center text-neutral-700 xl:leading-20 mt-3 font-extrabold">
+                        </motion.p>
+                        <motion.h1
+                            initial={{ y: 40, opacity: 0 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ delay: 0.15, duration: 0.25 }}
+                            className="xl:text-[4rem] lg:text-6xl md:text-5xl text-4xl xl:text-left text-center text-neutral-700 xl:leading-20 mt-3 font-extrabold"
+                        >
                             The best way for preparing for exams
-                        </h1>
-                        <p className="text-[#33b7d1] text-2xl mt-4 xl:block hidden max-[1650px]:text-[1.5rem] max-[1300px]:text-[1.2rem] max-[1250px]:text-center">
+                        </motion.h1>
+                        <motion.p
+                            transition={{ delay: 0.3, duration: 0.25 }}
+                            initial={{ y: 40, opacity: 0 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            className="text-[#33b7d1] text-2xl mt-4 xl:block hidden max-[1650px]:text-[1.5rem] max-[1300px]:text-[1.2rem] max-[1250px]:text-center"
+                        >
                             Let ai help you prepare for exams
-                        </p>
-                        <div className="flex xl:justify-start justify-center   items-center gap-4 px-4 xl:px-0">
+                        </motion.p>
+                        <motion.div
+                            initial={{ y: 40, opacity: 0 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ delay: 0.4, duration: 0.25 }}
+                            className="flex xl:justify-start justify-center   items-center gap-4 px-4 xl:px-0"
+                        >
                             <Link
                                 href={"/auth/login"}
                                 className="bg-amber-400  items-center justify-center z-10 h-14  md:h-16 md:flex hidden px-9 rounded-full  shadow-amber-300 text-white/95 shadow-[0px_3px_7px] font-bold hover:text-white hover:cursor-pointer hover:scale-105 transition-all hover:bg-amber-400/95 text-xl mt-10 active:scale-100 "
@@ -38,9 +62,11 @@ function Page() {
                             >
                                 Get started
                             </Link>
-                        </div>
+                        </motion.div>
                     </div>
-                    <img
+                    <motion.img
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
                         alt=""
                         className="z-10 xl:block  hidden -mt-32 h-[700px]"
                         src="/hero-img.svg"

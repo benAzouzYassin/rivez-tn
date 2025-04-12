@@ -3,80 +3,74 @@ interface Props {
 }
 export default function SummarizeDocument(props: Props) {
     return (
-        <svg {...props} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
-            <circle
-                cx="53.5"
-                cy="10.5"
-                fill="none"
-                r="2.5"
-                stroke="#4c241d"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="2"
-            />
-            <circle cx="23.5" cy="26.5" fill="#e5efef" r="21.5" />
+        <svg {...props} viewBox="0 0 72 72" xmlns="http://www.w3.org/2000/svg">
             <path
-                d="m13.837 5.663-3.674 3.674"
-                fill="none"
-                stroke="#4c241d"
-                strokeLinecap="round"
+                d="m14.85 64.04.05537-5.257-5.343-.03324v-50.79h28.89l5.287 5.291h11.3v50.79z"
+                fill="#fff"
+                stroke="#fff"
                 strokeLinejoin="round"
                 strokeWidth="2"
             />
             <path
-                d="m10.163 5.663 3.674 3.674"
+                d="m54.92 23-10.92-11.35v11.35"
+                fill="#d0cfce"
+                strokeWidth=".9454"
+                transform="matrix(1.057 0 0 1.058 -8.414 -4.737)"
+            />
+            <path
+                d="m59.55 29.04h7.45v4.96h-7.45l-1.84-2.48z"
+                fill="#92d3f5"
+                strokeWidth=".9454"
+                transform="matrix(1.057 0 0 1.058 -8.414 -4.737)"
+            />
+            <path
+                d="m54.55 48h7.45v4.96h-7.45l-1.84-2.48z"
+                fill="#ea5a47"
+                strokeWidth=".9454"
+                transform="matrix(1.057 0 0 1.058 -8.414 -4.737)"
+            />
+            <g
                 fill="none"
-                stroke="#4c241d"
+                stroke="#000"
                 strokeLinecap="round"
                 strokeLinejoin="round"
-                strokeWidth="2"
-            />
-            <circle cx="8" cy="13" fill="#4c241d" r="1" />
-            <g strokeLinecap="round" strokeLinejoin="round" strokeWidth="2">
-                <path d="m7 23h54v34h-54z" fill="#6b4f5b" stroke="#4c241d" />
+            >
                 <path
-                    d="m34 55.685v-32.885s7.76-7.893 21.987-5.262v32.885s-12.934-1.316-21.987 5.262z"
-                    fill="#fff"
-                    stroke="#4c241d"
+                    d="m60 28.75v-11.75h-10.68"
+                    strokeWidth="1.889"
+                    transform="matrix(1.059 0 0 1.058 -8.462 -4.752)"
+                />
+                <path d="m55.06 45.53v-13.85" strokeWidth="2" />
+                <path
+                    d="m22 63.09v1.91h38v-11.67"
+                    strokeWidth="1.889"
+                    transform="matrix(1.059 0 0 1.058 -8.462 -4.752)"
                 />
                 <path
-                    d="m39 27.483a25.91 25.91 0 0 1 10.916-2.483"
-                    fill="#fff"
-                    stroke="#b5a19c"
+                    d="m55 48v-25.32l-10.68-10.68h-27.32v48h38v-7"
+                    strokeWidth="1.889"
+                    transform="matrix(1.059 0 0 1.058 -8.462 -4.752)"
                 />
                 <path
-                    d="m39 31.483a25.91 25.91 0 0 1 10.916-2.483"
-                    fill="#fff"
-                    stroke="#b5a19c"
+                    d="m55 23h-10.7l.02-11"
+                    strokeWidth="1.889"
+                    transform="matrix(1.059 0 0 1.058 -8.462 -4.752)"
                 />
                 <path
-                    d="m39 35.483a25.91 25.91 0 0 1 10.916-2.483"
-                    fill="#fff"
-                    stroke="#b5a19c"
+                    d="m59.55 34-1.84-2.48 1.84-2.48h7.45v4.96z"
+                    strokeWidth="1.889"
+                    transform="matrix(1.059 0 0 1.058 -8.462 -4.752)"
                 />
                 <path
-                    d="m34 55.685v-32.885s-7.765-7.893-22-5.262v32.885s12.941-1.316 22 5.262z"
-                    fill="#fff"
-                    stroke="#4c241d"
+                    d="m54.55 52.96-1.84-2.48 1.84-2.48h7.45v4.96z"
+                    strokeWidth="1.889"
+                    transform="matrix(1.059 0 0 1.058 -8.462 -4.752)"
                 />
-                <path d="m30 12-3-3" fill="none" stroke="#ffce56" />
-                <path d="m38 12 3-3" fill="none" stroke="#ffce56" />
-                <path d="m34 12v-4" fill="none" stroke="#ffce56" />
-                <path
-                    d="m28.916 27.483a25.9 25.9 0 0 0 -10.916-2.483"
-                    fill="#fff"
-                    stroke="#b5a19c"
-                />
-                <path
-                    d="m28.916 31.483a25.9 25.9 0 0 0 -10.916-2.483"
-                    fill="#fff"
-                    stroke="#b5a19c"
-                />
-                <path
-                    d="m28.916 35.483a25.9 25.9 0 0 0 -10.916-2.483"
-                    fill="#fff"
-                    stroke="#b5a19c"
-                />
+                <path d="m15.89 17.48h14.82" strokeWidth="2" />
+                <path d="m15.89 25.94h27.52" strokeWidth="2" />
+                <path d="m15.89 33.35h27.52" strokeWidth="2" />
+                <path d="m15.89 41.82h27.52" strokeWidth="2" />
+                <path d="m15.89 50.29h27.52" strokeWidth="2" />
             </g>
         </svg>
     )
