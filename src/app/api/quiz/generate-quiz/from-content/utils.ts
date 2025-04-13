@@ -30,15 +30,21 @@ QUIZ METADATA:
 QUESTION DISTRIBUTION:
 - Aim for a balanced mix of ${questionsNames.join(" and ")} questions
 - Minimum number of questions is ${minQuestions}
+- Aim for creating ${
+        maxQuestions > minQuestions
+            ? (maxQuestions / 2).toFixed(0)
+            : minQuestions
+    } questions 
 
 QUALITY REQUIREMENTS:
 1. Questions should:
-   - Be clear and unambiguous
-   - Progress from basic to more challenging concepts
-   - Avoid obvious patterns in correct answers
+   - Be clear and unambiguous.
+   - Progress from basic to more challenging concepts.
+   - Avoid obvious patterns in correct answers.
    - Depend on the content that is provided below.
-   - Base all questions strictly on the content from the provided PDF bellow
-
+   - Base all questions strictly on the content from the provided PDF bellow.
+   - Challenging and not easy.
+   
 2. Answer options should:
    - Be mutually exclusive
    - Be free of obvious hints or patterns

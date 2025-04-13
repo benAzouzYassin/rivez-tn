@@ -28,6 +28,11 @@ QUIZ METADATA:
 QUESTION DISTRIBUTION:
 - Aim for a balanced mix of ${questionsNames.join(" and ")} questions
 - Minimum number of questions is ${minQuestions}
+- Aim for creating ${
+        maxQuestions > minQuestions
+            ? (maxQuestions / 2).toFixed(0)
+            : minQuestions
+    } questions 
 
 QUALITY REQUIREMENTS:
 1. Questions should:
@@ -36,6 +41,7 @@ QUALITY REQUIREMENTS:
    - Avoid obvious patterns in correct answers
    - Depends on pdf content that is provided below.
    - Base all questions strictly on the content from the provided PDF bellow
+   - Challenging and not easy.
 
 2. Answer options should:
    - Be mutually exclusive
