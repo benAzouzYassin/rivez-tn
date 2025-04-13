@@ -42,7 +42,7 @@ function Page() {
                             transition={{ delay: 0.15, duration: 0.25 }}
                             className="xl:text-[4rem] lg:text-6xl md:text-5xl text-4xl xl:text-left text-center text-neutral-700 xl:leading-20 mt-3 font-extrabold"
                         >
-                            The best way for preparing for exams
+                            The best way for preparing to exams
                         </motion.h1>
                         <motion.p
                             transition={{ delay: 0.3, duration: 0.25 }}
