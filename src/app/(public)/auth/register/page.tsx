@@ -67,7 +67,10 @@ export default function Page() {
             queryClient.refetchQueries({
                 queryKey: ["current-user"],
             })
-            router.replace(localStorage.getItem("afterAuthRedirect") || "/home")
+            const afterAuthRoute =
+                (localStorage.getItem("afterAuthRedirect") || "/home") +
+                "?is_new_user=true"
+            router.replace(afterAuthRoute)
         } else {
             toastError("Error while creating your account.")
         }
@@ -152,11 +155,14 @@ export default function Page() {
                         queryClient.invalidateQueries({
                             queryKey: ["current-user"],
                         })
-                        await registerUserWithGoogle({
-                            redirectTo:
-                                window.location.origin +
+                        const afterAuthUrl = new URL(
+                            window.location.origin +
                                 (localStorage.getItem("afterAuthRedirect") ||
-                                    "/home"),
+                                    "/home")
+                        )
+                        afterAuthUrl.searchParams.append("is_new_user", "true")
+                        await registerUserWithGoogle({
+                            redirectTo: afterAuthUrl.href,
                         })
                     }}
                     type="button"

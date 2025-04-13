@@ -34,7 +34,7 @@ export default function NodeSheet(props: Props) {
     const [isError, setIsError] = useState(false)
     const [generatedContent, setGeneratedContent] = useState("")
     const [isLoading, setIsLoading] = useState(true)
-
+    const isGenerating = useRef(false)
     const {
         isFetched,
         isError: isFetchErrored,
@@ -48,11 +48,15 @@ export default function NodeSheet(props: Props) {
     const isFinishedStreaming = useRef(false)
     useEffect(() => {
         if (isFinishedStreaming.current === true) return
+        if (isGenerating.current === true) return
+
         if (props.open && (isFetched || isFetchErrored)) {
             if (!explanationData?.content) {
                 let contentToInsert = ""
                 let didGenerate = false
+
                 const onContentChange = (changedContent: string) => {
+                    isGenerating.current = true
                     if (!didGenerate) didGenerate = true
                     try {
                         setGeneratedContent(changedContent)
@@ -64,6 +68,7 @@ export default function NodeSheet(props: Props) {
 
                 const onStreamEnd = () => {
                     isFinishedStreaming.current = true
+                    isGenerating.current = false
                     if (!didGenerate) {
                         setIsError(true)
                         handleMindMapRefund({

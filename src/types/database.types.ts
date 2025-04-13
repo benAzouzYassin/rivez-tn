@@ -524,6 +524,7 @@ export type Database = {
           created_at: string
           credit_balance: number
           email: string | null
+          inviter: string | null
           is_banned: boolean
           phone: string | null
           user_id: string
@@ -535,6 +536,7 @@ export type Database = {
           created_at?: string
           credit_balance?: number
           email?: string | null
+          inviter?: string | null
           is_banned?: boolean
           phone?: string | null
           user_id?: string
@@ -546,13 +548,22 @@ export type Database = {
           created_at?: string
           credit_balance?: number
           email?: string | null
+          inviter?: string | null
           is_banned?: boolean
           phone?: string | null
           user_id?: string
           username?: string | null
           xp_points?: number | null
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "user_profiles_inviter_fkey"
+            columns: ["inviter"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["user_id"]
+          },
+        ]
       }
       user_roles: {
         Row: {
@@ -574,7 +585,15 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      handle_user_invite: {
+        Args: {
+          inviter_id: string
+          invited_user_id: string
+          credit_for_inviter: number
+          credit_for_invited: number
+        }
+        Returns: undefined
+      }
     }
     Enums: {
       difficulty: "NORMAL" | "MEDIUM" | "HARD"
