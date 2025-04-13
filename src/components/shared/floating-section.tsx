@@ -3,7 +3,7 @@ import { useCurrentUser } from "@/hooks/use-current-user"
 import { cn } from "@/lib/ui-utils"
 import { Check, Copy } from "lucide-react"
 import Link from "next/link"
-import { ReactNode, useState } from "react"
+import { ReactNode, useEffect, useState } from "react"
 import XpIcon from "../icons/xp"
 import {
     Dialog,
@@ -173,15 +173,22 @@ function FreeCredits(props: Props) {
     )
 }
 export function ShareDialog({ children }: { children: ReactNode }) {
+    const currentUser = useCurrentUser()
     const [copied, setCopied] = useState(false)
-    const [isLoading, setIsLoading] = useState(false)
-    const [isError, setIsError] = useState(false)
     const isDark = false
 
-    const link = "aeeaeaze"
+    const [shareLink, setShareLink] = useState("")
+
+    useEffect(() => {
+        if (currentUser.data?.id) {
+            setShareLink(
+                `${window.location.origin}?invite_code=${currentUser.data.id}`
+            )
+        }
+    }, [currentUser])
 
     const handleCopy = () => {
-        navigator.clipboard.writeText(link)
+        navigator.clipboard.writeText(shareLink)
         setCopied(true)
         setTimeout(() => setCopied(false), 2000)
     }
@@ -189,14 +196,17 @@ export function ShareDialog({ children }: { children: ReactNode }) {
     const shareToFacebook = () => {
         window.open(
             `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(
-                link
+                shareLink
             )}`,
             "_blank"
         )
     }
 
     const shareToWhatsApp = () => {
-        window.open(`https://wa.me/?text=${encodeURIComponent(link)}`, "_blank")
+        window.open(
+            `https://wa.me/?text=${encodeURIComponent(shareLink)}`,
+            "_blank"
+        )
     }
 
     return (
@@ -219,11 +229,7 @@ export function ShareDialog({ children }: { children: ReactNode }) {
                         isDark ? "text-gray-400" : "text-gray-500"
                     }`}
                 ></DialogDescription>
-                {isLoading && (
-                    <div className="p-8 flex justify-center">Loading...</div>
-                )}
-                {isError && <ErrorDisplay hideButton />}
-                {!isLoading && !isError && (
+                {
                     <>
                         <div className="flex items-center mt-4 space-x-2">
                             <div
@@ -239,7 +245,7 @@ export function ShareDialog({ children }: { children: ReactNode }) {
                                             ? "text-gray-200"
                                             : "text-neutral-700"
                                     }`}
-                                    value={link}
+                                    value={shareLink}
                                     readOnly
                                 />
                             </div>
@@ -287,7 +293,10 @@ export function ShareDialog({ children }: { children: ReactNode }) {
                         <div className="-mt-2 flex justify-center">
                             <div className="flex gap-8">
                                 <div className="cursor-pointer flex flex-col items-center">
-                                    <button className="group p-3 scale-80 cursor-pointer rounded-full bg-blue-50 hover:bg-blue-100 transition-all duration-300">
+                                    <button
+                                        onClick={shareToFacebook}
+                                        className="group p-3 scale-80 cursor-pointer rounded-full bg-blue-50 hover:bg-blue-100 transition-all duration-300"
+                                    >
                                         <FacebookIcon className="w-10  h-10 text-blue-500 group-hover:scale-110 transition-transform duration-300" />
                                     </button>
                                     <span className="mt-2 text-sm font-medium text-gray-600">
@@ -295,7 +304,10 @@ export function ShareDialog({ children }: { children: ReactNode }) {
                                     </span>
                                 </div>
                                 <div className="flex cursor-pointer flex-col items-center">
-                                    <button className="group cursor-pointer p-3 rounded-full bg-green-50 hover:bg-green-100 transition-all duration-300">
+                                    <button
+                                        onClick={shareToWhatsApp}
+                                        className="group cursor-pointer p-3 rounded-full bg-green-50 hover:bg-green-100 transition-all duration-300"
+                                    >
                                         <WhatsAppIcon className="w-10 h-10 text-green-500 group-hover:scale-110 transition-transform duration-300" />
                                     </button>
                                     <span className="mt-2 text-sm font-medium text-gray-600">
@@ -305,7 +317,7 @@ export function ShareDialog({ children }: { children: ReactNode }) {
                             </div>
                         </div>
                     </>
-                )}
+                }
             </DialogContent>
         </Dialog>
     )
