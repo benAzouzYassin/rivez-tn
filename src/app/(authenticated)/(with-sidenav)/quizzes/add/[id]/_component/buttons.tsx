@@ -24,7 +24,7 @@ import useQuizStore, {
 } from "../store"
 export default function Buttons() {
     const { data: userData } = useCurrentUser()
-
+    const isGenerating = useQuizStore((s) => s.isGeneratingQuizWithAi)
     const params = useParams()
     const quizId = parseInt(params["id"] as string)
     const reset = useQuizStore((s) => s.reset)
@@ -221,6 +221,7 @@ export default function Buttons() {
                 </WarningDialog>
                 <Button
                     isLoading={isSaving}
+                    disabled={isGenerating}
                     onClick={handleSubmit}
                     className="text-base font-extrabold"
                     variant={"blue"}

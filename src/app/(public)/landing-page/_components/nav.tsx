@@ -112,7 +112,7 @@ export default function Nav() {
                     </Link>
                 )}
                 <Link
-                    href={isAuthenticated ? "/home" : "/auth/register"}
+                    href={"/auth/register"}
                     className="to-[#70e8f8] flex items-center justify-center active:scale-100 z-50 hover:font-semibold font-medium hover:to-[#7beefde3] text-white font-sans bg-gradient-to-tl from-[#12abde] hover:from-[#12abde] h-9 md:h-10 lg:h-11 px-4 md:px-6 lg:px-8 cursor-pointer hover:scale-105 transition-all rounded-full duration-250 hover:shadow-[0_2px_7px_rgba(18,171,222,0.6)] text-sm lg:text-base"
                 >
                     Get started

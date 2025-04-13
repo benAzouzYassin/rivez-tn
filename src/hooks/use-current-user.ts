@@ -5,6 +5,7 @@ export function useCurrentUser() {
     const { isLoading, data, isError } = useQuery({
         staleTime: Infinity,
         queryKey: ["current-user"],
+        retry: 1,
         queryFn: async () => {
             const { data, error, success } = await readCurrentUser()
             if (!success) throw error

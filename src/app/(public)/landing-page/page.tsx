@@ -3,10 +3,15 @@ import Link from "next/link"
 import Nav from "./_components/nav"
 import { motion } from "framer-motion"
 import { useCurrentUser } from "@/hooks/use-current-user"
+import { useRouter } from "nextjs-toploader/app"
 
 function Page() {
+    const router = useRouter()
     const currentUser = useCurrentUser()
     const isAuthenticated = currentUser.data?.id
+    if (isAuthenticated) {
+        router.replace("/home")
+    }
     return (
         <section className="bg-[#EEFBFC]">
             <section className="bg-[#EEFBFC] h-auto  overflow-hidden  relative ">
@@ -54,15 +59,13 @@ function Page() {
                             className="flex xl:justify-start justify-center   items-center gap-4 px-4 xl:px-0"
                         >
                             <Link
-                                href={isAuthenticated ? "/home" : "/auth/login"}
+                                href={"/auth/login"}
                                 className="bg-amber-400  items-center justify-center z-10 h-14  md:h-16 md:flex hidden px-9 rounded-full  shadow-amber-300 text-white/95 shadow-[0px_3px_7px] font-bold hover:text-white hover:cursor-pointer hover:scale-105 transition-all hover:bg-amber-400/95 text-xl mt-10 active:scale-100 "
                             >
                                 Sign In
                             </Link>
                             <Link
-                                href={
-                                    isAuthenticated ? "/home" : "/auth/register"
-                                }
+                                href={"/auth/register"}
                                 className="bg-blue-400 z-10 h-14 md:h-16 px-9 flex items-center md:w-auto w-full justify-center rounded-full  shadow-blue-300 text-white shadow-[0px_3px_7px] font-bold hover:text-white/90 hover:cursor-pointer hover:scale-105 transition-all hover:bg-blue-400/95 text-xl mt-10 active:scale-100 "
                             >
                                 Get started
@@ -266,9 +269,7 @@ function Page() {
                                 Start now and get 2500 credit for free !
                             </h2>
                             <Link
-                                href={
-                                    isAuthenticated ? "/home" : "/auth/register"
-                                }
+                                href={"/auth/register"}
                                 className="bg-gradient-to-r flex items-center justify-center font-bold from-amber-400 to-amber-500 h-12 px-8 rounded-full shadow-sm shadow-amber-300/50 text-amber-950/90  hover:text-white hover:cursor-pointer hover:scale-105 transition-all hover:bg-amber-400/95 text-lg mt-6 active:scale-100"
                             >
                                 Get started
