@@ -1,9 +1,11 @@
 import { Card, CardHeader } from "@/components/ui/card"
 import { formatDate } from "@/utils/date"
-import { MapIcon } from "lucide-react"
+import { MapIcon, User2 } from "lucide-react"
 import { useRouter } from "nextjs-toploader/app"
 import { ItemType } from "../page"
 import MoreButton from "./more-button"
+import { useIsAdmin } from "@/hooks/use-is-admin"
+import { cn } from "@/lib/ui-utils"
 
 interface Props {
     item: ItemType
@@ -13,6 +15,7 @@ interface Props {
 
 export default function Item({ item, isSharing, setIsSharing }: Props) {
     const router = useRouter()
+    const isUserAdmin = useIsAdmin()
     return (
         <Card
             onClick={(e) => {
@@ -24,7 +27,9 @@ export default function Item({ item, isSharing, setIsSharing }: Props) {
             }
         >
             <div
-                className={`h-48 min-h-48 w-full hover:cursor-pointer  transition-all relative bg-gray-100  overflow-hidden`}
+                className={cn(
+                    `h-48 min-h-48 w-full hover:cursor-pointer  transition-all relative bg-gray-100  overflow-hidden`
+                )}
             >
                 {item.image ? (
                     <img
@@ -47,14 +52,42 @@ export default function Item({ item, isSharing, setIsSharing }: Props) {
                         isSharing={isSharing}
                         setIsSharing={setIsSharing}
                     />
-                    <div className="flex  justify-between items-start">
+                    <div
+                        className={cn("flex   justify-between items-start", {
+                            "pb-4": isUserAdmin,
+                        })}
+                    >
                         <div className="">
-                            <h2 className="text-2xl pb-1 line-clamp-1 first-letter:uppercase text-neutral-600 font-extrabold">
-                                {item.name}
-                            </h2>
-                            <p className="text-sm font-medium">
+                            <div className="text-sm font-medium">
+                                <h2 className="text-2xl pb-1 line-clamp-1 first-letter:uppercase text-neutral-600 font-extrabold">
+                                    {item.name}
+                                </h2>
+                                {isUserAdmin && (
+                                    <div className=" flex items-center gap-2 font-semibold -ml-2 ">
+                                        <div className="w-9 h-9 border relative border-neutral-200 flex items-center justify-center rounded-full  bg-neutral-100">
+                                            {item?.author_id?.avatar_url ? (
+                                                <img
+                                                    className="absolute w-full h-full object-cover object-center rounded-full"
+                                                    alt=""
+                                                    src={
+                                                        item?.author_id
+                                                            ?.avatar_url
+                                                    }
+                                                />
+                                            ) : (
+                                                <User2 className="w-5 h-5 text-gray-500" />
+                                            )}
+                                        </div>
+                                        <p className="max-w-[200px] text-base truncate">
+                                            {" "}
+                                            {item?.author_id?.username}
+                                        </p>
+                                    </div>
+                                )}
+                            </div>
+                            <div className="text-sm mt-2 font-medium">
                                 Created the : {formatDate(item.created_at)}
-                            </p>
+                            </div>
                         </div>
                     </div>
                 </CardHeader>

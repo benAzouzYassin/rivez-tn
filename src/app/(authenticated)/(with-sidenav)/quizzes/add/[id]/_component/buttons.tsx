@@ -16,7 +16,7 @@ import { shuffleArray } from "@/utils/array"
 import { useQueryClient } from "@tanstack/react-query"
 import { useParams } from "next/navigation"
 import { useRouter } from "nextjs-toploader/app"
-import { useRef, useState } from "react"
+import { useState } from "react"
 import useQuizStore, {
     FillInTheBlankStoreContent,
     MatchingPairsOptions,
@@ -25,6 +25,7 @@ import useQuizStore, {
 export default function Buttons() {
     const { data: userData } = useCurrentUser()
     const isGenerating = useQuizStore((s) => s.isGeneratingQuizWithAi)
+    const shadowQuestionsCount = useQuizStore((s) => s.shadowQuestionsCount)
     const params = useParams()
     const quizId = parseInt(params["id"] as string)
     const reset = useQuizStore((s) => s.reset)
@@ -215,13 +216,17 @@ export default function Buttons() {
                         router.replace("/quizzes")
                     }}
                 >
-                    <Button className="text-base font-extrabold" variant="red">
+                    <Button
+                        disabled={isGenerating || shadowQuestionsCount > 2}
+                        className="text-base font-extrabold"
+                        variant="red"
+                    >
                         Cancel
                     </Button>
                 </WarningDialog>
                 <Button
                     isLoading={isSaving}
-                    disabled={isGenerating}
+                    disabled={isGenerating || shadowQuestionsCount > 2}
                     onClick={handleSubmit}
                     className="text-base font-extrabold"
                     variant={"blue"}
