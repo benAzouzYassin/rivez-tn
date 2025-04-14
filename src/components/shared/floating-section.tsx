@@ -35,7 +35,7 @@ export default function FloatingSection(props: Props) {
                                 <p className="mt-1 font-semibold text-neutral-500">
                                     Invite your friends and get{" "}
                                     <span className="text-blue-500 font-extrabold">
-                                        100 free credit !
+                                        25 free credit !
                                     </span>{" "}
                                 </p>
                             </div>
