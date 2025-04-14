@@ -603,14 +603,17 @@ export type Database = {
       }
       user_roles: {
         Row: {
+          email: string | null
           user_id: string
           user_role: Database["public"]["Enums"]["user_role_types"] | null
         }
         Insert: {
+          email?: string | null
           user_id?: string
           user_role?: Database["public"]["Enums"]["user_role_types"] | null
         }
         Update: {
+          email?: string | null
           user_id?: string
           user_role?: Database["public"]["Enums"]["user_role_types"] | null
         }

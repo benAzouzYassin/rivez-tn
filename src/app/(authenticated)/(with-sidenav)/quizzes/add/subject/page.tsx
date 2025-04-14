@@ -207,30 +207,25 @@ export default function SubjectForm() {
                     className="w-full"
                     errorMessage={form.formState.errors.mainTopic?.message}
                 />
-                <div className=" -mt-1 gap-8">
-                    <Select
-                        defaultValue={form.getValues().language || undefined}
-                        onValueChange={(val) => form.setValue("language", val)}
-                    >
-                        <SelectTrigger className="data-[placeholder]:text-neutral-400">
-                            <SelectValue placeholder="Language" />
-                        </SelectTrigger>
-                        <SelectContent>
-                            <SelectItem value="EN">English</SelectItem>
-                            <SelectItem disabled value="AR">
-                                Arabic{" "}
-                                <span className="text-sm italic">
-                                    (soon...)
-                                </span>
-                            </SelectItem>
-                            <SelectItem disabled value="FR">
-                                French{" "}
-                                <span className="text-sm italic">
-                                    (soon...)
-                                </span>
-                            </SelectItem>
-                        </SelectContent>
-                    </Select>
+                <div className="grid grid-cols-2 gap-8">
+                    <Input
+                        {...form.register("maxQuestions")}
+                        placeholder="Max questions"
+                        className="w-full"
+                        type="number"
+                        errorMessage={
+                            form.formState.errors.maxQuestions?.message
+                        }
+                    />
+                    <Input
+                        {...form.register("minQuestions")}
+                        placeholder="Min questions"
+                        className="w-full"
+                        type="number"
+                        errorMessage={
+                            form.formState.errors.minQuestions?.message
+                        }
+                    />
                 </div>
                 <Collapsible className="group ">
                     <CollapsibleTrigger className="w-full data-[state=open]:font-bold  data-[state=open]:text-neutral-500 data-[state=open]:bg-blue-300/80 data-[state=open]:border-transparent   mb-4 hover:bg-neutral-100 flex justify-between items-center rounded-xl transition-all duration-200 bg-[#F7F7F7]/50 font-medium border-2 p-3 h-12 border-[#E5E5E5] text-[#AFAFAF] cursor-pointer">
@@ -250,6 +245,38 @@ export default function SubjectForm() {
                                         form.formState.errors.notes?.message
                                     }
                                 />
+                            </div>
+
+                            <div className=" -mt-1 gap-8">
+                                <Select
+                                    defaultValue={
+                                        form.getValues().language || undefined
+                                    }
+                                    onValueChange={(val) =>
+                                        form.setValue("language", val)
+                                    }
+                                >
+                                    <SelectTrigger className="data-[placeholder]:text-neutral-400">
+                                        <SelectValue placeholder="Language" />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        <SelectItem value="EN">
+                                            English
+                                        </SelectItem>
+                                        <SelectItem disabled value="AR">
+                                            Arabic{" "}
+                                            <span className="text-sm italic">
+                                                (soon...)
+                                            </span>
+                                        </SelectItem>
+                                        <SelectItem disabled value="FR">
+                                            French{" "}
+                                            <span className="text-sm italic">
+                                                (soon...)
+                                            </span>
+                                        </SelectItem>
+                                    </SelectContent>
+                                </Select>
                             </div>
                             <div className=" -mt-1 gap-8">
                                 <div className="pb-3">
@@ -290,28 +317,7 @@ export default function SubjectForm() {
                                 </div>
                             </div>
 
-                            <div className="grid grid-cols-2 gap-8">
-                                <Input
-                                    {...form.register("maxQuestions")}
-                                    placeholder="Max questions"
-                                    className="w-full"
-                                    type="number"
-                                    errorMessage={
-                                        form.formState.errors.maxQuestions
-                                            ?.message
-                                    }
-                                />
-                                <Input
-                                    {...form.register("minQuestions")}
-                                    placeholder="Min questions"
-                                    className="w-full"
-                                    type="number"
-                                    errorMessage={
-                                        form.formState.errors.minQuestions
-                                            ?.message
-                                    }
-                                />
-                            </div>
+                            <div className="grid grid-cols-2 gap-8"></div>
                             <div className="col-span-2">
                                 <Controller
                                     control={form.control}

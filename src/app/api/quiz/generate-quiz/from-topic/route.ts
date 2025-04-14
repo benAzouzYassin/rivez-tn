@@ -46,10 +46,13 @@ export async function POST(req: NextRequest) {
                 ? Math.min(data.maxQuestions, maxQuestionsFromConfig)
                 : maxQuestionsFromConfig
 
-        const minQuestions =
+        let minQuestions =
             data.minQuestions !== undefined && data.minQuestions !== null
                 ? Math.min(data.minQuestions, maxQuestionsFromConfig)
                 : DEFAULT_MIN_QUESTIONS
+        if (minQuestions > maxQuestions) {
+            minQuestions = maxQuestions
+        }
 
         const prompt = generateQuizPrompt({
             name: data.name,

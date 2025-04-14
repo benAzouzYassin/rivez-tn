@@ -43,11 +43,13 @@ export async function POST(req: NextRequest) {
             data.maxQuestions !== undefined && data.maxQuestions !== null
                 ? Math.min(data.maxQuestions, maxQuestionsFromConfig)
                 : maxQuestionsFromConfig
-
-        const minQuestions =
+        let minQuestions =
             data.minQuestions !== undefined && data.minQuestions !== null
                 ? Math.min(data.minQuestions, maxQuestionsFromConfig)
                 : DEFAULT_MIN_QUESTIONS
+        if (minQuestions > maxQuestions) {
+            minQuestions = maxQuestions
+        }
 
         const videoTranscription = await getYtVideoTranscriptions(
             data.youtubeLink

@@ -1,4 +1,5 @@
 import { supabase } from "@/lib/supabase-client-side"
+import { Database } from "@/types/database.types"
 
 export async function readMindmaps(config: {
     isAdmin: boolean
@@ -17,7 +18,10 @@ export async function readMindmaps(config: {
         ? (start || 0) + pagination.itemsPerPage - 1
         : undefined
 
-    let query = supabase.from("mindmaps").select("*", { count: "exact" })
+    const selectedFields = isAdmin ? "*,author_id(*)" : "*"
+    let query = supabase
+        .from("mindmaps")
+        .select(selectedFields, { count: "exact" })
 
     if (isFiltering) {
         query = query.ilike("name", `%${filters.name}%`)
@@ -40,8 +44,14 @@ export async function readMindmaps(config: {
 
     query = query.order("created_at", { ascending: false })
 
-    const response = await query.throwOnError()
-    return { data: response.data, count: response.count }
+    const response = (await query.throwOnError()) as any
+    const data =
+        response.data as (Database["public"]["Tables"]["mindmaps"]["Row"] & {
+            author_id:
+                | Database["public"]["Tables"]["user_profiles"]["Row"]
+                | number
+        })[]
+    return { data: data, count: response.count as number }
 }
 
 export async function readMindMapById(params: { id: number }) {
@@ -92,10 +102,13 @@ export async function readSharedMindmaps(config: {
     const end = pagination
         ? (start || 0) + pagination.itemsPerPage - 1
         : undefined
+    const selectedFields = config.isAdmin
+        ? "*,mindmaps(*,author_id(*))"
+        : "*,mindmaps(*)"
 
     let query = supabase
         .from("mindmap_shares")
-        .select("*,mindmaps(*)", { count: "exact" })
+        .select(selectedFields, { count: "exact" })
         .neq("mindmaps.publishing_status", "ARCHIVED")
         .eq("shared_with", userId)
 
@@ -117,11 +130,16 @@ export async function readSharedMindmaps(config: {
         referencedTable: "mindmaps",
     })
 
-    const response = await query.throwOnError()
+    const response = (await query.throwOnError()) as any
+    const data = response.data
+        .flatMap((item: any) => item.mindmaps)
+        .filter(
+            (item: any) => item !== null
+        ) as (Database["public"]["Tables"]["mindmaps"]["Row"] & {
+        author_id: Database["public"]["Tables"]["user_profiles"]["Row"] | number
+    })[]
     return {
-        data: response.data
-            .flatMap((item) => item.mindmaps)
-            .filter((item) => item !== null),
+        data,
         count: response.count,
     }
 }

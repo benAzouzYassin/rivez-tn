@@ -6,5 +6,5 @@ const openRouter = createOpenRouter({
     baseURL: process.env.OPENROUTER_ENDPOINT,
 })
 
-export const normalModel = openRouter("openrouter/optimus-alpha")
-export const premiumModel = openRouter("openrouter/optimus-alpha")
+export const normalModel = openRouter("openai/gpt-4o-mini")
+export const premiumModel = openRouter("openai/gpt-4o-mini")

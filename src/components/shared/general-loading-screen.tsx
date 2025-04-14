@@ -105,10 +105,10 @@ export default function GeneralLoadingScreen(props: Props) {
                                 damping: 20,
                             }}
                         >
-                            <div className="relative w-48 h-48">
-                                <div className="absolute w-48 h-48 rounded-full"></div>
+                            <div className="relative w-56 h-56">
+                                <div className="absolute w-56 h-56 rounded-full"></div>
                                 <svg
-                                    className="absolute w-48 h-48"
+                                    className="absolute w-56 h-56"
                                     viewBox="0 0 100 100"
                                 >
                                     <circle

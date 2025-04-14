@@ -9,8 +9,10 @@ import {
     readQuizzesWithDetails,
     readSharedQuizzesWithDetails,
 } from "@/data-access/quizzes/read"
+import { useCurrentUser } from "@/hooks/use-current-user"
 import { useIsAdmin } from "@/hooks/use-is-admin"
 import { cn } from "@/lib/ui-utils"
+import { useSidenav } from "@/providers/sidenav-provider"
 import { useQuery } from "@tanstack/react-query"
 import { BookOpen, ChevronRight, Plus, Share2Icon, ZapIcon } from "lucide-react"
 import Link from "next/link"
@@ -20,9 +22,6 @@ import { useState } from "react"
 import Item from "./_components/item"
 import ItemSkeleton from "./_components/item-skeleton"
 import Search from "./_components/search"
-import { useCurrentUser } from "@/hooks/use-current-user"
-import { useSidenav } from "@/providers/sidenav-provider"
-import ShareQuizDialog from "./_components/share-quiz-dialog"
 
 export default function Page() {
     const { isSidenavOpen } = useSidenav()

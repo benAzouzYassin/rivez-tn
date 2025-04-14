@@ -3,16 +3,11 @@ import { Button } from "@/components/ui/button"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { cn } from "@/lib/ui-utils"
 import { wait } from "@/utils/wait"
-import {
-    ChevronLeft,
-    ChevronRight,
-    DownloadIcon,
-    HelpCircle,
-} from "lucide-react"
+import { DownloadIcon, HelpCircle } from "lucide-react"
 import { useRef, useState } from "react"
 import { useReactToPrint } from "react-to-print"
-import SideItem from "./side-item"
 import GenerateQuizDialog from "../../_components/generate-quiz-dialog"
+import SideItem from "./side-item"
 
 interface Props {
     files: {
@@ -142,6 +137,23 @@ export default function PagesViewer(props: Props) {
                     ref={contentRef}
                     className="bg-white p-5 rounded-lg h-[90vh]  overflow-y-auto pb-20 -mt-1 pt-8 border mx-auto"
                 >
+                    <div className="flex print:hidden  -mb-6  justify-end gap-2">
+                        <Button
+                            isLoading={isPrinting}
+                            onClick={() => {
+                                setIsPrinting(true)
+                                wait(100).then(() => {
+                                    reactToPrintFn()
+                                })
+                            }}
+                        >
+                            Save <DownloadIcon className="ml-1" />
+                        </Button>
+                        <Button onClick={handleConvertToQuiz} variant={"blue"}>
+                            Convert all into Quiz{" "}
+                            <HelpCircle className="ml-1" />
+                        </Button>
+                    </div>
                     <div ref={markdownRef} className="print:px-10  relative ">
                         {isPrinting ? (
                             props.files.map((file) =>
@@ -158,43 +170,6 @@ export default function PagesViewer(props: Props) {
                                 }
                             />
                         )}
-                    </div>
-                    <div className="flex border-t-2 pt-3 justify-between mb-4">
-                        <Button
-                            variant={"secondary"}
-                            onClick={handlePreviousPage}
-                            className="text-base h-12 px-4 rounded-xl"
-                            disabled={isPreviousDisabled}
-                        >
-                            <ChevronLeft className="min-w-5 min-h-5 -mr-1 stroke-3" />
-                            Previous
-                        </Button>
-
-                        <Button
-                            variant={"secondary"}
-                            onClick={handleNextPage}
-                            disabled={isNextDisabled}
-                            className="text-base h-12 px-4 rounded-xl"
-                        >
-                            Next{" "}
-                            <ChevronRight className="min-w-5 min-h-5 -ml-2 stroke-3" />
-                        </Button>
-                    </div>
-                    <div className="flex  justify-end gap-2">
-                        <Button
-                            isLoading={isPrinting}
-                            onClick={() => {
-                                setIsPrinting(true)
-                                wait(100).then(() => {
-                                    reactToPrintFn()
-                                })
-                            }}
-                        >
-                            Save <DownloadIcon className="ml-1" />
-                        </Button>
-                        <Button onClick={handleConvertToQuiz} variant={"blue"}>
-                            Convert to Quiz <HelpCircle className="ml-1" />
-                        </Button>
                     </div>
                 </div>
             </div>
