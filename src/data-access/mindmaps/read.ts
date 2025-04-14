@@ -75,3 +75,53 @@ export async function readLastNMindmaps(number: number, userId: string) {
         .throwOnError()
     return response.data
 }
+
+export async function readSharedMindmaps(config: {
+    isAdmin: boolean
+    userId: string
+    filters?: { name?: string | null }
+    pagination?: { currentPage: number; itemsPerPage: number }
+}) {
+    if (!config) throw new Error("Invalid configuration provided.")
+
+    const { userId, filters, pagination } = config
+    const isFiltering = !!filters?.name
+    const start = pagination
+        ? (pagination.currentPage - 1) * pagination.itemsPerPage
+        : undefined
+    const end = pagination
+        ? (start || 0) + pagination.itemsPerPage - 1
+        : undefined
+
+    let query = supabase
+        .from("mindmap_shares")
+        .select("*,mindmaps(*)", { count: "exact" })
+        .neq("mindmaps.publishing_status", "ARCHIVED")
+        .eq("shared_with", userId)
+
+    if (isFiltering) {
+        query = query.ilike("mindmaps.name", `%${filters.name}%`)
+    }
+
+    if (
+        pagination &&
+        !isFiltering &&
+        start !== undefined &&
+        end !== undefined
+    ) {
+        query = query.range(start, end, { referencedTable: "mindmaps" })
+    }
+
+    query = query.order("created_at", {
+        ascending: false,
+        referencedTable: "mindmaps",
+    })
+
+    const response = await query.throwOnError()
+    return {
+        data: response.data
+            .flatMap((item) => item.mindmaps)
+            .filter((item) => item !== null),
+        count: response.count,
+    }
+}

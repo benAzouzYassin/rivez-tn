@@ -52,15 +52,6 @@ export default function UserHeader() {
             className: "text-neutral-500",
         },
         {
-            icon: <Settings className="w-6 h-6 opacity-70" />,
-            label: "Settings",
-            onClick: () => {
-                setIsUserSettingOpen(false)
-                router.push("/settings")
-            },
-            className: "text-neutral-500",
-        },
-        {
             icon: <LogOutIcon className="w-6 h-6 opacity-70" />,
             label: "Logout",
             onClick: () => {
@@ -103,7 +94,7 @@ export default function UserHeader() {
                     >
                         <PopoverTrigger className="cursor-pointer  w-fit p-1  mt-2 rounded-2xl  flex items-center  gap-2 font-bold text-lg text-neutral-600 px-3 py-1 active:scale-95 hover:bg-neutral-100 transition-transform">
                             <div className="flex text-nowrap flex-col">
-                                <p className="first-letter:uppercase pr-px w-fit mx-2">
+                                <p className="first-letter:uppercase pr-px max-w-[200px] truncate w-fit mx-2">
                                     {" "}
                                     {user?.identities?.[0].displayName}
                                 </p>

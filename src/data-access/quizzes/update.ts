@@ -117,7 +117,7 @@ export async function addQuestionsToQuiz(
 export async function updateQuiz(quizId: number, data: QuizUpdateType) {
     const result = await supabase
         .from("quizzes")
-        .update({ ...data, author_id: undefined })
+        .update({ ...data })
         .eq(`id`, quizId)
         .select("id")
         .throwOnError()

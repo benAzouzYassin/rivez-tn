@@ -108,6 +108,42 @@ export type Database = {
           },
         ]
       }
+      mindmap_shares: {
+        Row: {
+          created_at: string
+          id: number
+          mindmap_id: number | null
+          shared_with: string | null
+        }
+        Insert: {
+          created_at?: string
+          id?: number
+          mindmap_id?: number | null
+          shared_with?: string | null
+        }
+        Update: {
+          created_at?: string
+          id?: number
+          mindmap_id?: number | null
+          shared_with?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "mindmap_shares_mindmap_id_fkey"
+            columns: ["mindmap_id"]
+            isOneToOne: false
+            referencedRelation: "mindmaps"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "mindmap_shares_shared_with_fkey"
+            columns: ["shared_with"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["user_id"]
+          },
+        ]
+      }
       mindmaps: {
         Row: {
           author_id: string | null
