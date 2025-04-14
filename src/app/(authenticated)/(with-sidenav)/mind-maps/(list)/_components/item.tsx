@@ -7,9 +7,11 @@ import MoreButton from "./more-button"
 
 interface Props {
     item: ItemType
+    isSharing: boolean
+    setIsSharing: (value: boolean) => void
 }
 
-export default function Item({ item }: Props) {
+export default function Item({ item, isSharing, setIsSharing }: Props) {
     const router = useRouter()
     return (
         <Card
@@ -42,6 +44,8 @@ export default function Item({ item }: Props) {
                         status={item.publishing_status}
                         itemId={item.id}
                         className="scale-90 absolute right-3"
+                        isSharing={isSharing}
+                        setIsSharing={setIsSharing}
                     />
                     <div className="flex  justify-between items-start">
                         <div className="">

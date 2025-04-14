@@ -2,21 +2,26 @@
 import { ErrorDisplay } from "@/components/shared/error-display"
 import { Button } from "@/components/ui/button"
 import DashboardPagination from "@/components/ui/dashboard-pagination"
-import { readMindmaps } from "@/data-access/mindmaps/read"
+import { readMindmaps, readSharedMindmaps } from "@/data-access/mindmaps/read"
 import { useCurrentUser } from "@/hooks/use-current-user"
 import { useIsAdmin } from "@/hooks/use-is-admin"
 import { cn } from "@/lib/ui-utils"
 import { useSidenav } from "@/providers/sidenav-provider"
 import { useQuery } from "@tanstack/react-query"
-import { Plus } from "lucide-react"
+import { BookOpen, Plus, Share2Icon } from "lucide-react"
 import { parseAsInteger, parseAsString, useQueryState } from "nuqs"
 import { useState } from "react"
 import AddDialog from "./_components/add-dialog"
 import Item from "./_components/item"
 import ItemSkeleton from "./_components/item-skeleton"
 import Search from "./_components/search"
+import ShareDialog from "./_components/share-dialog"
+import AnimatedTabs from "@/components/shared/animated-tabs"
 
 export default function Page() {
+    const [activeTab, setActiveTab] = useState("personal")
+    const [isSharing, setIsSharing] = useState(false)
+    const [sharingId, setSharingId] = useState<number>()
     const [isAdding, setIsAdding] = useState(false)
     const { isSidenavOpen } = useSidenav()
     const isAdmin = useIsAdmin()
@@ -47,21 +52,52 @@ export default function Page() {
             searchValue,
             isAdmin,
             userData,
+            activeTab,
         ],
-        queryFn: () =>
-            readMindmaps({
-                isAdmin: !!isAdmin,
-                userId: userData?.id || "",
-                filters: {
-                    name: searchValue || undefined,
-                },
-                pagination: {
-                    itemsPerPage,
-                    currentPage,
-                },
-            }),
+        queryFn: () => {
+            if (activeTab === "personal") {
+                return readMindmaps({
+                    isAdmin: !!isAdmin,
+                    userId: userData?.id || "",
+                    filters: {
+                        name: searchValue || undefined,
+                    },
+                    pagination: {
+                        itemsPerPage,
+                        currentPage,
+                    },
+                })
+            } else {
+                return readSharedMindmaps({
+                    isAdmin: !!isAdmin,
+                    userId: userData?.id || "",
+                    filters: {
+                        name: searchValue || undefined,
+                    },
+                    pagination: {
+                        itemsPerPage,
+                        currentPage,
+                    },
+                })
+            }
+        },
     })
     const data = response?.data
+
+    const tabs = [
+        {
+            id: "shared",
+            label: "Shared Quizzes ",
+            icon: <Share2Icon size={18} />,
+            count: response?.count || 0,
+        },
+        {
+            id: "personal",
+            label: "My Quizzes",
+            icon: <BookOpen size={18} />,
+            count: 0,
+        },
+    ]
 
     if (isError) {
         return <ErrorDisplay />
@@ -108,6 +144,17 @@ export default function Page() {
                 </div>
 
                 <div className="mb-4 ">
+                    {!isFetching && (
+                        <AnimatedTabs
+                            className="ml-auto mb-4"
+                            tabs={tabs}
+                            activeTab={activeTab}
+                            onTabChange={(tab) => {
+                                setActiveTab(tab)
+                                setCurrentPage(1)
+                            }}
+                        />
+                    )}
                     <div
                         className={cn(
                             "grid grid-cols-3 min-[1700px]:grid-cols-4 rounded-2xl ml-auto px-2 py-2   gap-8 mb-2"
@@ -124,7 +171,26 @@ export default function Page() {
                             </div>
                         )}
                         {data?.map((item) => {
-                            return <Item item={item} key={item.id} />
+                            return (
+                                <div key={item.id}>
+                                    <Item
+                                        isSharing={isSharing}
+                                        setIsSharing={(value) => {
+                                            setIsSharing(value)
+                                            setSharingId(item.id)
+                                        }}
+                                        item={item}
+                                    />
+                                    <ShareDialog
+                                        isOpen={
+                                            isSharing && item.id === sharingId
+                                        }
+                                        onOpenChange={setIsSharing}
+                                        id={item.id}
+                                        status={item.publishing_status}
+                                    />
+                                </div>
+                            )
                         })}
                     </div>
                 </div>

@@ -13,7 +13,7 @@ import Questions from "./_components/questions"
 import Result from "./_components/result"
 import ResultLoadingPage from "./_components/result-loading-page"
 import { useQuestionsStore } from "./store"
-import { shareQuiz } from "@/data-access/quizzes/share"
+import { attachSharedQuizToUser } from "@/data-access/quizzes/share"
 import { useCurrentUser } from "@/hooks/use-current-user"
 
 export default function Page() {
@@ -26,7 +26,7 @@ export default function Page() {
     useEffect(() => {
         if (isSharing && currentUser?.id) {
             setIsLoading(true)
-            shareQuiz({ userId: currentUser.id, quizId: id })
+            attachSharedQuizToUser({ userId: currentUser.id, quizId: id })
                 .catch((err) => {
                     console.error(err)
                 })

@@ -21,20 +21,25 @@ import { useSidenav } from "@/providers/sidenav-provider"
 import { useQuery } from "@tanstack/react-query"
 import "@xyflow/react/dist/style.css"
 import { Loader2, Sparkles } from "lucide-react"
-import { useParams } from "next/navigation"
+import { useParams, useSearchParams } from "next/navigation"
 import CustomNode from "../_components/custom-node"
 import { Button } from "@/components/ui/button"
 import GenerateQuizDialog from "./_components/generate-quiz-dialog"
+import { attachSharedMindmapToUser } from "@/data-access/mindmaps/share"
+import { useCurrentUser } from "@/hooks/use-current-user"
 
 const nodeTypes = {
     customNode: CustomNode,
 }
 
 export default function Page() {
-    const [isQuizzesDialogOpen, setIsQuizzesDialogOpen] = useState(false)
+    const { data: currentUser } = useCurrentUser()
+    const searchParams = useSearchParams()
+    const isSharing = searchParams.get("share") === "true"
+    const [isMindmapDialogOpen, setIsMindmapsDialogOpen] = useState(false)
+    const [isLoading, setIsLoading] = useState(false)
     const params = useParams()
     const id = Number((params.id as string) || "0")
-
     const { data, isFetching } = useQuery({
         queryKey: ["mindmpas", id],
         queryFn: () => readMindMapById({ id }),
@@ -53,15 +58,33 @@ export default function Page() {
             setEdges(data.edges as any)
         }
     }, [data, setEdges, setNodes])
+
+    useEffect(() => {
+        if (isSharing && currentUser?.id) {
+            setIsLoading(true)
+            attachSharedMindmapToUser({ userId: currentUser.id, mindmapId: id })
+                .catch((err) => {
+                    console.error(err)
+                })
+                .finally(() => {
+                    setIsLoading(false)
+                })
+        } else {
+            setIsLoading(false)
+        }
+    }, [currentUser?.id, id, isSharing])
+
     const onConnect = useCallback(
         (params: any) => setEdges((eds) => addEdge(params, eds)),
         [setEdges]
     )
+
     const handleGenerateQuiz = () => {
-        setIsQuizzesDialogOpen(true)
+        setIsMindmapsDialogOpen(true)
     }
+
     if (!id) return <ErrorDisplay />
-    if (isFetching) {
+    if (isFetching || isLoading) {
         return (
             <div className="h-[92vh] flex items-center justify-center">
                 <Loader2 className="w-8 h-8 stroke-[2.5] stroke-blue-400 animate-spin duration-300" />
@@ -86,8 +109,8 @@ export default function Page() {
                     </Button>
                     <GenerateQuizDialog
                         content={JSON.stringify(data?.items)}
-                        isOpen={isQuizzesDialogOpen}
-                        onOpenChange={setIsQuizzesDialogOpen}
+                        isOpen={isMindmapDialogOpen}
+                        onOpenChange={setIsMindmapsDialogOpen}
                     />
                 </>
             )}{" "}

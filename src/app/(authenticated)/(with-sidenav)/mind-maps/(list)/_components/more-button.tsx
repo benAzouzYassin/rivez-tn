@@ -12,7 +12,7 @@ import {
 } from "@/lib/toasts"
 import { cn } from "@/lib/ui-utils"
 import { useQueryClient } from "@tanstack/react-query"
-import { Info, MoreVerticalIcon, Trash2 } from "lucide-react"
+import { Info, MoreVerticalIcon, Share2, Trash2 } from "lucide-react"
 import { useRouter } from "nextjs-toploader/app"
 import { useState } from "react"
 
@@ -21,6 +21,8 @@ interface Props {
     className?: string
     authorId?: string | null
     status: PublishingStatusType
+    isSharing: boolean
+    setIsSharing: (value: boolean) => void
 }
 export default function MoreButton(props: Props) {
     const { data: userData } = useCurrentUser()
@@ -31,6 +33,9 @@ export default function MoreButton(props: Props) {
     const [isDeleting, setIsDeleting] = useState(false)
     const handleDelete = () => {
         setIsDeleting(true)
+    }
+    const handleShare = () => {
+        props.setIsSharing(true)
     }
     if (isOwner || isAdmin)
         return (
@@ -43,6 +48,11 @@ export default function MoreButton(props: Props) {
                             label: "Details",
                             onClick: () =>
                                 router.push(`/mind-maps/${props.itemId}`),
+                        },
+                        {
+                            icon: <Share2 className="w-5 h-5" />,
+                            label: "Share link",
+                            onClick: handleShare,
                         },
                         {
                             icon: <Trash2 className="w-5 h-5" />,

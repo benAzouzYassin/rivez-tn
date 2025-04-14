@@ -72,7 +72,7 @@ export async function POST(req: NextRequest) {
 }
 
 const bodySchema = z.object({
-    topic: z.string().min(3).max(5000),
+    topic: z.string().min(3).max(100_000),
     language: z.string().max(1000).optional().nullable(),
     additionalInstructions: z.string().max(5000).optional().nullable(),
 })

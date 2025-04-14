@@ -1,6 +1,9 @@
 import { supabase } from "@/lib/supabase-client-side"
 
-export async function shareQuiz(params: { userId: string; quizId: number }) {
+export async function attachSharedQuizToUser(params: {
+    userId: string
+    quizId: number
+}) {
     const { data } = await supabase
         .from("quizzes_shares")
         .select("*")
