@@ -19,8 +19,8 @@ export function getSystemPrompt() {
         items:z.array( z.object({
             title: z.string(),
             id: z.string(),
-            description: z.string(),
-            subItemsCount: z.number(),
+            description: z.string() // max 16 word ,
+                        subItemsCount: z.number(),
             subItems: z.array(z.lazy(() => ItemSchema))
         }))
     });
