@@ -11,8 +11,8 @@ export async function generatePaymentLink({ credits }: { credits: number }) {
     }
     const body: TGeneratePaymentLink = {
         credits,
-        failEndpoint: window.location.origin + "/api/buy-credits/success",
-        successEndpoint: window.location.origin + "/api/buy-credits/fail",
+        failEndpoint: window.location.origin + "/api/buy-credits/fail",
+        successEndpoint: window.location.origin + "/api/buy-credits/success",
     }
     const response = await axios.post(
         "/api/buy-credits/generate-payment-link",

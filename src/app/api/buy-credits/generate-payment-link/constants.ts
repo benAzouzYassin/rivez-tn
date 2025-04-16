@@ -1,0 +1,1 @@
+export const CREDITS_FOR_10_DINARS = 500

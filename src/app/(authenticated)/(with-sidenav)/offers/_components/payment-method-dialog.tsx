@@ -11,20 +11,53 @@ import {
     DialogTrigger,
 } from "@/components/ui/dialog"
 import SearchSelect from "@/components/ui/search-select"
+import { generatePaymentLink } from "@/data-access/payments/handle-payment"
 import Link from "next/link"
 import { ReactNode, useState } from "react"
+import { CREDITS_FOR_10_DINARS } from "@/app/api/buy-credits/generate-payment-link/constants"
+import { toastError } from "@/lib/toasts"
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+} from "@/components/ui/select"
+import { wait } from "@/utils/wait"
 
 interface Props {
     children: ReactNode
 }
+
 export default function PaymentMethodDialog(props: Props) {
     const options = [10, 20, 30, 40, 50]
     const [selectedPrice, setSelectedPrice] = useState<string>("10")
+    const [loadingButton, setLoadingButton] = useState<
+        null | "online" | "e-dinar" | "bank" | "poste"
+    >(null)
 
-    const handleOnlinePayment = () => {}
+    const handleOnlinePayment = async () => {
+        const price = Number(selectedPrice)
+        if (!price || isNaN(price)) {
+            setLoadingButton(null)
+            return toastError("Something went wrong")
+        }
+        const creditCount = CREDITS_FOR_10_DINARS * (price / 10)
+        const link = await generatePaymentLink({
+            credits: creditCount,
+        })
+        if (!link) {
+            setLoadingButton(null)
+            return toastError("Something went wrong")
+        }
+        window.open(link)
+        wait(10).then(() => {
+            window.close()
+        })
+        setLoadingButton(null)
+    }
 
     return (
-        <Dialog open>
+        <Dialog>
             <DialogTrigger asChild>{props.children}</DialogTrigger>
             <DialogContent className="min-h-[80vh] min-w-[700px] flex flex-col">
                 <DialogTitle className="text-center  h-fit text-5xl pt-2 text-neutral-600 font-bold">
@@ -34,23 +67,48 @@ export default function PaymentMethodDialog(props: Props) {
                     <label className="font-bold text-neutral-700 ml-1 text-lg">
                         Amount{" "}
                     </label>
-                    <SearchSelect
-                        inputClassName="w-full"
-                        placeholder="Amount in TND"
-                        items={options.map((opt) => {
-                            return {
-                                id: String(opt),
-                                label: `${opt} Dinars`,
-                            }
-                        })}
-                        onSelect={({ id }) => setSelectedPrice(id)}
-                        selectedId={selectedPrice}
-                    />
+                    <Select
+                        value={selectedPrice}
+                        onValueChange={setSelectedPrice}
+                    >
+                        <SelectTrigger>
+                            <div>
+                                {selectedPrice ? (
+                                    <div>
+                                        {CREDITS_FOR_10_DINARS *
+                                            (Number(selectedPrice) / 10)}{" "}
+                                        credit for {selectedPrice} Dinars{" "}
+                                    </div>
+                                ) : (
+                                    <div className="">
+                                        Please select a price
+                                    </div>
+                                )}
+                            </div>
+                        </SelectTrigger>
+                        <SelectContent>
+                            {options.map((item) => {
+                                return (
+                                    <SelectItem key={item} value={String(item)}>
+                                        {CREDITS_FOR_10_DINARS *
+                                            (Number(item) / 10)}{" "}
+                                        credit for {item} Dinars{" "}
+                                    </SelectItem>
+                                )
+                            })}
+                        </SelectContent>
+                    </Select>
+
                     <div className="grid gap-x-8 gap-y-5 grid-cols-2 mt-2">
                         <div className="col-span-2 text-center font-bold text-neutral-700 text-2xl">
                             Payment Methods
                         </div>
                         <Button
+                            isLoading={loadingButton == "online"}
+                            onClick={() => {
+                                setLoadingButton("online")
+                                handleOnlinePayment()
+                            }}
                             className="h-44 hover:bg-white hover:scale-105  flex flex-col rounded-3xl text-xl "
                             variant={"secondary"}
                         >
@@ -71,8 +129,13 @@ export default function PaymentMethodDialog(props: Props) {
                             </p>
                         </Button>
                         <Button
+                            isLoading={loadingButton == "e-dinar"}
                             className="h-44 hover:bg-white hover:scale-105  rounded-3xl overflow-hidden text-xl flex flex-col "
                             variant={"secondary"}
+                            onClick={() => {
+                                setLoadingButton("e-dinar")
+                                handleOnlinePayment()
+                            }}
                         >
                             <div className=" ">
                                 <img

@@ -2,29 +2,30 @@ import { getUserInServerSide } from "@/data-access/users/authenticate-user-ssr"
 import { supabaseAdminServerSide } from "@/lib/supabase-server-side"
 import { NextRequest, NextResponse } from "next/server"
 import { z } from "zod"
+import { CREDITS_FOR_10_DINARS } from "./constants"
 
 const isProduction = process.env.NODE_ENV === "production"
 const BASE_URL = isProduction
     ? "https://dashboard.sandbox.konnect.network"
     : "https://dashboard.sandbox.konnect.network"
 const COOKIES_STRING = process.env.KONNECT_COOKIES_STRING as string
-const CREDITS_FOR_10_DINARS = 500
+
 const ALLOWED_LINKS_PER_10_MINUTE = 5
 
 export async function POST(req: NextRequest) {
     try {
-        // const accessToken = req.headers.get("access-token") || ""
-        // const refreshToken = req.headers.get("refresh-token") || ""
-        // const userId = await getUserInServerSide({ accessToken, refreshToken })
-        // if (!userId) {
-        //     return NextResponse.json(
-        //         {
-        //             error: "this feature is available for authenticated users only",
-        //         },
-        //         { status: 403 }
-        //     )
-        // }
-        const userId = "63130b20-03fc-43c5-b690-a17b01911234"
+        const accessToken = req.headers.get("access-token") || ""
+        const refreshToken = req.headers.get("refresh-token") || ""
+        const userId = await getUserInServerSide({ accessToken, refreshToken })
+        if (!userId) {
+            return NextResponse.json(
+                {
+                    error: "this feature is available for authenticated users only",
+                },
+                { status: 403 }
+            )
+        }
+        // const userId = "63130b20-03fc-43c5-b690-a17b01911234"
 
         // Rate limiting: Check how many payment links the user has created in the last 10 minutes
         const supabase = await supabaseAdminServerSide()
@@ -65,9 +66,13 @@ export async function POST(req: NextRequest) {
         const successUrl = new URL(data.successEndpoint)
         successUrl.searchParams.append("user_id", userId)
         successUrl.searchParams.append("order_id", orderId)
+        successUrl.searchParams.append("website_origin", successUrl.origin)
+
         const failUrl = new URL(data.failEndpoint)
         failUrl.searchParams.append("user_id", userId)
         failUrl.searchParams.append("order_id", orderId)
+        failUrl.searchParams.append("website_origin", failUrl.origin)
+
         formData.append("__rvfInternalFormId", "createPaymentLink")
         formData.append("type", "immediate")
         formData.append("packId", "")
@@ -124,7 +129,6 @@ export async function POST(req: NextRequest) {
             .insert({
                 credit_count: data.credits,
                 currency_symbol: "TND",
-                paid_amount: 0,
                 status: "PENDING",
                 updated_at: now.toISOString(),
                 created_at: now.toISOString(),

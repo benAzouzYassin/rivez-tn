@@ -5,5 +5,5 @@ const openRouter = createOpenRouter({
     baseURL: process.env.OPENROUTER_ENDPOINT,
 })
 
-export const normalModel = openRouter("openai/gpt-4.1-mini")
+export const normalModel = openRouter("openai/gpt-4o-mini")
 export const premiumModel = openRouter("openai/gpt-4.1-mini")

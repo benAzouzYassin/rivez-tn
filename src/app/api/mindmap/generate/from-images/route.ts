@@ -1,5 +1,5 @@
 import { getUserInServerSide } from "@/data-access/users/authenticate-user-ssr"
-import { premiumModel } from "@/lib/ai"
+import { normalModel, premiumModel } from "@/lib/ai"
 import { supabaseAdminServerSide } from "@/lib/supabase-server-side"
 import { calculateBase64FileSize } from "@/utils/file"
 import { extractImagesText } from "@/utils/image"
@@ -49,7 +49,7 @@ export async function POST(req: NextRequest) {
         const { data: extractedText } = await tryCatchAsync(
             extractImagesText({
                 imagesBase64,
-                aiModel: premiumModel,
+                aiModel: normalModel,
             })
         )
         if (!extractedText) {
