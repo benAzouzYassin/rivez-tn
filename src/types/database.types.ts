@@ -191,6 +191,50 @@ export type Database = {
           },
         ]
       }
+      payments: {
+        Row: {
+          created_at: string
+          credit_count: number
+          currency_name: string
+          currency_symbol: string
+          id: number
+          paid_amount: number
+          status: Database["public"]["Enums"]["payment_status"]
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          credit_count: number
+          currency_name: string
+          currency_symbol: string
+          id?: number
+          paid_amount: number
+          status: Database["public"]["Enums"]["payment_status"]
+          updated_at: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          credit_count?: number
+          currency_name?: string
+          currency_symbol?: string
+          id?: number
+          paid_amount?: number
+          status?: Database["public"]["Enums"]["payment_status"]
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "payments_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["user_id"]
+          },
+        ]
+      }
       questions_hints: {
         Row: {
           author_id: string | null
@@ -636,6 +680,7 @@ export type Database = {
     }
     Enums: {
       difficulty: "NORMAL" | "MEDIUM" | "HARD"
+      payment_status: "FAIL" | "SUCCESS" | "PENDING"
       publishing_status: "DRAFT" | "PUBLISHED" | "ARCHIVED"
       quiz_question_image_type: "normal-image" | "code-snippets" | "none"
       quiz_question_types:
