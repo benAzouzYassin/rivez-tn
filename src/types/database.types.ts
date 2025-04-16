@@ -195,10 +195,12 @@ export type Database = {
         Row: {
           created_at: string
           credit_count: number
-          currency_name: string
           currency_symbol: string
           id: number
+          order_id: string
           paid_amount: number
+          payment_link: string
+          price_to_pay: number | null
           status: Database["public"]["Enums"]["payment_status"]
           updated_at: string
           user_id: string
@@ -206,10 +208,12 @@ export type Database = {
         Insert: {
           created_at?: string
           credit_count: number
-          currency_name: string
           currency_symbol: string
           id?: number
+          order_id: string
           paid_amount: number
+          payment_link?: string
+          price_to_pay?: number | null
           status: Database["public"]["Enums"]["payment_status"]
           updated_at: string
           user_id: string
@@ -217,10 +221,12 @@ export type Database = {
         Update: {
           created_at?: string
           credit_count?: number
-          currency_name?: string
           currency_symbol?: string
           id?: number
+          order_id?: string
           paid_amount?: number
+          payment_link?: string
+          price_to_pay?: number | null
           status?: Database["public"]["Enums"]["payment_status"]
           updated_at?: string
           user_id?: string

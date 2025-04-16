@@ -1,4 +1,5 @@
 import { Check } from "lucide-react"
+import PaymentMethodDialog from "./_components/payment-method-dialog"
 
 export default function Page() {
     return (
@@ -11,7 +12,7 @@ export default function Page() {
                         </h2>
                         <p className="text-4xl font-extrabold mt-3 text-neutral-600">
                             {" "}
-                            100 Free Coin
+                            Free
                         </p>
                         <p className="mt-3 pl-1 text-lg text-neutral-600">
                             Limited access
@@ -62,14 +63,16 @@ export default function Page() {
                         </h2>
                         <p className="text-4xl font-extrabold mt-3 text-white">
                             {" "}
-                            5 Dinars
+                            10 Dinars
                         </p>
                         <p className="mt-3 pl-1 text-lg text-neutral-100">
                             Pay as you go{" "}
                         </p>
-                        <button className="h-20 hover:scale-105 active:scale-100 transition-all cursor-pointer rounded-2xl   hover:bg-[#FFDF46] w-full text-center text-[1.7rem] font-bold text-neutral-700 bg-[#ffcb46]">
-                            500 credit per 5 TND
-                        </button>
+                        <PaymentMethodDialog>
+                            <button className="h-20 hover:scale-105 active:scale-100 transition-all cursor-pointer rounded-2xl   hover:bg-[#FFDF46] w-full text-center text-[1.7rem] font-bold text-neutral-700 bg-[#ffcb46]">
+                                10 TND for 500 credits
+                            </button>
+                        </PaymentMethodDialog>
                         <p className="mt-2 pb-3 pl-1 text-lg font-bold  text-gray-50">
                             All features from the trial plan plus :
                         </p>
