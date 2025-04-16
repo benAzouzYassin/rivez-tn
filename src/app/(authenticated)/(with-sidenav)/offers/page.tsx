@@ -1,5 +1,6 @@
 import { Check } from "lucide-react"
 import PaymentMethodDialog from "./_components/payment-method-dialog"
+import { CREDITS_FOR_10_DINARS } from "@/app/api/buy-credits/generate-payment-link/constants"
 
 export default function Page() {
     return (
@@ -70,7 +71,7 @@ export default function Page() {
                         </p>
                         <PaymentMethodDialog>
                             <button className="h-20 hover:scale-105 active:scale-100 transition-all cursor-pointer rounded-2xl   hover:bg-[#FFDF46] w-full text-center text-[1.7rem] font-bold text-neutral-700 bg-[#ffcb46]">
-                                10 TND for 500 credits
+                                10 TND for {CREDITS_FOR_10_DINARS} credits
                             </button>
                         </PaymentMethodDialog>
                         <p className="mt-2 pb-3 pl-1 text-lg font-bold  text-gray-50">

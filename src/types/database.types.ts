@@ -191,6 +191,44 @@ export type Database = {
           },
         ]
       }
+      payment_errors: {
+        Row: {
+          cause: string | null
+          created_at: string
+          error_text: string | null
+          id: number
+          order_id: string | null
+          payment_ref: string | null
+          user_id: string | null
+        }
+        Insert: {
+          cause?: string | null
+          created_at?: string
+          error_text?: string | null
+          id?: number
+          order_id?: string | null
+          payment_ref?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          cause?: string | null
+          created_at?: string
+          error_text?: string | null
+          id?: number
+          order_id?: string | null
+          payment_ref?: string | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "payment_errors_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["user_id"]
+          },
+        ]
+      }
       payments: {
         Row: {
           created_at: string
@@ -198,8 +236,8 @@ export type Database = {
           currency_symbol: string
           id: number
           order_id: string
-          paid_amount: number
           payment_link: string
+          payment_ref: string | null
           price_to_pay: number | null
           status: Database["public"]["Enums"]["payment_status"]
           updated_at: string
@@ -211,8 +249,8 @@ export type Database = {
           currency_symbol: string
           id?: number
           order_id: string
-          paid_amount: number
           payment_link?: string
+          payment_ref?: string | null
           price_to_pay?: number | null
           status: Database["public"]["Enums"]["payment_status"]
           updated_at: string
@@ -224,8 +262,8 @@ export type Database = {
           currency_symbol?: string
           id?: number
           order_id?: string
-          paid_amount?: number
           payment_link?: string
+          payment_ref?: string | null
           price_to_pay?: number | null
           status?: Database["public"]["Enums"]["payment_status"]
           updated_at?: string
@@ -674,6 +712,13 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      add_credits_to_user: {
+        Args: {
+          p_user_id: string
+          credits: number
+        }
+        Returns: undefined
+      }
       handle_user_invite: {
         Args: {
           inviter_id: string

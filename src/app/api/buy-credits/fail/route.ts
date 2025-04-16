@@ -1,7 +1,7 @@
-import { NextResponse } from "next/server"
+import { NextRequest, NextResponse } from "next/server"
 
-export function GET() {
-    return NextResponse.json("failed")
+export function GET(request: NextRequest) {
+    const { searchParams } = new URL(request.url)
+    const websiteOrigin = searchParams.get("website_origin") as string | null
+    return NextResponse.redirect(`${websiteOrigin}/payments/fail`)
 }
-
-// TODO redirect the user into the fail page

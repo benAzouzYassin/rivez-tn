@@ -37,9 +37,9 @@ export async function isPaymentCompleted(paymentRef: string) {
     })
 
     const data = (await response.json()) as IResponse
-    const result = !!data?.transactions?.items?.some(
-        (transaction) => transaction?.status === "success"
-    )
+    const result = data.transactions.items
+        .map((item) => item.status)
+        .includes("success")
     return result
 }
 
