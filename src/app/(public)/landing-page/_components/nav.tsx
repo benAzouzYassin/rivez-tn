@@ -49,7 +49,7 @@ export default function Nav() {
             className={cn(
                 "flex z-50 bg-none transition-all justify-between items-center px-4 sm:px-8 md:px-12 lg:px-20 h-16 sm:h-20",
                 {
-                    "fixed w-full bg-[#EEFBFC] z-[999] shadow-white border-b-2 shadow":
+                    "fixed w-full  bg-white z-[999] shadow-white border-b-2 shadow":
                         isScrolled,
                 }
             )}
@@ -77,25 +77,25 @@ export default function Nav() {
             <div className="hidden md:flex items-center justify-center gap-8 lg:gap-16 xl:gap-24 pl-0 lg:pl-20">
                 <button
                     onClick={() => scrollToSection("top")}
-                    className="text-gray-600 cursor-pointer z-20 text-base lg:text-lg font-medium hover:underline underline-offset-4"
+                    className="text-neutral-600 font-bold cursor-pointer z-20 text-base lg:text-lg hover:underline underline-offset-4"
                 >
                     Home
                 </button>
                 <button
                     onClick={() => scrollToSection("tools")}
-                    className="text-gray-600 z-20 text-base lg:text-lg font-medium hover:underline underline-offset-4"
+                    className="text-neutral-600 font-bold z-20 text-base lg:text-lg  hover:underline underline-offset-4"
                 >
                     Tools
                 </button>
                 <button
                     onClick={() => scrollToSection("about")}
-                    className="text-gray-600 z-20 text-base lg:text-lg font-medium hover:underline underline-offset-4"
+                    className="text-neutral-600 font-bold z-20 text-base lg:text-lg  hover:underline underline-offset-4"
                 >
                     About us
                 </button>
                 <button
                     onClick={() => scrollToSection("contact")}
-                    className="text-gray-600 z-20 text-base lg:text-lg font-medium hover:underline underline-offset-4"
+                    className="text-neutral-600 font-bold z-20 text-base lg:text-lg  hover:underline underline-offset-4"
                 >
                     Contact
                 </button>
@@ -103,17 +103,9 @@ export default function Nav() {
 
             {/* Desktop Auth Buttons */}
             <div className="hidden md:flex items-center gap-4">
-                {!isAuthenticated && (
-                    <Link
-                        href={"/auth/login"}
-                        className="to-[#ada3fc] flex items-center justify-center z-50 hover:font-semibold font-medium active:scale-100 hover:to-[#a99dffe4] text-white font-sans bg-gradient-to-tl from-[#7654fc] hover:from-[#7654fc] h-9 md:h-10 lg:h-11 px-4 md:px-6 lg:px-8 cursor-pointer hover:scale-105 transition-all duration-250 rounded-full hover:shadow-[0_2px_7px_rgba(118,84,252,0.6)] text-sm lg:text-base"
-                    >
-                        Login
-                    </Link>
-                )}
                 <Link
                     href={"/auth/register"}
-                    className="bg-blue-400 flex items-center justify-center active:scale-100 z-50 hover:font-semibold font-medium hover:to-[#7beefde3] text-white font-sans hover:bg-gradient-to-tl  hover:from-[#12abde] h-9 md:h-10 lg:h-11 px-4 md:px-6 lg:px-8 cursor-pointer hover:scale-105 transition-all rounded-full duration-250 hover:shadow-[0_2px_7px_rgba(18,171,222,0.6)] text-sm lg:text-base"
+                    className="bg-blue-400 flex items-center justify-center active:scale-100 z-50 hover:font-semibold font-medium hover:to-blue-500 text-white font-sans hover:bg-gradient-to-br  hover:from-blue-400 h-9 md:h-10 lg:h-11 px-4 md:px-6 lg:px-5 cursor-pointer hover:scale-105 transition-all rounded-full duration-250 hover:shadow-[0_2px_7px_rgba(18,171,222,0.6)] text-sm lg:text-base"
                 >
                     Get started
                 </Link>
@@ -127,7 +119,7 @@ export default function Nav() {
                     }}
                     className="h-10 cursor-pointer z-[999] w-10 rounded-full"
                 >
-                    <AlignRight className="h-10 text-[#0c4888] stroke-[2.7] w-10" />
+                    <AlignRight className="h-10 text-neutral-700 stroke-[2.7] w-10" />
                     <span className="sr-only">Toggle menu</span>
                 </button>
                 <Drawer open={isOpen} onOpenChange={setIsOpen}>
@@ -164,16 +156,10 @@ export default function Nav() {
                                 Contact
                             </button>
 
-                            <div className="flex flex-col w-full gap-4 mt-4">
-                                <Link
-                                    href={"/auth/login"}
-                                    className="to-[#ada3fc] flex items-center justify-center z-50 hover:font-semibold font-medium active:scale-100 hover:to-[#a99dffe4] text-white font-sans bg-gradient-to-tl from-[#7654fc] hover:from-[#7654fc] h-12 px-8 cursor-pointer transition-all duration-250 rounded-full hover:shadow-[0_2px_7px_rgba(118,84,252,0.6)] text-lg w-full"
-                                >
-                                    Login
-                                </Link>
+                            <div className="flex mt-1 flex-col w-full gap-4 ">
                                 <Link
                                     href={"/auth/register"}
-                                    className="to-[#70e8f8] flex items-center justify-center active:scale-100 z-50 hover:font-semibold font-medium hover:to-[#7beefde3] text-white font-sans bg-gradient-to-tl from-[#12abde] hover:from-[#12abde] h-12 px-8 cursor-pointer transition-all rounded-full duration-250 hover:shadow-[0_2px_7px_rgba(18,171,222,0.6)] text-lg w-full"
+                                    className="flex items-center justify-center active:scale-100 z-50 hover:font-semibold font-medium  text-white font-sans bg-blue-400 h-14 px-8 cursor-pointer transition-all rounded-xl duration-250 hover:shadow-[0_2px_7px_rgba(18,171,222,0.6)] text-xl w-full"
                                 >
                                     Get started
                                 </Link>
