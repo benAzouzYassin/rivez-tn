@@ -13,18 +13,18 @@ const ALLOWED_LINKS_PER_10_MINUTE = 5
 
 export async function POST(req: NextRequest) {
     try {
-        // const accessToken = req.headers.get("access-token") || ""
-        // const refreshToken = req.headers.get("refresh-token") || ""
-        // const userId = await getUserInServerSide({ accessToken, refreshToken })
-        // if (!userId) {
-        //     return NextResponse.json(
-        //         {
-        //             error: "this feature is available for authenticated users only",
-        //         },
-        //         { status: 403 }
-        //     )
-        // }
-        const userId = "63130b20-03fc-43c5-b690-a17b01911234"
+        const accessToken = req.headers.get("access-token") || ""
+        const refreshToken = req.headers.get("refresh-token") || ""
+        const userId = await getUserInServerSide({ accessToken, refreshToken })
+        if (!userId) {
+            return NextResponse.json(
+                {
+                    error: "this feature is available for authenticated users only",
+                },
+                { status: 403 }
+            )
+        }
+        // const userId = "63130b20-03fc-43c5-b690-a17b01911234"
 
         // Rate limiting: Check how many payment links the user has created in the last 10 minutes
         const supabase = await supabaseAdminServerSide()

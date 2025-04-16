@@ -9,3 +9,7 @@ export function GET(request: NextRequest) {
 
     return NextResponse.json({})
 }
+
+// TODO extract the payment ref + other user_id + order_id from the url
+// TODO use the isPaymentCompleted function to determine if the payments actually payed
+// TODO add the credits to the user account and redirect him into the success page
