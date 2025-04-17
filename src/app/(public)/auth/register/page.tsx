@@ -1,6 +1,7 @@
 "use client"
 import Google from "@/components/icons/google"
 import XIcon from "@/components/icons/xIcon"
+import AnimatedLoader from "@/components/ui/animated-loader"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { PhoneInput } from "@/components/ui/phone-input"
@@ -8,6 +9,7 @@ import {
     registerUserWithGoogle,
     registerUserWithPassword,
 } from "@/data-access/users/register"
+import { useCurrentUser } from "@/hooks/use-current-user"
 import { dismissToasts, toastError } from "@/lib/toasts"
 
 import { zodResolver } from "@hookform/resolvers/zod"
@@ -20,6 +22,8 @@ import { z } from "zod"
 
 export default function Page() {
     const queryClient = useQueryClient()
+    const { isLoading: isFetchingCurrentUser, refetch: refetchUser } =
+        useCurrentUser()
     const [isPasswordAuth, setIsPasswordAuth] = useState(false)
     const [isGoogleAuth, setIsGoogleAuth] = useState(false)
     const formSchema = useMemo(
@@ -64,19 +68,25 @@ export default function Page() {
             phone: formData.phone || undefined,
         })
         if (success) {
-            queryClient.refetchQueries({
-                queryKey: ["current-user"],
+            refetchUser().then(() => {
+                const afterAuthRoute =
+                    (localStorage.getItem("afterAuthRedirect") || "/home") +
+                    "?is_new_user=true"
+                router.replace(afterAuthRoute)
             })
-            const afterAuthRoute =
-                (localStorage.getItem("afterAuthRedirect") || "/home") +
-                "?is_new_user=true"
-            router.replace(afterAuthRoute)
         } else {
             toastError("Error while creating your account.")
         }
 
         dismissToasts("loading")
         setIsPasswordAuth(false)
+    }
+    if (isFetchingCurrentUser) {
+        return (
+            <main className="flex min-h-[100vh] relative flex-col items-center justify-center">
+                <AnimatedLoader />
+            </main>
+        )
     }
     return (
         <main className="flex min-h-[100vh] relative flex-col items-center justify-center">

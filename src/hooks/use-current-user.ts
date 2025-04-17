@@ -2,7 +2,7 @@ import { readCurrentUser } from "@/data-access/users/read"
 import { useQuery } from "@tanstack/react-query"
 
 export function useCurrentUser() {
-    const { isLoading, data, isError } = useQuery({
+    const { isLoading, data, isError, refetch } = useQuery({
         staleTime: Infinity,
         queryKey: ["current-user"],
         retry: 1,
@@ -12,5 +12,5 @@ export function useCurrentUser() {
             return data
         },
     })
-    return { isLoading, data, isError }
+    return { isLoading, data, isError, refetch }
 }

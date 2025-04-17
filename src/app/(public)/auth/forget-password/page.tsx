@@ -40,7 +40,7 @@ export default function Page() {
     const onSubmit = async (data: z.infer<typeof formSchema>) => {
         const { error, success } = await sendResetPasswordMail({
             email: data.email,
-            redirectTo: `${process.env.NEXT_PUBLIC_SITE_URL}/auth/reset-password`,
+            redirectTo: `${window.location.origin}/auth/reset-password`,
         })
 
         if (success) {

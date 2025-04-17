@@ -4,8 +4,10 @@ import BackButton from "@/components/shared/back-button"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { updateUserPassword } from "@/data-access/users/update"
+import { useRefetchUser } from "@/hooks/use-refetch-user"
 import { dismissToasts, toastError, toastSuccess } from "@/lib/toasts"
 import { zodResolver } from "@hookform/resolvers/zod"
+import { useQueryClient } from "@tanstack/react-query"
 import { Eye, EyeOff } from "lucide-react"
 import { useRouter } from "nextjs-toploader/app"
 import { useMemo, useState } from "react"
@@ -13,11 +15,11 @@ import { useForm } from "react-hook-form"
 import { z } from "zod"
 
 export default function Page() {
+    const queryClient = useQueryClient()
     const router = useRouter()
     const [isResetting, setIsResetting] = useState(false)
     const [showPassword, setShowPassword] = useState(false)
     const [showConfirmPassword, setShowConfirmPassword] = useState(false)
-
     const formSchema = useMemo(
         () =>
             z
@@ -70,6 +72,9 @@ export default function Page() {
 
         dismissToasts("loading")
         setIsResetting(false)
+        queryClient.invalidateQueries({
+            queryKey: ["current-user"],
+        })
     }
 
     return (

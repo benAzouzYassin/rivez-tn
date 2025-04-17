@@ -265,8 +265,8 @@ function Page() {
                 </div>
             </section>
 
-            <section id="contact" className="bg-[#FFF] py-5">
-                <div className="max-w-[2200px] mx-auto px-8 md:px-12 lg:px-20">
+            <section id="contact" className="bg-[#FFF] md:py-5">
+                <div className="max-w-[2200px] mx-auto px-3 md:px-12 lg:px-20">
                     <div className="flex flex-col md:flex-row justify-between gap-8">
                         <div className="bg-white h-auto shadow-[0px_2px_10px] shadow-neutral-200 border rounded-2xl p-6 md:w-2/5 lg:w-1/3 flex flex-col items-start justify-center">
                             <h2 className="text-neutral-600 text-2xl lg:text-3xl font-extrabold ">
@@ -318,7 +318,7 @@ function Page() {
                             </div>
                         </div>
                     </div>
-                    <div className="text-center mt-10 pt-4 border-t border-sky-100/50">
+                    <div className="text-center mt-10 py-4 border-t border-sky-100/50">
                         <p className="text-[#1e1e1e]/70 text-sm">
                             All rights reserved © 2025
                         </p>
