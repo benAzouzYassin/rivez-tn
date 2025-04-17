@@ -4,6 +4,7 @@ import BackButton from "@/components/shared/back-button"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { updateUserPassword } from "@/data-access/users/update"
+import { useRefetchUser } from "@/hooks/use-refetch-user"
 import { dismissToasts, toastError, toastSuccess } from "@/lib/toasts"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { Eye, EyeOff } from "lucide-react"
@@ -17,7 +18,7 @@ export default function Page() {
     const [isResetting, setIsResetting] = useState(false)
     const [showPassword, setShowPassword] = useState(false)
     const [showConfirmPassword, setShowConfirmPassword] = useState(false)
-
+    const refetchUser = useRefetchUser()
     const formSchema = useMemo(
         () =>
             z
@@ -70,6 +71,7 @@ export default function Page() {
 
         dismissToasts("loading")
         setIsResetting(false)
+        refetchUser()
     }
 
     return (

@@ -3,6 +3,7 @@
 import AnimatedLoader from "@/components/ui/animated-loader"
 import { readCurrentSession } from "@/data-access/users/read"
 import { wait } from "@/utils/wait"
+import { useQueryClient } from "@tanstack/react-query"
 import { useSearchParams } from "next/navigation"
 import { useRouter } from "nextjs-toploader/app"
 import { useEffect, useState } from "react"
@@ -16,8 +17,11 @@ export default function PrivateLayout({
     const router = useRouter()
     const searchParams = useSearchParams()
     const [allowedToEnter, setAllowedToEnter] = useState<boolean | null>(null)
+    const queryCLient = useQueryClient()
+    const isLoading =
+        queryCLient.getQueryState(["current-user"])?.status === "pending"
     useEffect(() => {
-        wait(100).then(() => {
+        if (isLoading === false) {
             readCurrentSession().then(({ data }) => {
                 if (data.session) {
                     setAllowedToEnter(true)
@@ -34,9 +38,9 @@ export default function PrivateLayout({
                     router.replace("/auth/register")
                 }
             })
-        })
-    }, [router, searchParams])
-    if (allowedToEnter === null) {
+        }
+    }, [router, searchParams, isLoading])
+    if (allowedToEnter === null || isLoading) {
         return (
             <main className=" flex min-h-[100vh] items-center justify-center">
                 <AnimatedLoader className="text-neutral-200 fill-blue-600" />

@@ -1,14 +1,15 @@
 "use client"
 import Google from "@/components/icons/google"
 import BackButton from "@/components/shared/back-button"
+import AnimatedLoader from "@/components/ui/animated-loader"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import {
     loginUserWithGoogle,
     loginUserWithPassword,
 } from "@/data-access/users/login"
+import { useCurrentUser } from "@/hooks/use-current-user"
 import { dismissToasts, toastError } from "@/lib/toasts"
-import { wait } from "@/utils/wait"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useQueryClient } from "@tanstack/react-query"
 import Link from "next/link"
@@ -18,6 +19,8 @@ import { useForm } from "react-hook-form"
 import { z } from "zod"
 
 export default function Page() {
+    const { isLoading: isFetchingCurrentUser, refetch: refetchUser } =
+        useCurrentUser()
     const queryClient = useQueryClient()
     const router = useRouter()
     const [isPasswordAuth, setIsPasswordAuth] = useState(false)
@@ -57,10 +60,11 @@ export default function Page() {
             password: formData.password,
         })
         if (success) {
-            queryClient.invalidateQueries({
-                queryKey: ["current-user"],
+            refetchUser().then(() => {
+                router.replace(
+                    localStorage.getItem("afterAuthRedirect") || "/home"
+                )
             })
-            router.replace(localStorage.getItem("afterAuthRedirect") || "/home")
         } else {
             toastError("Wrong email or password.")
         }
@@ -69,6 +73,13 @@ export default function Page() {
         setIsPasswordAuth(false)
     }
 
+    if (isFetchingCurrentUser) {
+        return (
+            <main className="flex min-h-[100vh] relative flex-col items-center justify-center">
+                <AnimatedLoader />
+            </main>
+        )
+    }
     return (
         <main className="flex min-h-[100vh] relative flex-col items-center justify-center">
             <section>
