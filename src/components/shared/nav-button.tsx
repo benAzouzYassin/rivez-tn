@@ -18,13 +18,13 @@ interface NavItem {
 
 export interface NavButtonProps {
     item: NavItem
-    isSidenavOpen: boolean
+    isNameVisible: boolean
     additionalClasses?: string
 }
 
 export function NavButton({
     item,
-    isSidenavOpen,
+    isNameVisible,
     additionalClasses,
 }: NavButtonProps) {
     const pathname = usePathname()
@@ -36,10 +36,10 @@ export function NavButton({
             {item.subItems?.length ? (
                 <CollapsibleNavButton
                     item={item}
-                    isSidenavOpen={isSidenavOpen}
+                    isNameVisible={isNameVisible}
                     additionalClasses={additionalClasses}
                 />
-            ) : isSidenavOpen ? (
+            ) : isNameVisible ? (
                 <Button
                     key={item.name}
                     variant="secondary"
@@ -59,7 +59,7 @@ export function NavButton({
                     )}
                 >
                     {item.icon}
-                    {isSidenavOpen && <span className="ml-2">{item.name}</span>}
+                    {isNameVisible && <span className="ml-2">{item.name}</span>}
                 </Button>
             ) : (
                 <TooltipWrapper
@@ -68,7 +68,7 @@ export function NavButton({
                     content={item.name}
                     contentClassName={cn(
                         "  translate-y-12 rounded-lg  font-bold text-neutral-600/90 text-sm  w-[110px] text-center translate-x-[90px]",
-                        { "opacity-0 ": isSidenavOpen }
+                        { "opacity-0 ": isNameVisible }
                     )}
                     asChild
                 >
@@ -91,7 +91,7 @@ export function NavButton({
                         )}
                     >
                         {item.icon}
-                        {isSidenavOpen && (
+                        {isNameVisible && (
                             <span className="ml-2">{item.name}</span>
                         )}
                     </Button>

@@ -26,7 +26,7 @@ export default function Sidenav(props: Props) {
     return (
         <nav
             className={cn(
-                "h-full  z-10 group hover:border-r-[#8aa8fb] border-r-2 px-2 pt-10 fixed top-0 left-0 transition-all duration-300",
+                "h-full lg:block hidden  z-10 group hover:border-r-[#8aa8fb] border-r-2 px-2 pt-10 fixed top-0 left-0 transition-all duration-300",
                 {
                     "w-[300px]": isSidenavOpen,
                     "w-[100px]": !isSidenavOpen,
@@ -51,14 +51,14 @@ export default function Sidenav(props: Props) {
                 <div className="scale-x-[-1]  pl-[6px]">
                     <NavButton
                         item={props.items[0]}
-                        isSidenavOpen={isSidenavOpen}
+                        isNameVisible={isSidenavOpen}
                         additionalClasses=""
                     />
                     {props.items.slice(1).map((item) => (
                         <NavButton
                             key={item.name}
                             item={item}
-                            isSidenavOpen={isSidenavOpen}
+                            isNameVisible={isSidenavOpen}
                             additionalClasses="mt-1"
                         />
                     ))}
@@ -67,7 +67,7 @@ export default function Sidenav(props: Props) {
             <div className="absolute border-t bg-white  bottom-0 pt-6 pb-10 px-3 left-0 w-full">
                 <NavButton
                     item={props.bottomItem}
-                    isSidenavOpen={isSidenavOpen}
+                    isNameVisible={isSidenavOpen}
                     additionalClasses="mt-1 py-7 pl-6 hover:bg-blue-400/90 rounded-xl border-b-4 border-blue-400/70 bg-blue-400/80 text-white gap-2 text-xl"
                 />
             </div>

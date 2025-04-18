@@ -69,7 +69,7 @@ export default function LatestQuizzesMindmaps() {
         return <LatestQuizzesMindmapsSekelton />
     }
     return (
-        <div className=" mb-10 mx-auto px-10 -mt-2 max-w-[1500px]">
+        <div className=" mb-10 mx-auto md:px-10 px-6 -mt-2 max-w-[1500px]">
             <h2 className="text-3xl font-extrabold text-blue-700/70 mb-4">
                 Last quizzes and mindmaps :{" "}
             </h2>
@@ -81,7 +81,7 @@ export default function LatestQuizzesMindmaps() {
             >
                 <CarouselContent className="pb-2">
                     {items.map((item) => (
-                        <CarouselItem key={item.id} className="basis-1/2">
+                        <CarouselItem key={item.id} className="md:basis-1/2">
                             <div className="p-1">
                                 <Card
                                     onClick={() => {
@@ -141,7 +141,7 @@ export default function LatestQuizzesMindmaps() {
 
 export function LatestQuizzesMindmapsSekelton() {
     return (
-        <div className=" mb-10 mx-auto px-10 -mt-2  max-w-[1500px]">
+        <div className=" mb-10 mx-auto md:px-10 px-6 -mt-2  max-w-[1500px]">
             <h2 className="text-3xl font-extrabold text-blue-700/70 mb-4">
                 Last quizzes and mindmaps :{" "}
             </h2>
@@ -151,7 +151,7 @@ export function LatestQuizzesMindmapsSekelton() {
                     {Array.from({ length: 3 }).map((_, index) => (
                         <CarouselItem
                             key={index}
-                            className="basis-1/2 active:cursor-grabbing cursor-grab"
+                            className="md:basis-1/2 active:cursor-grabbing cursor-grab"
                         >
                             <Card className="h-48 ">
                                 <CardContent className="p-6 flex space-x-6">

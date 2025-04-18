@@ -6,7 +6,6 @@ import {
     DrawerHeader,
     DrawerTitle,
 } from "@/components/ui/drawer"
-import { useCurrentUser } from "@/hooks/use-current-user"
 import { cn } from "@/lib/ui-utils"
 import { AlignRight } from "lucide-react"
 import { useMotionValueEvent, useScroll } from "motion/react"
