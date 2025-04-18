@@ -13,33 +13,34 @@ import {
     DialogTrigger,
 } from "../ui/dialog"
 import TooltipWrapper from "../ui/tooltip"
-import { ErrorDisplay } from "./error-display"
+
 interface Props {
     fixed?: boolean
 }
+
 export default function FloatingSection(props: Props) {
     const { data: userData } = useCurrentUser()
     return (
-        <section className="  col-span-4  py-4 pr-4 pl-5 ">
-            <div className={cn({ " fixed top-30 pr-4 ": props.fixed })}>
-                <div className="border-neutral-200  flex flex-col min-h-[24.5rem] gap-4  border py-5 px-3 rounded-3xl">
+        <section className="col-span-1  py-4 pr-0 md:pr-4 pl-0 md:pl-5">
+            <div className={cn({ "md:fixed md:top-30 md:pr-4": props.fixed })}>
+                <div className="border-neutral-200 flex flex-col    gap-4 border py-5 px-3 rounded-3xl">
                     <div
                         onClick={() => {}}
-                        className="  transition-all  gap-5 border-2 px-4 py-3 rounded-2xl justify-between "
+                        className="transition-all gap-3 md:gap-5 border-2 px-3 md:px-4 py-3 rounded-2xl justify-between"
                     >
-                        <div className="flex">
+                        <div className="flex flex-col sm:flex-row">
                             <div className="grow">
-                                <p className="text-xl font-extrabold  text-neutral-500">
+                                <p className="text-lg md:text-xl font-extrabold text-neutral-500">
                                     Get free credits
                                 </p>
-                                <p className="mt-1 font-semibold text-neutral-500">
+                                <p className="mt-1 text-sm md:text-base font-semibold text-neutral-500">
                                     Invite your friends and get{" "}
                                     <span className="text-blue-500 font-extrabold">
                                         25 free credit !
                                     </span>{" "}
                                 </p>
                             </div>
-                            <div className="  min-w-14 h-full  rounded-xl">
+                            <div className="min-w-10 md:min-w-14 h-full rounded-xl hidden sm:block">
                                 <FreeCredits />
                             </div>
                         </div>
@@ -55,17 +56,17 @@ export default function FloatingSection(props: Props) {
 
                     <Link
                         href={"#"}
-                        className=" hover:bg-neutral-100 active:scale-95 transition-all flex gap-5 border-2 px-4 items-center py-3 rounded-2xl justify-between "
+                        className="hover:bg-neutral-100 active:scale-95 transition-all flex gap-3 md:gap-5 border-2 px-3 md:px-4 items-center py-3 rounded-2xl justify-between"
                     >
                         <div className="grow">
-                            <p className="text-xl font-extrabold  text-neutral-500">
+                            <p className="text-lg md:text-xl font-extrabold text-neutral-500">
                                 XP Points :
                             </p>
                         </div>
-                        <div className="flex items-center text-xl text-[#f5b237] font-black  gap-1">
+                        <div className="flex items-center text-lg md:text-xl text-[#f5b237] font-black gap-1">
                             {userData?.xp_points || 0}
-                            <div className="w-8 h-8 text-[#f5b237]  -mt-px rounded-xl">
-                                <XpIcon className="w-7 h-7" />
+                            <div className="w-6 h-6 md:w-8 md:h-8 text-[#f5b237] -mt-px rounded-xl">
+                                <XpIcon className="w-6 h-6 md:w-7 md:h-7" />
                             </div>
                         </div>
                     </Link>
@@ -74,9 +75,11 @@ export default function FloatingSection(props: Props) {
         </section>
     )
 }
+
 interface Props {
     className?: string
 }
+
 function FreeCredits(props: Props) {
     return (
         <svg {...props} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
@@ -172,6 +175,7 @@ function FreeCredits(props: Props) {
         </svg>
     )
 }
+
 export function ShareDialog({ children }: { children: ReactNode }) {
     const currentUser = useCurrentUser()
     const [copied, setCopied] = useState(false)
@@ -213,12 +217,12 @@ export function ShareDialog({ children }: { children: ReactNode }) {
         <Dialog>
             <DialogTrigger asChild>{children}</DialogTrigger>
             <DialogContent
-                className={`sm:max-w-[700px] !rounded-xl ${
+                className={`w-[92vw] max-w-[700px] !rounded-xl ${
                     isDark ? "bg-gray-900 border-gray-700" : "bg-white"
                 }`}
             >
                 <DialogTitle
-                    className={`text-3xl text-center font-bold ${
+                    className={`text-2xl md:text-3xl text-center font-bold ${
                         isDark ? "text-gray-100" : "text-neutral-600"
                     }`}
                 >
@@ -231,7 +235,7 @@ export function ShareDialog({ children }: { children: ReactNode }) {
                 ></DialogDescription>
                 {
                     <>
-                        <div className="flex items-center mt-4 space-x-2">
+                        <div className="flex flex-col sm:flex-row sm:items-center mt-4 space-y-3 sm:space-y-0 sm:space-x-2">
                             <div
                                 className={`flex-1 flex items-center border rounded-lg overflow-hidden ${
                                     isDark
@@ -240,7 +244,7 @@ export function ShareDialog({ children }: { children: ReactNode }) {
                                 }`}
                             >
                                 <input
-                                    className={`w-full p-3 text-lg font-semibold bg-transparent outline-none flex-1 ${
+                                    className={`w-full p-2 sm:p-3 text-base sm:text-lg font-semibold bg-transparent outline-none flex-1 ${
                                         isDark
                                             ? "text-gray-200"
                                             : "text-neutral-700"
@@ -252,7 +256,7 @@ export function ShareDialog({ children }: { children: ReactNode }) {
                             <TooltipWrapper asChild content="Copy link">
                                 <button
                                     onClick={handleCopy}
-                                    className={`p-3 h-14 w-14 rounded-lg border-2 active:scale-90 cursor-pointer transition-all duration-300 flex items-center justify-center relative overflow-hidden ${
+                                    className={`p-2 sm:p-3 h-10 sm:h-14 w-full sm:w-14 rounded-lg border-2 active:scale-90 cursor-pointer transition-all duration-300 flex items-center justify-center relative overflow-hidden ${
                                         isDark
                                             ? "border-blue-500/80 text-blue-400 hover:bg-gray-800"
                                             : "border-blue-400/80 text-blue-600 hover:bg-blue-50"
@@ -283,7 +287,7 @@ export function ShareDialog({ children }: { children: ReactNode }) {
                                     <div className="w-full border-t border-gray-300"></div>
                                 </div>
                                 <div className="relative flex justify-center">
-                                    <span className="bg-white px-4  text-gray-500">
+                                    <span className="bg-white px-4 text-gray-500">
                                         or share directly
                                     </span>
                                 </div>
@@ -291,26 +295,26 @@ export function ShareDialog({ children }: { children: ReactNode }) {
                         </div>
 
                         <div className="-mt-2 flex justify-center">
-                            <div className="flex gap-8">
+                            <div className="flex gap-4 md:gap-8">
                                 <div className="cursor-pointer flex flex-col items-center">
                                     <button
                                         onClick={shareToFacebook}
-                                        className="group p-3 scale-80 cursor-pointer rounded-full bg-blue-50 hover:bg-blue-100 transition-all duration-300"
+                                        className="group p-2 md:p-3 scale-75 md:scale-80 cursor-pointer rounded-full bg-blue-50 hover:bg-blue-100 transition-all duration-300"
                                     >
-                                        <FacebookIcon className="w-10  h-10 text-blue-500 group-hover:scale-110 transition-transform duration-300" />
+                                        <FacebookIcon className="w-8 h-8 md:w-10 md:h-10 text-blue-500 group-hover:scale-110 transition-transform duration-300" />
                                     </button>
-                                    <span className="mt-2 text-sm font-medium text-gray-600">
+                                    <span className="mt-2 text-xs md:text-sm font-medium text-gray-600">
                                         Facebook
                                     </span>
                                 </div>
                                 <div className="flex cursor-pointer flex-col items-center">
                                     <button
                                         onClick={shareToWhatsApp}
-                                        className="group cursor-pointer p-3 rounded-full bg-green-50 hover:bg-green-100 transition-all duration-300"
+                                        className="group cursor-pointer p-2 md:p-3 scale-75 md:scale-100 rounded-full bg-green-50 hover:bg-green-100 transition-all duration-300"
                                     >
-                                        <WhatsAppIcon className="w-10 h-10 text-green-500 group-hover:scale-110 transition-transform duration-300" />
+                                        <WhatsAppIcon className="w-8 h-8 md:w-10 md:h-10 text-green-500 group-hover:scale-110 transition-transform duration-300" />
                                     </button>
-                                    <span className="mt-2 text-sm font-medium text-gray-600">
+                                    <span className="mt-2 text-xs md:text-sm font-medium text-gray-600">
                                         WhatsApp
                                     </span>
                                 </div>

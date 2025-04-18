@@ -36,14 +36,14 @@ export default function CollapsibleNavButton(props: NavButtonProps) {
                         }
                     )}
                 >
-                    {props.isSidenavOpen ? (
+                    {props.isNameVisible ? (
                         <div
                             className={cn("flex     items-center gap-2", {
                                 "pl-5": isSidenavOpen,
                             })}
                         >
                             {props.item.icon}
-                            {props.isSidenavOpen && (
+                            {props.isNameVisible && (
                                 <span className="ml-2">{props.item.name}</span>
                             )}
                             {isSidenavOpen && (
@@ -67,7 +67,7 @@ export default function CollapsibleNavButton(props: NavButtonProps) {
                                 })}
                             >
                                 {props.item.icon}
-                                {props.isSidenavOpen && (
+                                {props.isNameVisible && (
                                     <span className="ml-2">
                                         {props.item.name}
                                     </span>
@@ -98,7 +98,7 @@ export default function CollapsibleNavButton(props: NavButtonProps) {
                             >
                                 <NavButton
                                     item={subItem}
-                                    isSidenavOpen={props.isSidenavOpen}
+                                    isNameVisible={props.isNameVisible}
                                     additionalClasses={cn(
                                         " translate-x-2 !border-l-3 last:border-b-3 !border-neutral-200 hover:!bg-neutral-100 !bg-white border-y-0 pl-3  !rounded-r-xl rounded-l-none  ",
                                         {

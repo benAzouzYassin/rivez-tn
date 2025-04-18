@@ -1,24 +1,8 @@
 import Sidenav from "@/components/shared/sidenav"
 import UserHeader from "@/components/shared/user-header"
-import { useCurrentUser } from "@/hooks/use-current-user"
+import { useNavigationItems } from "@/hooks/use-navigation-items"
 import { cn } from "@/lib/ui-utils"
 import { useSidenav } from "@/providers/sidenav-provider"
-import {
-    BookOpen,
-    Brain,
-    CopyIcon,
-    FileText,
-    Gamepad2Icon,
-    Home,
-    ImageIcon,
-    LayoutListIcon,
-    LockIcon,
-    PlusCircle,
-    Rocket,
-    Telescope,
-    VideoIcon,
-    WandSparklesIcon,
-} from "lucide-react"
 import { ReactNode } from "react"
 
 type Props = {
@@ -26,76 +10,15 @@ type Props = {
 }
 export default function UserLayout({ children }: Props) {
     const { isSidenavOpen } = useSidenav()
-    const user = useCurrentUser()
-    const adminItems =
-        user.data?.user_role === "ADMIN"
-            ? [
-                  {
-                      name: "Dashboard",
-                      icon: <LockIcon className="!w-6 !h-6" />,
-                      route: "/admin/quizzes",
-                  },
-              ]
-            : []
+    const { normalUserItems, bottomItem } = useNavigationItems()
     return (
         <>
             <UserHeader />
-            <Sidenav
-                items={[
-                    {
-                        name: "Home",
-                        icon: <Home className="!w-6 !h-6" />,
-                        route: "/home",
-                    },
-                    // {
-                    //     name: "Courses",
-                    //     icon: <BookOpen className="!w-6 !h-6" />,
-                    //     route: "/courses/list",
-                    // },
-                    {
-                        name: "Quizzes",
-                        icon: <Gamepad2Icon className="!w-6 !h-6" />,
-                        route: "/quizzes",
-                    },
-                    // {
-                    //     name: "Leaderboard",
-                    //     icon: <AwardIcon className="!w-6 !h-6" />,
-                    //     route: "/leaderboard",
-                    // },
-
-                    // {
-                    //     name: "Flashcards",
-                    //     icon: <CopyIcon className="!w-6 !h-6" />,
-                    //     route: "/flash-cards",
-                    // },
-                    {
-                        name: "Mind maps",
-                        icon: <Brain className="!w-6 !h-6" />,
-                        route: "/mind-maps",
-                    },
-                    {
-                        name: "Summarize",
-                        icon: <Telescope className="!w-6 !h-6" />,
-                        route: "/summarize",
-                    },
-                    {
-                        name: "Our Offers",
-                        icon: <Rocket className="!w-6 !h-6" />,
-                        route: "/offers",
-                    },
-
-                    ...adminItems,
-                ]}
-                bottomItem={{
-                    route: "/get-credits",
-                    name: "Get credits",
-                    icon: <PlusCircle className="!w-6 stroke-[2.5]  !h-6" />,
-                }}
-            />
+            <Sidenav items={normalUserItems} bottomItem={bottomItem} />
             <main
                 className={cn("transition-all pt-20 duration-300", {
-                    "pl-[300px]": isSidenavOpen,
-                    "pl-[100px]": !isSidenavOpen,
+                    "lg:pl-[300px]": isSidenavOpen,
+                    "lg:pl-[100px]": !isSidenavOpen,
                 })}
             >
                 {children}
