@@ -111,11 +111,8 @@ export default function MatchingPairsQuestion(props: Props) {
                         if (success) {
                             queryClient.invalidateQueries({
                                 predicate: (query) =>
-                                    query.queryKey.some((key) =>
-                                        [
-                                            "quiz_submissions",
-                                            "current-user",
-                                        ].includes(key as string)
+                                    query.queryKey.some(
+                                        (key) => key === "quiz_submissions"
                                     ),
                             })
                         } else {
@@ -154,11 +151,8 @@ export default function MatchingPairsQuestion(props: Props) {
                         if (success) {
                             queryClient.invalidateQueries({
                                 predicate: (query) =>
-                                    query.queryKey.some((key) =>
-                                        [
-                                            "quiz_submissions",
-                                            "current-user",
-                                        ].includes(key as string)
+                                    query.queryKey.some(
+                                        (key) => key === "quiz_submissions"
                                     ),
                             })
                         } else {
