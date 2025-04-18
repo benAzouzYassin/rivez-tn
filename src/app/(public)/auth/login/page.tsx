@@ -83,18 +83,18 @@ export default function Page() {
     return (
         <main className="flex min-h-[100vh] relative flex-col items-center justify-center">
             <section>
-                <BackButton className="absolute top-8 left-16" />
+                <BackButton className="absolute top-8 left-2 md:left-16" />
 
                 <Button
                     onClick={() => router.push("/auth/register")}
-                    className="absolute w-fit! px-7! uppercase font-bold text-[#1CB0F6] top-8 right-16"
+                    className="absolute w-fit! px-7! uppercase font-bold text-[#1CB0F6] top-8 right-3 md:right-16"
                     variant={"secondary"}
                 >
                     REGISTER
                 </Button>
                 <form
                     onSubmit={handleSubmit(onSubmit)}
-                    className="flex flex-col "
+                    className="flex flex-col max-w-[95vw] "
                 >
                     <h1 className="text-2xl first-letter:capitalize mb-5 font-bold text-center text-[#3C3C3C]">
                         login to your profile
@@ -102,15 +102,15 @@ export default function Page() {
                     <Input
                         {...register("identifier")}
                         type="text"
-                        className="min-w-96"
+                        className="md:min-w-96 w-full"
                         placeholder="Email or phone"
                         errorMessage={errors.identifier?.message}
                     />
-                    <div className="relative">
+                    <div className="relative ">
                         <Input
                             {...register("password")}
                             type="password"
-                            className="min-w-96"
+                            className="md:min-w-96 w-full"
                             placeholder="Password"
                             errorMessage={errors.password?.message}
                         />

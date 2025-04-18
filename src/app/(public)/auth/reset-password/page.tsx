@@ -80,28 +80,28 @@ export default function Page() {
     return (
         <main className="flex min-h-[100vh] relative flex-col items-center justify-center">
             <section>
-                <BackButton className="absolute top-8 left-16" />
+                <BackButton className="absolute top-8 left-2 md:left-16" />
 
                 <Button
                     onClick={() => router.push("/auth/login")}
-                    className="absolute w-fit! px-7! uppercase font-bold text-[#1CB0F6] top-8 right-16"
+                    className="absolute w-fit! px-7! uppercase font-bold text-[#1CB0F6] top-8 right-3 md:right-16"
                     variant={"secondary"}
                 >
                     LOGIN
                 </Button>
                 <form
                     onSubmit={handleSubmit(onSubmit)}
-                    className="flex flex-col"
+                    className="flex flex-col w-[95vw] md:w-auto"
                 >
                     <h1 className="text-2xl first-letter:capitalize mb-5 font-bold text-center text-[#3C3C3C]">
                         Reset Your Password
                     </h1>
 
-                    <div className="relative">
+                    <div className="relative w-full ">
                         <Input
                             {...register("newPassword")}
                             type={showPassword ? "text" : "password"}
-                            className="min-w-96"
+                            className="w-full md:min-w-96"
                             placeholder="New password"
                             errorMessage={errors.newPassword?.message}
                         />
@@ -122,7 +122,7 @@ export default function Page() {
                         <Input
                             {...register("confirmPassword")}
                             type={showConfirmPassword ? "text" : "password"}
-                            className="min-w-96"
+                            className="w-full md:min-w-96"
                             placeholder="Confirm new password"
                             errorMessage={errors.confirmPassword?.message}
                         />
