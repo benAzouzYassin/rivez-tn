@@ -2,8 +2,7 @@
 
 import AnimatedLoader from "@/components/ui/animated-loader"
 import { readCurrentSession } from "@/data-access/users/read"
-import { wait } from "@/utils/wait"
-import { useQueryClient } from "@tanstack/react-query"
+import { useIsFetching } from "@tanstack/react-query"
 import { useSearchParams } from "next/navigation"
 import { useRouter } from "nextjs-toploader/app"
 import { useEffect, useState } from "react"
@@ -17,9 +16,10 @@ export default function PrivateLayout({
     const router = useRouter()
     const searchParams = useSearchParams()
     const [allowedToEnter, setAllowedToEnter] = useState<boolean | null>(null)
-    const queryCLient = useQueryClient()
     const isLoading =
-        queryCLient.getQueryState(["current-user"])?.status === "pending"
+        useIsFetching({
+            queryKey: ["current-user"],
+        }) > 0
     useEffect(() => {
         if (isLoading === false) {
             readCurrentSession().then(({ data }) => {

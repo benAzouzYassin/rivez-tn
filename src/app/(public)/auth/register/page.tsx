@@ -93,21 +93,21 @@ export default function Page() {
             <section>
                 <Button
                     onClick={router.back}
-                    className="absolute h-10 w-10 top-8 left-16"
+                    className="absolute h-10 w-10 top-8 left-2 md:left-16"
                     variant={"ghost"}
                 >
                     <XIcon />
                 </Button>
                 <Button
                     onClick={() => router.push("/auth/login")}
-                    className="absolute w-fit! px-7! uppercase font-bold text-[#1CB0F6] top-8 right-16"
+                    className="absolute w-fit! px-7! uppercase font-bold text-[#1CB0F6] top-8 right-3 md:right-16"
                     variant={"secondary"}
                 >
                     LOGIN
                 </Button>
                 <form
                     onSubmit={handleSubmit(onSubmit)}
-                    className="flex flex-col"
+                    className="flex flex-col md:pt-0 pt-32"
                 >
                     <h1 className="text-2xl first-letter:capitalize mb-5 font-bold text-center text-[#3C3C3C]">
                         create your profile
@@ -115,14 +115,14 @@ export default function Page() {
                     <Input
                         {...register("username")}
                         type="text"
-                        className="min-w-[450px]"
+                        className=" w-full md:min-w-[450px]"
                         placeholder="Name"
                         errorMessage={errors.username?.message}
                     />
                     <Input
                         {...register("email")}
                         type="text"
-                        className="min-w-[450px]"
+                        className=" w-full md:min-w-[450px]"
                         placeholder="Email"
                         errorMessage={errors.email?.message}
                     />
@@ -132,14 +132,14 @@ export default function Page() {
                         }}
                         defaultCountry="TN"
                         type="tel"
-                        className="min-w-[380px]"
+                        className=" w-full md:min-w-[380px]"
                         placeholder="Phone (optional)"
                         containerClassName="mb-4    "
                     />
                     <Input
                         {...register("password")}
                         type="password"
-                        className="min-w-[450px]"
+                        className=" w-full md:min-w-[450px]"
                         placeholder="Password"
                         errorMessage={errors.password?.message}
                     />

@@ -60,12 +60,12 @@ export default function Page() {
 
     if (isSubmitted) {
         return (
-            <main className="flex min-h-[100vh] relative flex-col items-center justify-center">
-                <section className="text-center">
-                    <h1 className="text-2xl font-bold text-[#3C3C3C] mb-4">
+            <main className="flex min-h-[100vh] relative flex-col items-center justify-center p-4">
+                <section className="text-center max-w-md">
+                    <h1 className="text-xl md:text-2xl font-bold text-[#3C3C3C] mb-4">
                         Check your email
                     </h1>
-                    <p className="text-base text-[#3C3C3C] font-bold max-w-[400px]">
+                    <p className="text-sm md:text-base text-[#3C3C3C] font-bold max-w-[400px] mx-auto">
                         We&apos;ve sent password reset instructions to your
                         email address. Please check your inbox.
                     </p>
@@ -82,38 +82,40 @@ export default function Page() {
     }
 
     return (
-        <main className="flex min-h-[100vh] relative flex-col items-center justify-center">
-            <section>
-                <BackButton className="absolute top-8 left-16" />
+        <main className="flex min-h-[100vh] relative flex-col items-center justify-center p-4">
+            <section className="w-full max-w-md">
+                <div className="block">
+                    <BackButton className="absolute top-8 left-4 md:left-16" />
+                    <Button
+                        onClick={() => router.push("/auth/login")}
+                        className="absolute w-fit uppercase font-bold text-[#1CB0F6] top-8 right-4 md:right-16"
+                        variant={"secondary"}
+                    >
+                        LOGIN
+                    </Button>
+                </div>
 
-                <Button
-                    onClick={() => router.push("/auth/login")}
-                    className="absolute w-fit! px-7! uppercase font-bold text-[#1CB0F6] top-8 right-16"
-                    variant={"secondary"}
-                >
-                    LOGIN
-                </Button>
                 <form
                     onSubmit={handleSubmit(onSubmit)}
-                    className="flex flex-col gap-3"
+                    className="flex flex-col gap-3 w-full"
                 >
-                    <h1 className="text-2xl font-bold text-center text-[#3C3C3C]">
+                    <h1 className="text-xl md:text-2xl font-bold text-center text-[#3C3C3C]">
                         Forgot password
                     </h1>
-                    <p className="text-base text-[#3C3C3C] font-bold max-w-[400px] text-center">
+                    <p className="text-sm md:text-base text-[#3C3C3C] font-bold max-w-[400px] text-center mx-auto">
                         We will send you instructions on how to reset your
                         password by email.
                     </p>
                     <Input
                         {...register("email")}
                         type="email"
-                        className="min-w-96"
+                        className="w-full"
                         placeholder="Email"
                         errorMessage={errors.email?.message}
                     />
                     <Button
                         type="submit"
-                        className="font-bold -mt-3 uppercase text-sm"
+                        className="font-bold -mt-3 uppercase text-sm w-full"
                         variant={"blue"}
                         isLoading={isSubmitting}
                     >
