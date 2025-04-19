@@ -11,10 +11,8 @@ import { ButtonHTMLAttributes, useState } from "react"
 import useUpdateQuizStore, { FillInTheBlankStoreContent } from "../../store"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
-type Props = {
-    questionId: string
-    questionContent: FillInTheBlankStoreContent
-} & ButtonHTMLAttributes<any>
+interface Props extends ButtonHTMLAttributes<any> {questionId: string
+    questionContent: FillInTheBlankStoreContent}
 
 export default function AddOptionButton({
     questionId,

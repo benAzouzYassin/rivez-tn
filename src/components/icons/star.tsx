@@ -1,8 +1,6 @@
 import { HTMLAttributes } from "react"
 
-type Props = {
-    variant?: "default" | "blue"
-} & HTMLAttributes<SVGElement>
+interface Props extends HTMLAttributes<SVGElement> {variant?: "default" | "blue"}
 
 export default function Star(props: Props) {
     const { variant = "default", ...restProps } = props

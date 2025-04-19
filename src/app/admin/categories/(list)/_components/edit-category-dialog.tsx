@@ -295,10 +295,10 @@ export default function EditCategoryDialog(props: Props) {
         </Dialog>
     )
 }
-type QuizzesSelectProps = Omit<
+interface QuizzesSelectProps extends Omit<
     ComponentProps<typeof SearchSelectMultiple>,
     "items"
-> & { categoryId: number }
+> {categoryId: number}
 
 function QuizzesSelect({
     isLoading: isLoadingProp,

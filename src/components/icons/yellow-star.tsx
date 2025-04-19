@@ -1,6 +1,6 @@
 import { HTMLAttributes } from "react"
 
-type Props = {} & HTMLAttributes<SVGElement>
+interface Props extends HTMLAttributes<SVGElement> {}
 
 export default function YellowStar(props: Props) {
     return (

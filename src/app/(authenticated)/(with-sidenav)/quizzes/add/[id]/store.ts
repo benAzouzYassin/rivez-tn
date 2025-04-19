@@ -84,7 +84,7 @@ interface Actions {
     reset: () => void
 }
 
-export type Store = State & Actions
+export interface Store extends State, Actions {}
 
 const initialState: State = {
     isAddingQuestionByAi: false,
@@ -538,17 +538,15 @@ export type QuizQuestionType = {
     codeSnippets: MultipleChoiceContent["codeSnippets"] | null
 }
 
-export type FillInTheBlankStoreContent = Omit<
+export interface FillInTheBlankStoreContent extends Omit<
     Omit<FillInTheBlankContent, "correct">,
     "options"
-> & {
-    options: { text: string; localId: string }[]
+> {options: { text: string; localId: string }[]
     correct: {
         option: string
         index: number
         optionId: string
-    }[]
-}
+    }[]}
 export interface MultipleChoiceOptions {
     options: { text: string; localId: string; isCorrect: boolean | null }[]
 }

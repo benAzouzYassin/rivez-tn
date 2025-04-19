@@ -93,9 +93,9 @@ export default function Page() {
     }
     return (
         <div
-            className={cn("h-[92vh] -mt-2 border border-gray-300 relative", {
-                "w-[calc(100vw-306px)]": isSidenavOpen,
-                "w-[calc(100vw-100px)]": !isSidenavOpen,
+            className={cn("h-[92vh]  -mt-2 border border-gray-300 relative", {
+                "md:w-[calc(100vw-306px)]": isSidenavOpen,
+                "md:w-[calc(100vw-100px)]": !isSidenavOpen,
             })}
         >
             {data?.items && (

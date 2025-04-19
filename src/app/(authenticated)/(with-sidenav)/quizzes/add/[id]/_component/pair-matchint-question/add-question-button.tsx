@@ -1,7 +1,7 @@
 import { cn } from "@/lib/ui-utils"
 import { PlusCircle } from "lucide-react"
 import { ButtonHTMLAttributes } from "react"
-type Props = {} & ButtonHTMLAttributes<any>
+interface Props extends ButtonHTMLAttributes<any> {}
 
 export default function AddOptionButton({ className, ...props }: Props) {
     return (

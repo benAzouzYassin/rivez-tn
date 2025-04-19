@@ -147,7 +147,7 @@ export default function AddDialog(props: Props) {
             open={props.isOpen}
         >
             <DialogTrigger asChild>
-                <Button className="text-base h-[3.2rem]">
+                <Button className="text-base md:w-fit w-full h-[3.2rem]">
                     <Plus className="-mr-1 !w-5 stroke-2 !h-5" /> Add Mindmap
                 </Button>
             </DialogTrigger>
