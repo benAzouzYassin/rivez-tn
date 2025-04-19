@@ -52,14 +52,14 @@ export default function Sidenav(props: Props) {
                     <NavButton
                         item={props.items[0]}
                         isNameVisible={isSidenavOpen}
-                        additionalClasses=""
+                        additionalClasses="md:!text-base"
                     />
                     {props.items.slice(1).map((item) => (
                         <NavButton
                             key={item.name}
                             item={item}
                             isNameVisible={isSidenavOpen}
-                            additionalClasses="mt-1"
+                            additionalClasses="mt-1 md:!text-base"
                         />
                     ))}
                 </div>
@@ -68,7 +68,7 @@ export default function Sidenav(props: Props) {
                 <NavButton
                     item={props.bottomItem}
                     isNameVisible={isSidenavOpen}
-                    additionalClasses="mt-1 py-7 pl-6 hover:bg-blue-400/90 rounded-xl border-b-4 border-blue-400/70 bg-blue-400/80 text-white gap-2 text-xl"
+                    additionalClasses="mt-1 py-7 pl-6 hover:bg-blue-400/90 rounded-xl border-b-4 border-blue-400/70 bg-blue-400/80 text-white gap-2 !text-lg"
                 />
             </div>
         </nav>

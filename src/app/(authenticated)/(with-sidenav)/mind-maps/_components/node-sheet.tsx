@@ -1,6 +1,5 @@
 import { ErrorDisplay } from "@/components/shared/error-display"
 import Markdown from "@/components/shared/markdown"
-import { Button } from "@/components/ui/button"
 import {
     Sheet,
     SheetContent,
@@ -14,7 +13,7 @@ import { readNodeExplanation } from "@/data-access/mindmaps/read"
 import { useCurrentUser } from "@/hooks/use-current-user"
 import { useRefetchUser } from "@/hooks/use-refetch-user"
 import { useQuery, useQueryClient } from "@tanstack/react-query"
-import { Download, Loader2 } from "lucide-react"
+import { Loader2 } from "lucide-react"
 import { useParams } from "next/navigation"
 import { useEffect, useRef, useState } from "react"
 interface Props {

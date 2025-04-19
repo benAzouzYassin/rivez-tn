@@ -30,7 +30,7 @@ export default function Page() {
             {!files.length && (
                 <Button
                     onClick={router.back}
-                    className="absolute font-bold text-neutral-500 top-4 left-4 "
+                    className="absolute font-bold text-neutral-500 top-2 left-2 md:top-4 md:left-4 "
                     variant={"secondary"}
                 >
                     <ChevronLeft className="!w-5 !h-5 -mr-1 stroke-[2.5]" />{" "}

@@ -7,11 +7,15 @@ import {} from "pdfjs-dist"
 import { ChangeEvent, DragEvent, useState } from "react"
 import { z } from "zod"
 import { usePdfSummarizerStore } from "../store"
+import { useIsSmallScreen } from "@/hooks/is-small-screen"
+import { useRouter } from "nextjs-toploader/app"
 
 pdfjsLib.GlobalWorkerOptions.workerSrc =
     "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js"
 
 export default function FilesUpload() {
+    const isSmallScreen = useIsSmallScreen()
+    const router = useRouter()
     const [isDragging, setIsDragging] = useState(false)
     const addFileToState = usePdfSummarizerStore((s) => s.addFile)
     const reset = usePdfSummarizerStore((s) => s.reset)
@@ -70,6 +74,9 @@ export default function FilesUpload() {
         }
 
         dismissToasts("loading")
+        if (isSmallScreen) {
+            router.push("pdf-summarizer/multiple-pages")
+        }
     }
 
     const getFileData = (file: File): Promise<pdfjsLib.PDFDocumentProxy> => {
@@ -123,7 +130,7 @@ export default function FilesUpload() {
         })
     }
     return (
-        <div className="w-full max-w-3xl   pt-28 space-y-6">
+        <div className="w-full max-w-3xl  pt-20 md:px-0 px-3 md:pt-28 space-y-6">
             <div className="text-center mb-10">
                 <h1 className="text-4xl font-bold text-neutral-600 mb-5">
                     Summarize your documents
@@ -131,7 +138,7 @@ export default function FilesUpload() {
             </div>
 
             <div
-                className={`flex active:scale-95 flex-col items-center justify-center h-96 ${
+                className={`flex active:scale-95  flex-col items-center justify-center h-64 md:h-96 ${
                     isDragging
                         ? "bg-blue-50 border-blue-400"
                         : "bg-white border-gray-300"
@@ -156,10 +163,10 @@ export default function FilesUpload() {
                     <div className="w-20 h-20 bg-blue-50 rounded-full flex items-center justify-center mb-4">
                         <FilesIcon className="h-10 w-10 text-red-400/90" />
                     </div>
-                    <p className="text-xl font-bold text-neutral-500 mb-1">
+                    <p className="text-xl font-bold text-neutral-500 mb-1 text-center">
                         Drop PDFs here or click to browse
                     </p>
-                    <p className="text-sm font-semibold text-neutral-500">
+                    <p className="text-sm font-semibold text-neutral-500 text-center">
                         Only PDF files are supported
                     </p>
                 </label>

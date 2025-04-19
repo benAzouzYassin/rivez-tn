@@ -3,11 +3,17 @@ import { Button } from "@/components/ui/button"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { cn } from "@/lib/ui-utils"
 import { wait } from "@/utils/wait"
-import { DownloadIcon, HelpCircle } from "lucide-react"
+import {
+    ChevronLeft,
+    ChevronRight,
+    DownloadIcon,
+    HelpCircle,
+} from "lucide-react"
 import { useRef, useState } from "react"
 import { useReactToPrint } from "react-to-print"
 import GenerateQuizDialog from "../../_components/generate-quiz-dialog"
 import SideItem from "./side-item"
+import { useSidenav } from "@/providers/sidenav-provider"
 
 interface Props {
     files: {
@@ -31,6 +37,8 @@ export default function PagesViewer(props: Props) {
         (file) => file.id === activePage.fileId
     )
     const activeFile = props.files[activeFileIndex] || props.files[0]
+    const nextFile = props.files[activeFileIndex + 1] || undefined
+    const prevFile = props.files[activeFileIndex - 1] || undefined
 
     const isLastFile = activeFileIndex === props.files.length - 1
     const isLastPageOfFile =
@@ -108,8 +116,8 @@ export default function PagesViewer(props: Props) {
 
     return (
         <div className="flex h-[89vh] overflow-hidden bg-gray-50">
-            <div className="w-[360px] h-[95vh] overflow-y-hidden fixed pb-20 bg-white">
-                <ScrollArea className="w-full scale-x-[-1] h-[95vh] -mt-1 border overflow-y-auto py-4">
+            <div className="xl:w-[360px] w-0 h-[95vh] overflow-y-hidden fixed pb-20 bg-white">
+                <ScrollArea className="w-full scale-x-[-1] xl:block hidden h-[95vh] -mt-1 border overflow-y-auto py-4">
                     <div className="scale-x-[-1] pl-5 pr-3 pb-20 pt-5">
                         {props.files.map((file) => (
                             <SideItem
@@ -129,15 +137,19 @@ export default function PagesViewer(props: Props) {
                     </div>
                 </ScrollArea>
             </div>
-            <div className="w-[21.5rem] min-w-[21.5rem]"></div>
-            <div className="flex-1 max-w-[calc(100%-21.5rem)] pl-4 relative">
+            <div className={"xl:w-[21.5rem] xl:min-w-[21.5rem]"}></div>
+            <div
+                className={cn(
+                    " md:max-w-[100%] max-w-screen flex-1 xl:max-w-[calc(100%-21.5rem)] xl:pl-4 relative"
+                )}
+            >
                 <div className="w-screen"></div>
 
                 <div
                     ref={contentRef}
-                    className="bg-white p-5 rounded-lg h-[90vh]  overflow-y-auto pb-20 -mt-1 pt-8 border mx-auto"
+                    className="bg-white md:p-5 p-2  rounded-lg h-[90vh]  overflow-y-auto pb-20 -mt-1 pt-8 border mx-auto"
                 >
-                    <div className="flex print:hidden  -mb-6  justify-end gap-2">
+                    <div className="md:flex hidden print:hidden  -mb-6  justify-end gap-2">
                         <Button
                             isLoading={isPrinting}
                             onClick={() => {
@@ -154,7 +166,10 @@ export default function PagesViewer(props: Props) {
                             <HelpCircle className="ml-1" />
                         </Button>
                     </div>
-                    <div ref={markdownRef} className="print:px-10  relative ">
+                    <div
+                        ref={markdownRef}
+                        className="print:px-10 md:mt-0 -mt-10  relative "
+                    >
                         {isPrinting ? (
                             props.files.map((file) =>
                                 file.markdownPages.map((page, i) => (
@@ -170,6 +185,27 @@ export default function PagesViewer(props: Props) {
                                 }
                             />
                         )}
+
+                        <div className="flex border-t-2 pt-3 justify-between mb-4">
+                            <Button
+                                variant={"secondary"}
+                                onClick={handlePreviousPage}
+                                className="text-base h-11 px-4 rounded-xl"
+                                disabled={isPreviousDisabled}
+                            >
+                                <ChevronLeft className="min-w-5 min-h-5 -mr-1 stroke-3" />
+                                Previous
+                            </Button>
+
+                            <Button
+                                onClick={handleNextPage}
+                                disabled={isNextDisabled}
+                                className="text-base h-11 px-6 rounded-xl"
+                            >
+                                Next{" "}
+                                <ChevronRight className="min-w-5 min-h-5 -ml-2 stroke-3" />
+                            </Button>
+                        </div>
                     </div>
                 </div>
             </div>
