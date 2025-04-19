@@ -160,9 +160,17 @@ export default function Page() {
             </div>
 
             <div className="w-full md:border-2 min-h-screen md:mt-18 -mt-3 sm:mt-36 rounded-2xl  md:p-5">
-                <h1 className="text-4xl  md:hidden block pb-5  text-neutral-600  font-extrabold">
-                    Quizzes
-                </h1>
+                <div className="flex items-center">
+                    <h1 className="text-4xl  md:hidden block pb-5  text-neutral-600  font-extrabold">
+                        Quizzes
+                    </h1>
+                    <Link href={"/quizzes/add"} className="md:hidden ml-auto">
+                        <Button className="text-base h-[3rem] -mt-4">
+                            <Plus className="-mr-1 !w-5 stroke-2 !h-5" /> Add
+                            Quiz
+                        </Button>
+                    </Link>
+                </div>
                 <AnimatedTabs
                     className="ml-auto mb-4"
                     tabs={tabs}
@@ -172,6 +180,7 @@ export default function Page() {
                         setCurrentPage(1)
                     }}
                 />
+
                 <div
                     className={cn(
                         "grid  rounded-2xl min-[1800px]:grid-cols-4 md:grid-cols-3 ml-auto px-2 sm:py-2   gap-8 mb-2"
@@ -186,7 +195,7 @@ export default function Page() {
                 <div className="mb-4 ">
                     <div
                         className={cn(
-                            "grid sm:grid-cols-2 xl:grid-cols-3  min-[1800px]:grid-cols-4 rounded-2xl ml-auto px-2 py-2   gap-8 mb-2"
+                            "grid sm:grid-cols-2 xl0:grid-cols-3  min-[1800px]:grid-cols-4 rounded-2xl ml-auto px-2 py-2   gap-8 mb-2"
                         )}
                     >
                         {data?.map((item) => {

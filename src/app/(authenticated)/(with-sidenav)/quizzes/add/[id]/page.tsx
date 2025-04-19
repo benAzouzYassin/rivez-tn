@@ -8,8 +8,11 @@ import SelectedQuestionContent from "./_component/selected-question-content"
 import useQuizStore from "./store"
 import { dismissToasts, toastLoading } from "@/lib/toasts"
 import { wait } from "@/utils/wait"
+import { useIsSmallScreen } from "@/hooks/is-small-screen"
+import UnsupportedScreen from "@/components/shared/unsuported-screen"
 
 export default function Page() {
+    const isSmallScreen = useIsSmallScreen()
     const searchParams = useSearchParams()
     const isGeneratingWithAi = searchParams.get("isGeneratingWithAi") === "true"
     const resetState = useQuizStore((s) => s.reset)
@@ -38,6 +41,9 @@ export default function Page() {
                 <ErrorDisplay />
             </section>
         )
+    }
+    if (isSmallScreen) {
+        return <UnsupportedScreen />
     }
     return (
         <section className=" relative  min-h-[100vh] pb-[200px]">

@@ -122,12 +122,17 @@ function LayoutSelect(props: Props) {
                 }
             }}
             trigger={
-                <div className="flex items-center">
-                    <p className="text-center text-lg font-bold">Layout :</p>
+                <div className="flex items-center  ">
+                    <p className="text-center text-lg font-bold md:block hidden">
+                        Layout :
+                    </p>
                     {props.selectedQuestion.layout === "vertical" &&
                         props.selectedQuestion.imageType !== "none" &&
                         props.selectedQuestion.type === "MULTIPLE_CHOICE" && (
-                            <MultipleChoiceVertical textClassName="hidden" />
+                            <MultipleChoiceVertical
+                                className="bg-red-500"
+                                textClassName="hidden"
+                            />
                         )}
                     {props.selectedQuestion.imageType === "none" &&
                         props.selectedQuestion.type === "MULTIPLE_CHOICE" && (
@@ -135,13 +140,13 @@ function LayoutSelect(props: Props) {
                                 textClassName="mt-3 h-2 w-[80%]"
                                 imageClassName="hidden"
                                 itemClassName="h-5 rounded  mt-2 "
-                                className="px-2 w-[220px] pb-5"
+                                className="px-2 md:w-[220px] bg-red-500 pb-5"
                             />
                         )}
                     {props.selectedQuestion.layout === "horizontal" &&
                         props.selectedQuestion.imageType !== "none" &&
                         props.selectedQuestion.type === "MULTIPLE_CHOICE" && (
-                            <MultipleChoiceHorizontal />
+                            <MultipleChoiceHorizontal className="" />
                         )}
                     {props.selectedQuestion.type === "MATCHING_PAIRS" && (
                         <MatchingPairs />

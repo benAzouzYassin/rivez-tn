@@ -14,7 +14,7 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select"
-import { ChevronDown, ChevronLeft, Sparkles } from "lucide-react"
+import { ChevronDown, ChevronLeft, Sparkles, ZapIcon } from "lucide-react"
 import { Controller } from "react-hook-form"
 
 import { POSSIBLE_QUESTIONS } from "@/app/api/quiz/generate-quiz/constants"
@@ -36,6 +36,7 @@ import { useQuestionsStore as useViewOnlyQuizStore } from "../../../../quizzes/[
 import { default as useEditableQuizStore } from "../[id]/store"
 import { DifficultySelect } from "../_components/difficulty-select"
 import ImageUpload from "../_components/image-upload"
+import { useIsSmallScreen } from "../../../../../../hooks/is-small-screen"
 
 const POSSIBLE_QUESTIONS_TYPES = Object.keys(POSSIBLE_QUESTIONS)
 
@@ -53,6 +54,7 @@ export type FormValues = {
 }
 
 export default function SubjectForm() {
+    const isSmallScreen = useIsSmallScreen()
     const sideNav = useSidenav()
     const queryClient = useQueryClient()
     const [imageUrl, setImageUrl] = useState<string | null>(null)
@@ -181,20 +183,20 @@ export default function SubjectForm() {
     }
     return (
         <main className="flex relative items-center pb-20  flex-col">
-            <h1 className="mt-10 text-neutral-600 text-3xl font-extrabold">
+            <h1 className="md:mt-10 mt-24 text-neutral-600 text-3xl font-extrabold">
                 Generate from subject
             </h1>
             <div className="flex items-center  h-0">
                 <Button
                     onClick={() => router.back()}
-                    className=" text-sm gap-1   absolute top-4 left-5"
+                    className=" text-sm gap-1   absolute top-6 md:top-4 left-2 md:left-5"
                     variant="secondary"
                 >
                     <ChevronLeft className="stroke-3 -ml-1 text-neutral-500 !w-4 !h-4" />
                     Go back
                 </Button>
             </div>
-            <section className="flex flex-col w-full mt-8 gap-1 max-w-[900px]">
+            <section className="flex md:px-0 px-3 flex-col w-full mt-8 gap-1 max-w-[900px]">
                 <Input
                     {...form.register("name")}
                     placeholder="Quiz Name"
@@ -344,27 +346,18 @@ export default function SubjectForm() {
                     onImageUrlChange={setImageUrl}
                 />
                 <div className="grid  gap-5">
-                    {/* <Button
-                        isLoading={isLoading}
-                        disabled={isUploadingImage}
-                        type="button"
-                        onClick={() => {
-                            form.handleSubmit((data) =>
-                                onSubmit(data, "generate-and-take")
-                            )()
-                        }}
-                        className="font-extrabold uppercase mt-5 py-7 text-sm"
-                        variant="blue"
-                    >
-                        Generate and Take <ZapIcon className="!w-5 !h-5" />
-                    </Button> */}
                     <Button
                         isLoading={isLoading}
                         disabled={isUploadingImage}
                         type="button"
                         onClick={() => {
                             form.handleSubmit((data) =>
-                                onSubmit(data, "generate-and-modify")
+                                onSubmit(
+                                    data,
+                                    isSmallScreen
+                                        ? "generate-and-take"
+                                        : "generate-and-modify"
+                                )
                             )()
                         }}
                         className="font-extrabold uppercase py-7 mt-5 text-sm"

@@ -1,5 +1,6 @@
 import {
     Drawer,
+    DrawerClose,
     DrawerContent,
     DrawerDescription,
     DrawerHeader,
@@ -23,9 +24,11 @@ export default function MobileNavDrawer() {
                 </button>
             </DrawerTrigger>
             <DrawerContent className="h-[90vh]  max-w-h-[90vh] pb-2">
-                <div className=" rounded-2xl absolute top-5 right-5 ">
-                    <XIcon className="h-6  text-neutral-400 stroke-3 hover:text-red-600 cursor-pointer w-6" />
-                </div>
+                <DrawerClose>
+                    <div className=" rounded-2xl absolute top-5 right-5 ">
+                        <XIcon className="h-6  text-neutral-400 stroke-3 hover:text-red-600 cursor-pointer w-6" />
+                    </div>
+                </DrawerClose>
                 <DrawerHeader className="text-center">
                     <DrawerTitle className="text-3xl text-neutral-600 font-bold">
                         Menu
