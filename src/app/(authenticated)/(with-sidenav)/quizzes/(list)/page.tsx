@@ -195,7 +195,7 @@ export default function Page() {
                 <div className="mb-4 ">
                     <div
                         className={cn(
-                            "grid sm:grid-cols-2 xl0:grid-cols-3  min-[1800px]:grid-cols-4 rounded-2xl ml-auto px-2 py-2   gap-8 mb-2"
+                            "grid sm:grid-cols-2 xl:grid-cols-3  min-[1800px]:grid-cols-4 rounded-2xl ml-auto px-2 py-2   gap-8 mb-2"
                         )}
                     >
                         {data?.map((item) => {

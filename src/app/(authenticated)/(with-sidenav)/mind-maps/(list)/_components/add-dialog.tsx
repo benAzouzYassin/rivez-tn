@@ -152,19 +152,22 @@ export default function AddDialog(props: Props) {
                 </Button>
             </DialogTrigger>
             <DialogContent
-                className={cn("sm:min-w-[800px] w-[800px] max-w-[1000px]", {
-                    "w-[1000px]": currentTab === null,
-                })}
+                className={cn(
+                    "sm:min-w-[800px] md:w-[800px] md:max-w-[1000px]",
+                    {
+                        "w-[1000px]": currentTab === null,
+                    }
+                )}
             >
                 <DialogHeader>
-                    <DialogTitle className="text-4xl text-center font-bold text-neutral-500 mt-2">
+                    <DialogTitle className="md:text-4xl text-2xl md:mt-2 text-center font-bold text-neutral-500 mt-5">
                         Generate a Mind Map
                     </DialogTitle>
                     <DialogDescription className="text-neutral-600"></DialogDescription>
                 </DialogHeader>
 
                 {!currentTab && (
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-5 mt-6">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-5 md:mt-6">
                         {items.map((item) => (
                             <Card
                                 key={item.value}

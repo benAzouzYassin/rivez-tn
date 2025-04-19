@@ -27,14 +27,14 @@ import { toastError } from "@/lib/toasts"
 import { useSidenav } from "@/providers/sidenav-provider"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useQueryClient } from "@tanstack/react-query"
-import { ChevronDown, ChevronLeft, Sparkles } from "lucide-react"
+import { ChevronDown, Sparkles } from "lucide-react"
 import { useRouter } from "nextjs-toploader/app"
 import { useEffect, useMemo, useState } from "react"
 import { Controller, useForm } from "react-hook-form"
 import { z } from "zod"
+import useQuizStore from "../../quizzes/add/[id]/store"
 import { DifficultySelect } from "./difficulty-select"
-import ImageUpload from "./image-upload"
-import useQuizStore from "../../../quizzes/add/[id]/store"
+import QuizImageUpload from "./quiz-image-upload"
 
 const POSSIBLE_QUESTIONS_TYPES = Object.keys(POSSIBLE_QUESTIONS)
 
@@ -62,6 +62,7 @@ export default function GenerateQuizDialog(props: Props) {
     const [isLoading, setIsLoading] = useState(false)
     const [imageUrl, setImageUrl] = useState<string | null>(null)
     const router = useRouter()
+    const generateQuizWithAi = useQuizStore((s) => s.generateQuizWithAi)
     const { isSidenavOpen, toggleSidenav } = useSidenav()
     const resetEditableQuizStore = useQuizStore((s) => s.reset)
     const addToEditQuizWithAi = useQuizStore((s) => s.generateQuizWithAi)
@@ -150,7 +151,7 @@ export default function GenerateQuizDialog(props: Props) {
     }
     return (
         <Dialog open={props.isOpen} onOpenChange={props.onOpenChange}>
-            <DialogContent className="md:!min-w-[800px]  md:w-[800px]">
+            <DialogContent className="!min-w-[800px] w-[800px]">
                 <DialogTitle className="mt-10 text-neutral-600 text-center text-3xl font-extrabold">
                     {" "}
                     Generate Quiz
@@ -164,7 +165,7 @@ export default function GenerateQuizDialog(props: Props) {
                         errorMessage={form.formState.errors.name?.message}
                     />
 
-                    <div className="grid grid-cols-2 gap-2 md:gap-8">
+                    <div className="grid grid-cols-2 gap-8">
                         <Input
                             {...form.register("maxQuestions")}
                             defaultValue={undefined}
@@ -205,7 +206,6 @@ export default function GenerateQuizDialog(props: Props) {
                                         }
                                     />
                                 </div>
-
                                 <div className=" -mt-1 gap-8">
                                     <Select
                                         defaultValue={
@@ -303,7 +303,7 @@ export default function GenerateQuizDialog(props: Props) {
                             </div>
                         </CollapsibleContent>
                     </Collapsible>
-                    <ImageUpload
+                    <QuizImageUpload
                         className=""
                         imageUrl={imageUrl}
                         onImageUrlChange={setImageUrl}

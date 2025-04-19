@@ -23,7 +23,7 @@ export default function MobileNavDrawer() {
                     <span className="sr-only">Toggle menu</span>
                 </button>
             </DrawerTrigger>
-            <DrawerContent className="h-[90vh]  max-w-h-[90vh] pb-2">
+            <DrawerContent className="h-[85vh]  max-w-h-[85vh] pb-2">
                 <DrawerClose>
                     <div className=" rounded-2xl absolute top-5 right-5 ">
                         <XIcon className="h-6  text-neutral-400 stroke-3 hover:text-red-600 cursor-pointer w-6" />
@@ -35,7 +35,7 @@ export default function MobileNavDrawer() {
                     </DrawerTitle>
                     <DrawerDescription className="text-lg font-medium"></DrawerDescription>
                 </DrawerHeader>
-                <div className="flex overflow-y-auto h-[90vh] flex-col items-center justify-center gap-3 p-6">
+                <div className="flex overflow-y-auto h-[85vh] flex-col items-center justify-center gap-3 p-6">
                     {normalUserItems.map((item) => (
                         <div
                             className="w-full"

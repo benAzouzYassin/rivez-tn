@@ -1,6 +1,5 @@
 import { ErrorDisplay } from "@/components/shared/error-display"
 import Markdown from "@/components/shared/markdown"
-import { Button } from "@/components/ui/button"
 import {
     Sheet,
     SheetContent,
@@ -14,7 +13,7 @@ import { readNodeExplanation } from "@/data-access/mindmaps/read"
 import { useCurrentUser } from "@/hooks/use-current-user"
 import { useRefetchUser } from "@/hooks/use-refetch-user"
 import { useQuery, useQueryClient } from "@tanstack/react-query"
-import { Download, Loader2 } from "lucide-react"
+import { Loader2 } from "lucide-react"
 import { useParams } from "next/navigation"
 import { useEffect, useRef, useState } from "react"
 interface Props {
@@ -123,7 +122,7 @@ export default function NodeSheet(props: Props) {
 
     return (
         <Sheet open={props.open} onOpenChange={props.setOpen}>
-            <SheetContent className="p-0 bg-white w-[calc(100vw-450px)] min-w-[calc(100vw-450px)]">
+            <SheetContent className="p-0 bg-white w-[95vw] min-w-[95vw]  lg:w-[calc(100vw-450px)] lg:min-w-[calc(100vw-450px)]">
                 <div className="scale-x-[-1] overflow-y-auto">
                     <div className="h-full scale-x-[-1]">
                         {isError && <ErrorDisplay />}
@@ -135,7 +134,7 @@ export default function NodeSheet(props: Props) {
                                     </div>
                                 ) : (
                                     <>
-                                        <div className="p-5">
+                                        <div className="md:p-5 p-2">
                                             <Markdown
                                                 content={generatedContent}
                                             />

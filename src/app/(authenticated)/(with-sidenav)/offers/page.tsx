@@ -6,8 +6,8 @@ export default function Page() {
     return (
         <section className="flex min-h-[90vh]   flex-col">
             <section className="flex pb-32 mt-16 font-sans items-center justify-center">
-                <div className="grid  w-[800px] gap-8 h-[600px] grid-cols-2">
-                    <div className="border  bg-[#f3f3f3] px-5 py-8 rounded-3xl">
+                <div className="md:grid flex flex-col-reverse  w-[1000px] gap-8 px-2 md:h-[600px] md:grid-cols-2">
+                    <div className="border  bg-[#f3f3f3] px-4 md:px-5 py-8 rounded-3xl">
                         <h2 className="text-neutral-600 text-xl font-medium">
                             Trial
                         </h2>
@@ -58,7 +58,7 @@ export default function Page() {
                             </p>
                         </div>
                     </div>
-                    <div className="border  bg-[#3a7ef4] px-5 py-8 rounded-3xl">
+                    <div className="border  bg-[#3a7ef4] px-4 md:px-5 py-8 rounded-3xl">
                         <h2 className="text-white text-xl font-medium">
                             Premium
                         </h2>

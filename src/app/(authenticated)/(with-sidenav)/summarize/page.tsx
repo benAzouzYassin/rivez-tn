@@ -39,9 +39,9 @@ export default function Page() {
         []
     )
     return (
-        <main className="flex relative flex-col items-center w-full min-h-screen p-6 bg-white">
+        <main className="flex relative flex-col items-center w-full min-h-screen md:p-6 bg-white">
             <div className="max-w-3xl w-full text-center">
-                <h1 className="text-4xl font-extrabold text-neutral-700 pt-6">
+                <h1 className="md:text-4xl text-3xl font-extrabold text-neutral-700  pt-6">
                     Summarize something
                 </h1>
                 <p className="text-lg text-gray-600 mt-2">
@@ -49,7 +49,7 @@ export default function Page() {
                 </p>
             </div>
 
-            <section className="grid    grid-cols-1 sm:grid-cols-2 max-w-[850px] gap-x-10 gap-y-7 mt-10 ">
+            <section className="grid  md:px-0 px-3  grid-cols-1 sm:grid-cols-2 max-w-[850px] pb-10 gap-x-10 gap-y-7 mt-10 ">
                 {items.map((item) => (
                     <Item key={item.text} {...item} />
                 ))}

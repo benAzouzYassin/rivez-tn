@@ -6,13 +6,6 @@ import {
     DialogTitle,
 } from "@/components/ui/dialog"
 import { Input } from "@/components/ui/input"
-import {
-    Select,
-    SelectContent,
-    SelectItem,
-    SelectTrigger,
-    SelectValue,
-} from "@/components/ui/select"
 import { useRouter } from "nextjs-toploader/app"
 import { useState } from "react"
 interface Props {
@@ -22,13 +15,12 @@ interface Props {
 export default function YoutubeLinkDialog(props: Props) {
     const [isSubmitting, setIsSubmitting] = useState(false)
     const [youtubeUrl, setYoutubeUrl] = useState("")
-    const [language, setLanguage] = useState<string>()
     const router = useRouter()
     const handleSubmit = (e: any) => {
         e?.preventDefault?.()
         setIsSubmitting(true)
         router.push(
-            `/youtube-video-summarizer?youtubeLink=${youtubeUrl}&language=${language}`
+            `/youtube-video-summarizer?youtubeLink=${youtubeUrl}&language=`
         )
     }
     return (
@@ -57,24 +49,6 @@ export default function YoutubeLinkDialog(props: Props) {
                             placeholder="https://www.youtube.com/watch?v=something"
                             required
                         />
-                    </div>
-                    <div className="-mt-1">
-                        <label
-                            htmlFor="language"
-                            className="font-medium text-neutral-600"
-                        >
-                            Select Language
-                        </label>
-                        <Select onValueChange={setLanguage} value={language}>
-                            <SelectTrigger id="language" className="w-full">
-                                <SelectValue placeholder="Choose a language" />
-                            </SelectTrigger>
-                            <SelectContent>
-                                <SelectItem value="english">English</SelectItem>
-                                <SelectItem value="arabic">Arabic</SelectItem>
-                                <SelectItem value="french">French</SelectItem>
-                            </SelectContent>
-                        </Select>
                     </div>
 
                     <Button

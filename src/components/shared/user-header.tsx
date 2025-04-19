@@ -101,18 +101,18 @@ export default function UserHeader() {
                     >
                         <PopoverTrigger className="cursor-pointer  w-fit p-1  mt-2 rounded-2xl  flex items-center  gap-2 font-bold text-lg text-neutral-600 md:px-3 py-1 active:scale-95 hover:bg-neutral-100 transition-transform">
                             <div className="flex text-nowrap flex-col">
-                                <p className="first-letter:uppercase sm:block hidden pr-px max-w-[200px] truncate w-fit mx-2">
+                                <p className="first-letter:uppercase md:text-base text-sm pr-px max-w-[200px] truncate w-fit mx-2">
                                     {" "}
                                     {user?.identities?.[0].displayName}
                                 </p>
-                                <div className="text-sm w-full  gap-2 justify-end sm:flex hidden text-neutral-500  text-left font-semibold">
+                                <div className="md:text-sm text-xs w-full  gap-2 justify-end flex text-neutral-500  text-left font-semibold">
                                     <TooltipWrapper
                                         asChild
                                         content="Your credit balance"
                                     >
-                                        <div className="flex w-fit   items-center cursor-pointer gap-1 rounded-full text-lg bg-blue-100/70 border border-blue-200 pl-2 pr-3 py-[1px] scale-95 text-neutral-600/90 hover:bg-blue-100 transition-colors">
-                                            <CreditIcon className="h-6 w-6 scale-125 opacity-80" />
-                                            <span className="font-extrabold pr-1">
+                                        <div className="flex w-fit   items-center cursor-pointer gap-1 rounded-full text-sm md:mt-0 mt-1 md:text-lg bg-blue-100/70 border border-blue-200 pl-2 pr-3 py-[1px] scale-95 text-neutral-600/90 hover:bg-blue-100 transition-colors">
+                                            <CreditIcon className="h-6 w-6 md:scale-125 opacity-80" />
+                                            <span className="font-extrabold  pr-1">
                                                 {user?.credit_balance?.toFixed(
                                                     1
                                                 )}

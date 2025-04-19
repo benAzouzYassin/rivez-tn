@@ -13,8 +13,12 @@ import AddFilesButton from "./add-files-button"
 import FileItem from "./file-item"
 import PageCard from "./page-card"
 import SummarizeSelectedBtn from "./summarize-selected-btn"
+import { useIsSmallScreen } from "@/hooks/is-small-screen"
+import UnsupportedScreen from "@/components/shared/unsuported-screen"
+import AnimatedLoader from "@/components/ui/animated-loader"
 
 export default function PagesSelection() {
+    const isSmallScreen = useIsSmallScreen()
     const files = usePdfSummarizerStore((s) => s.files)
 
     const reset = usePdfSummarizerStore((s) => s.reset)
@@ -77,10 +81,17 @@ export default function PagesSelection() {
             unSelectPages(selectedFile?.pages.map((p) => p.localId) || [])
         }
     }
+    if (isSmallScreen) {
+        return (
+            <div className="flex items-center justify-center min-h-[50vh]">
+                <AnimatedLoader />
+            </div>
+        )
+    }
     return (
         <div className="  rounded-2xl  relative !overflow-y-hidden  ">
             <div className="grid relative grid-cols-18 !overflow-y-hidden h-[calc(103vh-110px)] p-2 min-w-[70vw]">
-                <div className="pr-2 relative border-r h-[calc(103vh-120px)] pb-20 pt-10 col-span-4">
+                <div className="pr-2 relative border-r h-[calc(103vh-120px)] pb-20 pt-10 col-span-6 xl:col-span-4">
                     <div className=" relative !h-[calc(103vh-160px)]">
                         <ScrollArea className="gap-2 !h-[calc(90vh-130px)] overflow-y-auto scale-x-[-1]">
                             <div className="flex flex-col py-2 gap-3 scale-x-[-1]">
@@ -101,7 +112,7 @@ export default function PagesSelection() {
                         <AddFilesButton />
                     </div>
                 </div>
-                <div className="col-span-14">
+                <div className="col-span-12 xl:col-span-14">
                     <div
                         className={cn(
                             "px-4 mt-5  overflow-y-hidden transition-all  h-24"
@@ -122,7 +133,7 @@ export default function PagesSelection() {
                                     {selectedPages.length} selected page
                                 </label>
                             </div>
-                            <div>
+                            <div className="xl:scale-100 scale-90 flex flex-nowrap items-center">
                                 <Button
                                     onClick={reset}
                                     className="text-lg text-neutral-600 font-bold mr-2 h-[44px]"
@@ -156,7 +167,7 @@ export default function PagesSelection() {
                                     return (
                                         <div
                                             className={cn(
-                                                "grid  grid-cols-3 gap-5 py-2"
+                                                "grid grid-cols-2 2xl:grid-cols-3 gap-5 py-2"
                                             )}
                                         >
                                             {Array.from({
