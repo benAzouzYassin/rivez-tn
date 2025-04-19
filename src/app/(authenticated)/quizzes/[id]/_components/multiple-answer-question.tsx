@@ -1,20 +1,19 @@
 import { Button } from "@/components/ui/button"
+import { useCurrentUser } from "@/hooks/use-current-user"
+import { toastError } from "@/lib/toasts"
 import { cn } from "@/lib/ui-utils"
 import { MultipleChoiceContent } from "@/schemas/questions-content"
 import { areArraysEqual } from "@/utils/array"
-import { ImageIcon, Lightbulb } from "lucide-react"
-import { AnimatePresence, motion } from "motion/react"
+import { useQueryClient } from "@tanstack/react-query"
+import { ImageIcon } from "lucide-react"
 import { useParams } from "next/navigation"
 import { useEffect, useState } from "react"
 import { QuestionType, useQuestionsStore } from "../store"
+import CodeSnippets from "./code-snippets"
 import ConfirmationBanner from "./confirmation-banner"
 import CorrectAnswerBanner from "./correct-answer-banner"
-import WrongAnswerBanner from "./wrong-answer-banner"
-import { useCurrentUser } from "@/hooks/use-current-user"
-import { toastError } from "@/lib/toasts"
-import { useQueryClient } from "@tanstack/react-query"
-import CodeSnippets from "./code-snippets"
 import HintsSheet from "./hints-sheet"
+import WrongAnswerBanner from "./wrong-answer-banner"
 
 type Props = {
     question: { content: MultipleChoiceContent } & QuestionType
@@ -122,14 +121,14 @@ export default function MultipleAnswerQuestion(props: Props) {
                     questionId={props.question.id}
                 />
                 <div
-                    className={cn("", {
+                    className={cn(" ", {
                         "flex flex-col w-full  items-center justify-center":
                             props.question.layout == "horizontal",
                     })}
                 >
                     <p
                         className={cn(
-                            " max-w-[1000px] text-center  items-center justify-center w-full mt-1  flex pt-0 pb-5 text-4xl font-extrabold top-0 text-neutral-700  ",
+                            " max-w-[1000px] text-center  items-center justify-center w-full mt-1  flex pt-0 pb-5 text-lg sm:text-3xl lg:text-4xl font-extrabold top-0 text-neutral-700 px-2  ",
                             {
                                 "max-w-[1250px] mt-5":
                                     props.question.layout === "horizontal",
@@ -140,19 +139,19 @@ export default function MultipleAnswerQuestion(props: Props) {
                     </p>
                     <div
                         className={cn(
-                            "relative w-full mt-6 flex-col flex",
+                            "relative w-full md:mt-6 flex-col flex xl:px-0 px-4 ",
 
                             {
-                                " flex-row mt-6 max-w-[1300px]":
+                                " xl:flex-row md:mt-6 max-w-[1300px]":
                                     props.question.layout === "horizontal",
                             }
                         )}
                     >
                         <div
                             className={cn(
-                                "h-[400px] rounded-xl min-w-[700px] overflow-hidden  flex items-center justify-center relative  mx-auto  border bg-neutral-50 w-[800px]! ",
+                                "md:h-[400px] w-[80vw] rounded-xl mb-4 md:mb-0 xl:min-w-[700px] overflow-hidden  h-[250px] flex items-center justify-center relative  md:mx-auto  border bg-neutral-50 xl:w-[800px] ",
                                 {
-                                    "w-[700px]  mr-10 h-[500px] ":
+                                    "xl:w-[700px] w-full xl:mb-0  xl:mr-10  sm:max-w-[80vw]  h-[250px] xl:h-[500px] ":
                                         props.question.layout === "horizontal",
                                     hidden:
                                         props.question.image_type === "none",
@@ -182,76 +181,58 @@ export default function MultipleAnswerQuestion(props: Props) {
                                 </>
                             )}{" "}
                         </div>
+                        <div
+                            key={questionIndex}
+                            className={cn(
+                                "max-w-[1000px] xl:px-4 lg:px-0  mx-auto md:mt-10 mt-2 gap-5 w-full grid xl:grid-cols-2",
+                                {
+                                    "flex xl:w-[700px] w-full xl:mr-0 flex-col xl:ml-auto":
+                                        props.question.layout === "horizontal",
+                                    "min-w-[70vw] gap-6 md:gap-10":
+                                        props.question.image_type === "none",
+                                }
+                            )}
+                        >
+                            {props.question.content.options.map((opt, i) => {
+                                const isCorrect =
+                                    props.question.content.correct.includes(opt)
+                                const isSelected = selectedOptions.includes(opt)
 
-                        <AnimatePresence mode="wait">
-                            <motion.div
-                                key={questionIndex}
-                                variants={questionAnimations}
-                                initial="initial"
-                                animate="animate"
-                                exit="exit"
-                                transition={{ duration: 0.4 }}
-                                className={cn(
-                                    "max-w-[1000px]  mx-auto mt-10 gap-5 w-full grid grid-cols-2",
-                                    {
-                                        "flex w-[700px] mr-0 flex-col ml-auto":
-                                            props.question.layout ===
-                                            "horizontal",
-                                        "min-w-[70vw] gap-10":
-                                            props.question.image_type ===
-                                            "none",
-                                    }
-                                )}
-                            >
-                                {props.question.content.options.map(
-                                    (opt, i) => {
-                                        const isCorrect =
-                                            props.question.content.correct.includes(
-                                                opt
-                                            )
-                                        const isSelected =
-                                            selectedOptions.includes(opt)
-
-                                        return (
-                                            <Button
-                                                key={i}
-                                                onClick={() =>
-                                                    handleOptionClick(
-                                                        opt,
-                                                        isSelected
-                                                    )
-                                                }
-                                                className={cn(
-                                                    "min-h-[85px]  text-lg overflow-auto small-scroll-bar hover:bg-sky-100 text-wrap hover:shadow-sky-300/50 hover:border-sky-300/45 text-neutral-700 font-bold max-h-48",
-                                                    {
-                                                        "hover:bg-red-200/50 bg-red-200/50 text-red-500 font-extrabold hover:shadow-red-300 shadow-red-300 hover:border-red-300 border-red-300":
-                                                            !isCorrect &&
-                                                            (isWrongBannerOpen ||
-                                                                isCorrectBannerOpen) &&
-                                                            isSelected,
-                                                        "hover:bg-[#D2FFCC] bg-[#D2FFCC] text-[#58A700] font-extrabold hover:shadow-[#58CC02]/50 shadow-[#58CC02]/50 hover:border-[#58CC02]/40 border-[#58CC02]/40":
-                                                            isCorrect &&
-                                                            (isWrongBannerOpen ||
-                                                                isCorrectBannerOpen) &&
-                                                            isSelected,
-                                                        "hover:bg-sky-200/50 bg-sky-200/50 text-sky-500 font-extrabold hover:shadow-sky-300 shadow-sky-300 hover:border-sky-300 border-sky-300":
-                                                            isSelected &&
-                                                            !isWrongBannerOpen &&
-                                                            !isCorrectBannerOpen,
-                                                    }
-                                                )}
-                                                variant="secondary"
-                                            >
-                                                <p className="max-w-[80%] text-wrap h-fit ">
-                                                    {" "}
-                                                    {opt}
-                                                </p>
-                                            </Button>
-                                        )
-                                    }
-                                )}
-                            </motion.div>
-                        </AnimatePresence>
+                                return (
+                                    <Button
+                                        key={i}
+                                        onClick={() =>
+                                            handleOptionClick(opt, isSelected)
+                                        }
+                                        className={cn(
+                                            "min-h-[85px]  text-lg overflow-auto small-scroll-bar hover:bg-sky-100 text-wrap hover:shadow-sky-300/50 hover:border-sky-300/45 text-neutral-700 font-bold max-h-48",
+                                            {
+                                                "hover:bg-red-200/50 bg-red-200/50 text-red-500 font-extrabold hover:shadow-red-300 shadow-red-300 hover:border-red-300 border-red-300":
+                                                    !isCorrect &&
+                                                    (isWrongBannerOpen ||
+                                                        isCorrectBannerOpen) &&
+                                                    isSelected,
+                                                "hover:bg-[#D2FFCC] bg-[#D2FFCC] text-[#58A700] font-extrabold hover:shadow-[#58CC02]/50 shadow-[#58CC02]/50 hover:border-[#58CC02]/40 border-[#58CC02]/40":
+                                                    isCorrect &&
+                                                    (isWrongBannerOpen ||
+                                                        isCorrectBannerOpen) &&
+                                                    isSelected,
+                                                "hover:bg-sky-200/50 bg-sky-200/50 text-sky-500 font-extrabold hover:shadow-sky-300 shadow-sky-300 hover:border-sky-300 border-sky-300":
+                                                    isSelected &&
+                                                    !isWrongBannerOpen &&
+                                                    !isCorrectBannerOpen,
+                                            }
+                                        )}
+                                        variant="secondary"
+                                    >
+                                        <p className="max-w-[80%] md:text-base text-sm text-wrap h-fit ">
+                                            {" "}
+                                            {opt}
+                                        </p>
+                                    </Button>
+                                )
+                            })}
+                        </div>
                     </div>
                 </div>
             </div>
@@ -289,10 +270,4 @@ export default function MultipleAnswerQuestion(props: Props) {
             />
         </>
     )
-}
-
-const questionAnimations = {
-    initial: { opacity: 0, x: 0 },
-    animate: { opacity: 1, x: 0 },
-    exit: { opacity: 0, x: -50 },
 }

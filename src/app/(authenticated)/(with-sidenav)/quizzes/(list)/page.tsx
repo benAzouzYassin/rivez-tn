@@ -115,24 +115,24 @@ export default function Page() {
         return <ErrorDisplay />
     }
     return (
-        <section className="flex flex-col min-h-[50vh] px-10 py-10">
+        <section className="flex flex-col min-h-[50vh] md:px-10 px-3 py-10">
             <div
                 className={cn(
-                    "flex fixed  z-50   bg-white border-t top-[10vh] pt-4  justify-between items-center",
+                    "sm:flex hidden fixed  z-50   bg-white border-t top-[10vh] pt-4  justify-between md:items-center",
                     {
-                        "left-[300px] w-[calc(100vw-306px)] px-8  ":
+                        "lg:left-[300px] left-0 lg:w-[calc(100vw-306px)] w-screen px-3 md:px-8  ":
                             isSidenavOpen,
-                        "left-[100px] w-[calc(100vw-106px)] px-8  ":
+                        "lg:left-[100px] left-0 lg:w-[calc(100vw-106px)] md:px-8 px-3 w-screen  ":
                             !isSidenavOpen,
                     }
                 )}
             >
                 {" "}
-                <h1 className="text-4xl text-neutral-600  font-extrabold">
+                <h1 className="text-4xl md:pt-0 pt-3 text-neutral-600  font-extrabold">
                     Quizzes
                 </h1>
-                <div className="flex items-center gap-2">
-                    <div className="mt-5 ">
+                <div className="md:flex-row flex flex-col-reverse md:pb-0 pb-2 items-end md:items-center md:gap-2">
+                    <div className="mt-5 w-full ">
                         <Search
                             searchValue={searchValue}
                             onSearchChange={setSearchValue}
@@ -159,7 +159,10 @@ export default function Page() {
                 </div>
             </div>
 
-            <div className="w-full border-2 min-h-screen mt-18 rounded-2xl p-5">
+            <div className="w-full md:border-2 min-h-screen md:mt-18 -mt-3 sm:mt-36 rounded-2xl  md:p-5">
+                <h1 className="text-4xl  md:hidden block pb-5  text-neutral-600  font-extrabold">
+                    Quizzes
+                </h1>
                 <AnimatedTabs
                     className="ml-auto mb-4"
                     tabs={tabs}
@@ -171,7 +174,7 @@ export default function Page() {
                 />
                 <div
                     className={cn(
-                        "grid  rounded-2xl min-[1800px]:grid-cols-4 grid-cols-3 ml-auto px-2 py-2   gap-8 mb-2"
+                        "grid  rounded-2xl min-[1800px]:grid-cols-4 md:grid-cols-3 ml-auto px-2 sm:py-2   gap-8 mb-2"
                     )}
                 >
                     {isFetching &&
@@ -183,7 +186,7 @@ export default function Page() {
                 <div className="mb-4 ">
                     <div
                         className={cn(
-                            "grid grid-cols-3 min-[1800px]:grid-cols-4 rounded-2xl ml-auto px-2 py-2   gap-8 mb-2"
+                            "grid sm:grid-cols-2 xl:grid-cols-3  min-[1800px]:grid-cols-4 rounded-2xl ml-auto px-2 py-2   gap-8 mb-2"
                         )}
                     >
                         {data?.map((item) => {

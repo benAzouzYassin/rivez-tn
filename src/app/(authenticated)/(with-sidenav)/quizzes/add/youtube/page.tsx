@@ -219,6 +219,7 @@ export default function Document() {
                         placeholder="Max questions"
                         className="w-full"
                         type="number"
+                        defaultValue={undefined}
                         errorMessage={
                             form.formState.errors.maxQuestions?.message
                         }
@@ -228,6 +229,7 @@ export default function Document() {
                         placeholder="Min questions"
                         className="w-full"
                         type="number"
+                        defaultValue={undefined}
                         errorMessage={
                             form.formState.errors.minQuestions?.message
                         }

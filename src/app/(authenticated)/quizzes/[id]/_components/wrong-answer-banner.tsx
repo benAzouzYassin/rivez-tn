@@ -13,27 +13,30 @@ export default function WrongAnswerBanner(props: Props) {
     return (
         <div
             className={cn(
-                "border overflow-hidden opacity-0 h-0 ease-in flex py-5 px-20 transition-all border-red-200 bg-[#FFE5E5] fixed w-full bottom-0",
-                { "h-[140px] opacity-100": props.isOpen }
+                "border overflow-hidden opacity-0 h-0 translate-y-10 ease-in flex flex-col md:flex-row py-3 md:py-5 px-4 md:px-20 transition-all border-red-200 bg-[#FFE5E5] fixed w-full bottom-0",
+                {
+                    "h-auto md:h-[140px] opacity-100 translate-y-0":
+                        props.isOpen,
+                }
             )}
         >
             <div className="flex items-center">
-                <div className="h-[90px] flex items-center justify-center w-[90px] bg-white border border-[#FF4B4B]/20 rounded-full">
-                    <X className="stroke-5 ml-1 h-14 w-14 stroke-[#FF4B4B]/80" />
+                <div className="h-16 w-16 md:h-[90px] md:w-[90px] flex items-center justify-center bg-white border border-[#FF4B4B]/20 rounded-full">
+                    <X className="stroke-5 ml-1 h-8 w-8 md:h-14 md:w-14 stroke-[#FF4B4B]/80" />
                 </div>
                 <div>
-                    <p className="text-xl ml-4 font-bold text-[#FF4B4B]">
+                    <p className="text-lg md:text-xl ml-4 font-bold text-[#FF4B4B]">
                         Wrong answer!
                     </p>
                     <ReportQuiz
-                        quizId={""} //TODO change this
+                        quizId={""}
                         quizType="question-answer"
                         disabled={!props.isOpen}
-                        className="text-base active:scale-95 opacity-90 font-semibold flex items-center gap-1 w-fit mt-2 text-[#FF4B4B]"
+                        className="text-sm md:text-base active:scale-95 opacity-90 font-semibold flex items-center gap-1 w-fit mt-2 text-[#FF4B4B]"
                     />
                 </div>
             </div>
-            <div className="flex ml-auto flex-col gap-4">
+            <div className="flex mt-4 md:mt-0 md:ml-auto flex-col gap-4">
                 <Button
                     onClick={() => {
                         props.onNextClick()
@@ -45,18 +48,18 @@ export default function WrongAnswerBanner(props: Props) {
                         )
                     }}
                     disabled={!props.isOpen}
-                    className="ml-auto h-12 px-7 text-lg font-bold! my-auto"
+                    className="w-full z-50 md:w-auto md:ml-auto h-10 md:h-12 px-5 md:px-7 text-base md:text-lg font-bold my-auto"
                     variant={"red"}
                 >
                     Continue
                 </Button>
                 {/* <Button
-                    disabled={!props.isOpen}
-                    className="ml-auto  w-full  h-12 px-7 text-lg font-bold! my-auto"
-                    variant={"blue"}
-                >
-                    Why ?
-                </Button> */}
+                disabled={!props.isOpen}
+                className="w-full md:w-auto md:ml-auto h-10 md:h-12 px-5 md:px-7 text-base md:text-lg font-bold my-auto"
+                variant={"blue"}
+            >
+                Why ?
+            </Button> */}
             </div>
         </div>
     )

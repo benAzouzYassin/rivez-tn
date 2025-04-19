@@ -153,14 +153,14 @@ export default function FillInTheBlankQuestion(props: Props) {
     const [activeDraggedId, setActiveDraggedId] = useState<number | null>(null)
     return (
         <>
-            <div className="flex flex-col relative h-fit items-center justify-center">
+            <div className="md:flex flex-col relative h-fit items-center justify-center">
                 <HintsSheet
                     questionId={props.question.id}
                     questionContent={JSON.stringify(props.question.content)}
                     questionText={props.question.question}
                 />
                 <div>
-                    <p className="max-w-[1200px] mb-1 pt-5 text-4xl text-center font-extrabold top-0 text-neutral-700  w-full left-0">
+                    <p className="max-w-[1200px] mb-1 pt-5 text-2xl md:text-3xl lg:text-4xl text-center font-extrabold top-0 text-neutral-700  w-full left-0">
                         {props.question?.question ||
                             "Fill in the blank with the correct options :"}{" "}
                     </p>
@@ -230,7 +230,7 @@ export default function FillInTheBlankQuestion(props: Props) {
                         >
                             <div
                                 key={currentQuestionIndex}
-                                className="max-w-[900px] min-h-[70px]  transition-all min-w-[700px] flex-wrap justify-start items-center mt-12  w-full flex"
+                                className="max-w-[900px] min-h-[70px]  transition-all md:min-w-[700px] flex-wrap justify-start items-center mt-12  w-full flex"
                             >
                                 <FillInTheBlankOptions
                                     options={allOptions.filter(
@@ -241,7 +241,7 @@ export default function FillInTheBlankQuestion(props: Props) {
                                     )}
                                 />
                             </div>
-                            <div className="max-w-[900px] transition-all pb-56  min-w-[700px] flex-wrap justify-start items-center mt-2  w-full">
+                            <div className="max-w-[900px] transition-all pb-56  md:min-w-[700px] flex-wrap justify-start items-center mt-2  w-full">
                                 <FillInTheBlankParts
                                     incorrectItems={results.wrong.map(
                                         (item) => item.index

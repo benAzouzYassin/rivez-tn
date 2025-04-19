@@ -49,7 +49,7 @@ function TextWithBlanks({
                 return (
                     <div
                         key={`paragraph-${paragraphIndex}`}
-                        className="max-w-[900px] "
+                        className="max-w-[900px] px-3 md:px-0 "
                     >
                         {segments.map((segment, segmentIndex) => {
                             const dropZoneIndex = geDropZoneIndex(
@@ -61,7 +61,7 @@ function TextWithBlanks({
                             )
                             return (
                                 <span
-                                    className="text-4xl font-bold text-neutral-600"
+                                    className="md:text-3xl sm:px-0  sm:text-2xl text-base lg:text-4xl font-bold text-neutral-600"
                                     key={`segment-${paragraphIndex}-${segmentIndex}`}
                                 >
                                     <span className="h-16 !w-0 inline-flex opacity-0">

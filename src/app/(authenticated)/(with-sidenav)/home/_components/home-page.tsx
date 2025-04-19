@@ -80,7 +80,7 @@ export default function HomePage() {
             </div>
             <LatestQuizzesMindmaps />
             <div className="h-auto px-4 sm:px-10 max-w-[1520px] mx-auto gap-4 sm:gap-7 grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3">
-                <Link href={"/quizzes/add"} className="w-full">
+                <Link href={"/quizzes"} className="w-full">
                     <Button
                         variant={"secondary"}
                         className="p-4 w-full items-start justify-start flex-col h-auto md:h-48"

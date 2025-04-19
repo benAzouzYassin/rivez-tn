@@ -11,8 +11,8 @@ export default function ConfirmationBanner(props: Props) {
     return (
         <div
             className={cn(
-                " border-2 overflow-hidden opacity-0  h-0 ease-in  flex py-5 px-20  transition-all border-neutral-200/80 bg-white fixed w-full  bottom-0",
-                { "h-[100px] opacity-100": props.isOpen }
+                " border-2 overflow-hidden opacity-0  h-0 ease-in  flex py-5 px-2 md:px-20 translate-y-10  transition-all border-neutral-200/80 bg-white fixed w-full  bottom-0",
+                { "h-[100px] opacity-100 translate-y-0": props.isOpen }
             )}
         >
             {" "}

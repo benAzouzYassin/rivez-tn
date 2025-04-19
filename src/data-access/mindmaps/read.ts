@@ -81,6 +81,7 @@ export async function readLastNMindmaps(number: number, userId: string) {
         .order("created_at", {
             ascending: false,
         })
+        .neq("publishing_status", "ARCHIVED")
         .eq("author_id", userId)
         .throwOnError()
     return response.data

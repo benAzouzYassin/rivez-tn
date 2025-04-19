@@ -213,6 +213,7 @@ export default function SubjectForm() {
                         placeholder="Max questions"
                         className="w-full"
                         type="number"
+                        defaultValue={undefined}
                         errorMessage={
                             form.formState.errors.maxQuestions?.message
                         }
@@ -222,6 +223,7 @@ export default function SubjectForm() {
                         placeholder="Min questions"
                         className="w-full"
                         type="number"
+                        defaultValue={undefined}
                         errorMessage={
                             form.formState.errors.minQuestions?.message
                         }

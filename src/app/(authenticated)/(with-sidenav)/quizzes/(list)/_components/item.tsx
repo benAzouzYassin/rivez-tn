@@ -32,11 +32,11 @@ export default function Item({ item, disableMoreBtn }: Props) {
         <Card
             onClick={handleClick}
             className={
-                "relative active:translate-y-1 active:shadow-[0px_2px_0px] transition-all hover:cursor-pointer hover:bg-neutral-100 hover:shadow-neutral-300 hover:border-neutral-300 h-[360px] flex rounded-3xl  flex-col  "
+                "relative active:translate-y-1 active:shadow-[0px_2px_0px] transition-all hover:cursor-pointer hover:bg-neutral-100 hover:shadow-neutral-300 hover:border-neutral-300 h-[410px] 2xl:h-[360px] flex rounded-3xl  flex-col  "
             }
         >
             <div
-                className={`h-48 min-h-48 hover:cursor-pointer transition-all relative bg-gray-100  overflow-hidden`}
+                className={`xl:h-48 h-56 min-h-48 hover:cursor-pointer transition-all relative bg-gray-100  overflow-hidden`}
             >
                 <div
                     className={cn(
@@ -95,8 +95,8 @@ export default function Item({ item, disableMoreBtn }: Props) {
                     </div>
                 </CardHeader>
 
-                <CardContent className="pb-2">
-                    <div className="flex gap-4 items-center">
+                <CardContent className="pb-4">
+                    <div className="flex flex-col 2xl:flex-row gap-4 2xl:items-center">
                         <Badge
                             variant={"blue"}
                             className="text-sm text-nowrap rounded-full !font-bold "

@@ -3,6 +3,7 @@ import SuccessIcon from "@/components/icons/success"
 import TimeIcon from "@/components/icons/time"
 import XpIcon from "@/components/icons/xp"
 import { Button } from "@/components/ui/button"
+import { cn } from "@/lib/ui-utils"
 import { formatSeconds } from "@/utils/date"
 import { useQueryClient } from "@tanstack/react-query"
 import { motion } from "framer-motion"
@@ -81,7 +82,7 @@ export default function ResultPage(props: Props) {
     }
     return (
         <motion.section
-            className="h-fit "
+            className="h-fit px-4 py-6 md:py-8 lg:py-10"
             initial="hidden"
             animate="visible"
             variants={containerVariants}
@@ -99,16 +100,16 @@ export default function ResultPage(props: Props) {
                         damping: 20,
                     }}
                 >
-                    <SuccessIcon className="w-64 h-64 mt-0" />
+                    <SuccessIcon className="w-32 h-32 sm:w-40 sm:h-40 md:w-52 md:h-52 lg:w-64 lg:h-64 mt-0" />
                 </motion.div>
                 <motion.p
-                    className="text-6xl text-center uppercase font-black text-neutral-800 mt-3"
+                    className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl text-center uppercase font-black text-neutral-800 mt-2 md:mt-3"
                     variants={itemVariants}
                 >
                     Quiz Over
                 </motion.p>
                 <motion.p
-                    className="text-neutral-500 mt-5 font-semibold text-center max-w-[600px] text-lg"
+                    className="text-neutral-500 mt-3 md:mt-5 font-semibold text-center max-w-[600px] text-sm sm:text-base md:text-lg"
                     variants={itemVariants}
                 >
                     GG! Well played! 🎉 Your effort was truly impressive, and we
@@ -118,23 +119,28 @@ export default function ResultPage(props: Props) {
             </motion.div>
 
             <motion.div
-                className="grid max-w-[800px] mt-10 gap-10 mx-auto grid-cols-3"
+                className="grid max-w-[800px]  mt-6 sm:mt-8 md:mt-10 gap-4 sm:gap-6 md:gap-8 lg:gap-10 mx-auto grid-cols-2 sm:grid-cols-3"
                 variants={containerVariants}
             >
                 {stats.map((stat, index) => (
                     <motion.div
                         key={stat.label}
-                        className="h-44 border-2 border-neutral-200 flex items-center justify-center flex-col rounded-2xl"
+                        className={cn(
+                            "h-28   sm:h-32 md:h-36 lg:h-44 border-2 border-neutral-200 flex items-center justify-center flex-col rounded-xl md:rounded-2xl",
+                            {
+                                "sm:col-span-1 col-span-2": index === 0,
+                            }
+                        )}
                         variants={statsCardVariants}
                         whileHover={{
-                            scale: 1.05,
+                            scale: 1.03,
                             transition: { duration: 0.2 },
                         }}
                     >
                         <div className="flex items-center gap-1 justify-center">
                             <stat.Icon className={stat.iconClass} />
                             <motion.span
-                                className="text-[2.4rem] ml-1 font-black text-neutral-700"
+                                className="text-xl sm:text-2xl md:text-3xl lg:text-[2.4rem] ml-1 font-black text-neutral-700"
                                 initial={{ opacity: 0 }}
                                 animate={{ opacity: 1 }}
                                 transition={{ delay: 0.5 + index * 0.2 }}
@@ -142,7 +148,7 @@ export default function ResultPage(props: Props) {
                                 {stat.value}
                             </motion.span>
                         </div>
-                        <p className="text-neutral-500/60 mt-3 text-2xl font-extrabold">
+                        <p className="text-neutral-500/60 mt-1 sm:mt-2 md:mt-3 text-sm sm:text-lg md:text-xl lg:text-2xl font-extrabold">
                             {stat.label}
                         </p>
                     </motion.div>
@@ -150,7 +156,7 @@ export default function ResultPage(props: Props) {
                 <Button
                     onClick={handleBackBtn}
                     variant={"green"}
-                    className="w-full col-span-3 text-xl h-14 bg-neutral-800 border-neutral-500 shadow-neutral-500"
+                    className="w-full col-span-2 sm:col-span-3 text-base sm:text-lg md:text-xl h-12 md:h-14 bg-neutral-800 border-neutral-500 shadow-neutral-500 mt-2 sm:mt-0"
                 >
                     Back to home
                 </Button>

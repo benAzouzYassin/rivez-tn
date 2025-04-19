@@ -176,15 +176,23 @@ export default function MatchingPairsQuestion(props: Props) {
 
     return (
         <>
-            <div className="flex flex-col relative h-fit items-center justify-center">
+            <div className="flex flex-col relative h-fit items-center justify-center pb-56 md:pb-0">
                 <HintsSheet
                     questionContent={JSON.stringify(props.question.content)}
                     questionText={props.question.question}
                     questionId={props.question.id}
                 />
                 <div>
-                    <p className="max-w-[1200px] mb-1 text-3xl font-extrabold top-0 text-neutral-700 text-left w-full left-0">
+                    <p className="max-w-[1200px] mb-1 text-2xl md:text-3xl md:px-0 pl-3 pr-1  font-extrabold top-0 text-neutral-700 text-left w-full left-0">
                         {props.question?.question || "Match the items :"}
+                    </p>
+                    <p className="text-base pl-3 md:hidden mt-2 underline underline-offset-4 text-neutral-600 font-bold mb-4  border-neutral-200 flex items-center gap-2">
+                        <span className="">
+                            Each item from{" "}
+                            <span className="text-blue-600">Group A</span> with
+                            have a corresponding from{" "}
+                            <span className="text-purple-600">Group B</span>.
+                        </span>
                     </p>
                     <div className="relative">
                         <AnimatePresence mode="wait">
@@ -195,8 +203,11 @@ export default function MatchingPairsQuestion(props: Props) {
                                 animate="animate"
                                 exit="exit"
                                 transition={{ duration: 0.4 }}
-                                className="max-w-[1200px] min-w-[700px] justify-center items-center mt-20 gap-10 w-full flex"
+                                className="max-w-[1200px] md:min-w-[700px] justify-center items-center md:mt-20 md:px-0 px-3  gap-10 w-full md:flex"
                             >
+                                <p className=" md:hidden mt-2 py-5 text-2xl font-bold text-neutral-600 text-center ">
+                                    Group A :{" "}
+                                </p>
                                 <MatchingPairsLeft
                                     readonly={
                                         isWrongBannerOpen || isCorrectBannerOpen
@@ -237,6 +248,10 @@ export default function MatchingPairsQuestion(props: Props) {
                                     }}
                                     options={leftSection}
                                 />
+                                <p className=" mt-10 md:hidden py-5 text-2xl font-bold text-neutral-600 text-center border-t-2">
+                                    Group B :{" "}
+                                </p>
+
                                 <MatchingPairsRight
                                     readonly={
                                         isWrongBannerOpen || isCorrectBannerOpen
