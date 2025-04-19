@@ -43,7 +43,7 @@ export default function SelectedQuestionContent() {
         )
     }
     return (
-        <section className="mt-10 h-full relative px-20 w-full">
+        <section className="mt-10 h-full relative md:ml-0 -ml-2 md:px-20 w-full">
             <section className="flex justify-between">
                 <div className="flex pb-3 flex-col relative  ">
                     <LayoutSelect selectedQuestion={selectedQuestion} />

@@ -142,14 +142,14 @@ export default function MultipleAnswerQuestion(props: Props) {
                             "relative w-full md:mt-6 flex-col flex xl:px-0 px-4 ",
 
                             {
-                                " xl:flex-row md:mt-6 max-w-[1300px]":
+                                " xl:flex-row md:mt-6 max-w-[1300px] ":
                                     props.question.layout === "horizontal",
                             }
                         )}
                     >
                         <div
                             className={cn(
-                                "md:h-[400px] w-[80vw] rounded-xl mb-4 md:mb-0 xl:min-w-[700px] overflow-hidden  h-[250px] flex items-center justify-center relative  md:mx-auto  border bg-neutral-50 xl:w-[800px] ",
+                                "md:h-[400px] w-[95vw] rounded-xl mb-4 md:mb-0 xl:min-w-[700px] overflow-hidden  h-[250px] flex items-center justify-center relative  md:mx-auto  border bg-neutral-50 xl:w-[800px] ",
                                 {
                                     "xl:w-[700px] w-full xl:mb-0  xl:mr-10  sm:max-w-[80vw]  h-[250px] xl:h-[500px] ":
                                         props.question.layout === "horizontal",
@@ -205,7 +205,7 @@ export default function MultipleAnswerQuestion(props: Props) {
                                             handleOptionClick(opt, isSelected)
                                         }
                                         className={cn(
-                                            "min-h-[85px]  text-lg overflow-auto small-scroll-bar hover:bg-sky-100 text-wrap hover:shadow-sky-300/50 hover:border-sky-300/45 text-neutral-700 font-bold max-h-48",
+                                            "min-h-[85px]  min-w-[95vw] md:min-w-fit text-lg overflow-auto small-scroll-bar hover:bg-sky-100 text-wrap hover:shadow-sky-300/50 hover:border-sky-300/45 text-neutral-700 font-bold max-h-48",
                                             {
                                                 "hover:bg-red-200/50 bg-red-200/50 text-red-500 font-extrabold hover:shadow-red-300 shadow-red-300 hover:border-red-300 border-red-300":
                                                     !isCorrect &&

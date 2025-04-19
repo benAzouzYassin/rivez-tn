@@ -31,11 +31,8 @@ export default function GeneralLoadingScreen(props: Props) {
             } else if (elapsedMs < 20000) {
                 const additionalProgress = (elapsedMs - 15000) / 500
                 setProgress(Math.min(95, 85 + additionalProgress))
-            } else if (elapsedMs < 25000) {
-                const additionalProgress = (elapsedMs - 20000) / 1666.67
-                setProgress(Math.min(98, 95 + additionalProgress))
             } else {
-                setProgress(99)
+                setProgress(95)
                 setLoading(false)
                 return
             }
