@@ -9,6 +9,7 @@ import {
 } from "lucide-react"
 import QuizType from "./_components/quiz-type"
 export default function Page() {
+    const isSmallScreen = useIsSmallScreen()
     return (
         <main className="flex relative flex-col items-center w-full min-h-screen p-6 bg-white">
             <>
@@ -22,9 +23,11 @@ export default function Page() {
                 </div>
 
                 <section className="grid grid-cols-1 sm:grid-cols-2 max-w-[1100px] gap-x-4 gap-y-5 mt-12 ">
-                    {items.map((item) => (
-                        <QuizType key={item.text} {...item} />
-                    ))}
+                    {items.map((item) =>
+                        item.value === "custom-quiz" && isSmallScreen ? null : (
+                            <QuizType key={item.text} {...item} />
+                        )
+                    )}
                 </section>
             </>
         </main>

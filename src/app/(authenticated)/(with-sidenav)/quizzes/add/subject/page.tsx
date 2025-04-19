@@ -189,7 +189,7 @@ export default function SubjectForm() {
             <div className="flex items-center  h-0">
                 <Button
                     onClick={() => router.back()}
-                    className=" text-sm gap-1   absolute top-6 md:top-4 left-2 md:left-5"
+                    className=" text-sm gap-1   absolute top-0 md:top-4 left-2 md:left-5"
                     variant="secondary"
                 >
                     <ChevronLeft className="stroke-3 -ml-1 text-neutral-500 !w-4 !h-4" />
@@ -209,7 +209,7 @@ export default function SubjectForm() {
                     className="w-full"
                     errorMessage={form.formState.errors.mainTopic?.message}
                 />
-                <div className="grid grid-cols-2 gap-8">
+                <div className="grid md:grid-cols-2 md:gap-8">
                     <Input
                         {...form.register("maxQuestions")}
                         placeholder="Max questions"
@@ -321,7 +321,7 @@ export default function SubjectForm() {
                                 </div>
                             </div>
 
-                            <div className="grid grid-cols-2 gap-8"></div>
+                            <div className="grid md:grid-cols-2 md:gap-8"></div>
                             <div className="col-span-2">
                                 <Controller
                                     control={form.control}

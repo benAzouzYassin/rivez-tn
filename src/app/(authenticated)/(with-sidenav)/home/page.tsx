@@ -26,7 +26,7 @@ export default function Page() {
         }
     }, [isNewUser, setIsNewUser, refetchUser])
     return (
-        <div className="relative isolate">
+        <div className="relative isolate pb-12">
             <HomePage />
         </div>
     )

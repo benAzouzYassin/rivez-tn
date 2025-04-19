@@ -50,7 +50,7 @@ export default function ResultLoadingPage() {
                 variants={containerVariants}
             >
                 <motion.h2
-                    className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl pb-1 flex flex-wrap justify-center items-end font-black text-transparent bg-clip-text bg-gradient-to-r from-neutral-600 to-neutral-800"
+                    className="text-3xl md:text-4xl lg:text-5xl pb-1 flex flex-wrap justify-center items-end font-black text-transparent bg-clip-text bg-gradient-to-r from-neutral-600 to-neutral-800"
                     variants={circleVariants}
                 >
                     <span>Processing answers</span>
@@ -82,16 +82,16 @@ export default function ResultLoadingPage() {
                         >
                             {/* Pulsing circles with neutral colors */}
                             <motion.div
-                                className="absolute left-1/2 -translate-x-1/2 top-0 w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 bg-gradient-to-r from-blue-300 to-blue-300 rounded-full blur-sm"
+                                className="absolute left-1/2 -translate-x-1/2 top-0 w-20 h-20 md:w-24 md:h-24 bg-gradient-to-r from-blue-300 to-blue-300 rounded-full blur-sm"
                                 variants={pulseVariants}
                             />
                             <motion.div
-                                className="absolute left-1/2 -translate-x-1/2 top-0 w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 bg-gradient-to-r from-blue-300 to-blue-400 rounded-full blur-sm"
+                                className="absolute left-1/2 -translate-x-1/2 top-0 w-20 h-20 md:w-24 md:h-24 bg-gradient-to-r from-blue-300 to-blue-400 rounded-full blur-sm"
                                 variants={pulseVariants}
                                 style={{ animationDelay: "0.3s" }}
                             />
                             <motion.div
-                                className="absolute left-1/2 -translate-x-1/2 top-0 w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 bg-gradient-to-r from-blue-400 to-blue-500 rounded-full blur-sm"
+                                className="absolute left-1/2 -translate-x-1/2 top-0 w-20 h-20 md:w-24 md:h-24 bg-gradient-to-r from-blue-400 to-blue-500 rounded-full blur-sm"
                                 variants={pulseVariants}
                                 style={{ animationDelay: "0.6s" }}
                             />

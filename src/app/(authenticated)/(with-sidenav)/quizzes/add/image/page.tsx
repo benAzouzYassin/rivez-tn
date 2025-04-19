@@ -31,11 +31,12 @@ import { useRouter } from "nextjs-toploader/app"
 import { useEffect, useMemo, useState } from "react"
 import { Controller, useForm } from "react-hook-form"
 import { z } from "zod"
-import { useQuestionsStore as useViewOnlyQuizStore } from "../../../../quizzes/[id]/store"
+import { useQuestionsStore as useViewOnlyQuizStore } from "@/app/(authenticated)/quizzes/[id]/store"
 import { default as useEditableQuizStore } from "../[id]/store"
 import { DifficultySelect } from "../_components/difficulty-select"
 import ImageUpload from "../_components/image-upload"
 import ImagesInputLoading from "./_components/images-input-loading"
+import { useIsSmallScreen } from "@/hooks/is-small-screen"
 const POSSIBLE_QUESTIONS_TYPES = Object.keys(POSSIBLE_QUESTIONS)
 
 const ImagesInput = dynamic(() => import("./_components/images-input"), {
@@ -55,6 +56,7 @@ export type FormValues = {
 }
 
 export default function Document() {
+    const isSmallScreen = useIsSmallScreen()
     const sideNav = useSidenav()
     const queryClient = useQueryClient()
     const [imageUrl, setImageUrl] = useState<string | null>(null)
@@ -190,20 +192,20 @@ export default function Document() {
 
     return (
         <main className="flex relative items-center pb-20  flex-col">
-            <h1 className="mt-10 text-neutral-600 text-3xl font-extrabold">
+            <h1 className="md:mt-10 mt-20 text-neutral-600 text-center text-3xl font-extrabold">
                 Generate from an image
             </h1>
             <div className="flex items-center  h-0">
                 <Button
                     onClick={() => router.back()}
-                    className=" text-sm gap-1   absolute top-4 left-5"
+                    className=" text-sm gap-1   absolute top-1 left-2 md:top-4 md:left-5"
                     variant="secondary"
                 >
                     <ChevronLeft className="stroke-3 -ml-1 text-neutral-500 !w-4 !h-4" />
                     Go back
                 </Button>
             </div>
-            <section className="flex flex-col w-full mt-8 gap-1 max-w-[900px]">
+            <section className="flex flex-col w-full mt-8 gap-1 md:px-0 px-2 max-w-[900px]">
                 <Input
                     {...form.register("name")}
                     placeholder="Quiz Name"
@@ -212,7 +214,7 @@ export default function Document() {
                 />
                 <ImagesInput onChange={setImagesBase64} />
 
-                <div className="grid grid-cols-2 gap-8 mt-3">
+                <div className="grid grid-cols-2 gap-2 md:gap-8 mt-3">
                     <Input
                         {...form.register("maxQuestions")}
                         defaultValue={undefined}
@@ -345,27 +347,18 @@ export default function Document() {
                     onImageUrlChange={setImageUrl}
                 />
                 <div className="grid gap-5">
-                    {/* <Button
-                        isLoading={isLoading}
-                        disabled={isUploadingImage}
-                        type="button"
-                        onClick={() => {
-                            form.handleSubmit((data) =>
-                                onSubmit(data, "generate-and-take")
-                            )()
-                        }}
-                        className="font-extrabold uppercase mt-5 py-7 text-sm"
-                        variant="blue"
-                    >
-                        Generate and Take <ZapIcon className="!w-5 !h-5" />
-                    </Button> */}
                     <Button
                         isLoading={isLoading}
                         disabled={isUploadingImage}
                         type="button"
                         onClick={() => {
                             form.handleSubmit((data) =>
-                                onSubmit(data, "generate-and-modify")
+                                onSubmit(
+                                    data,
+                                    isSmallScreen
+                                        ? "generate-and-take"
+                                        : "generate-and-modify"
+                                )
                             )()
                         }}
                         className="font-extrabold uppercase py-7 mt-5 text-sm"

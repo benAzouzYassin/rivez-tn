@@ -1,5 +1,6 @@
 "use client"
 
+import { useQuestionsStore as useViewOnlyQuizStore } from "@/app/(authenticated)/quizzes/[id]/store"
 import { POSSIBLE_QUESTIONS } from "@/app/api/quiz/generate-quiz/constants"
 import { ErrorDisplay } from "@/components/shared/error-display"
 import GeneralLoadingScreen from "@/components/shared/general-loading-screen"
@@ -20,18 +21,17 @@ import {
 } from "@/components/ui/select"
 import { Textarea } from "@/components/ui/textarea"
 import { createQuiz } from "@/data-access/quizzes/create"
+import { useIsSmallScreen } from "@/hooks/is-small-screen"
 import { useCurrentUser } from "@/hooks/use-current-user"
 import { toastError, toastSuccess } from "@/lib/toasts"
 import { useSidenav } from "@/providers/sidenav-provider"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useQueryClient } from "@tanstack/react-query"
 import { ChevronDown, ChevronLeft, SparklesIcon } from "lucide-react"
-import dynamic from "next/dynamic"
 import { useRouter } from "nextjs-toploader/app"
 import { useEffect, useMemo, useState } from "react"
 import { Controller, useForm } from "react-hook-form"
 import { z } from "zod"
-import { useQuestionsStore as useViewOnlyQuizStore } from "../../../../quizzes/[id]/store"
 import { default as useEditableQuizStore } from "../[id]/store"
 import { DifficultySelect } from "../_components/difficulty-select"
 import ImageUpload from "../_components/image-upload"
@@ -50,6 +50,7 @@ export type FormValues = {
 }
 
 export default function Document() {
+    const isSmallScreen = useIsSmallScreen()
     const sideNav = useSidenav()
     const queryClient = useQueryClient()
     const [imageUrl, setImageUrl] = useState<string | null>(null)
@@ -186,20 +187,20 @@ export default function Document() {
 
     return (
         <main className="flex relative items-center pb-20  flex-col">
-            <h1 className="mt-10 text-neutral-600 text-3xl font-extrabold">
+            <h1 className="md:mt-10 mt-20 text-center text-neutral-600 text-3xl font-extrabold">
                 Generate from youtube video
             </h1>
-            <div className="flex items-center  h-0">
+            <div className="md:flex md:items-center  h-0">
                 <Button
                     onClick={() => router.back()}
-                    className=" text-sm gap-1   absolute top-4 left-5"
+                    className=" text-sm gap-1 left-2   absolute top-0  md:top-4 md:left-5"
                     variant="secondary"
                 >
                     <ChevronLeft className="stroke-3 -ml-1 text-neutral-500 !w-4 !h-4" />
                     Go back
                 </Button>
             </div>
-            <section className="flex flex-col w-full mt-8 gap-1 max-w-[900px]">
+            <section className="flex flex-col w-full mt-4 px-3 md:px-0 md:mt-8 gap-1 max-w-[900px]">
                 <Input
                     {...form.register("name")}
                     placeholder="Quiz Name"
@@ -213,7 +214,7 @@ export default function Document() {
                     errorMessage={form.formState.errors.name?.message}
                 />
 
-                <div className="grid grid-cols-2 gap-8">
+                <div className="grid grid-cols-2 gap-2 md:gap-8">
                     <Input
                         {...form.register("maxQuestions")}
                         placeholder="Max questions"
@@ -348,26 +349,17 @@ export default function Document() {
                     onImageUrlChange={setImageUrl}
                 />
                 <div className="grid gap-5">
-                    {/* <Button
-                        isLoading={isLoading}
-                        disabled={isUploadingImage}
-                        type="button"
-                        onClick={() => {
-                            form.handleSubmit((data) =>
-                                onSubmit(data, "generate-and-take")
-                            )()
-                        }}
-                        className="font-extrabold uppercase mt-5 py-7 text-sm"
-                        variant="blue"
-                    >
-                        Generate and Take <ZapIcon className="!w-5 !h-5" />
-                    </Button> */}
                     <Button
                         isLoading={isLoading}
                         type="button"
                         onClick={() => {
                             form.handleSubmit((data) =>
-                                onSubmit(data, "generate-and-modify")
+                                onSubmit(
+                                    data,
+                                    isSmallScreen
+                                        ? "generate-and-take"
+                                        : "generate-and-modify"
+                                )
                             )()
                         }}
                         className="font-extrabold uppercase py-7 mt-5 text-sm"

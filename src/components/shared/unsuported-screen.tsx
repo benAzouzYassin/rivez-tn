@@ -1,12 +1,20 @@
-import { Info, Monitor, Smartphone } from "lucide-react"
+import {
+    ChevronRight,
+    Info,
+    Monitor,
+    Smartphone,
+    ChevronLeft,
+} from "lucide-react"
 import { Card, CardContent, CardHeader } from "../ui/card"
 import { Button } from "../ui/button"
 import Link from "next/link"
+import { useRouter } from "nextjs-toploader/app"
 
 export default function UnsupportedScreen() {
+    const router = useRouter()
     return (
-        <div className="flex items-center justify-center min-h-screen ">
-            <Card className="w-full max-w-[550px] -mt-20">
+        <div className="flex px-1 items-center justify-center min-h-screen ">
+            <Card className="w-full max-w-[550px] border-none shadow-none -mt-20">
                 <CardHeader className="flex flex-col items-center space-y-2 pb-2">
                     <Info className="h-16 w-16 text-blue-400/90" />
                     <h1 className="text-2xl text-neutral-700 font-bold text-center">
@@ -38,11 +46,10 @@ export default function UnsupportedScreen() {
                     </p>
                 </CardContent>
                 <div className="flex flex-col  px-3 pb-6">
-                    <Link href="/" className="w-full text-sm">
-                        <Button className="text-sm w-full">
-                            Return to Home
-                        </Button>
-                    </Link>
+                    <Button onClick={router.back} className="text-sm w-full">
+                        <ChevronLeft className="!w-5 !h-5 -mr-1" />
+                        Go back
+                    </Button>
                 </div>
             </Card>
         </div>
