@@ -19,7 +19,7 @@ function Page() {
                 {/* hero */}
                 <div
                     id="home"
-                    className="xl:grid   z-50 pt-10  xl:grid-cols-2 max-w-[1700px] mx-auto"
+                    className="xl:grid   z-50 md:pt-10  xl:grid-cols-2 max-w-[1700px] mx-auto"
                 >
                     <div className="xl:pl-20 xl:pt-20 ">
                         <motion.p
@@ -57,19 +57,20 @@ function Page() {
                             initial={{ y: 40, opacity: 0 }}
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ delay: 0.4, duration: 0.25 }}
-                            className="flex xl:justify-start justify-center   items-center gap-4 px-4 xl:px-0"
+                            className="md:flex grid grid-cols-2 xl:justify-start justify-center   items-center gap-4 px-4 xl:px-0"
                         >
                             <Link
-                                href={"/auth/login"}
-                                className="bg-[#FFDC18]  items-center justify-center z-10 h-14  md:h-16 md:flex hidden px-9 rounded-full   text-neutral-700/95 shadow-[#FFDC18]   font-bold hover:text-white hover:cursor-pointer hover:scale-105 transition-all hover:bg-yellow-400/95 text-xl mt-10 active:scale-100 "
-                            >
-                                Sign In
-                            </Link>
-                            <Link
                                 href={"/auth/register"}
-                                className="bg-blue-400 z-10 h-14 md:h-16 px-9 flex items-center md:w-auto w-full justify-center rounded-full  shadow-blue-300 text-white  font-bold hover:text-white/90 hover:cursor-pointer hover:scale-105 transition-all hover:bg-blue-400/95 text-xl mt-10 active:scale-100 "
+                                className="bg-blue-400 z-10 h-14 md:h-16 md:px-9 flex items-center md:w-auto w-full justify-center rounded-full  shadow-blue-300 text-white  font-bold hover:text-white/90 hover:cursor-pointer hover:scale-105 transition-all hover:bg-blue-400/95 text-xl mt-10 active:scale-100 "
                             >
                                 Get started
+                            </Link>
+
+                            <Link
+                                href={"/auth/login"}
+                                className="bg-[#ffd118]  items-center justify-center z-10 h-14  md:h-16 flex  md:px-14 rounded-full   text-neutral-700/95 shadow-[#FFDC18]   font-bold hover:text-white hover:cursor-pointer hover:scale-105 transition-all hover:bg-yellow-400/95 text-xl mt-10 active:scale-100 "
+                            >
+                                Sign In
                             </Link>
                         </motion.div>
                     </div>
