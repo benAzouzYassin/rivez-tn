@@ -93,15 +93,18 @@ export default function Page() {
     }
     return (
         <div
-            className={cn("h-[92vh]  -mt-2 border border-gray-300 relative", {
-                "md:w-[calc(100vw-306px)]": isSidenavOpen,
-                "md:w-[calc(100vw-100px)]": !isSidenavOpen,
-            })}
+            className={cn(
+                "h-[92vh]  -mt-4 md:-mt-2 border border-gray-300 relative",
+                {
+                    "md:w-[calc(100vw-306px)]": isSidenavOpen,
+                    "md:w-[calc(100vw-100px)]": !isSidenavOpen,
+                }
+            )}
         >
             {data?.items && (
                 <>
                     <Button
-                        className="text-base absolute top-5 right-5 z-50"
+                        className="md:text-base text-sm md:scale-100 scale-80 absolute md:top-5 top-2 right-0 md:right-5 z-50"
                         variant={"blue"}
                         onClick={handleGenerateQuiz}
                     >
@@ -123,8 +126,11 @@ export default function Page() {
                 onConnect={onConnect}
                 fitView
             >
-                <Controls className="rounded-lg -translate-y-4 border border-gray-200" />
-                <Panel position="bottom-right" className="bg-transparent">
+                <Controls className="rounded-lg md:!block !hidden -translate-y-4 border border-gray-200" />
+                <Panel
+                    position="bottom-right"
+                    className="bg-transparent md:scale-100 scale-50"
+                >
                     <div className="rounded-lg shadow-lg overflow-hidden border border-gray-200">
                         <MiniMap
                             className="!bg-white/90 -translate-y-4 dark:!bg-gray-800/90"

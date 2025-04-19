@@ -150,7 +150,7 @@ export default function GenerateQuizDialog(props: Props) {
     }
     return (
         <Dialog open={props.isOpen} onOpenChange={props.onOpenChange}>
-            <DialogContent className="!min-w-[800px] w-[800px]">
+            <DialogContent className="md:!min-w-[800px]  md:w-[800px]">
                 <DialogTitle className="mt-10 text-neutral-600 text-center text-3xl font-extrabold">
                     {" "}
                     Generate Quiz
@@ -164,7 +164,7 @@ export default function GenerateQuizDialog(props: Props) {
                         errorMessage={form.formState.errors.name?.message}
                     />
 
-                    <div className="grid grid-cols-2 gap-8">
+                    <div className="grid grid-cols-2 gap-2 md:gap-8">
                         <Input
                             {...form.register("maxQuestions")}
                             defaultValue={undefined}
