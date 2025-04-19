@@ -32,7 +32,7 @@ interface Actions {
     }[]
 }
 
-type Store = Actions & State
+interface Store extends Actions, State {}
 const initialState: State = {
     files: [],
     selectedFileLocalId: null,

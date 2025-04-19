@@ -49,7 +49,7 @@ interface Actions {
     reset: () => void
 }
 
-type Store = State & Actions
+interface Store extends State, Actions {}
 
 const initialState: State = {
     deletedQuestionsIds: [],
@@ -479,14 +479,12 @@ export interface StateMatchingPairsOptions {
         leftOptionLocalId: string | null
     }[]
 }
-export type FillInTheBlankStoreContent = Omit<
+export interface FillInTheBlankStoreContent extends Omit<
     Omit<FillInTheBlankContent, "correct">,
     "options"
-> & {
-    options: { text: string; localId: string }[]
+> {options: { text: string; localId: string }[]
     correct: {
         option: string
         index: number
         optionId: string
-    }[]
-}
+    }[]}

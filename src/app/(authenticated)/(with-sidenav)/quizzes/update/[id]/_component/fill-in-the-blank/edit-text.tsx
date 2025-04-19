@@ -11,11 +11,9 @@ import { cn } from "@/lib/ui-utils"
 import { PenLine } from "lucide-react"
 import { ButtonHTMLAttributes, useEffect, useState } from "react"
 import useUpdateQuizStore, { FillInTheBlankStoreContent } from "../../store"
-type Props = {
-    questionId: string
+interface Props extends ButtonHTMLAttributes<any> {questionId: string
     questionContent: FillInTheBlankStoreContent
-    parts: string[]
-} & ButtonHTMLAttributes<any>
+    parts: string[]}
 
 const BLANK_SEPARATOR = "___"
 export default function EditText({

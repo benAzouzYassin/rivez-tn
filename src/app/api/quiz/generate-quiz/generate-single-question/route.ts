@@ -110,8 +110,6 @@ const bodySchema = z.object({
     }),
 })
 
-export type GenerateSingleQuestionBodyType = z.infer<typeof bodySchema> & {
-    questionType: keyof typeof POSSIBLE_QUESTIONS
-}
+export interface GenerateSingleQuestionBodyType extends z.infer<typeof bodySchema> {questionType: keyof typeof POSSIBLE_QUESTIONS}
 
 export const maxDuration = 60
