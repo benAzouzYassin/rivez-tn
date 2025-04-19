@@ -13,7 +13,6 @@ import { useRef, useState } from "react"
 import { useReactToPrint } from "react-to-print"
 import GenerateQuizDialog from "../../_components/generate-quiz-dialog"
 import SideItem from "./side-item"
-import { useSidenav } from "@/providers/sidenav-provider"
 
 interface Props {
     files: {
@@ -186,7 +185,7 @@ export default function PagesViewer(props: Props) {
                             />
                         )}
 
-                        <div className="flex border-t-2 pt-3 justify-between mb-4">
+                        <div className="print:hidden flex border-t-2 pt-3 justify-between mb-4">
                             <Button
                                 variant={"secondary"}
                                 onClick={handlePreviousPage}

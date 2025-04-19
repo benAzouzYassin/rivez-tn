@@ -1,31 +1,10 @@
-import { Button } from "@/components/ui/button"
-import {
-    Dialog,
-    DialogContent,
-    DialogDescription,
-    DialogTitle,
-} from "@/components/ui/dialog"
-import { Input } from "@/components/ui/input"
-import {
-    Select,
-    SelectContent,
-    SelectItem,
-    SelectTrigger,
-    SelectValue,
-} from "@/components/ui/select"
-import { Switch } from "@/components/ui/switch"
 import { ImageIcon } from "lucide-react"
 import { ChangeEvent, DragEvent, useState } from "react"
 interface Props {
     handleSummarize: (data: { images: File[]; language: string }) => void
 }
 export default function ImageUpload(props: Props) {
-    const [files, setFiles] = useState<File[]>([])
     const [isDragging, setIsDragging] = useState(false)
-    const [language, setLanguage] = useState("")
-    const [customLang, setCustomLang] = useState("")
-    const [isSelectingLang, setIsSelectingLang] = useState(false)
-    const [isCustomLang, setIsCustomLang] = useState(false)
     const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
         const selectedFiles = Array.from(e?.target?.files || []).filter(
             (file) => file.type.startsWith("image/")
@@ -54,14 +33,9 @@ export default function ImageUpload(props: Props) {
     }
 
     const handleFiles = async (files: File[]) => {
-        setFiles(files)
-        setIsSelectingLang(true)
-    }
-    const handleConfirm = () => {
-        setIsSelectingLang(false)
         props.handleSummarize({
             images: files,
-            language,
+            language: "",
         })
     }
     return (
@@ -71,53 +45,9 @@ export default function ImageUpload(props: Props) {
                     Upload your images
                 </h1>
             </div>
-            <Dialog open={isSelectingLang} onOpenChange={setIsSelectingLang}>
-                <DialogContent>
-                    <DialogTitle className="text-2xl font-bold text-neutral-600">
-                        Select Language (Optional)
-                    </DialogTitle>
-                    <DialogDescription></DialogDescription>
 
-                    {!isCustomLang ? (
-                        <Select onValueChange={setLanguage}>
-                            <SelectTrigger className="w-full">
-                                <SelectValue placeholder="Select a language" />
-                            </SelectTrigger>
-                            <SelectContent>
-                                <SelectItem value="english">English</SelectItem>
-                                <SelectItem value="arabic">Arabic</SelectItem>
-                                <SelectItem value="french">French</SelectItem>
-                                <SelectItem value="spanish">Spanish</SelectItem>
-                            </SelectContent>
-                        </Select>
-                    ) : (
-                        <Input
-                            placeholder="Type your language"
-                            className="w-full"
-                            value={customLang}
-                            onChange={(e) => setCustomLang(e.target.value)}
-                        />
-                    )}
-                    <div className="flex items-center gap-2 -mt-6">
-                        <span className="font-semibold text-neutral-600">
-                            Use Custom Language
-                        </span>
-                        <Switch
-                            className="scale-125 cursor-pointer"
-                            checked={isCustomLang}
-                            onCheckedChange={setIsCustomLang}
-                        />
-                    </div>
-                    <Button
-                        onClick={handleConfirm}
-                        className="mt-4 text-lg w-full"
-                    >
-                        Confirm
-                    </Button>
-                </DialogContent>
-            </Dialog>
             <div
-                className={`flex active:scale-95 flex-col items-center justify-center h-96 ${
+                className={`flex active:scale-95 flex-col items-center justify-center h-64 md:h-96 ${
                     isDragging
                         ? "bg-blue-50 border-blue-400"
                         : "bg-white border-gray-300"
@@ -142,10 +72,10 @@ export default function ImageUpload(props: Props) {
                     <div className="w-20 h-20 bg-blue-50 rounded-full flex items-center justify-center mb-4">
                         <ImageIcon className="h-10 w-10 text-blue-400/90" />
                     </div>
-                    <p className="text-xl font-bold text-neutral-500 mb-1">
+                    <p className="text-xl font-bold text-neutral-500 mb-1 text-center">
                         Drop images here or click to browse
                     </p>
-                    <p className="text-sm font-semibold text-neutral-500">
+                    <p className="text-sm font-semibold text-neutral-500 text-center">
                         Supports JPG, PNG, GIF, and other image formats
                     </p>
                 </label>

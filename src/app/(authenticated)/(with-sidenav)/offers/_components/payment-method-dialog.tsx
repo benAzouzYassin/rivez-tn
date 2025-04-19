@@ -59,8 +59,8 @@ export default function PaymentMethodDialog(props: Props) {
     return (
         <Dialog>
             <DialogTrigger asChild>{props.children}</DialogTrigger>
-            <DialogContent className="min-h-[80vh] min-w-[700px] flex flex-col">
-                <DialogTitle className="text-center  h-fit text-5xl pt-2 text-neutral-600 font-bold">
+            <DialogContent className="md:min-h-[80vh] md:min-w-[700px] flex flex-col">
+                <DialogTitle className="text-center  h-fit text-3xl  md:text-5xl pt-5 md:pt-2 text-neutral-600 font-bold">
                     Buy credits
                 </DialogTitle>
                 <div className="">
@@ -99,7 +99,7 @@ export default function PaymentMethodDialog(props: Props) {
                         </SelectContent>
                     </Select>
 
-                    <div className="grid gap-x-8 gap-y-5 grid-cols-2 mt-2">
+                    <div className="md:grid md:gap-x-8 gap-y-3 flex flex-col md:gap-y-5 md:grid-cols-2 mt-2">
                         <div className="col-span-2 text-center font-bold text-neutral-700 text-2xl">
                             Payment Methods
                         </div>
@@ -109,7 +109,7 @@ export default function PaymentMethodDialog(props: Props) {
                                 setLoadingButton("online")
                                 handleOnlinePayment()
                             }}
-                            className="h-44 hover:bg-white hover:scale-105  flex flex-col rounded-3xl text-xl "
+                            className="h-44 hover:bg-white w-full hover:scale-105  flex flex-col rounded-3xl text-xl "
                             variant={"secondary"}
                         >
                             <div className="flex items-center gap-10">
@@ -130,7 +130,7 @@ export default function PaymentMethodDialog(props: Props) {
                         </Button>
                         <Button
                             isLoading={loadingButton == "e-dinar"}
-                            className="h-44 hover:bg-white hover:scale-105  rounded-3xl overflow-hidden text-xl flex flex-col "
+                            className="h-44 hover:bg-white w-full hover:scale-105  rounded-3xl overflow-hidden text-xl flex flex-col "
                             variant={"secondary"}
                             onClick={() => {
                                 setLoadingButton("e-dinar")
@@ -165,7 +165,7 @@ export default function PaymentMethodDialog(props: Props) {
                             </Button>
                         </Link>
                         <Button
-                            className="h-44 bg-neutral-200 hover:bg-white hover:scale-105  flex flex-col rounded-3xl text-xl "
+                            className="h-44 w-full bg-neutral-200 hover:bg-white hover:scale-105  flex flex-col rounded-3xl text-xl "
                             variant={"secondary"}
                             disabled
                         >
@@ -183,14 +183,15 @@ export default function PaymentMethodDialog(props: Props) {
                         Contact Methods :{" "}
                     </p>
 
-                    <div className="flex justify-center gap-3 mt-4 items-center">
+                    <div className="flex md:flex-row flex-col justify-center gap-3 mt-4 items-center">
                         <Link
+                            className="w-full"
                             href={
                                 "https://api.whatsapp.com/send/?phone=%2B21628348622&text&type=phone_number&app_absent=0"
                             }
                         >
                             <Button
-                                className="text-lg h-16 "
+                                className="text-lg h-16 w-full "
                                 variant={"secondary"}
                             >
                                 <WhatsAppIcon className=" !w-10 !h-10" />{" "}
@@ -198,10 +199,11 @@ export default function PaymentMethodDialog(props: Props) {
                             </Button>
                         </Link>
                         <Link
+                            className="w-full"
                             href={"https://www.messenger.com/t/100016410070680"}
                         >
                             <Button
-                                className="text-lg h-16 "
+                                className="text-lg w-full h-16 "
                                 variant={"secondary"}
                             >
                                 <FacebookIcon className=" !w-10 scale-90 border rounded-full p-1 !h-10" />{" "}
