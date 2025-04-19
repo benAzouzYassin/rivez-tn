@@ -30,11 +30,11 @@ export default function AnimatedTabs({
     return (
         <div
             className={cn(
-                "flex flex-col border p-2 isolate rounded-2xl w-fit space-y-4",
+                "flex flex-col border p-2 isolate w-full rounded-2xl sm:w-fit space-y-4",
                 className
             )}
         >
-            <div className="flex space-x-2">
+            <div className="flex sm:flex-row flex-col-reverse w-full sm:w-fit gap-2">
                 {tabs.map((tab) => (
                     <div
                         key={tab.id}
@@ -65,7 +65,7 @@ export default function AnimatedTabs({
                                 >
                                     {tab.icon}
                                 </span>
-                                <span className="font-semibold transition-all duration-0">
+                                <span className="font-semibold text-nowrap transition-all duration-0">
                                     {tab.label}
                                 </span>
                             </div>

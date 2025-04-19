@@ -81,40 +81,43 @@ export default function LatestQuizzesMindmaps() {
             >
                 <CarouselContent className="pb-2">
                     {items.map((item) => (
-                        <CarouselItem key={item.id} className="md:basis-1/2">
+                        <CarouselItem
+                            key={item.id}
+                            className="md:basis-1/2 w-full"
+                        >
                             <div className="p-1">
                                 <Card
                                     onClick={() => {
-                                        if (item.tag === "quizzes") {
+                                        if (item.tag === "Quizzes") {
                                             router.push(`/quizzes/${item.id}`)
                                         } else {
                                             router.push(`/mind-maps/${item.id}`)
                                         }
                                     }}
-                                    className="h-48 hover:bg-blue-50 transition-all active:translate-y-1 active:shadow-transparent cursor-pointer hover:border-blue-300 hover:shadow-blue-300 "
+                                    className="h-auto min-h-48 hover:bg-blue-50 transition-all active:translate-y-1 active:shadow-transparent cursor-pointer hover:border-blue-300 hover:shadow-blue-300"
                                 >
-                                    <div className="p-6 flex ">
+                                    <div className="p-4 sm:p-6 flex flex-col sm:flex-row">
                                         {item.image ? (
                                             <img
-                                                alt=""
+                                                alt={`${item.title} thumbnail`}
                                                 src={item.image}
-                                                className="w-44 object-center object-cover bg-neutral-200 rounded-2xl h-32 mr-6"
+                                                className="w-full sm:w-44 object-center object-cover bg-neutral-200 rounded-2xl h-32 sm:mr-6 mb-4 sm:mb-0"
                                             />
                                         ) : (
-                                            <div className="w-44 bg-neutral-200 rounded-2xl h-32 mr-6"></div>
+                                            <div className="w-full sm:w-44 bg-neutral-200 rounded-2xl h-32 sm:mr-6 mb-4 sm:mb-0"></div>
                                         )}
-                                        <div>
-                                            <h3 className="text-[1.4rem] text-neutral-700 font-extrabold">
+                                        <div className="flex-1">
+                                            <h3 className="text-xl sm:text-2xl text-neutral-700 font-extrabold line-clamp-2">
                                                 {item.title}
                                             </h3>
-                                            <p className="text-gray-500 font-medium mt-2">
+                                            <p className="text-gray-500 font-medium mt-2 line-clamp-2 sm:line-clamp-3">
                                                 {item.description}
                                             </p>
 
-                                            <div className="flex gap-4 mt-4">
+                                            <div className="flex gap-2 mt-3">
                                                 <Badge
                                                     variant={"blue"}
-                                                    className="  opacity-90 px-3 py-1 rounded-full text-sm"
+                                                    className="opacity-90 px-2 py-1 rounded-full text-xs sm:text-sm"
                                                 >
                                                     {item.tag}
                                                 </Badge>

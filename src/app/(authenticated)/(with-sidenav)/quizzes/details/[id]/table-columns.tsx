@@ -65,7 +65,7 @@ export const columns: ColumnDef<SubmissionType>[] = [
                             </div>
                         )}
                     </div>
-                    <p className="text-center text-base font-semibold">
+                    <p className="md:text-center  min-w-[200px] text-base font-semibold">
                         {row.original?.user?.username ||
                             row.original?.user?.email ||
                             row.original.user_submit_name}

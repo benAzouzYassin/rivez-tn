@@ -216,6 +216,7 @@ export default function Document() {
                 <div className="grid mt-4 grid-cols-2 gap-8">
                     <Input
                         {...form.register("maxQuestions")}
+                        defaultValue={undefined}
                         placeholder="Max questions"
                         className="w-full"
                         type="number"
@@ -225,6 +226,7 @@ export default function Document() {
                     />
                     <Input
                         {...form.register("minQuestions")}
+                        defaultValue={undefined}
                         placeholder="Min questions"
                         className="w-full"
                         type="number"

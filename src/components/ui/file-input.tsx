@@ -92,7 +92,7 @@ export function FileInput({
     return (
         <div
             className={cn(
-                "relative flex items-center justify-center",
+                "relative flex items-center justify-center w-full",
                 className
             )}
         >
@@ -105,9 +105,8 @@ export function FileInput({
                     isDragActive
                         ? "border-blue-500 bg-blue-50"
                         : "border-neutral-300 hover:bg-[#F7F7F7] bg-[#F7F7F7]/50",
-                    disabled && "opacity-50  cursor-not-allowed",
-                    preview ? "p-4" : "p-8",
-
+                    disabled && "opacity-50 cursor-not-allowed",
+                    preview ? "p-4" : "p-4 md:p-8",
                     containerClassName,
                     {
                         "hover:bg-white": isLoading,
@@ -117,15 +116,15 @@ export function FileInput({
                 <input {...getInputProps()} />
 
                 {isLoading ? (
-                    <div className="relative hover:cursor-not-allowed min-w-[350px] w-full h-full">
+                    <div className="relative hover:cursor-not-allowed w-full h-full">
                         <div className="flex flex-col w-full h-full items-center justify-center">
-                            <Loader2 className="w-7 h-7  animate-spin duration-[animation-duration:350ms] text-blue-400" />
+                            <Loader2 className="w-7 h-7 animate-spin duration-[animation-duration:350ms] text-blue-400" />
                             {displayCancelBtn && (
                                 <Button
                                     onClick={onCancel}
                                     type="button"
                                     variant={"outline-red"}
-                                    className="h-10 font-extrabold  mt-5"
+                                    className="h-10 font-extrabold mt-5"
                                 >
                                     Cancel
                                 </Button>
@@ -133,7 +132,7 @@ export function FileInput({
                         </div>
                     </div>
                 ) : preview || fileName ? (
-                    <div className="relative min-w-[350px] w-full h-full">
+                    <div className="relative w-full h-full">
                         {(previewAsImage ||
                             (previewAsImage === undefined &&
                                 !previewAsDocument)) && (
@@ -148,8 +147,8 @@ export function FileInput({
                         )}
                         {previewAsDocument && (
                             <div className="flex flex-col items-center justify-center h-full">
-                                <FileTextIcon className="w-16 h-16 text-red-400 mb-2" />
-                                <p className="text-base text-neutral-700 text-center font-semibold max-w-[200px] truncate break-all">
+                                <FileTextIcon className="w-12 h-12 md:w-16 md:h-16 text-red-400 mb-2" />
+                                <p className="text-sm md:text-base text-neutral-700 text-center font-semibold max-w-full px-4 truncate break-all">
                                     {fileName}
                                 </p>
                             </div>
@@ -172,21 +171,21 @@ export function FileInput({
                         )}
                     </div>
                 ) : (
-                    <div className="text-center min-w-[350px]">
+                    <div className="text-center w-full px-2">
                         {renderEmptyContent ? (
                             renderEmptyContent()
                         ) : (
                             <>
-                                <Upload className="w-10 h-10 mb-2 mx-auto text-neutral-400" />
-                                <p className="text-neutral-600 mb-2">
+                                <Upload className="w-8 h-8 md:w-10 md:h-10 mb-2 mx-auto text-neutral-400" />
+                                <p className="text-sm md:text-base text-neutral-600 mb-1 md:mb-2">
                                     {isDragActive
                                         ? "Drop the file here"
                                         : "Drag & drop a file here"}
                                 </p>
-                                <p className="text-sm text-neutral-500">
+                                <p className="text-xs md:text-sm text-neutral-500">
                                     or click to select a file
                                 </p>
-                                <p className="text-xs text-neutral-400 mt-2">
+                                <p className="text-xs text-neutral-400 mt-1 md:mt-2">
                                     Images (PNG, JPG, GIF) or Documents (PDF,
                                     DOC, DOCX, XLS, XLSX)
                                 </p>

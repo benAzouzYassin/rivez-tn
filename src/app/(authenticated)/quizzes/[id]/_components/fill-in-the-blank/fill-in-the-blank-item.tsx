@@ -40,7 +40,7 @@ export default function FillInTheBlankItem(props: OptionProps) {
                 {...attributes}
                 variant={"secondary"}
                 className={cn(
-                    "min-h-[50px] active:translate-y-0  active:shadow-[0px_4px_0px_0px] active:shadow-[#E5E5E5] font-semibold touch-none shadow-[0px_3px_0px_0px] py-3  transition-none duration-200 text-base text-neutral-700  hover:bg-neutral-100 hover:border-neutral-200 hover:shadow-neutral-200",
+                    "min-h-[50px] active:translate-y-0  active:shadow-[0px_4px_0px_0px] active:shadow-[#E5E5E5] font-semibold touch-none shadow-[0px_3px_0px_0px] py-3  transition-none duration-200 md:text-base text-neutral-700  hover:bg-neutral-100 hover:border-neutral-200 hover:shadow-neutral-200",
                     {
                         "opacity-0 ": isDragging,
                         "hover:bg-[#D2FFCC] bg-[#D2FFCC] text-[#58A700] font-extrabold hover:shadow-[#58CC02]/50 shadow-[#58CC02]/50 hover:border-[#58CC02]/40 border-[#58CC02]/40":

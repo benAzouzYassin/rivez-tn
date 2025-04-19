@@ -28,6 +28,7 @@ function DialogImage({
     return (
         <>
             <QuizImageDialog
+                disabledOptions={["code-snippets"]}
                 isOpen={isOpen}
                 onOpenChange={setIsOpen}
                 onCodeSnippetsSave={(snippets, shouldClose) => {

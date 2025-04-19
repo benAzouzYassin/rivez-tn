@@ -94,7 +94,7 @@ export default function Page() {
                 </Button>
                 <form
                     onSubmit={handleSubmit(onSubmit)}
-                    className="flex flex-col max-w-[95vw] "
+                    className="flex flex-col px-2 max-w-[95vw] "
                 >
                     <h1 className="text-2xl first-letter:capitalize mb-5 font-bold text-center text-[#3C3C3C]">
                         login to your profile
@@ -137,26 +137,29 @@ export default function Page() {
                     <p className="mx-2 font-bold text-[#AFAFAF]">OR</p>
                     <hr className="rounded-full w-full bg-[#E5E5E5] h-1" />
                 </div>
-                <Button
-                    isLoading={isGoogleAuth}
-                    onClick={async () => {
-                        setIsGoogleAuth(true)
-                        queryClient.invalidateQueries({
-                            queryKey: ["current-user"],
-                        })
-                        await loginUserWithGoogle({
-                            redirectTo:
-                                window.location.origin +
-                                (localStorage.getItem("afterAuthRedirect") ||
-                                    "/home"),
-                        })
-                    }}
-                    type="button"
-                    className="font-bold w-full mt-3 text-[#4285F4] uppercase text-sm"
-                    variant={"secondary"}
-                >
-                    <Google className="w-4! scale-105 h-4!" /> GOOGLE
-                </Button>
+                <div className="px-2">
+                    <Button
+                        isLoading={isGoogleAuth}
+                        onClick={async () => {
+                            setIsGoogleAuth(true)
+                            queryClient.invalidateQueries({
+                                queryKey: ["current-user"],
+                            })
+                            await loginUserWithGoogle({
+                                redirectTo:
+                                    window.location.origin +
+                                    (localStorage.getItem(
+                                        "afterAuthRedirect"
+                                    ) || "/home"),
+                            })
+                        }}
+                        type="button"
+                        className="font-bold w-full mt-3 text-[#4285F4] uppercase text-sm"
+                        variant={"secondary"}
+                    >
+                        <Google className="w-4! scale-105 h-4!" /> GOOGLE
+                    </Button>
+                </div>
                 <div className="flex items-center justify-center mt-5">
                     <p className="text-[#AFAFAF] first-letter:capitalize text-sm max-w-[350px] text-center font-medium">
                         by signing in to Fikr, you agree to our{" "}
