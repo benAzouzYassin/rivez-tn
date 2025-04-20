@@ -11,8 +11,13 @@ import { AlignRight } from "lucide-react"
 import { useMotionValueEvent, useScroll } from "motion/react"
 import Link from "next/link"
 import { useState } from "react"
+import { Translation } from "../translations/english"
+import { LanguageSelector } from "../../../../components/shared/language-selector"
 
-export default function Nav() {
+interface Props {
+    translation: Translation
+}
+export default function Nav({ translation }: Props) {
     const { scrollY } = useScroll()
     const [isScrolled, setIsScrolled] = useState(false)
     const [isOpen, setIsOpen] = useState(false)
@@ -78,36 +83,37 @@ export default function Nav() {
                         onClick={() => scrollToSection("top")}
                         className="text-neutral-600 font-bold cursor-pointer z-20 text-base lg:text-lg hover:underline underline-offset-4"
                     >
-                        Home
+                        {translation["Home"]}
                     </button>
                     <button
                         onClick={() => scrollToSection("tools")}
                         className="text-neutral-600 font-bold z-20 text-base lg:text-lg  hover:underline underline-offset-4"
                     >
-                        Tools
+                        {translation["Tools"]}
                     </button>
                     <button
                         onClick={() => scrollToSection("about")}
                         className="text-neutral-600 font-bold z-20 text-base lg:text-lg  hover:underline underline-offset-4"
                     >
-                        About us
+                        {translation["About us"]}
                     </button>
                     <button
                         onClick={() => scrollToSection("contact")}
                         className="text-neutral-600 font-bold z-20 text-base lg:text-lg  hover:underline underline-offset-4"
                     >
-                        Contact
+                        {translation["Contact"]}
                     </button>
                 </div>
-
-                {/* Desktop Auth Buttons */}
-                <div className="hidden md:flex items-center gap-4">
-                    <Link
-                        href={"/auth/register"}
-                        className="bg-blue-400 flex items-center justify-center active:scale-100 z-50 hover:font-semibold font-medium hover:to-blue-500 text-white font-sans hover:bg-gradient-to-br  hover:from-blue-400 h-9 md:h-10 lg:h-11 px-4 md:px-6 lg:px-5 cursor-pointer hover:scale-105 transition-all rounded-full duration-250 hover:shadow-[0_2px_7px_rgba(18,171,222,0.6)] text-sm lg:text-base"
-                    >
-                        Get started
-                    </Link>
+                <div className="flex items-center gap-2">
+                    <LanguageSelector />
+                    <div className="hidden md:flex items-center gap-4">
+                        <Link
+                            href={"/auth/register"}
+                            className="bg-blue-400 flex items-center justify-center active:scale-100 z-50 hover:font-semibold font-medium hover:to-blue-500 text-white font-sans hover:bg-gradient-to-br  hover:from-blue-400 h-9 md:h-10 lg:h-11 px-4 md:px-6 lg:px-5 cursor-pointer hover:scale-105 transition-all rounded-full duration-250 hover:shadow-[0_2px_7px_rgba(18,171,222,0.6)] text-sm lg:text-base"
+                        >
+                            {translation["Get started"]}
+                        </Link>
+                    </div>
                 </div>
 
                 {/* Mobile Menu Button */}
@@ -125,7 +131,7 @@ export default function Nav() {
                         <DrawerContent className="h-[80vh] pb-2">
                             <DrawerHeader className="text-center">
                                 <DrawerTitle className="text-3xl font-bold">
-                                    Menu
+                                    {translation["Menu"]}
                                 </DrawerTitle>
                                 <DrawerDescription className="text-lg font-medium"></DrawerDescription>
                             </DrawerHeader>
@@ -134,25 +140,25 @@ export default function Nav() {
                                     onClick={() => scrollToSection("top")}
                                     className="text-gray-600 text-xl font-semibold border rounded-xl w-full py-4 border-gray-300"
                                 >
-                                    Home
+                                    {translation["Home"]}
                                 </button>
                                 <button
                                     onClick={() => scrollToSection("tools")}
                                     className="text-gray-600 text-xl font-semibold border rounded-xl w-full py-4 border-gray-300"
                                 >
-                                    Tools
+                                    {translation["Tools"]}
                                 </button>
                                 <button
                                     onClick={() => scrollToSection("about")}
                                     className="text-gray-600 text-xl font-semibold border rounded-xl w-full py-4 border-gray-300"
                                 >
-                                    About us
+                                    {translation["About us"]}
                                 </button>
                                 <button
                                     onClick={() => scrollToSection("contact")}
                                     className="text-gray-600 text-xl font-semibold border rounded-xl w-full py-4 border-gray-300"
                                 >
-                                    Contact
+                                    {translation["Contact"]}
                                 </button>
 
                                 <div className="flex mt-1 flex-col w-full gap-4 ">
@@ -160,7 +166,7 @@ export default function Nav() {
                                         href={"/auth/register"}
                                         className="flex items-center justify-center active:scale-100 z-50 hover:font-semibold font-medium  text-white font-sans bg-blue-400 h-14 px-8 cursor-pointer transition-all rounded-xl duration-250 hover:shadow-[0_2px_7px_rgba(18,171,222,0.6)] text-xl w-full"
                                     >
-                                        Get started
+                                        {translation["Get started"]}
                                     </Link>
                                 </div>
                             </div>

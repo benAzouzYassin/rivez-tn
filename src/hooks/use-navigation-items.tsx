@@ -51,7 +51,7 @@ export function useNavigationItems() {
         ...adminItems,
     ]
     const bottomItem = {
-        route: "/get-credits",
+        route: "/offers",
         name: "Get credits",
         icon: <PlusCircle className="!w-6 stroke-[2.5]  !h-6" />,
     }

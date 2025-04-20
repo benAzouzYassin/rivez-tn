@@ -159,7 +159,7 @@ export default function Page() {
                     )}
                     <div
                         className={cn(
-                            "grid md:grid-cols-2 grid-cols-1  lg:grid-cols-3 min-[1700px]:grid-cols-4 rounded-2xl ml-auto px-2 py-2   gap-8 mb-2"
+                            "grid md:grid-cols-2 grid-cols-1   lg:grid-cols-3 min-[1700px]:grid-cols-4 rounded-2xl ml-auto px-2 py-4 md:py-2   gap-8 mb-2"
                         )}
                     >
                         {!data?.length && !isFetching && (
