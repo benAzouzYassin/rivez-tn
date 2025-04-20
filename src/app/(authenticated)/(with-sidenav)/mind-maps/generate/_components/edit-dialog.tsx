@@ -34,6 +34,9 @@ import { convertItemsToNodes } from "../../_utils/convert-to-nodes"
 import { CHEAP_TYPES } from "../constants"
 import { handleMindMapRefund } from "@/data-access/mindmaps/handle-refund"
 import { useRefetchUser } from "@/hooks/use-refetch-user"
+import { Badge } from "@/components/ui/badge"
+import { lowPrice } from "@/constants/prices"
+import CreditIcon from "@/components/icons/credit-icon"
 
 interface Props {
     setNodes: (nodes: Node[]) => void
@@ -194,7 +197,13 @@ export default function EditMindmapDialog(props: Props) {
             <DialogContent className="sm:max-w-[600px]">
                 <DialogHeader>
                     <DialogTitle className="text-2xl font-bold text-neutral-700">
-                        Edit Your Mind Map
+                        Modify mindmap with ai{" "}
+                        <Badge
+                            variant={"blue"}
+                            className="scale-80 -ml-1 py-0 px-2 font-bold inline-flex gap-[3px]  !text-lg"
+                        >
+                            {lowPrice} <CreditIcon className="!w-5 !h-5" />
+                        </Badge>
                     </DialogTitle>
                     <DialogDescription className="text-neutral-500">
                         Describe the changes you want to make to your existing

@@ -29,6 +29,9 @@ import { useRouter } from "nextjs-toploader/app"
 import { useState } from "react"
 import { mindmapsContentDb } from "../../_utils/indexed-db"
 import { FileInputLoading } from "./file-input-loading"
+import { Badge } from "@/components/ui/badge"
+import CreditIcon from "@/components/icons/credit-icon"
+import { highPrice, lowPrice } from "@/constants/prices"
 const PdfInput = dynamic(() => import("./pdf-input"), {
     loading: () => <FileInputLoading />,
 })
@@ -53,6 +56,7 @@ export default function AddDialog(props: Props) {
     const router = useRouter()
     const items = [
         {
+            price: lowPrice,
             disabled: false,
             value: "subject",
             text: "Text Input",
@@ -61,6 +65,7 @@ export default function AddDialog(props: Props) {
                 "Create a mind map from any topic or subject you specify.",
         },
         {
+            price: highPrice,
             disabled: false,
             value: "document",
             text: "Upload PDF",
@@ -69,6 +74,7 @@ export default function AddDialog(props: Props) {
                 "Upload a PDF file to generate questions from its content.",
         },
         {
+            price: highPrice,
             disabled: false,
             value: "youtube",
             text: "YouTube Video",
@@ -77,6 +83,7 @@ export default function AddDialog(props: Props) {
                 "Convert a YouTube video into a mind map by entering its URL.",
         },
         {
+            price: highPrice,
             disabled: false,
             value: "image",
             text: "Extract from Images",
@@ -146,7 +153,7 @@ export default function AddDialog(props: Props) {
             </DialogTrigger>
             <DialogContent
                 className={cn(
-                    "sm:min-w-[800px] md:w-[800px] md:max-w-[1000px]",
+                    "sm:min-w-[1000px] md:w-[1000px] md:max-w-[1000px]",
                     {
                         "w-[1000px]": currentTab === null,
                     }
@@ -177,9 +184,18 @@ export default function AddDialog(props: Props) {
                                     {item.icon}
                                 </span>
                                 <div>
-                                    <h3 className="text-xl text-neutral-700 font-bold pt-1">
-                                        {item.text}
-                                    </h3>
+                                    <div className="flex items-center ">
+                                        <h3 className="text-xl text-neutral-700 font-bold pt-1">
+                                            {item.text}
+                                        </h3>
+                                        <Badge
+                                            variant={"blue"}
+                                            className=" py-0 scale-80 px-2 font-bold inline-flex gap-[3px] ml-1 !text-lg"
+                                        >
+                                            {item.price}{" "}
+                                            <CreditIcon className="!w-5 !h-5" />
+                                        </Badge>
+                                    </div>
                                     <p className="text-sm font-medium text-neutral-500">
                                         {item.description}
                                     </p>

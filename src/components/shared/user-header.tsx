@@ -33,7 +33,7 @@ export default function UserHeader() {
             queryClient.refetchQueries({
                 queryKey: ["current-user"],
             })
-            router.replace("/auth/login")
+            router.replace("/landing-page")
             queryClient.invalidateQueries()
         } catch (error) {
             console.error("Logout failed:", error)

@@ -18,6 +18,7 @@ export default function Page() {
             if (inviteCode) {
                 handleInvite(inviteCode)
                     .then(() => {
+                        localStorage.removeItem("inviteCode")
                         refetchUser()
                     })
                     .catch(console.error)

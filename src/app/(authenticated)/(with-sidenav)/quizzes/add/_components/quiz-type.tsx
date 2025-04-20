@@ -42,10 +42,10 @@ export default function QuizType({
                     <div className=" min-h-10 min-w-10 flex items-center justify-center p-2 border-2  rounded-xl">
                         {icon}
                     </div>
-                    <h3 className="text-xl  text-neutral-600  font-extrabold">
+                    <div className="text-xl  text-neutral-600  font-extrabold">
                         {text}{" "}
                         <Badge
-                            variant={"green"}
+                            variant={"blue"}
                             className=" py-0 px-2 font-bold inline-flex gap-[3px] ml-1 !text-lg"
                         >
                             {price} <CreditIcon className="!w-5 !h-5" />
@@ -55,7 +55,7 @@ export default function QuizType({
                                 (soon..)
                             </span>
                         )}
-                    </h3>
+                    </div>
                 </div>
                 <p className="    text-medium text-base md:px-8  text-center  text-wrap text-neutral-500">
                     {description}

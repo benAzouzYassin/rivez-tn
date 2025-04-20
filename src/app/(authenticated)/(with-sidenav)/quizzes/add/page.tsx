@@ -36,22 +36,22 @@ export default function Page() {
 }
 const items = [
     {
+        price: highPrice,
         disabled: false,
-        value: "subject",
-        text: "Subject Based",
-        price: mediumPrice,
-        icon: <LetterTextIcon className="!w-7 text-indigo-500 !h-7" />,
+        value: "document",
+        text: "From Document PDF",
+        icon: <FileTextIcon className="!w-7 !h-7 text-indigo-500" />,
         description:
-            "Create a custom quiz from any topic or subject area you specify.",
+            "Upload PDF files to generate questions from your own materials.",
     },
     {
         price: highPrice,
         disabled: false,
-        value: "document",
-        text: "PDF Document Upload",
-        icon: <FileTextIcon className="!w-7 !h-7 text-indigo-500" />,
+        value: "image",
+        text: "From Images",
+        icon: <ImageIcon className="!w-7 text-indigo-500 !h-7" />,
         description:
-            "Upload PDF files to generate questions from your own materials.",
+            "Upload images containing text, diagrams, or visual information to create visual quizzes.",
     },
     {
         price: 0,
@@ -72,13 +72,14 @@ const items = [
         description:
             "Transform any YouTube video into a comprehensive quiz by providing a URL.",
     },
+
     {
-        price: highPrice,
         disabled: false,
-        value: "image",
-        text: "From Images",
-        icon: <ImageIcon className="!w-7 text-indigo-500 !h-7" />,
+        value: "subject",
+        text: "From subject",
+        price: mediumPrice,
+        icon: <LetterTextIcon className="!w-7 text-indigo-500 !h-7" />,
         description:
-            "Upload images containing text, diagrams, or visual information to create visual quizzes.",
+            "Create a custom quiz from any topic or subject area you specify.",
     },
 ] as const

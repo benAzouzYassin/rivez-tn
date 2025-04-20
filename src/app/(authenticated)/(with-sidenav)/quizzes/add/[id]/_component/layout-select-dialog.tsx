@@ -17,6 +17,9 @@ import MultipleChoiceVertical from "./layouts-icons/multiple-choice-vertical"
 import { Store } from "../store"
 import AddQuestionWithAiForm from "./add-question-with-ai-form"
 import { wait } from "@/utils/wait"
+import { Badge } from "@/components/ui/badge"
+import CreditIcon from "@/components/icons/credit-icon"
+import { lowPrice } from "@/constants/prices"
 
 type Props = {
     contentClassName?: string
@@ -33,6 +36,7 @@ type Props = {
 }
 
 export default function LayoutSelectDialog(props: Props) {
+    const price = lowPrice
     const [isOpen, setIsOpen] = useState(false)
     const [tab, setTab] = useState<"layout-select" | "mode-select" | "ai-form">(
         "layout-select"
@@ -73,7 +77,12 @@ export default function LayoutSelectDialog(props: Props) {
                 )}
             >
                 <div className="p-4 bg-muted">
-                    <DialogTitle className="text-center  pb-3 text-neutral-500 font-extrabold text-3xl">
+                    <DialogTitle
+                        className={cn(
+                            "text-center  pb-3 text-neutral-500 font-extrabold text-3xl",
+                            { "opacity-0": tab === "ai-form" }
+                        )}
+                    >
                         {tab === "layout-select"
                             ? "Select a question layout"
                             : "Do you want to use ai ?"}
@@ -115,9 +124,16 @@ export default function LayoutSelectDialog(props: Props) {
                                 <div className="bg-blue-100 rounded-full p-3 mb-4">
                                     <Sparkles className="h-6 w-6 text-blue-600 group-hover:scale-110 transition-transform" />
                                 </div>
-                                <p className="text-2xl font-bold text-blue-500 mb-2">
+                                <div className="text-2xl font-bold text-blue-500 mb-2">
                                     Use AI
-                                </p>
+                                    <Badge
+                                        variant={"blue"}
+                                        className="ml-px -mt-1  scale-80 py-0 px-2 font-bold inline-flex gap-[3px]  !text-lg"
+                                    >
+                                        {price}{" "}
+                                        <CreditIcon className="!w-5 !h-5" />
+                                    </Badge>
+                                </div>
                                 <p className="text-base text-neutral-500 font-medium text-center mb-3">
                                     Generate content automatically with our
                                     smart assistant
