@@ -4,7 +4,7 @@ import { supabaseAdminServerSide } from "@/lib/supabase-server-side"
 import { streamText } from "ai"
 import { NextRequest, NextResponse } from "next/server"
 import { z } from "zod"
-import { NORMAL_COST } from "../constants"
+import { HIGH_COST } from "../constants"
 import { getSystemPrompt, getUserPrompt } from "./prompt"
 
 export async function POST(req: NextRequest) {
@@ -40,7 +40,7 @@ export async function POST(req: NextRequest) {
                 .throwOnError()
         ).data.credit_balance
 
-        if (userBalance < NORMAL_COST) {
+        if (userBalance < HIGH_COST) {
             return NextResponse.json(
                 {
                     error: "Insufficient balance.",
@@ -48,7 +48,7 @@ export async function POST(req: NextRequest) {
                 { status: 400 }
             )
         }
-        const newBalance = userBalance - NORMAL_COST
+        const newBalance = userBalance - HIGH_COST
 
         await supabaseAdmin
             .from("user_profiles")

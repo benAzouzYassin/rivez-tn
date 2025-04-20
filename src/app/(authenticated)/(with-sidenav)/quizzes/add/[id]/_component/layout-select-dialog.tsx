@@ -65,7 +65,7 @@ export default function LayoutSelectDialog(props: Props) {
             <DialogTrigger asChild>{props.trigger}</DialogTrigger>
             <DialogContent
                 className={cn(
-                    " rounded-xl  transition-all  pb-6 overflow-hidden border  max-w-[1000px] ",
+                    " rounded-xl pb-6 !min-w-[1000px] overflow-hidden border w-[1000px]  max-w-[1000px] ",
                     props.contentClassName,
                     {
                         "w-fit": tab === "mode-select",
@@ -162,9 +162,9 @@ export default function LayoutSelectDialog(props: Props) {
                                         className="ml-auto mt-1 flex items-center justify-center"
                                     >
                                         <MultipleChoiceHorizontal
-                                            imageClassName="h-[140px] w-[130px] ml-2 mt-6"
-                                            itemClassName="h-7 mt-1 first:mt-5 w-[110px]"
-                                            className="!w-[290px] h-[210px]"
+                                            imageClassName="!h-[140px]  !w-[130px] ml-2 mt-6"
+                                            itemClassName="!h-7 mt-1 first:mt-5 !w-[110px]"
+                                            className="!w-[290px]  h-[210px]"
                                         />
                                     </div>
                                 </div>

@@ -1,5 +1,6 @@
 import { ErrorDisplay } from "@/components/shared/error-display"
 import Markdown from "@/components/shared/markdown"
+import MarkdownShadowLoading from "@/components/shared/markdown-shadow-loading"
 import {
     Sheet,
     SheetContent,
@@ -129,8 +130,8 @@ export default function NodeSheet(props: Props) {
                         {!isError && (
                             <>
                                 {isLoading ? (
-                                    <div className="h-[80vh] flex items-center justify-center ">
-                                        <Loader2 className="w-12 h-12 animate-spin duration-300 text-blue-400" />
+                                    <div className="h-[100vh] flex items-start justify-start ">
+                                        <MarkdownShadowLoading />{" "}
                                     </div>
                                 ) : (
                                     <>
