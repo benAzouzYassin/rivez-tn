@@ -33,9 +33,9 @@ function Content({ translation, shouldSaveLang, currentLang }: Props) {
                 {/* hero */}
                 <div
                     id="home"
-                    className="xl:grid   z-50 md:pt-10  xl:grid-cols-2 max-w-[1700px] mx-auto"
+                    className="xl:grid   z-50 md:pt-10 pt-8 xl:grid-cols-2 max-w-[1700px] mx-auto"
                 >
-                    <div className="xl:pl-20 xl:pt-20 ">
+                    <div className="xl:pl-20 rtl:xl:pr-20 rtl:xl:pl-0 xl:pt-20 ">
                         <motion.p
                             initial={{ y: 40, opacity: 0 }}
                             animate={{ opacity: 1, y: 0 }}
@@ -50,7 +50,7 @@ function Content({ translation, shouldSaveLang, currentLang }: Props) {
                             initial={{ y: 40, opacity: 0 }}
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ delay: 0.15, duration: 0.25 }}
-                            className="xl:text-[4.5rem] lg:text-6xl md:text-5xl text-4xl xl:text-left text-center text-neutral-700 xl:leading-20 mt-3 font-extrabold"
+                            className="xl:text-[4.5rem] lg:text-6xl md:text-5xl text-4xl xl:text-left rtl:xl:text-right text-center text-neutral-700 xl:leading-20 mt-3 font-extrabold"
                         >
                             {translation["The best way for preparing to exams"]}
                         </motion.h1>
@@ -71,7 +71,7 @@ function Content({ translation, shouldSaveLang, currentLang }: Props) {
                             initial={{ y: 40, opacity: 0 }}
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ delay: 0.4, duration: 0.25 }}
-                            className="md:flex grid grid-cols-2 xl:justify-start justify-center   items-center gap-4 px-4 xl:px-0"
+                            className="md:flex grid grid-cols-2 xl:justify-start  justify-center items-center gap-4 px-4 xl:px-0"
                         >
                             <Link
                                 href={"/auth/login"}
@@ -92,14 +92,14 @@ function Content({ translation, shouldSaveLang, currentLang }: Props) {
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
                         alt=""
-                        className="z-10 lg:block  hidden mx-auto h-[550px]"
+                        className="z-10 lg:block  hidden  mx-auto h-[550px]"
                         src="/hero-img.svg"
                     />
                     <div className="h-[90px] md:block hidden"></div>
                 </div>
                 <div className="h-10"></div>
                 <svg
-                    className="w-full  absolute left-0 xl:block hidden   z-50 max-w-[2200px]  bottom-0 min-[1200px]:-bottom-28 min-[2200px]:hidden min-[1600px]:-bottom-32 min-[1800px]:-bottom-48"
+                    className="w-full  absolute left-0 rtl:right-0 rtl:left-auto xl:block hidden z-50 max-w-[2200px] bottom-0 min-[1200px]:-bottom-28 min-[2200px]:hidden min-[1600px]:-bottom-32 min-[1800px]:-bottom-48"
                     viewBox="0 0 900 140"
                     fill="none"
                     xmlns="http://www.w3.org/2000/svg"
@@ -113,7 +113,7 @@ function Content({ translation, shouldSaveLang, currentLang }: Props) {
             {/* other sections */}
             <section className="  mx-auto  px-2 sm:px-20 pb-10 border-[#1d8effe7] bg-[#FFF] overflow-hidden  relative  w-full">
                 <svg
-                    className="max-w-[2700px] w-screen md:block hidden  absolute left-0 rotate-180  top-0 min-[1200px]:-top-36  min-[1600px]:-top-32 min-[1800px]:-top-48     z-50 "
+                    className="max-w-[2700px] w-screen md:block hidden  absolute left-0 rtl:right-0 rtl:left-auto rotate-180  top-0 min-[1200px]:-top-36  min-[1600px]:-top-32 min-[1800px]:-top-48     z-50 "
                     viewBox="0 0 900 140"
                     fill="none"
                     xmlns="http://www.w3.org/2000/svg"
@@ -148,7 +148,7 @@ function Content({ translation, shouldSaveLang, currentLang }: Props) {
                         </p>
                     </div>
                     <div className="h-full relative hover:bg-neutral-100 hover:border-neutral-200 border-transparent border-2 px-4  rounded-3xl">
-                        <div className="absolute md:block hidden top-1/2 -translate-y-1/2 w-[2px] h-3/5 -left-5 bg-[#0C4888]/50"></div>
+                        <div className="absolute md:block hidden top-1/2 -translate-y-1/2 w-[2px] h-3/5 -left-5 rtl:-right-5 rtl:left-auto bg-[#0C4888]/50"></div>
                         <div className="absolute left-1/2 block md:hidden -translate-x-1/2 h-[2px] w-3/5 top-0 bg-[#0C4888]/50"></div>
 
                         <div className="h-24 w-24 border mt-10  flex items-center justify-center rounded-2xl mx-auto">
@@ -170,11 +170,11 @@ function Content({ translation, shouldSaveLang, currentLang }: Props) {
                         </p>
                     </div>{" "}
                     <div className="h-full relative hover:bg-neutral-100 hover:border-neutral-200 border-transparent border-2 px-4 rounded-3xl hidden xl:block">
-                        <div className="absolute top-1/2 -translate-y-1/2 w-[2px] h-3/5 -left-5 bg-[#0C4888]/50"></div>
+                        <div className="absolute top-1/2 -translate-y-1/2 w-[2px] h-3/5 -left-5 rtl:-right-5 rtl:left-auto bg-[#0C4888]/50"></div>
 
                         <div className="h-24 w-24 mt-10 border rounded-2xl mx-auto">
                             <img
-                                className="w-20 h-20 ml-1 "
+                                className="w-20 h-20 ml-1 rtl:mr-1 rtl:ml-0"
                                 alt=""
                                 src="/icons/documentation.png"
                             />
@@ -191,11 +191,11 @@ function Content({ translation, shouldSaveLang, currentLang }: Props) {
                         </p>
                     </div>
                     <div className="h-full relative hover:bg-neutral-100 hover:border-neutral-200 border-transparent border-2 px-4 rounded-3xl hidden xl:block">
-                        <div className="absolute top-1/2  -translate-y-1/2 w-[2px] h-3/5 -left-5 bg-[#0C4888]/50"></div>
+                        <div className="absolute top-1/2  -translate-y-1/2 w-[2px] h-3/5 -left-5 rtl:-right-5 rtl:left-auto bg-[#0C4888]/50"></div>
                         <div className="h-24 w-24 border flex items-center justify-center mt-10 rounded-2xl mx-auto">
                             {" "}
                             <img
-                                className="w-18 h-18 ml-1 "
+                                className="w-18 h-18 ml-1 rtl:mr-1 rtl:ml-0"
                                 alt=""
                                 src="/icons/giftbox.png"
                             />
@@ -216,7 +216,7 @@ function Content({ translation, shouldSaveLang, currentLang }: Props) {
                     <div className="h-full relative hover:bg-neutral-100 hover:border-neutral-200 border-transparent border-2 px-4 rounded-3xl ">
                         <div className="h-24 w-24 mt-10 border rounded-2xl mx-auto">
                             <img
-                                className="w-20 h-20 ml-1 "
+                                className="w-20 h-20 ml-1 rtl:mr-1 rtl:ml-0"
                                 alt=""
                                 src="/icons/documentation.png"
                             />
@@ -233,12 +233,12 @@ function Content({ translation, shouldSaveLang, currentLang }: Props) {
                         </p>
                     </div>
                     <div className="h-full relative hover:bg-[#E6F9FF] px-4 rounded-3xl ">
-                        <div className="absolute md:block hidden top-1/2  -translate-y-1/2 w-[2px] h-3/5 -left-5 bg-[#0C4888]/50"></div>
+                        <div className="absolute md:block hidden top-1/2  -translate-y-1/2 w-[2px] h-3/5 -left-5 rtl:-right-5 rtl:left-auto bg-[#0C4888]/50"></div>
                         <div className="absolute md:hidden block left-1/2  -translate-x-1/2 h-[2px] w-3/5 -top-0 bg-[#0C4888]/50"></div>
                         <div className="h-24 w-24 border flex items-center justify-center mt-10 rounded-2xl mx-auto">
                             {" "}
                             <img
-                                className="w-18 h-18 ml-1 "
+                                className="w-18 h-18 ml-1 rtl:mr-1 rtl:ml-0"
                                 alt=""
                                 src="/icons/giftbox.png"
                             />
@@ -262,7 +262,7 @@ function Content({ translation, shouldSaveLang, currentLang }: Props) {
                 className="mx-auto  pb-10 bg-[#FFF] overflow-hidden relative w-full"
             >
                 <div className="container  mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-20">
-                    <div className="pt-0 xl:pl-20 lg:pt-5">
+                    <div className="pt-0 xl:pl-20 rtl:xl:pr-20 rtl:xl:pl-0 lg:pt-5">
                         <h2 className="text-blue-500 text-3xl sm:text-5xl font-extrabold">
                             {translation["Who are we ?"]}
                         </h2>
@@ -303,8 +303,8 @@ function Content({ translation, shouldSaveLang, currentLang }: Props) {
 
             <section id="contact" className="bg-[#FFF] md:py-5">
                 <div className="max-w-[2200px] mx-auto px-3 md:px-12 lg:px-20">
-                    <div className="flex flex-col md:flex-row justify-between gap-8">
-                        <div className="bg-white h-auto shadow-[0px_2px_10px] shadow-neutral-200 border rounded-2xl p-6 md:w-2/5 lg:w-1/3 flex flex-col items-start justify-center">
+                    <div className="flex flex-col md:flex-row rtl:md:flex-row-reverse justify-between gap-8">
+                        <div className="bg-white h-auto shadow-[0px_2px_10px] shadow-neutral-200 border rounded-2xl p-6 md:w-2/5 lg:w-1/3 flex flex-col items-start rtl:items-end justify-center">
                             <h2 className="text-neutral-600 text-2xl lg:text-3xl font-extrabold ">
                                 {
                                     translation[

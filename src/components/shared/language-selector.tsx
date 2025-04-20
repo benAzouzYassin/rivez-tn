@@ -35,14 +35,14 @@ export function LanguageSelector(props: Props) {
                 <Button
                     variant="secondary"
                     className={cn(
-                        "px-3 font-bold rounded-xl text-neutral-400 h-10 text-sm",
+                        "px-3 font-bold rounded-2xl md:rounded-xl z-50 text-neutral-400 h-9.5 md:h-10 text-sm",
                         props.className
                     )}
                 >
                     {language?.label ? (
                         <img
                             alt=""
-                            className="rounded-sm h-5"
+                            className="rounded-sm h-4 md:h-5"
                             src={language.flag}
                         />
                     ) : (
@@ -71,7 +71,7 @@ export function LanguageSelector(props: Props) {
                             >
                                 <img
                                     alt={lang.label}
-                                    className="rounded-sm h-5 w-5 mr-2"
+                                    className="rounded-sm h-5 w-5 rtl:ml-2 mr-2"
                                     src={lang.flag}
                                 />
                                 <span

@@ -7,7 +7,7 @@ import {
     DrawerTitle,
 } from "@/components/ui/drawer"
 import { cn } from "@/lib/ui-utils"
-import { AlignRight } from "lucide-react"
+import { AlignLeft } from "lucide-react"
 import { useMotionValueEvent, useScroll } from "motion/react"
 import Link from "next/link"
 import { useState } from "react"
@@ -51,7 +51,7 @@ export default function Nav({ translation }: Props) {
         <div className="h-16 sm:h-20">
             <nav
                 className={cn(
-                    "flex z-50 bg-none bg-white justify-between items-center px-4 sm:px-8 border-b-2 border-b-transparent md:px-12 lg:px-20 h-16 sm:h-20",
+                    "flex md:flex-row flex-row-reverse z-50 bg-none bg-white justify-between items-center px-4 sm:px-8 border-b-2 border-b-transparent md:px-12 lg:px-20 h-16 sm:h-20",
                     {
                         "fixed w-full  bg-white z-[999] shadow-white border-b-neutral-200":
                             isScrolled,
@@ -60,7 +60,7 @@ export default function Nav({ translation }: Props) {
             >
                 <svg
                     className={cn(
-                        "w-[400px] md:w-[600px] md:block hidden lg:w-[800px] left-0 transition-all z-20 absolute",
+                        "w-[400px] md:w-[600px] md:block hidden lg:w-[800px] left-0 rtl:right-0 rtl:scale-x-[-1] rtl:left-auto transition-all z-20 absolute",
                         {
                             "opacity-0": isScrolled,
                         }
@@ -73,12 +73,8 @@ export default function Nav({ translation }: Props) {
                     />
                 </svg>
 
-                <div className="flex items-center justify-center font-bold text-xl text-gray-800">
-                    {/* Logo could go here */}
-                </div>
-
                 {/* Desktop Navigation */}
-                <div className="hidden md:flex items-center justify-center gap-8 lg:gap-16 xl:gap-24 pl-0 lg:pl-20">
+                <div className="hidden md:flex items-center justify-center gap-8 lg:gap-16 xl:gap-24 pl-0 lg:pl-20 rtl:pr-0 rtl:lg:pr-20 rtl:pl-0">
                     <button
                         onClick={() => scrollToSection("top")}
                         className="text-neutral-600 font-bold cursor-pointer z-20 text-base lg:text-lg hover:underline underline-offset-4"
@@ -104,12 +100,12 @@ export default function Nav({ translation }: Props) {
                         {translation["Contact"]}
                     </button>
                 </div>
-                <div className="flex items-center gap-2">
+                <div className="flex md:flex-row  md:items-center w-fit gap-2">
                     <LanguageSelector />
-                    <div className="hidden md:flex items-center gap-4">
+                    <div className="flex items-center gap-4">
                         <Link
                             href={"/auth/register"}
-                            className="bg-blue-400 flex items-center justify-center active:scale-100 z-50 hover:font-semibold font-medium hover:to-blue-500 text-white font-sans hover:bg-gradient-to-br  hover:from-blue-400 h-9 md:h-10 lg:h-11 px-4 md:px-6 lg:px-5 cursor-pointer hover:scale-105 transition-all rounded-full duration-250 hover:shadow-[0_2px_7px_rgba(18,171,222,0.6)] text-sm lg:text-base"
+                            className="bg-blue-400 min-w-28 flex items-center justify-center active:scale-100 z-50 hover:font-semibold font-medium hover:to-blue-500 text-white font-sans hover:bg-gradient-to-br  hover:from-blue-400 h-10 lg:h-11 px-4 md:px-6 lg:px-5 cursor-pointer hover:scale-105 transition-all rounded-full duration-250 hover:shadow-[0_2px_7px_rgba(18,171,222,0.6)] text-sm lg:text-base"
                         >
                             {translation["Get started"]}
                         </Link>
@@ -124,7 +120,7 @@ export default function Nav({ translation }: Props) {
                         }}
                         className="h-10 cursor-pointer z-[999] w-10 rounded-full"
                     >
-                        <AlignRight className="h-10 text-neutral-700 stroke-[2.7] w-10" />
+                        <AlignLeft className="h-10 text-neutral-700 stroke-[2.7] w-10 rtl:scale-x-[-1]" />
                         <span className="sr-only">Toggle menu</span>
                     </button>
                     <Drawer open={isOpen} onOpenChange={setIsOpen}>
@@ -160,7 +156,6 @@ export default function Nav({ translation }: Props) {
                                 >
                                     {translation["Contact"]}
                                 </button>
-
                                 <div className="flex mt-1 flex-col w-full gap-4 ">
                                     <Link
                                         href={"/auth/register"}
