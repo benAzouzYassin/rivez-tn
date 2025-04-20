@@ -74,7 +74,7 @@ export default function Nav({ translation }: Props) {
                 </svg>
 
                 {/* Desktop Navigation */}
-                <div className="hidden md:flex items-center justify-center gap-8 lg:gap-16 xl:gap-24 pl-0 lg:pl-20 rtl:pr-0 rtl:lg:pr-20 rtl:pl-0">
+                <div className="hidden mx-auto md:flex items-center justify-center gap-8 lg:gap-16 xl:gap-24 pl-0 lg:pl-20 rtl:pr-0 rtl:lg:pr-20 rtl:pl-0">
                     <button
                         onClick={() => scrollToSection("top")}
                         className="text-neutral-600 font-bold cursor-pointer z-20 text-base lg:text-lg hover:underline underline-offset-4"

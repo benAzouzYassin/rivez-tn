@@ -54,7 +54,7 @@ export async function POST(req: NextRequest) {
         const maxQuestionsFromConfig = Number(
             process.env.NEXT_PUBLIC_MAX_QUESTION_PER_QUIZ
         )
-        const maxQuestions =
+        let maxQuestions =
             data.maxQuestions !== undefined && data.maxQuestions !== null
                 ? Math.min(data.maxQuestions, maxQuestionsFromConfig)
                 : maxQuestionsFromConfig
@@ -63,6 +63,14 @@ export async function POST(req: NextRequest) {
             data.minQuestions !== undefined && data.minQuestions !== null
                 ? Math.min(data.minQuestions, maxQuestionsFromConfig)
                 : DEFAULT_MIN_QUESTIONS
+
+        if (minQuestions < 1) {
+            minQuestions = DEFAULT_MIN_QUESTIONS
+        }
+
+        if (maxQuestions < 1) {
+            maxQuestions = maxQuestionsFromConfig
+        }
         if (minQuestions > maxQuestions) {
             minQuestions = maxQuestions
         }

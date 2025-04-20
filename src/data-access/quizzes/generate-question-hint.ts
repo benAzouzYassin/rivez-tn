@@ -1,6 +1,7 @@
 import { GenerateHintEndpointBody } from "@/app/api/quiz/generate-hint/route"
 import { readStream } from "@/utils/stream"
 import { readCurrentSession } from "../users/read"
+import { supabase } from "@/lib/supabase-client-side"
 
 export const generateQuestionHint = async (
     data: GenerateHintEndpointBody,
@@ -13,6 +14,7 @@ export const generateQuestionHint = async (
     if (!session) {
         throw new Error("Session error")
     }
+
     const response = await fetch("/api/quiz/generate-hint", {
         method: "POST",
         headers: {
@@ -32,4 +34,17 @@ export const generateQuestionHint = async (
     } else {
         throw new Error("no stream to read data")
     }
+}
+
+export async function insertHint(data: { userId: string; questionId: number }) {
+    const insertedHint = await supabase
+        .from("questions_hints")
+        .insert({
+            author_id: data.userId,
+            content: "",
+            question_id: data.questionId,
+        })
+        .select("*")
+        .throwOnError()
+    return insertedHint.data
 }

@@ -1,17 +1,9 @@
 import { Button } from "@/components/ui/button"
 import WarningDialog from "@/components/ui/warning-dialog"
 import { softDeleteQuizById } from "@/data-access/quizzes/delete"
-import {
-    addHintsToQuestions,
-    addQuestionsToQuiz,
-} from "@/data-access/quizzes/update"
+import { addQuestionsToQuiz } from "@/data-access/quizzes/update"
 import { useCurrentUser } from "@/hooks/use-current-user"
-import {
-    dismissToasts,
-    toastError,
-    toastLoading,
-    toastSuccess,
-} from "@/lib/toasts"
+import { toastError, toastSuccess } from "@/lib/toasts"
 import { shuffleArray } from "@/utils/array"
 import { useQueryClient } from "@tanstack/react-query"
 import { useParams } from "next/navigation"
@@ -121,31 +113,6 @@ export default function Buttons() {
                         .filter((q) => !!q)
                 )
                 toastSuccess("Saved successfully.")
-                const hintsToAdd = addedQuestions.data
-                    .flatMap((q) => {
-                        const hints = questions.find(
-                            (item, itemIndex) =>
-                                item.questionText === q.question &&
-                                itemIndex === q.display_order
-                        )?.hints
-                        return hints?.map((hint) => ({
-                            content: hint.content || "",
-                            name: hint.name,
-                            question_id: q.id,
-                        }))
-                    })
-                    .filter((hint) => hint !== undefined)
-
-                toastLoading("Adding Questions hints...")
-                addHintsToQuestions(hintsToAdd, userData?.id || "")
-                    .then(() => {
-                        dismissToasts("loading")
-                        toastSuccess("Added successfully ! ")
-                    })
-                    .catch(() => {
-                        dismissToasts("loading")
-                        toastError("Quiz added but without hints.")
-                    })
 
                 queryClient.invalidateQueries({
                     queryKey: ["quizzes"],

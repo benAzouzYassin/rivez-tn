@@ -7,8 +7,10 @@ import { z } from "zod"
 import { getSystemPrompt, getUserPrompt } from "./prompt"
 import { COST } from "./constants"
 
+const FREE_HINTS_PER_DAY = 100
 export async function POST(req: NextRequest) {
     try {
+        let isFree = true
         const accessToken = req.headers.get("access-token") || ""
         const refreshToken = req.headers.get("refresh-token") || ""
         const userId = await getUserInServerSide({ accessToken, refreshToken })
@@ -27,13 +29,30 @@ export async function POST(req: NextRequest) {
         if (!success) {
             return NextResponse.json({ error }, { status: 400 })
         }
+        const { data: hintToGenerate } = await supabaseAdmin
+            .from("questions_hints")
+            .select("*")
+            .eq("id", data.hintId)
+            .single()
+        if (!hintToGenerate) {
+            return NextResponse.json(
+                { error: "hint was not found" },
+                { status: 404 }
+            )
+        }
 
-        const llmResponse = streamText({
-            model: premiumModel,
-            prompt: getUserPrompt(data),
-            temperature: 0.2,
-            system: getSystemPrompt(),
-        })
+        const today = new Date()
+        today.setHours(0, 0, 0, 0)
+        const todayIsoString = today.toISOString()
+
+        const { count: todayHintsCount } = await supabaseAdmin
+            .from("questions_hints")
+            .select("count(*)", { count: "exact" })
+            .gte("created_at", todayIsoString)
+            .eq("author_id", userId)
+        if (todayHintsCount && todayHintsCount >= FREE_HINTS_PER_DAY) {
+            isFree = false
+        }
 
         const userBalance = (
             await supabaseAdmin
@@ -44,7 +63,7 @@ export async function POST(req: NextRequest) {
                 .throwOnError()
         ).data.credit_balance
 
-        if (userBalance < COST) {
+        if (isFree === false && userBalance < COST) {
             return NextResponse.json(
                 {
                     error: "Insufficient balance.",
@@ -52,15 +71,22 @@ export async function POST(req: NextRequest) {
                 { status: 400 }
             )
         }
-        const newBalance = userBalance - COST
-
-        await supabaseAdmin
-            .from("user_profiles")
-            .update({
-                credit_balance: newBalance,
-            })
-            .eq("user_id", userId)
-            .throwOnError()
+        if (isFree === false) {
+            const newBalance = userBalance - COST
+            await supabaseAdmin
+                .from("user_profiles")
+                .update({
+                    credit_balance: newBalance,
+                })
+                .eq("user_id", userId)
+                .throwOnError()
+        }
+        const llmResponse = streamText({
+            model: premiumModel,
+            prompt: getUserPrompt(data),
+            temperature: 0.2,
+            system: getSystemPrompt(),
+        })
         return llmResponse.toTextStreamResponse()
     } catch (error) {
         console.error(error)
@@ -68,6 +94,7 @@ export async function POST(req: NextRequest) {
     }
 }
 const bodySchema = z.object({
+    hintId: z.number(),
     questionText: z.string(),
     questionOptions: z.string(),
 })

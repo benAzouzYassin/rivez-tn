@@ -1,3 +1,5 @@
+import CreditIcon from "@/components/icons/credit-icon"
+import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { useSidenav } from "@/providers/sidenav-provider"
 import { useRouter } from "nextjs-toploader/app"
@@ -9,6 +11,7 @@ type Props = {
     description: string
     value: string
     disabled: boolean
+    price: number
 }
 
 export default function QuizType({
@@ -17,6 +20,7 @@ export default function QuizType({
     description,
     value,
     disabled,
+    price,
 }: Props) {
     const router = useRouter()
     const sideNav = useSidenav()
@@ -40,6 +44,12 @@ export default function QuizType({
                     </div>
                     <h3 className="text-xl  text-neutral-600  font-extrabold">
                         {text}{" "}
+                        <Badge
+                            variant={"green"}
+                            className=" py-0 px-2 font-bold inline-flex gap-[3px] ml-1 !text-lg"
+                        >
+                            {price} <CreditIcon className="!w-5 !h-5" />
+                        </Badge>
                         {disabled && (
                             <span className="text-base italic text-neutral-600">
                                 (soon..)
