@@ -1,10 +1,15 @@
+"use client"
+
 import { FacebookIcon } from "@/components/icons/facebook"
 import { WhatsAppIcon } from "@/components/icons/whatsapp"
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
 import { PhoneIcon } from "lucide-react"
-
+import { useSearchParams } from "next/navigation"
+export const dynamic = "force-static"
 export default function Page() {
+    const searchParams = useSearchParams()
+    const price = searchParams.get("price")
     return (
         <section className="max-w-3xl mx-auto py-4 sm:py-8 px-3 sm:px-4">
             <div className="text-center mb-6 sm:mb-8">
@@ -34,7 +39,7 @@ export default function Page() {
                         <p className="text-neutral-700 mb-3 sm:mb-4 font-semibold text-sm sm:text-base">
                             Please transfer{" "}
                             <span className="font-bold text-blue-600">
-                                360 TND
+                                {price} TND
                             </span>{" "}
                             to the following bank account:
                         </p>
