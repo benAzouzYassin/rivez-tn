@@ -148,7 +148,7 @@ export function FileInput({
                         {previewAsDocument && (
                             <div className="flex flex-col items-center justify-center h-full">
                                 <FileTextIcon className="w-12 h-12 md:w-16 md:h-16 text-red-400 mb-2" />
-                                <p className="text-sm md:text-base text-neutral-700 text-center font-semibold max-w-full px-4 truncate break-all">
+                                <p className="text-sm md:text-base text-neutral-700 text-center font-semibold max-w-[250px] truncate px-4  break-all">
                                     {fileName}
                                 </p>
                             </div>

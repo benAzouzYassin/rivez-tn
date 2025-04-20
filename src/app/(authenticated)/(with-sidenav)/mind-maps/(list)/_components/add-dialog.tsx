@@ -20,22 +20,15 @@ import {
 
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
-import { cn } from "@/lib/ui-utils"
-import { useState } from "react"
-import { Textarea } from "@/components/ui/textarea"
-import {
-    Select,
-    SelectContent,
-    SelectItem,
-    SelectTrigger,
-    SelectValue,
-} from "@/components/ui/select"
-import dynamic from "next/dynamic"
-import { FileInputLoading } from "./file-input-loading"
-import { useRouter } from "nextjs-toploader/app"
-import { wait } from "@/utils/wait"
-import { mindmapsContentDb } from "../../_utils/indexed-db"
 import { Input } from "@/components/ui/input"
+import { Textarea } from "@/components/ui/textarea"
+import { cn } from "@/lib/ui-utils"
+import { wait } from "@/utils/wait"
+import dynamic from "next/dynamic"
+import { useRouter } from "nextjs-toploader/app"
+import { useState } from "react"
+import { mindmapsContentDb } from "../../_utils/indexed-db"
+import { FileInputLoading } from "./file-input-loading"
 const PdfInput = dynamic(() => import("./pdf-input"), {
     loading: () => <FileInputLoading />,
 })
@@ -160,7 +153,7 @@ export default function AddDialog(props: Props) {
                 )}
             >
                 <DialogHeader>
-                    <DialogTitle className="md:text-4xl text-2xl md:mt-2 text-center font-bold text-neutral-500 mt-5">
+                    <DialogTitle className="md:text-4xl text-2xl mt-20 md:mt-2 text-center font-bold text-neutral-500">
                         Generate a Mind Map
                     </DialogTitle>
                     <DialogDescription className="text-neutral-600"></DialogDescription>
@@ -212,33 +205,7 @@ export default function AddDialog(props: Props) {
                                 setPdfPages(value)
                             }
                         />
-                        <div className="mt-5">
-                            <label
-                                htmlFor="language"
-                                className="font-medium text-neutral-600"
-                            >
-                                Select Language
-                            </label>
-                            <Select
-                                onValueChange={setLanguage}
-                                value={language}
-                            >
-                                <SelectTrigger id="language" className="w-full">
-                                    <SelectValue placeholder="Choose a language" />
-                                </SelectTrigger>
-                                <SelectContent>
-                                    <SelectItem value="english">
-                                        English
-                                    </SelectItem>
-                                    <SelectItem value="arabic">
-                                        Arabic
-                                    </SelectItem>
-                                    <SelectItem value="french">
-                                        French
-                                    </SelectItem>
-                                </SelectContent>
-                            </Select>
-                        </div>
+
                         <Button
                             type="submit"
                             className="text-lg mt-5 h-[52px] w-full"
@@ -252,33 +219,6 @@ export default function AddDialog(props: Props) {
                 {currentTab === "image" && (
                     <form onSubmit={handleSubmit} className="mt-6">
                         <ImageInput onChange={setImagesInBase64} />
-                        <div className="mt-5">
-                            <label
-                                htmlFor="language"
-                                className="font-medium text-neutral-600"
-                            >
-                                Select Language
-                            </label>
-                            <Select
-                                onValueChange={setLanguage}
-                                value={language}
-                            >
-                                <SelectTrigger id="language" className="w-full">
-                                    <SelectValue placeholder="Choose a language" />
-                                </SelectTrigger>
-                                <SelectContent>
-                                    <SelectItem value="english">
-                                        English
-                                    </SelectItem>
-                                    <SelectItem value="arabic">
-                                        Arabic
-                                    </SelectItem>
-                                    <SelectItem value="french">
-                                        French
-                                    </SelectItem>
-                                </SelectContent>
-                            </Select>
-                        </div>
                         <Button
                             type="submit"
                             className="text-lg mt-5 h-[52px] w-full"
@@ -311,33 +251,7 @@ export default function AddDialog(props: Props) {
                                 required
                             />
                         </div>
-                        <div className="-mt-1">
-                            <label
-                                htmlFor="language"
-                                className="font-medium text-neutral-600"
-                            >
-                                Select Language
-                            </label>
-                            <Select
-                                onValueChange={setLanguage}
-                                value={language}
-                            >
-                                <SelectTrigger id="language" className="w-full">
-                                    <SelectValue placeholder="Choose a language" />
-                                </SelectTrigger>
-                                <SelectContent>
-                                    <SelectItem value="english">
-                                        English
-                                    </SelectItem>
-                                    <SelectItem value="arabic">
-                                        Arabic
-                                    </SelectItem>
-                                    <SelectItem value="french">
-                                        French
-                                    </SelectItem>
-                                </SelectContent>
-                            </Select>
-                        </div>
+                        <div className="-mt-1"></div>
                         <div>
                             <label
                                 htmlFor="requirement"
@@ -387,33 +301,7 @@ export default function AddDialog(props: Props) {
                                 required
                             />
                         </div>
-                        <div className="-mt-1">
-                            <label
-                                htmlFor="language"
-                                className="font-medium text-neutral-600"
-                            >
-                                Select Language
-                            </label>
-                            <Select
-                                onValueChange={setLanguage}
-                                value={language}
-                            >
-                                <SelectTrigger id="language" className="w-full">
-                                    <SelectValue placeholder="Choose a language" />
-                                </SelectTrigger>
-                                <SelectContent>
-                                    <SelectItem value="english">
-                                        English
-                                    </SelectItem>
-                                    <SelectItem value="arabic">
-                                        Arabic
-                                    </SelectItem>
-                                    <SelectItem value="french">
-                                        French
-                                    </SelectItem>
-                                </SelectContent>
-                            </Select>
-                        </div>
+                        <div className="-mt-1"></div>
 
                         <Button
                             type="submit"

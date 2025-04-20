@@ -147,7 +147,7 @@ export default function PaymentMethodDialog(props: Props) {
                             <p className="z-50  text-2xl font-bold">E-Dinar</p>
                         </Button>
                         <Link
-                            href={"/offers/bank-payment"}
+                            href={`/offers/bank-payment?price=${selectedPrice}`}
                             className="flex h-44"
                         >
                             <Button

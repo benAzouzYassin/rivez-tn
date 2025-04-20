@@ -104,7 +104,7 @@ export default function Page() {
             {data?.items && (
                 <>
                     <Button
-                        className="md:text-base text-sm md:scale-100 scale-80 absolute md:top-5 top-2 right-0 md:right-5 z-50"
+                        className="md:text-base md:flex hidden text-sm md:scale-100 scale-80 absolute md:top-5 top-2 right-0 md:right-5 z-50"
                         variant={"blue"}
                         onClick={handleGenerateQuiz}
                     >

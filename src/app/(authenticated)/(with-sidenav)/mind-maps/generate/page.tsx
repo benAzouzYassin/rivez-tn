@@ -348,10 +348,10 @@ export default function Page() {
         <section>
             <div
                 className={cn(
-                    "h-[92vh] -mt-2 border border-gray-300 relative isolate",
+                    "h-[92vh] md:-mt-2 -mt-4 border border-gray-300 relative isolate",
                     {
-                        "w-[calc(100vw-306px)]": isSidenavOpen,
-                        "w-[calc(100vw-100px)]": !isSidenavOpen,
+                        "md:w-[calc(100vw-306px)]": isSidenavOpen,
+                        "md:w-[calc(100vw-100px)]": !isSidenavOpen,
                     }
                 )}
             >
@@ -382,7 +382,7 @@ export default function Page() {
                     <Button
                         disabled={isLoading || isStreaming}
                         onClick={() => setIsEditing(true)}
-                        className="font-bold"
+                        className="font-bold md:flex hidden"
                         variant={"blue"}
                     >
                         <EditIcon />
@@ -423,8 +423,11 @@ export default function Page() {
                     {isLoading && (
                         <Loader2 className="w-10 h-10 absolute text-blue-400 animate-spin duration-300 top-[40%] left-1/2 -translate-x-1/2 -translate-y-1/2  " />
                     )}
-                    <Controls className="rounded-lg -translate-y-4 border border-gray-200" />
-                    <Panel position="bottom-right" className="bg-transparent">
+                    <Controls className="rounded-lg md:!block !hidden -translate-y-4 border border-gray-200" />
+                    <Panel
+                        className="bg-transparent md:scale-100 scale-50"
+                        position="bottom-right"
+                    >
                         <div className="rounded-lg shadow-lg overflow-hidden border border-gray-200">
                             <MiniMap
                                 className="!bg-white/90 -translate-y-4 dark:!bg-gray-800/90"

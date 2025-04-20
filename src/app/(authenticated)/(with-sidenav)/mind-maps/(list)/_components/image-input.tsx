@@ -13,6 +13,7 @@ export default function ImageInput(props: Props) {
     const [isUploading, setIsUploading] = useState(false)
     return (
         <MultipleFileInput
+            className="max-w-[90vw] "
             isLoading={isUploading}
             onChange={async (files) => {
                 toastLoading("Uploading your image...")
