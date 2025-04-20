@@ -92,7 +92,7 @@ export default function Page() {
         <main className="flex min-h-[100vh] relative flex-col items-center justify-center">
             <section>
                 <Button
-                    onClick={router.back}
+                    onClick={() => router.replace("/landing-page")}
                     className="absolute h-10 w-10 top-8 left-2 md:left-16"
                     variant={"ghost"}
                 >

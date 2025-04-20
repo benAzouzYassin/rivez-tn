@@ -6,6 +6,9 @@ import { Toaster } from "react-hot-toast"
 import QueryClientProvider from "@/providers/query-client"
 import { SidenavProvider } from "@/providers/sidenav-provider"
 import { NuqsAdapter } from "nuqs/adapters/next/app"
+import { cookies } from "next/headers"
+import { headers } from "next/headers"
+import { getPreferredLanguage } from "@/utils/languages"
 
 const nunito = Nunito({
     subsets: ["latin"],
@@ -16,13 +19,23 @@ export const metadata: Metadata = {
     description: "",
 }
 
-export default function RootLayout({
+export default async function RootLayout({
     children,
 }: Readonly<{
     children: React.ReactNode
 }>) {
+    const reqHeaders = await headers()
+    const preferred = getPreferredLanguage(
+        reqHeaders.get("accept-language") as string
+    )
+    const lang = (await cookies()).get("selected-language")?.value || preferred
+
     return (
-        <html lang="en" className=" overflow-x-hidden">
+        <html
+            dir={lang === "ar" ? "rtl" : "ltr"}
+            lang={lang}
+            className=" overflow-x-hidden"
+        >
             <head>
                 {/* <script src="https://unpkg.com/react-scan/dist/auto.global.js"></script> */}
             </head>
