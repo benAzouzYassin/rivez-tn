@@ -8,6 +8,7 @@ import {
     Video,
 } from "lucide-react"
 import QuizType from "./_components/quiz-type"
+import { highPrice, mediumPrice } from "@/constants/prices"
 export default function Page() {
     const isSmallScreen = useIsSmallScreen()
     return (
@@ -38,11 +39,13 @@ const items = [
         disabled: false,
         value: "subject",
         text: "Subject Based",
+        price: mediumPrice,
         icon: <LetterTextIcon className="!w-7 text-indigo-500 !h-7" />,
         description:
             "Create a custom quiz from any topic or subject area you specify.",
     },
     {
+        price: highPrice,
         disabled: false,
         value: "document",
         text: "PDF Document Upload",
@@ -51,6 +54,7 @@ const items = [
             "Upload PDF files to generate questions from your own materials.",
     },
     {
+        price: 0,
         disabled: false,
         value: "custom-quiz",
         text: "Custom quiz",
@@ -60,6 +64,7 @@ const items = [
     },
 
     {
+        price: highPrice,
         disabled: false,
         value: "youtube",
         text: "YouTube Video",
@@ -68,6 +73,7 @@ const items = [
             "Transform any YouTube video into a comprehensive quiz by providing a URL.",
     },
     {
+        price: highPrice,
         disabled: false,
         value: "image",
         text: "From Images",

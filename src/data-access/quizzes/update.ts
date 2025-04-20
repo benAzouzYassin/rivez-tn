@@ -288,29 +288,16 @@ export async function updateQuizQuestions(
     return response
 }
 
-export async function addHintsToQuestions(
-    hints: Database["public"]["Tables"]["questions_hints"]["Insert"][],
-    userId: string
+export async function updateHint(
+    hintId: number,
+    hint: Database["public"]["Tables"]["questions_hints"]["Update"]
 ) {
     const response = await supabase
         .from("questions_hints")
-        .insert(hints.map((h) => ({ ...h, author_id: userId })))
-        .throwOnError()
-    return response
-}
-export async function updateManyHints(
-    hints: Database["public"]["Tables"]["questions_hints"]["Update"][],
-    userId: string
-) {
-    const response = await supabase
-        .from("questions_hints")
-        .upsert(
-            hints.map((h) => ({ ...h, author_id: userId })),
-            {
-                onConflict: "id",
-                ignoreDuplicates: false,
-            }
-        )
+        .update({
+            ...hint,
+        })
+        .eq("id", hintId)
         .throwOnError()
     return response
 }

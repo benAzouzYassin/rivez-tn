@@ -255,7 +255,7 @@ export async function readQuizQuestionHint(params: { questionId: number }) {
             ascending: false,
         })
         .throwOnError()
-    return response.data[0]
+    return response.data[0] || null
 }
 
 export async function readSharedQuizzesWithDetails(config?: {

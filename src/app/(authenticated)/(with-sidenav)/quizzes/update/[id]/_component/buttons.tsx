@@ -3,16 +3,11 @@ import WarningDialog from "@/components/ui/warning-dialog"
 import { deleteQuizQuestions } from "@/data-access/quizzes/delete"
 import {
     addQuestionsToQuiz,
-    updateManyHints,
     updateQuizQuestions,
-    addHintsToQuestions,
 } from "@/data-access/quizzes/update"
-import {
-    dismissToasts,
-    toastError,
-    toastLoading,
-    toastSuccess,
-} from "@/lib/toasts"
+import { useCurrentUser } from "@/hooks/use-current-user"
+import { toastError, toastSuccess } from "@/lib/toasts"
+import { shuffleArray } from "@/utils/array"
 import { useQueryClient } from "@tanstack/react-query"
 import { useParams } from "next/navigation"
 import { useRouter } from "nextjs-toploader/app"
@@ -22,8 +17,6 @@ import useUpdateQuizStore, {
     StateMatchingPairsOptions,
     StateMultipleChoiceOptions,
 } from "../store"
-import { shuffleArray } from "@/utils/array"
-import { useCurrentUser } from "@/hooks/use-current-user"
 export default function Buttons() {
     const params = useParams()
     const quizId = parseInt(params["id"] as string)
@@ -158,52 +151,6 @@ export default function Buttons() {
                 })
                 .filter((q) => !!q)
             const result = await updateQuizQuestions(oldQuestions)
-            const hintsToUpsert = result.data
-                .flatMap((q) => {
-                    const hints = questions.find(
-                        (item, itemIndex) =>
-                            item.questionText === q.question &&
-                            itemIndex === q.display_order
-                    )?.hints
-                    return hints?.map((hint) => ({
-                        id: hint.id || undefined,
-                        content: hint.content || "",
-                        name: hint.name,
-                        question_id: q.id,
-                    }))
-                })
-                .filter((hint) => hint !== undefined)
-            toastLoading("Adding / Updating Questions hints...")
-            updateManyHints(
-                hintsToUpsert.filter((h) => h.id),
-                userData?.id || ""
-            )
-                .then(() => {
-                    dismissToasts("loading")
-                    toastSuccess("Request completed successfully ! ")
-                })
-                .catch(() => {
-                    dismissToasts("loading")
-                    toastError("Some hints was not updated.")
-                })
-            addHintsToQuestions(
-                hintsToUpsert
-                    .filter((h) => !h.id)
-                    .map((h) => ({
-                        content: h.content,
-                        name: h.name,
-                        question_id: h.question_id,
-                    })),
-                userData?.id || ""
-            )
-                .then(() => {
-                    dismissToasts("loading")
-                    toastSuccess("Request completed successfully ! ")
-                })
-                .catch(() => {
-                    dismissToasts("loading")
-                    toastError("Some hints was not added.")
-                })
             return true
         } catch (error) {
             console.error(error)
@@ -292,30 +239,6 @@ export default function Buttons() {
                 quizId,
                 formattedNewQuestions
             )
-            const hintsToInsert = result.data
-                .flatMap((q) => {
-                    const hints = questions.find(
-                        (item, itemIndex) =>
-                            item.questionText === q.question &&
-                            itemIndex === q.display_order
-                    )?.hints
-                    return hints?.map((hint) => ({
-                        content: hint.content || "",
-                        name: hint.name,
-                        question_id: q.id,
-                    }))
-                })
-                .filter((hint) => hint !== undefined)
-            toastLoading("Adding / Updating Questions hints...")
-            addHintsToQuestions(hintsToInsert, userData?.id || "")
-                .then(() => {
-                    dismissToasts("loading")
-                    toastSuccess("Request completed successfully ! ")
-                })
-                .catch(() => {
-                    dismissToasts("loading")
-                    toastError("Some hints was not added.")
-                })
             return true
         } catch (error) {
             console.error(error)

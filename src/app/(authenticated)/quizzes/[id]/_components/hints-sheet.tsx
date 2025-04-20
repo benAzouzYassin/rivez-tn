@@ -9,16 +9,20 @@ import {
     SheetTitle,
     SheetTrigger,
 } from "@/components/ui/sheet"
-import { generateQuestionHint } from "@/data-access/quizzes/generate-question-hint"
+import {
+    generateQuestionHint,
+    insertHint,
+} from "@/data-access/quizzes/generate-question-hint"
 import { handleHintRefund } from "@/data-access/quizzes/handle-refund"
 import { readQuizQuestionHint } from "@/data-access/quizzes/read"
-import { addHintsToQuestions } from "@/data-access/quizzes/update"
+import { updateHint } from "@/data-access/quizzes/update"
 import { useCurrentUser } from "@/hooks/use-current-user"
 import { useRefetchUser } from "@/hooks/use-refetch-user"
+import { toastError } from "@/lib/toasts"
 import { cn } from "@/lib/ui-utils"
 import { useQuery } from "@tanstack/react-query"
 import { Lightbulb, Loader2 } from "lucide-react"
-import { useEffect, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 interface Props {
     questionId: number
     questionText: string
@@ -31,6 +35,7 @@ export default function HintsSheet(props: Props) {
     const [isError, setIsError] = useState(false)
     const [isGenerating, setIsGenerating] = useState(false)
     const [generatedContent, setGeneratedContent] = useState("")
+    const isStreaming = useRef<boolean>(false)
     const { isLoading, data } = useQuery({
         queryKey: ["questions_hints", props.questionId],
         enabled: isOpen,
@@ -44,40 +49,52 @@ export default function HintsSheet(props: Props) {
             let contentToSave = ""
             setIsGenerating(true)
             let didGenerate = false
+            let hintId: number | null = null
+            if (isStreaming.current === false) {
+                isStreaming.current = true
+                insertHint({
+                    questionId: props.questionId,
+                    userId: userData.id,
+                })
+                    .then((hint) => {
+                        hintId = hint[0].id
+                        generateQuestionHint(
+                            {
+                                questionOptions: props.questionContent,
+                                questionText: props.questionText,
+                                hintId: hint[0].id,
+                            },
+                            handleStreamChange,
+                            handleStreamEnd
+                        ).catch(() => {
+                            handleHintRefund().catch(console.error)
+                        })
+                    })
+                    .catch(() => {
+                        toastError("Something went wrong")
+                    })
+            }
             const handleStreamChange = (chunk: string) => {
                 if (!didGenerate) didGenerate = true
                 setGeneratedContent((prev) => prev + chunk)
                 contentToSave += chunk
                 setIsGenerating(false)
             }
+
             const handleStreamEnd = () => {
+                isStreaming.current = false
                 if (!didGenerate) {
                     setIsError(true)
                     handleHintRefund().catch(console.error)
                 } else {
                     refetchUser()
-                    addHintsToQuestions(
-                        [
-                            {
-                                author_id: userData.id,
-                                content: contentToSave,
-                                question_id: props.questionId,
-                            },
-                        ],
-                        userData.id
-                    )
+                    if (hintId) {
+                        updateHint(hintId, {
+                            content: contentToSave,
+                        })
+                    }
                 }
             }
-            generateQuestionHint(
-                {
-                    questionOptions: props.questionContent,
-                    questionText: props.questionText,
-                },
-                handleStreamChange,
-                handleStreamEnd
-            ).catch(() => {
-                handleHintRefund().catch(console.error)
-            })
         }
     }, [
         data,

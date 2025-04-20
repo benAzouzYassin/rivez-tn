@@ -14,14 +14,7 @@ import { toastError } from "@/lib/toasts"
 import { cn } from "@/lib/ui-utils"
 import { useSidenav } from "@/providers/sidenav-provider"
 import { useQueryClient } from "@tanstack/react-query"
-import {
-    AlignLeft,
-    CreditCardIcon,
-    LanguagesIcon,
-    LogOutIcon,
-    Settings,
-    User2,
-} from "lucide-react"
+import { CreditCardIcon, LanguagesIcon, LogOutIcon, User2 } from "lucide-react"
 import { useRouter } from "nextjs-toploader/app"
 import { JSX, useMemo, useState } from "react"
 import CreditIcon from "../icons/credit-icon"

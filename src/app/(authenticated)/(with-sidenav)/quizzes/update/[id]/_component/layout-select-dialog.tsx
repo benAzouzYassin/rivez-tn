@@ -26,17 +26,17 @@ export default function LayoutSelectDialog(props: Props) {
             <DialogTrigger asChild>{props.trigger}</DialogTrigger>
             <DialogContent
                 className={cn(
-                    " rounded-xl pb-6 !min-w-[1000px] overflow-hidden border w-[1000px]  max-w-[1000px] ",
+                    " rounded-xl pb-6 px-2 !min-w-[1100px] overflow-x-hidden border w-[1100px]  max-w-[1100px] ",
                     props.contentClassName
                 )}
             >
                 <div className="p-4 bg-muted">
                     <DialogTitle className="text-center  pb-3 text-neutral-500 font-extrabold text-3xl">
-                        Select a question layout aaaaaaa
+                        Select a question layout
                     </DialogTitle>
                     <DialogDescription></DialogDescription>
                 </div>
-                <div className="p-0 min-w-[1000px] bg-red-500">
+                <div className="p-0 min-w-[1000px] ">
                     <div className="p-0 grid gap-5 grid-cols-3">
                         <div className="fle flex-col items-center justify-center">
                             <h3 className="text-base font-bold text-neutral-500 text-center ">
