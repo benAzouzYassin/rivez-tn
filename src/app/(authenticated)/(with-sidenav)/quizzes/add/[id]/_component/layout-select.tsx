@@ -130,7 +130,7 @@ function LayoutSelect(props: Props) {
                         props.selectedQuestion.imageType !== "none" &&
                         props.selectedQuestion.type === "MULTIPLE_CHOICE" && (
                             <MultipleChoiceVertical
-                                className="bg-red-500"
+                                className=""
                                 textClassName="hidden"
                             />
                         )}
@@ -140,7 +140,7 @@ function LayoutSelect(props: Props) {
                                 textClassName="mt-3 h-2 w-[80%]"
                                 imageClassName="hidden"
                                 itemClassName="h-5 rounded  mt-2 "
-                                className="px-2 md:w-[220px] bg-red-500 pb-5"
+                                className="px-2 md:w-[220px] pb-5"
                             />
                         )}
                     {props.selectedQuestion.layout === "horizontal" &&

@@ -6,8 +6,6 @@ import {
     DialogTrigger,
 } from "@/components/ui/dialog"
 import { cn } from "@/lib/ui-utils"
-import { PossibleQuestionTypes } from "@/schemas/questions-content"
-import { Database } from "@/types/database.types"
 import { ReactNode, useState } from "react"
 import FillInTheBlank from "./layouts-icons/fill-in-the-blank"
 import MatchingPairs from "./layouts-icons/matching-pairs"
@@ -22,22 +20,23 @@ type Props = {
 
 export default function LayoutSelectDialog(props: Props) {
     const [isOpen, setIsOpen] = useState(false)
+
     return (
         <Dialog onOpenChange={setIsOpen} open={isOpen}>
             <DialogTrigger asChild>{props.trigger}</DialogTrigger>
             <DialogContent
                 className={cn(
-                    " rounded-xl pb-6 overflow-hidden border  max-w-[1000px] ",
+                    " rounded-xl pb-6 !min-w-[1000px] overflow-hidden border w-[1000px]  max-w-[1000px] ",
                     props.contentClassName
                 )}
             >
                 <div className="p-4 bg-muted">
                     <DialogTitle className="text-center  pb-3 text-neutral-500 font-extrabold text-3xl">
-                        Select a question layout
+                        Select a question layout aaaaaaa
                     </DialogTitle>
                     <DialogDescription></DialogDescription>
                 </div>
-                <div className="p-0">
+                <div className="p-0 min-w-[1000px] bg-red-500">
                     <div className="p-0 grid gap-5 grid-cols-3">
                         <div className="fle flex-col items-center justify-center">
                             <h3 className="text-base font-bold text-neutral-500 text-center ">

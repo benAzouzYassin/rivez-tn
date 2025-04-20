@@ -1,5 +1,6 @@
 import { ErrorDisplay } from "@/components/shared/error-display"
 import Markdown from "@/components/shared/markdown"
+import MarkdownShadowLoading from "@/components/shared/markdown-shadow-loading"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import {
     Sheet,
@@ -108,9 +109,8 @@ export default function HintsSheet(props: Props) {
                     <>
                         {isLoading ||
                             (isGenerating && (
-                                <div className="w-full h-[70vh] flex items-center justify-center">
-                                    <Loader2 className="w-10 h-10   animate-spin duration-300 text-blue-400" />
-
+                                <div className="w-full h-[70vh] flex items-start justify-start">
+                                    <MarkdownShadowLoading />
                                     <SheetDescription></SheetDescription>
                                     <SheetTitle></SheetTitle>
                                 </div>
