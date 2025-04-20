@@ -35,6 +35,9 @@ import { z } from "zod"
 import { DifficultySelect } from "./difficulty-select"
 import ImageUpload from "./image-upload"
 import useQuizStore from "../../../quizzes/add/[id]/store"
+import { Badge } from "@/components/ui/badge"
+import CreditIcon from "@/components/icons/credit-icon"
+import { mediumPrice } from "@/constants/prices"
 
 const POSSIBLE_QUESTIONS_TYPES = Object.keys(POSSIBLE_QUESTIONS)
 
@@ -153,7 +156,13 @@ export default function GenerateQuizDialog(props: Props) {
             <DialogContent className="md:!min-w-[800px]  md:w-[800px]">
                 <DialogTitle className="mt-10 text-neutral-600 text-center text-3xl font-extrabold">
                     {" "}
-                    Generate Quiz
+                    Generate Quiz{" "}
+                    <Badge
+                        variant={"blue"}
+                        className="scale-80 -ml-1 py-0 px-2 font-bold inline-flex gap-[3px]  !text-lg"
+                    >
+                        {mediumPrice} <CreditIcon className="!w-5 !h-5" />
+                    </Badge>
                 </DialogTitle>
 
                 <section className="flex flex-col w-full mt-1 gap-1 max-w-[900px]">

@@ -1,8 +1,9 @@
 "use client"
-import { FileTextIcon, ImageIcon, Link, Video } from "lucide-react"
+import { highPrice, lowPrice, mediumPrice } from "@/constants/prices"
+import { FileTextIcon, ImageIcon, Video } from "lucide-react"
+import { useMemo, useState } from "react"
 import Item from "./_components/item"
 import YoutubeLinkDialog from "./_components/youtube-link-dialog"
-import { useMemo, useState } from "react"
 export default function Page() {
     const [isDialogOpen, setIsDialogOpen] = useState(false)
 
@@ -10,6 +11,8 @@ export default function Page() {
         () =>
             [
                 {
+                    price: lowPrice / 5,
+                    isPerPage: true,
                     disabled: false,
                     route: "/pdf-summarizer",
                     text: "PDF Document Upload",
@@ -20,6 +23,7 @@ export default function Page() {
                 },
 
                 {
+                    price: mediumPrice,
                     disabled: false,
                     route: "/image-summarizer",
                     text: "From Images",
@@ -28,6 +32,7 @@ export default function Page() {
                         "Upload images containing text, diagrams, or visual information to create summaries.",
                 },
                 {
+                    price: highPrice,
                     disabled: false,
                     onClick: () => setIsDialogOpen(true),
                     text: "YouTube Video",

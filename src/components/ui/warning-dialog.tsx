@@ -55,7 +55,7 @@ const WarningDialog = ({
         <Dialog open={isOpen} onOpenChange={onOpenChange}>
             {!!children && <DialogTrigger asChild>{children}</DialogTrigger>}
 
-            <DialogContent className="sm:max-w-[35vw] !rounded-2xl">
+            <DialogContent className=" md:min-w-[600px] xl:max-w-[35vw] !rounded-2xl">
                 <DialogHeader>
                     <DialogTitle
                         className={cn(

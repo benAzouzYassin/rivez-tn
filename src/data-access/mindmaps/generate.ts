@@ -18,7 +18,6 @@ export const generateMindMapFromText = async (
     if (!session) {
         throw new Error("Session error")
     }
-
     const response = await fetch("/api/mindmap/generate/from-text", {
         method: "POST",
         headers: {

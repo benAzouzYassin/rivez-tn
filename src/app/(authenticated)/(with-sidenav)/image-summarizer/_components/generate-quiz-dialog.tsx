@@ -1,4 +1,6 @@
 import { POSSIBLE_QUESTIONS } from "@/app/api/quiz/generate-quiz/constants"
+import CreditIcon from "@/components/icons/credit-icon"
+import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import {
     Collapsible,
@@ -21,6 +23,7 @@ import {
     SelectValue,
 } from "@/components/ui/select"
 import { Textarea } from "@/components/ui/textarea"
+import { mediumPrice } from "@/constants/prices"
 import { createQuiz } from "@/data-access/quizzes/create"
 import { useCurrentUser } from "@/hooks/use-current-user"
 import { toastError } from "@/lib/toasts"
@@ -154,7 +157,13 @@ export default function GenerateQuizDialog(props: Props) {
             <DialogContent className="!min-w-[800px] w-[800px]">
                 <DialogTitle className="mt-10 text-neutral-600 text-center text-3xl font-extrabold">
                     {" "}
-                    Generate Quiz
+                    Generate Quiz{" "}
+                    <Badge
+                        variant={"blue"}
+                        className="scale-80 -ml-1 py-0 px-2 font-bold inline-flex gap-[3px]  !text-lg"
+                    >
+                        {mediumPrice} <CreditIcon className="!w-5 !h-5" />
+                    </Badge>
                 </DialogTitle>
 
                 <section className="flex flex-col w-full mt-1 gap-1 max-w-[900px]">

@@ -49,7 +49,6 @@ export async function POST(req: NextRequest) {
             )
         }
         const newBalance = userBalance - CHEAP_COST
-
         await supabaseAdmin
             .from("user_profiles")
             .update({

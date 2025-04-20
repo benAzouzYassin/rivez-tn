@@ -7,6 +7,8 @@ import { z } from "zod"
 import { CHEAP_COST } from "../constants"
 import { getSystemPrompt, getUserPrompt } from "./prompt"
 
+const PRICE = CHEAP_COST / 5
+
 export async function POST(req: NextRequest) {
     try {
         const accessToken = req.headers.get("access-token") || ""
@@ -40,7 +42,7 @@ export async function POST(req: NextRequest) {
                 .throwOnError()
         ).data.credit_balance
 
-        if (userBalance < CHEAP_COST) {
+        if (userBalance < PRICE) {
             return NextResponse.json(
                 {
                     error: "Insufficient balance.",
@@ -48,7 +50,7 @@ export async function POST(req: NextRequest) {
                 { status: 400 }
             )
         }
-        const newBalance = userBalance - CHEAP_COST
+        const newBalance = userBalance - PRICE
 
         await supabaseAdmin
             .from("user_profiles")

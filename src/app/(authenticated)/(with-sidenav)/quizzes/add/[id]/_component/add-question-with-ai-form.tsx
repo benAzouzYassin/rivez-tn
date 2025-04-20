@@ -48,7 +48,7 @@ export default function AddQuestionWithAiForm(props: Props) {
     })
 
     return (
-        <section className="flex flex-col w-full mt-0 mx-auto gap-4 max-w-[900px] bg-white p-6 rounded-3xl  border-2 border-neutral-200">
+        <section className="flex flex-col w-full md:-mt-5 mx-auto gap-4 max-w-[900px] bg-white  rounded-3xl  ">
             <Button
                 variant={"secondary"}
                 className="absolute top-8"
