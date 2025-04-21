@@ -29,7 +29,7 @@ function Content({ translation, shouldSaveLang, currentLang }: Props) {
     return (
         <section className="">
             <section className=" h-auto  overflow-hidden  relative ">
-                <Nav translation={translation} />
+                <Nav translation={translation} defaultLang={currentLang} />
                 {/* hero */}
                 <div
                     id="home"

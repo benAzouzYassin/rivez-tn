@@ -12,12 +12,13 @@ import { useMotionValueEvent, useScroll } from "motion/react"
 import Link from "next/link"
 import { useState } from "react"
 import { Translation } from "../translations/english"
-import { LanguageSelector } from "../../../../components/shared/language-selector"
+import { LanguageSelector } from "@/components/shared/language-selector"
 
 interface Props {
     translation: Translation
+    defaultLang: string
 }
-export default function Nav({ translation }: Props) {
+export default function Nav({ translation, defaultLang }: Props) {
     const { scrollY } = useScroll()
     const [isScrolled, setIsScrolled] = useState(false)
     const [isOpen, setIsOpen] = useState(false)
@@ -101,7 +102,7 @@ export default function Nav({ translation }: Props) {
                     </button>
                 </div>
                 <div className="flex md:flex-row  md:items-center w-fit gap-2">
-                    <LanguageSelector />
+                    <LanguageSelector defaultLang={defaultLang} />
                     <div className="flex items-center gap-4">
                         <Link
                             href={"/auth/register"}
