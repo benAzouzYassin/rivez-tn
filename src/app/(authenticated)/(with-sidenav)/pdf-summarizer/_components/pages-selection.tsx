@@ -1,9 +1,11 @@
 "use client"
 
+import AnimatedLoader from "@/components/ui/animated-loader"
 import { Button } from "@/components/ui/button"
 import { Checkbox } from "@/components/ui/checkbox"
 import { Input } from "@/components/ui/input"
 import { ScrollArea } from "@/components/ui/scroll-area"
+import { useIsSmallScreen } from "@/hooks/is-small-screen"
 import { cn } from "@/lib/ui-utils"
 import { SearchIcon } from "lucide-react"
 import { useEffect, useMemo, useState } from "react"
@@ -13,9 +15,6 @@ import AddFilesButton from "./add-files-button"
 import FileItem from "./file-item"
 import PageCard from "./page-card"
 import SummarizeSelectedBtn from "./summarize-selected-btn"
-import { useIsSmallScreen } from "@/hooks/is-small-screen"
-import UnsupportedScreen from "@/components/shared/unsuported-screen"
-import AnimatedLoader from "@/components/ui/animated-loader"
 
 export default function PagesSelection() {
     const isSmallScreen = useIsSmallScreen()
@@ -142,6 +141,7 @@ export default function PagesSelection() {
                                     Cancel
                                 </Button>
                                 <SummarizeSelectedBtn
+                                    selectedPagesCount={selectedPages.length}
                                     disabled={selectedPages.length < 1}
                                 />
                             </div>
