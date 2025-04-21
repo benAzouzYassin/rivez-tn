@@ -17,10 +17,13 @@ const languages = [
 ]
 type Props = {
     className?: string
+    defaultLang: string
 }
 export function LanguageSelector(props: Props) {
     const [isOpen, setIsOpen] = useState(false)
-    const [language, setLanguage] = useState<(typeof languages)[number]>()
+    const [language, setLanguage] = useState<
+        (typeof languages)[number] | undefined
+    >(languages.find((item) => item.value === props.defaultLang) || undefined)
     useEffect(() => {
         const selected = Cookies.get("selected-language")
         const lang = languages.find((l) => l.value === selected)
