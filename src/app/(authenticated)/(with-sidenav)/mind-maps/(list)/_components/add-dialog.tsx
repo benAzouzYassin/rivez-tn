@@ -34,6 +34,7 @@ import CreditIcon from "@/components/icons/credit-icon"
 import { highPrice, lowPrice } from "@/constants/prices"
 import { useCurrentUser } from "@/hooks/use-current-user"
 import InsufficientCreditsDialog from "@/components/shared/insufficient-credits-dialog"
+import { useIsSmallScreen } from "@/hooks/is-small-screen"
 const PdfInput = dynamic(() => import("./pdf-input"), {
     loading: () => <FileInputLoading />,
 })
@@ -45,6 +46,7 @@ interface Props {
     setIsOpen: (value: boolean) => void
 }
 export default function AddDialog(props: Props) {
+    const isSmallScreen = useIsSmallScreen()
     const [isInsufficientCredits, setIsInsufficientCredits] = useState(false)
     const { data: user } = useCurrentUser()
     const creditBalance = user?.credit_balance?.toFixed(1)
@@ -71,7 +73,7 @@ export default function AddDialog(props: Props) {
         },
         {
             price: highPrice,
-            disabled: false,
+            disabled: isSmallScreen,
             value: "document",
             text: "Upload PDF",
             icon: <FileTextIcon className="w-7 h-7 text-indigo-500" />,
@@ -175,49 +177,52 @@ export default function AddDialog(props: Props) {
 
                     {!currentTab && (
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-5 md:mt-6">
-                            {items.map((item) => (
-                                <Card
-                                    key={item.value}
-                                    onClick={() => {
-                                        if (
-                                            Number(creditBalance) < item.price
-                                        ) {
-                                            return setIsInsufficientCredits(
-                                                true
-                                            )
-                                        }
-                                        handleCardClick(item.value)
-                                    }}
-                                    className={cn(
-                                        "p-4 flex h-28 hover:bg-neutral-100 cursor-pointer transition-all active:shadow-none active:translate-y-2 items-center gap-4 rounded-2xl ",
-                                        {
-                                            "bg-neutral-200 active:translate-y-0 hover:bg-neutral-200 cursor-not-allowed":
-                                                item.disabled,
-                                        }
-                                    )}
-                                >
-                                    <span className="bg-blue-100 flex items-center p-2 rounded-xl w-fit">
-                                        {item.icon}
-                                    </span>
-                                    <div>
-                                        <div className="flex items-center ">
-                                            <h3 className="text-xl text-neutral-700 font-bold pt-1">
-                                                {item.text}
-                                            </h3>
-                                            <Badge
-                                                variant={"blue"}
-                                                className=" py-0 scale-80 px-2 font-bold inline-flex gap-[3px] ml-1 !text-lg"
-                                            >
-                                                {item.price}{" "}
-                                                <CreditIcon className="!w-5 !h-5" />
-                                            </Badge>
+                            {items
+                                .filter((item) => !item.disabled)
+                                .map((item) => (
+                                    <Card
+                                        key={item.value}
+                                        onClick={() => {
+                                            if (
+                                                Number(creditBalance) <
+                                                item.price
+                                            ) {
+                                                return setIsInsufficientCredits(
+                                                    true
+                                                )
+                                            }
+                                            handleCardClick(item.value)
+                                        }}
+                                        className={cn(
+                                            "p-4 flex h-28 hover:bg-neutral-100 cursor-pointer transition-all active:shadow-none active:translate-y-2 items-center gap-4 rounded-2xl ",
+                                            {
+                                                "bg-neutral-200 active:translate-y-0 hover:bg-neutral-200 cursor-not-allowed":
+                                                    item.disabled,
+                                            }
+                                        )}
+                                    >
+                                        <span className="bg-blue-100 flex items-center p-2 rounded-xl w-fit">
+                                            {item.icon}
+                                        </span>
+                                        <div>
+                                            <div className="flex items-center ">
+                                                <h3 className="text-xl text-neutral-700 font-bold pt-1">
+                                                    {item.text}
+                                                </h3>
+                                                <Badge
+                                                    variant={"blue"}
+                                                    className=" py-0 scale-80 px-2 font-bold inline-flex gap-[3px] ml-1 !text-lg"
+                                                >
+                                                    {item.price}{" "}
+                                                    <CreditIcon className="!w-5 !h-5" />
+                                                </Badge>
+                                            </div>
+                                            <p className="text-sm font-medium text-neutral-500">
+                                                {item.description}
+                                            </p>
                                         </div>
-                                        <p className="text-sm font-medium text-neutral-500">
-                                            {item.description}
-                                        </p>
-                                    </div>
-                                </Card>
-                            ))}
+                                    </Card>
+                                ))}
                         </div>
                     )}
                     {currentTab !== null && (

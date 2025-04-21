@@ -44,7 +44,7 @@ export default function QuizType({
                     router.push(`/quizzes/add/${value}`)
                 }}
                 variant={"secondary"}
-                className="!p-3 h-56  flex  justify-start    disabled:opacity-80 disabled:bg-neutral-200/70 w-full max-h-fit text-start rounded-3xl  hover:border-blue-300 hover:bg-blue-100/70 hover:shadow-blue-300 transition-all  "
+                className="!p-3 h-56 md:last:col-span-2  flex  last:justify-center justify-center    disabled:opacity-80 disabled:bg-neutral-200/70 w-full max-h-fit text-start rounded-3xl  hover:border-blue-300 hover:bg-blue-100/70 hover:shadow-blue-300 transition-all  "
             >
                 <div className=" items-start gap-4">
                     <div className="flex flex-col  pb-4 items-center gap-2  ">

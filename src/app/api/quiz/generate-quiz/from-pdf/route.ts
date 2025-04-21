@@ -123,7 +123,6 @@ export async function POST(req: NextRequest) {
             RULES :
                 - IMPORTANT do not respond with markdown and only respond with json.
                 - Your answer should start with this character "{".
-                - If there is a question typed "FILL_IN_THE_BLANK" use all the content.options inside content.correct (only applied in "FILL_IN_THE_BLANK" question type ).
                 - your answer should not include any template strings.
                 - You should escape special characters for the special characters since your response will be parse with JSON.parse()
                 - Your response should not be markdown. 

@@ -3,7 +3,7 @@
 import { toastError } from "@/lib/toasts"
 import { cn } from "@/lib/ui-utils"
 import { FileTextIcon, Loader2, Upload, X } from "lucide-react"
-import { ReactNode, useCallback } from "react"
+import { ReactNode, useCallback, useEffect } from "react"
 import { useDropzone } from "react-dropzone"
 import { Button } from "./button"
 
@@ -75,6 +75,44 @@ export function FileInput({
           }
         : null
 
+    const handlePaste = useCallback(
+        (event: ClipboardEvent) => {
+            const items = event.clipboardData?.items
+
+            if (!items) return
+
+            const pastedFiles: File[] = []
+
+            for (let i = 0; i < items.length; i++) {
+                const item = items[i]
+
+                // Check if the pasted item is an image
+                const isValidImage = item.type.startsWith("image/")
+                const isValidPDF = item.type === "application/pdf"
+                if (
+                    (allowImage && isValidImage) ||
+                    (allowDocument && isValidPDF)
+                ) {
+                    const file = item.getAsFile()
+                    if (file) {
+                        pastedFiles.push(file)
+                    }
+                }
+            }
+
+            if (pastedFiles.length > 0) {
+                onChange(pastedFiles[0])
+            }
+        },
+        [allowDocument, allowImage, onChange]
+    )
+    useEffect(() => {
+        window.addEventListener("paste", handlePaste)
+
+        return () => {
+            window.removeEventListener("paste", handlePaste)
+        }
+    }, [handlePaste])
     const { getRootProps, getInputProps, isDragActive } = useDropzone({
         onDrop,
         accept: {

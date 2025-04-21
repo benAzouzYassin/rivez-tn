@@ -128,7 +128,7 @@ export default function MultipleAnswerQuestion(props: Props) {
                 >
                     <p
                         className={cn(
-                            " max-w-[1000px] text-center  items-center justify-center w-full mt-1  flex pt-0 pb-5 text-lg sm:text-3xl lg:text-4xl font-extrabold top-0 text-neutral-700 px-2  ",
+                            " max-w-[1000px] md:mx-auto text-center  items-center justify-center w-full mt-1  flex pt-0 pb-5 text-lg sm:text-3xl lg:text-4xl font-extrabold top-0 text-neutral-700 px-2  ",
                             {
                                 "max-w-[1250px] mt-5":
                                     props.question.layout === "horizontal",

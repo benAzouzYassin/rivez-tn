@@ -160,7 +160,7 @@ export default function FillInTheBlankQuestion(props: Props) {
                     questionText={props.question.question}
                 />
                 <div>
-                    <p className="max-w-[1200px] mb-1 pt-5 text-2xl md:text-3xl lg:text-4xl text-center font-extrabold top-0 text-neutral-700  w-full left-0">
+                    <p className="max-w-[1200px] md:mx-auto mb-1 pt-5 text-2xl md:text-3xl lg:text-4xl text-center font-extrabold top-0 text-neutral-700  w-full left-0">
                         {props.question?.question ||
                             "Fill in the blank with the correct options :"}{" "}
                     </p>

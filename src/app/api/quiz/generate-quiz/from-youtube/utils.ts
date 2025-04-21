@@ -17,7 +17,10 @@ export function generateQuizPrompt(params: PromptParams): string {
         params.allowQuestions === "ALL"
             ? Object.keys(POSSIBLE_QUESTIONS)
             : params.allowQuestions
+    ).filter(
+        (q) => q !== "FILL_IN_THE_BLANK"
     ) as (keyof typeof POSSIBLE_QUESTIONS)[]
+
     const allowedQuestions = questionsNames.map((q) => POSSIBLE_QUESTIONS[q])
     const prompt = `Our USER want you to generate an educational quiz from youtube video transcription with the following specifications:
 

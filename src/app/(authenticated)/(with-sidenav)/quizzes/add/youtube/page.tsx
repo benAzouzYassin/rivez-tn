@@ -256,35 +256,6 @@ export default function Document() {
                                 />
                             </div>
                             <div className=" -mt-1 gap-8">
-                                <Select
-                                    defaultValue={
-                                        form.getValues().language || undefined
-                                    }
-                                    onValueChange={(val) =>
-                                        form.setValue("language", val)
-                                    }
-                                >
-                                    <SelectTrigger className="data-[placeholder]:text-neutral-400 ">
-                                        <SelectValue placeholder="Language" />
-                                    </SelectTrigger>
-                                    <SelectContent>
-                                        <SelectItem value="EN">
-                                            English
-                                        </SelectItem>
-                                        <SelectItem disabled value="AR">
-                                            Arabic{" "}
-                                            <span className="text-sm italic">
-                                                (soon...)
-                                            </span>
-                                        </SelectItem>
-                                        <SelectItem disabled value="FR">
-                                            French{" "}
-                                            <span className="text-sm italic">
-                                                (soon...)
-                                            </span>
-                                        </SelectItem>
-                                    </SelectContent>
-                                </Select>
                                 <div className="pb-3">
                                     <Controller
                                         control={form.control}
@@ -293,17 +264,19 @@ export default function Document() {
                                             field: { onChange, value, onBlur },
                                         }) => (
                                             <SearchSelectMultiple
-                                                items={POSSIBLE_QUESTIONS_TYPES.map(
-                                                    (questionType) => {
-                                                        return {
-                                                            id: questionType,
-                                                            label: questionType
-                                                                .split("_")
-                                                                .join(" ")
-                                                                .toLowerCase(),
-                                                        }
+                                                items={POSSIBLE_QUESTIONS_TYPES.filter(
+                                                    (q) =>
+                                                        q !==
+                                                        "FILL_IN_THE_BLANK"
+                                                ).map((questionType) => {
+                                                    return {
+                                                        id: questionType,
+                                                        label: questionType
+                                                            .split("_")
+                                                            .join(" ")
+                                                            .toLowerCase(),
                                                     }
-                                                )}
+                                                })}
                                                 placeholder="Allowed questions"
                                                 inputClassName="w-full mb-2"
                                                 onSelect={onChange}
@@ -343,11 +316,11 @@ export default function Document() {
                         </div>
                     </CollapsibleContent>
                 </Collapsible>
-                <ImageUpload
+                {/* <ImageUpload
                     className=""
                     imageUrl={imageUrl}
                     onImageUrlChange={setImageUrl}
-                />
+                /> */}
                 <div className="grid gap-5">
                     <Button
                         isLoading={isLoading}

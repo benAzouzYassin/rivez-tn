@@ -4,16 +4,17 @@ import { FileTextIcon, ImageIcon, Video } from "lucide-react"
 import { useMemo, useState } from "react"
 import Item from "./_components/item"
 import YoutubeLinkDialog from "./_components/youtube-link-dialog"
+import { useIsSmallScreen } from "@/hooks/is-small-screen"
 export default function Page() {
     const [isDialogOpen, setIsDialogOpen] = useState(false)
-
+    const isSmallScreen = useIsSmallScreen()
     const items = useMemo(
         () =>
             [
                 {
                     price: lowPrice / 5,
                     isPerPage: true,
-                    disabled: false,
+                    disabled: isSmallScreen,
                     route: "/pdf-summarizer",
                     text: "PDF Document Upload",
                     icon: (
@@ -41,7 +42,7 @@ export default function Page() {
                         "Transform any YouTube video into a comprehensive summarized summary by providing a URL.",
                 },
             ] as const,
-        []
+        [isSmallScreen]
     )
     return (
         <main className="flex relative flex-col items-center w-full min-h-screen md:p-6 bg-white">
@@ -55,9 +56,11 @@ export default function Page() {
             </div>
 
             <section className="grid  md:px-0 px-3  grid-cols-1 sm:grid-cols-2 max-w-[850px] pb-10 gap-x-10 gap-y-7 mt-10 ">
-                {items.map((item) => (
-                    <Item key={item.text} {...item} />
-                ))}
+                {items
+                    .filter((item) => !item.disabled)
+                    .map((item) => (
+                        <Item key={item.text} {...item} />
+                    ))}
             </section>
             <YoutubeLinkDialog
                 isOpen={isDialogOpen}

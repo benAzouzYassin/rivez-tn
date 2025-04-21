@@ -19,6 +19,8 @@ import { useRouter } from "nextjs-toploader/app"
 import { JSX, useMemo, useState } from "react"
 import CreditIcon from "../icons/credit-icon"
 import MobileNavDrawer from "./mobile-nav-drawer"
+import Cookies from "js-cookie"
+import { availableLanguages } from "@/hooks/use-language"
 
 export default function UserHeader() {
     const queryClient = useQueryClient()
@@ -86,7 +88,6 @@ export default function UserHeader() {
         >
             <div className="flex h-full border-b-2 items-center px-4  sm:px-8 lg:px-20">
                 <MobileNavDrawer />
-
                 <div className="ml-auto flex items-center gap-1">
                     <Popover
                         open={isUserSettingOpen}
@@ -182,6 +183,17 @@ function UserMenu({ items, close }: { items: MenuItem[]; close: () => void }) {
                                             )}
                                             onClick={() => {
                                                 setLanguage(lang)
+                                                if (
+                                                    availableLanguages.includes(
+                                                        lang.value as any
+                                                    )
+                                                ) {
+                                                    Cookies.set(
+                                                        "selected-language",
+                                                        lang.value
+                                                    )
+                                                    window.location.reload()
+                                                }
                                                 close()
                                             }}
                                         >

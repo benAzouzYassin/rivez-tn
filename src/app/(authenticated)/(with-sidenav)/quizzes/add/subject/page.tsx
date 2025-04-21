@@ -36,7 +36,7 @@ import { useQuestionsStore as useViewOnlyQuizStore } from "../../../../quizzes/[
 import { default as useEditableQuizStore } from "../[id]/store"
 import { DifficultySelect } from "../_components/difficulty-select"
 import ImageUpload from "../_components/image-upload"
-import { useIsSmallScreen } from "../../../../../../hooks/is-small-screen"
+import { useIsSmallScreen } from "@/hooks/is-small-screen"
 
 const POSSIBLE_QUESTIONS_TYPES = Object.keys(POSSIBLE_QUESTIONS)
 
@@ -251,37 +251,7 @@ export default function SubjectForm() {
                                 />
                             </div>
 
-                            <div className=" -mt-1 gap-8">
-                                <Select
-                                    defaultValue={
-                                        form.getValues().language || undefined
-                                    }
-                                    onValueChange={(val) =>
-                                        form.setValue("language", val)
-                                    }
-                                >
-                                    <SelectTrigger className="data-[placeholder]:text-neutral-400">
-                                        <SelectValue placeholder="Language" />
-                                    </SelectTrigger>
-                                    <SelectContent>
-                                        <SelectItem value="EN">
-                                            English
-                                        </SelectItem>
-                                        <SelectItem disabled value="AR">
-                                            Arabic{" "}
-                                            <span className="text-sm italic">
-                                                (soon...)
-                                            </span>
-                                        </SelectItem>
-                                        <SelectItem disabled value="FR">
-                                            French{" "}
-                                            <span className="text-sm italic">
-                                                (soon...)
-                                            </span>
-                                        </SelectItem>
-                                    </SelectContent>
-                                </Select>
-                            </div>
+                            <div className=" -mt-1 gap-8"></div>
                             <div className=" -mt-1 gap-8">
                                 <div className="pb-3">
                                     <Controller
@@ -291,17 +261,19 @@ export default function SubjectForm() {
                                             field: { onChange, value, onBlur },
                                         }) => (
                                             <SearchSelectMultiple
-                                                items={POSSIBLE_QUESTIONS_TYPES.map(
-                                                    (questionType) => {
-                                                        return {
-                                                            id: questionType,
-                                                            label: questionType
-                                                                .split("_")
-                                                                .join(" ")
-                                                                .toLowerCase(),
-                                                        }
+                                                items={POSSIBLE_QUESTIONS_TYPES.filter(
+                                                    (q) =>
+                                                        q !==
+                                                        "FILL_IN_THE_BLANK"
+                                                ).map((questionType) => {
+                                                    return {
+                                                        id: questionType,
+                                                        label: questionType
+                                                            .split("_")
+                                                            .join(" ")
+                                                            .toLowerCase(),
                                                     }
-                                                )}
+                                                })}
                                                 placeholder="Allowed questions"
                                                 inputClassName="w-full mb-2"
                                                 onSelect={onChange}
@@ -340,11 +312,11 @@ export default function SubjectForm() {
                         </div>
                     </CollapsibleContent>
                 </Collapsible>
-                <ImageUpload
+                {/* <ImageUpload
                     className=""
                     imageUrl={imageUrl}
                     onImageUrlChange={setImageUrl}
-                />
+                /> */}
                 <div className="grid  gap-5">
                     <Button
                         isLoading={isLoading}

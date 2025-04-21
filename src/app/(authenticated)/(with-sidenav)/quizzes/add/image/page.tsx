@@ -1,5 +1,6 @@
 "use client"
 
+import { useQuestionsStore as useViewOnlyQuizStore } from "@/app/(authenticated)/quizzes/[id]/store"
 import { POSSIBLE_QUESTIONS } from "@/app/api/quiz/generate-quiz/constants"
 import { ErrorDisplay } from "@/components/shared/error-display"
 import GeneralLoadingScreen from "@/components/shared/general-loading-screen"
@@ -11,15 +12,9 @@ import {
 } from "@/components/ui/collapsible"
 import { Input } from "@/components/ui/input"
 import SearchSelectMultiple from "@/components/ui/search-select-multiple"
-import {
-    Select,
-    SelectContent,
-    SelectItem,
-    SelectTrigger,
-    SelectValue,
-} from "@/components/ui/select"
 import { Textarea } from "@/components/ui/textarea"
 import { createQuiz } from "@/data-access/quizzes/create"
+import { useIsSmallScreen } from "@/hooks/is-small-screen"
 import { useCurrentUser } from "@/hooks/use-current-user"
 import { toastError, toastSuccess } from "@/lib/toasts"
 import { useSidenav } from "@/providers/sidenav-provider"
@@ -31,12 +26,9 @@ import { useRouter } from "nextjs-toploader/app"
 import { useEffect, useMemo, useState } from "react"
 import { Controller, useForm } from "react-hook-form"
 import { z } from "zod"
-import { useQuestionsStore as useViewOnlyQuizStore } from "@/app/(authenticated)/quizzes/[id]/store"
 import { default as useEditableQuizStore } from "../[id]/store"
 import { DifficultySelect } from "../_components/difficulty-select"
-import ImageUpload from "../_components/image-upload"
 import ImagesInputLoading from "./_components/images-input-loading"
-import { useIsSmallScreen } from "@/hooks/is-small-screen"
 const POSSIBLE_QUESTIONS_TYPES = Object.keys(POSSIBLE_QUESTIONS)
 
 const ImagesInput = dynamic(() => import("./_components/images-input"), {
@@ -255,33 +247,7 @@ export default function Document() {
                                     }
                                 />
                             </div>
-                            <Select
-                                defaultValue={
-                                    form.getValues().language || undefined
-                                }
-                                onValueChange={(val) =>
-                                    form.setValue("language", val)
-                                }
-                            >
-                                <SelectTrigger className="data-[placeholder]:text-neutral-400 -mt-1">
-                                    <SelectValue placeholder="Language" />
-                                </SelectTrigger>
-                                <SelectContent>
-                                    <SelectItem value="EN">English</SelectItem>
-                                    <SelectItem disabled value="AR">
-                                        Arabic{" "}
-                                        <span className="text-sm italic">
-                                            (soon...)
-                                        </span>
-                                    </SelectItem>
-                                    <SelectItem disabled value="FR">
-                                        French{" "}
-                                        <span className="text-sm italic">
-                                            (soon...)
-                                        </span>
-                                    </SelectItem>
-                                </SelectContent>
-                            </Select>
+
                             <div className=" -mt-1 gap-8">
                                 <div className="pb-3">
                                     <Controller
@@ -291,17 +257,19 @@ export default function Document() {
                                             field: { onChange, value, onBlur },
                                         }) => (
                                             <SearchSelectMultiple
-                                                items={POSSIBLE_QUESTIONS_TYPES.map(
-                                                    (questionType) => {
-                                                        return {
-                                                            id: questionType,
-                                                            label: questionType
-                                                                .split("_")
-                                                                .join(" ")
-                                                                .toLowerCase(),
-                                                        }
+                                                items={POSSIBLE_QUESTIONS_TYPES.filter(
+                                                    (q) =>
+                                                        q !==
+                                                        "FILL_IN_THE_BLANK"
+                                                ).map((questionType) => {
+                                                    return {
+                                                        id: questionType,
+                                                        label: questionType
+                                                            .split("_")
+                                                            .join(" ")
+                                                            .toLowerCase(),
                                                     }
-                                                )}
+                                                })}
                                                 placeholder="Allowed questions"
                                                 inputClassName="w-full mb-2"
                                                 onSelect={onChange}
@@ -341,11 +309,11 @@ export default function Document() {
                         </div>
                     </CollapsibleContent>
                 </Collapsible>
-                <ImageUpload
+                {/* <ImageUpload
                     className=""
                     imageUrl={imageUrl}
                     onImageUrlChange={setImageUrl}
-                />
+                /> */}
                 <div className="grid gap-5">
                     <Button
                         isLoading={isLoading}
