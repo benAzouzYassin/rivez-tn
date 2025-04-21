@@ -12,7 +12,8 @@ export function getSystemPrompt() {
     - Your responses follows the ZOD SCHEMA bellow.
     - Include all details of the content provided to you by the user.
     - Highlight the essential parts of the content provided to you by the user.    
-    
+    - The items array should be a single item that have multiple subItems and the subItems can have subItems and so on...
+
   ## ZOD SCHEMA
     z.object({
         itemsCount: z.number(),

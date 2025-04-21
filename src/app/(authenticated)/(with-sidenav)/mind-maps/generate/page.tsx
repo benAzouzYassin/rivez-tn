@@ -348,7 +348,7 @@ export default function Page() {
         <section>
             <div
                 className={cn(
-                    "h-[92vh] md:-mt-2 -mt-4 border border-gray-300 relative isolate",
+                    "h-[90vh]  border border-gray-300 relative isolate",
                     {
                         "md:w-[calc(100vw-306px)]": isSidenavOpen,
                         "md:w-[calc(100vw-100px)]": !isSidenavOpen,
