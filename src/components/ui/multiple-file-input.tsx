@@ -3,7 +3,7 @@
 import { toastError } from "@/lib/toasts"
 import { cn } from "@/lib/ui-utils"
 import { FileTextIcon, Loader2, Upload, X } from "lucide-react"
-import { ReactNode, useCallback, useState } from "react"
+import { ReactNode, useCallback, useEffect, useState } from "react"
 import { useDropzone } from "react-dropzone"
 import { Button } from "./button"
 import ImageWithPreview from "./img-with-preview"
@@ -143,6 +143,65 @@ export function MultipleFileInput({
         setLocalFileNames(newFileNames)
     }
 
+    const handlePaste = useCallback(
+        (event: ClipboardEvent) => {
+            const items = event.clipboardData?.items
+
+            if (!items) return
+
+            const pastedFiles: File[] = []
+
+            for (let i = 0; i < items.length; i++) {
+                const item = items[i]
+
+                // Check if the pasted item is an image
+                const isValidImage = item.type.startsWith("image/")
+                const isValidPDF = item.type === "application/pdf"
+                if (
+                    (allowImage && isValidImage) ||
+                    (allowDocument && isValidPDF)
+                ) {
+                    const file = item.getAsFile()
+                    if (file) {
+                        pastedFiles.push(file)
+                    }
+                }
+            }
+
+            if (pastedFiles.length > 0) {
+                setUploadedFiles((prev) => [...prev, ...pastedFiles])
+                onChange([...uploadedFiles, ...pastedFiles])
+
+                const newPreviewUrls: string[] = []
+                const newFileNames: string[] = []
+                pastedFiles.forEach((file) => {
+                    newFileNames.push(file.name)
+                    if (allowImage && file.type.startsWith("image/")) {
+                        const reader = new FileReader()
+                        reader.onload = (e) => {
+                            setLocalPreviewUrls((prev) => [
+                                ...prev,
+                                e.target?.result as string,
+                            ])
+                        }
+                        reader.readAsDataURL(file)
+                        newPreviewUrls.push(URL.createObjectURL(file))
+                    } else {
+                        setLocalPreviewUrls((prev) => [...prev, "document"])
+                    }
+                })
+                setLocalFileNames((prev) => [...prev, ...newFileNames])
+            }
+        },
+        [allowDocument, allowImage, onChange, uploadedFiles]
+    )
+    useEffect(() => {
+        window.addEventListener("paste", handlePaste)
+
+        return () => {
+            window.removeEventListener("paste", handlePaste)
+        }
+    }, [handlePaste])
     return (
         <div
             className={cn(

@@ -13,13 +13,16 @@ import {
     DialogTrigger,
 } from "../ui/dialog"
 import TooltipWrapper from "../ui/tooltip"
+import { useLanguage } from "@/hooks/use-language"
 
 interface Props {
     fixed?: boolean
 }
-
 export default function FloatingSection(props: Props) {
+    const lang = useLanguage()
     const { data: userData } = useCurrentUser()
+    const t = translations[lang]
+
     return (
         <section className="col-span-1  py-4 pr-0 md:pr-4 pl-0 md:pl-5">
             <div className={cn({ "md:fixed md:top-30 md:pr-4": props.fixed })}>
@@ -31,12 +34,12 @@ export default function FloatingSection(props: Props) {
                         <div className="flex flex-col sm:flex-row">
                             <div className="grow">
                                 <p className="text-lg md:text-xl font-extrabold text-neutral-500">
-                                    Get free credits
+                                    {t["Get free credits"]}
                                 </p>
                                 <p className="mt-1 text-sm md:text-base font-semibold text-neutral-500">
-                                    Invite your friends and get{" "}
+                                    {t["Invite your friends to get"]}{" "}
                                     <span className="text-blue-500 font-extrabold">
-                                        25 free credit !
+                                        25 {t["free credit !"]}
                                     </span>{" "}
                                 </p>
                             </div>
@@ -49,7 +52,7 @@ export default function FloatingSection(props: Props) {
                                 variant={"blue"}
                                 className="h-9 mt-3 mb-2 w-full font-extrabold rounded-xl px-3"
                             >
-                                Invite friend
+                                {t["Invite friend"]}
                             </Button>
                         </ShareDialog>
                     </div>
@@ -60,7 +63,7 @@ export default function FloatingSection(props: Props) {
                     >
                         <div className="grow">
                             <p className="text-lg md:text-xl font-extrabold text-neutral-500">
-                                XP Points :
+                                {t["XP Points :"]}
                             </p>
                         </div>
                         <div className="flex items-center text-lg md:text-xl text-[#f5b237] font-black gap-1">
@@ -217,7 +220,7 @@ export function ShareDialog({ children }: { children: ReactNode }) {
         <Dialog>
             <DialogTrigger asChild>{children}</DialogTrigger>
             <DialogContent
-                className={`w-[92vw] max-w-[700px] !rounded-xl ${
+                className={`w-[92vw] max-w-[700px] md:min-w-[700px] !rounded-xl ${
                     isDark ? "bg-gray-900 border-gray-700" : "bg-white"
                 }`}
             >
@@ -380,4 +383,40 @@ function FacebookIcon({ className }: { className?: string }) {
             />
         </svg>
     )
+}
+
+const translations = {
+    en: {
+        "Get free credits": "Get free credits",
+        "Invite your friends to get": "Invite your friends to get",
+        "free credit !": "free credit !",
+        "Invite friend": "Invite friend",
+        "XP Points :": "XP Points :",
+        "Copy link": "Copy link",
+        "or share directly": "or share directly",
+        Facebook: "Facebook",
+        WhatsApp: "WhatsApp",
+    },
+    ar: {
+        "Get free credits": "احصل على رصيد مجاني",
+        "Invite your friends to get": "ادعُ أصدقائك واحصل على",
+        "free credit !": "رصيد مجاني!",
+        "Invite friend": "ادعُ صديق",
+        "XP Points :": "نقاط الخبرة :",
+        "Copy link": "نسخ الرابط",
+        "or share directly": "أو شارك مباشرة",
+        Facebook: "فيسبوك",
+        WhatsApp: "واتساب",
+    },
+    fr: {
+        "Get free credits": "Obtenez des crédits gratuits",
+        "Invite your friends to get": "Invitez vos amis et obtenez",
+        "free credit !": "crédit gratuit !",
+        "Invite friend": "Inviter un ami",
+        "XP Points :": "Points d'XP :",
+        "Copy link": "Copier] le lien",
+        "or share directly": "ou partager directement",
+        Facebook: "Facebook",
+        WhatsApp: "WhatsApp",
+    },
 }

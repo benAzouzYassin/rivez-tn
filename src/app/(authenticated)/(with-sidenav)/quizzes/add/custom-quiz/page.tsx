@@ -106,11 +106,11 @@ export default function Page() {
                     )}
                 />
 
-                <ImageUpload
+                {/* <ImageUpload
                     className=""
                     imageUrl={imageUrl}
                     onImageUrlChange={setImageUrl}
-                />
+                /> */}
                 <Button
                     isLoading={isSubmitting || isLoading}
                     type="button"

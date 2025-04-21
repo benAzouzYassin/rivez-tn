@@ -4,7 +4,7 @@ import { wait } from "@/utils/wait"
 import { FilesIcon } from "lucide-react"
 import * as pdfjsLib from "pdfjs-dist"
 import {} from "pdfjs-dist"
-import { ChangeEvent, DragEvent, useState } from "react"
+import { ChangeEvent, DragEvent, useCallback, useEffect, useState } from "react"
 import { z } from "zod"
 import { usePdfSummarizerStore } from "../store"
 import { useIsSmallScreen } from "@/hooks/is-small-screen"
@@ -48,36 +48,39 @@ export default function FilesUpload() {
         handleFiles(droppedFiles || [])
     }
 
-    const handleFiles = async (files: File[]) => {
-        toastLoading("Loading your files...")
-        for await (const file of files) {
-            const { data: result, error } = await tryCatchAsync(
-                Promise.all([getFileData(file), getFilePages(file)])
-            )
-            if (error) {
-                dismissToasts("loading")
-                return toastError(`Something went wrong with ${file.name}`)
-            }
-            const [fileData, pages] = result
-            const fileToAdd = {
-                localId: crypto.randomUUID(),
-                file: fileData,
-                name: file.name,
-                pages: pages.map((p, i) => ({
-                    content: p,
+    const handleFiles = useCallback(
+        async (files: File[]) => {
+            toastLoading("Loading your files...")
+            for await (const file of files) {
+                const { data: result, error } = await tryCatchAsync(
+                    Promise.all([getFileData(file), getFilePages(file)])
+                )
+                if (error) {
+                    dismissToasts("loading")
+                    return toastError(`Something went wrong with ${file.name}`)
+                }
+                const [fileData, pages] = result
+                const fileToAdd = {
                     localId: crypto.randomUUID(),
-                    index: i,
-                })),
+                    file: fileData,
+                    name: file.name,
+                    pages: pages.map((p, i) => ({
+                        content: p,
+                        localId: crypto.randomUUID(),
+                        index: i,
+                    })),
+                }
+                addFileToState(fileToAdd)
+                selectPages(fileToAdd.pages.map((item) => item.localId))
             }
-            addFileToState(fileToAdd)
-            selectPages(fileToAdd.pages.map((item) => item.localId))
-        }
 
-        dismissToasts("loading")
-        if (isSmallScreen) {
-            router.push("pdf-summarizer/multiple-pages")
-        }
-    }
+            dismissToasts("loading")
+            if (isSmallScreen) {
+                router.push("pdf-summarizer/multiple-pages")
+            }
+        },
+        [addFileToState, isSmallScreen, router, selectPages]
+    )
 
     const getFileData = (file: File): Promise<pdfjsLib.PDFDocumentProxy> => {
         return new Promise((resolve, reject) => {
@@ -129,6 +132,39 @@ export default function FilesUpload() {
             })
         })
     }
+
+    const handlePaste = useCallback(
+        (event: ClipboardEvent) => {
+            const items = event.clipboardData?.items
+
+            if (!items) return
+
+            const pastedFiles: File[] = []
+
+            for (let i = 0; i < items.length; i++) {
+                const item = items[i]
+
+                if (item.type === "application/pdf") {
+                    const file = item.getAsFile()
+                    if (file) {
+                        pastedFiles.push(file)
+                    }
+                }
+            }
+
+            if (pastedFiles.length > 0) {
+                handleFiles(pastedFiles)
+            }
+        },
+        [handleFiles]
+    )
+    useEffect(() => {
+        window.addEventListener("paste", handlePaste)
+
+        return () => {
+            window.removeEventListener("paste", handlePaste)
+        }
+    }, [handlePaste])
     return (
         <div className="w-full max-w-3xl  pt-20 md:px-0 px-3 md:pt-28 space-y-6">
             <div className="text-center mb-10">
@@ -168,6 +204,9 @@ export default function FilesUpload() {
                     </p>
                     <p className="text-sm font-semibold text-neutral-500 text-center">
                         Only PDF files are supported
+                    </p>
+                    <p className="text-sm text-blue-500 font-medium text-center">
+                        You can also paste files (Ctrl+V / Cmd+V)
                     </p>
                 </label>
             </div>

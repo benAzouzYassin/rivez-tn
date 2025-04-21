@@ -183,10 +183,10 @@ export default function MatchingPairsQuestion(props: Props) {
                     questionId={props.question.id}
                 />
                 <div>
-                    <p className="max-w-[1200px] mb-1 text-2xl md:text-3xl md:px-0 pl-3 pr-1  font-extrabold top-0 text-neutral-700 text-left w-full left-0">
+                    <p className="max-w-[1200px] md:mx-auto mb-1 text-2xl md:text-3xl md:px-0 pl-3 pr-1  font-extrabold top-0 text-neutral-700 text-left w-full left-0">
                         {props.question?.question || "Match the items :"}
                     </p>
-                    <p className="text-base pl-3 md:hidden mt-2 underline underline-offset-4 text-neutral-500 mb-4  border-neutral-200 flex items-center gap-2 font-semibold">
+                    <p className="text-base pl-3  md:hidden mt-2 underline underline-offset-4 text-neutral-500 mb-4  border-neutral-200 flex items-center gap-2 font-semibold">
                         <span className="">
                             Each item from{" "}
                             <span className="text-blue-600">Group A</span> have

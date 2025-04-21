@@ -123,7 +123,7 @@ export default function NodeSheet(props: Props) {
 
     return (
         <Sheet open={props.open} onOpenChange={props.setOpen}>
-            <SheetContent className="p-0 bg-white w-[95vw] min-w-[95vw]  lg:w-[calc(100vw-450px)] lg:min-w-[calc(100vw-450px)]">
+            <SheetContent className="p-0 bg-white w-[95vw]  md:px-2 min-w-[95vw]  lg:w-[calc(100vw-450px)] lg:min-w-[calc(100vw-450px)]">
                 <div className="scale-x-[-1] overflow-y-auto">
                     <div className="h-full scale-x-[-1]">
                         {isError && <ErrorDisplay />}

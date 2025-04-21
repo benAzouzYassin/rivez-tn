@@ -1,12 +1,10 @@
 "use client"
 
 import { handleInvite } from "@/data-access/users/handle-invite"
+import { useRefetchUser } from "@/hooks/use-refetch-user"
 import { parseAsBoolean, useQueryState } from "nuqs"
 import { useEffect } from "react"
 import HomePage from "./_components/home-page"
-import { useRefetchUser } from "@/hooks/use-refetch-user"
-import InsufficientCreditsDialog from "@/components/shared/insufficient-credits-dialog"
-import { mediumPrice } from "../../../../constants/prices"
 
 export default function Page() {
     const refetchUser = useRefetchUser()

@@ -6,8 +6,12 @@ import GenerateQuiz from "../_icons/generate-quiz"
 import Mindmap from "../_icons/mindmap"
 import SummarizeDocument from "../_icons/summarize-document"
 import LatestQuizzesMindmaps from "./latest-quizzes-mindmaps"
+import { useLanguage } from "@/hooks/use-language"
+import { translation } from "../translation"
 
 export default function HomePage() {
+    const lang = useLanguage()
+    const t = translation[lang]
     return (
         <section className="pb-20 max-w-[1520px] mx-auto">
             <div className=" ml-0  relative pt-10   mx-auto z-10   px-4 grid grid-cols-1 2xl:grid-cols-13 py-8">
@@ -24,15 +28,15 @@ export default function HomePage() {
                                 <div className="flex items-center gap-2">
                                     <GenerateQuiz className="!w-8 !h-8 md:!w-10 md:!h-10" />
                                     <p className="text-xl md:text-2xl font-extrabold text-blue-700/70">
-                                        Quizzes
+                                        {t["Quizzes"]}
                                     </p>
                                 </div>
                                 <p className="mt-2 pl-2 pr-4 text-base md:text-lg text-neutral-500 font-semibold text-wrap text-left">
-                                    Create and take interactive quizzes to test
-                                    your knowledge. Perfect for exam prep and
-                                    reinforcing key concepts through active
-                                    recall. Quizzes can be generated from text,
-                                    documents, images and videos.
+                                    {
+                                        t[
+                                            "Create and take interactive quizzes to test your knowledge. Perfect for exam prep and reinforcing key concepts through active recall. Quizzes can be generated from text, documents, images and videos."
+                                        ]
+                                    }
                                 </p>
                             </Button>
                         </Link>
@@ -44,13 +48,15 @@ export default function HomePage() {
                                 <div className="flex items-center gap-2">
                                     <Mindmap className="!w-8 !h-8 md:!w-10 md:!h-10 scale-320 -translate-y-2" />
                                     <p className="text-xl md:text-2xl font-extrabold text-blue-700/70">
-                                        Mindmap
+                                        {t["Mindmap"]}
                                     </p>
                                 </div>
                                 <p className="mt-2 pl-2 pr-4 text-base md:text-lg text-neutral-500 font-semibold text-wrap text-left">
-                                    Visualize complex topics and their
-                                    connections. by generating structured
-                                    mindmaps to simplify any topic.
+                                    {
+                                        t[
+                                            "Visualize complex topics and their connections. by generating structured mindmaps to simplify any topic."
+                                        ]
+                                    }
                                 </p>
                             </Button>
                         </Link>
@@ -62,13 +68,15 @@ export default function HomePage() {
                                 <div className="flex items-center gap-2">
                                     <SummarizeDocument className="!w-8 !h-8 md:!w-10 md:!h-10" />
                                     <p className="text-xl md:text-2xl font-extrabold text-blue-700/70">
-                                        Summarize
+                                        {t["Summarize"]}
                                     </p>
                                 </div>
                                 <p className="mt-2 pl-2 pr-4 text-base md:text-lg text-neutral-500 font-semibold text-wrap text-left">
-                                    Extract key points from documents and
-                                    lectures. Get concise summaries that
-                                    highlight essential information.
+                                    {
+                                        t[
+                                            "Extract key points from documents and lectures. Get concise summaries that highlight essential information."
+                                        ]
+                                    }
                                 </p>
                             </Button>
                         </Link>
@@ -88,12 +96,15 @@ export default function HomePage() {
                         <div className="flex items-center gap-2">
                             <WandSparkles className="!w-8 !h-8 md:!w-9 md:!h-9 text-purple-500 p-1 border-purple-300 rounded-lg border-2" />
                             <p className="text-xl md:text-2xl font-extrabold text-purple-700/70">
-                                Quizzes
+                                {t["Quizzes"]}
                             </p>
                         </div>
                         <p className="mt-2 pl-2 pr-4 text-base md:text-lg text-neutral-500 font-semibold text-wrap text-left">
-                            Save time and use AI to automatically create quizzes
-                            that helps you practice.
+                            {
+                                t[
+                                    "Save time and use AI to automatically create quizzes that helps you practice."
+                                ]
+                            }
                         </p>
                     </Button>
                 </Link>
@@ -105,12 +116,15 @@ export default function HomePage() {
                         <div className="flex items-center gap-2">
                             <Cable className="!w-8 !h-8 md:!w-9 md:!h-9 text-purple-500 p-1 border-purple-300 rounded-lg border-2" />
                             <p className="text-xl md:text-2xl font-extrabold text-purple-700/70">
-                                Mindmaps
+                                {t["Mindmap"]}
                             </p>
                         </div>
                         <p className="mt-2 pl-2 pr-4 text-base md:text-lg text-neutral-500 font-semibold text-wrap text-left">
-                            Simplify complex topics by generating mindmaps that
-                            visualize any topic.
+                            {
+                                t[
+                                    "Simplify complex topics by generating mindmaps that visualize any topic."
+                                ]
+                            }
                         </p>
                     </Button>
                 </Link>
@@ -122,12 +136,15 @@ export default function HomePage() {
                         <div className="flex items-center gap-2">
                             <ReceiptText className="!w-8 !h-8 md:!w-9 md:!h-9 text-purple-500 p-1 border-purple-300 rounded-lg border-2" />
                             <p className="text-xl md:text-2xl font-extrabold text-purple-700/70">
-                                Summarize
+                                {t["Summarize"]}
                             </p>
                         </div>
                         <p className="mt-2 pl-2 pr-4 text-base md:text-lg text-neutral-500 font-semibold text-wrap text-left">
-                            Transform any content into concise and clear
-                            summaries.
+                            {
+                                t[
+                                    "Transform any content into concise and clear summaries."
+                                ]
+                            }
                         </p>
                     </Button>
                 </Link>
