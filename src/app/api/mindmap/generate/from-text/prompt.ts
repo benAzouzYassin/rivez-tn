@@ -1,3 +1,5 @@
+import { z } from "zod"
+
 export function getSystemPrompt() {
     return `
     You are mindmap generator, you take any content or topic from a user then thinks about it and generate a detailed mindmap
@@ -12,11 +14,11 @@ export function getSystemPrompt() {
     - Your responses follows the ZOD SCHEMA bellow.
     - Include all details of the content provided to you by the user.
     - Highlight the essential parts of the content provided to you by the user.    
-        
+    - The items array should be a single item that have multiple subItems and the subItems can have subItems and so on...
   ## ZOD SCHEMA
     z.object({
         itemsCount: z.number(),
-        items:z.array( z.object({
+        items: z.array( z.object({
             title: z.string(),
             id: z.string(),
             description: z.string() // max 16 word ,
