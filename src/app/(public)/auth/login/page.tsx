@@ -73,7 +73,7 @@ export default function Page() {
         setIsPasswordAuth(false)
     }
 
-    if (isFetchingCurrentUser) {
+    if (isFetchingCurrentUser || isGoogleAuth || isPasswordAuth) {
         return (
             <main className="flex min-h-[100vh] relative flex-col items-center justify-center">
                 <AnimatedLoader />
