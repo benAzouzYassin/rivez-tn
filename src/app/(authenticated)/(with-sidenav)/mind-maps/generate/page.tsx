@@ -49,6 +49,7 @@ import { handleMindMapRefund } from "@/data-access/mindmaps/handle-refund"
 import { CHEAP_TYPES } from "./constants"
 import { useRefetchUser } from "@/hooks/use-refetch-user"
 import { mindmapsContentDb } from "../_utils/indexed-db"
+import GeneralLoadingScreen from "@/components/shared/general-loading-screen"
 
 export default function Page() {
     const queryClient = useQueryClient()
@@ -421,7 +422,9 @@ export default function Page() {
                     fitView
                 >
                     {isLoading && (
-                        <Loader2 className="w-10 h-10 absolute text-blue-400 animate-spin duration-300 top-[40%] left-1/2 -translate-x-1/2 -translate-y-1/2  " />
+                        <div className=" absolute w-56 bg-white z-50 max-w-[80vw] max-h-[80vh] text-blue-400 top-[50%] left-1/2 -translate-x-1/2 -translate-y-1/2  ">
+                            <GeneralLoadingScreen text="" />
+                        </div>
                     )}
                     <Controls className="rounded-lg md:!block !hidden -translate-y-4 border border-gray-200" />
                     <Panel
