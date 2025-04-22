@@ -21,12 +21,14 @@ type CarouselProps = {
     setApi?: (api: CarouselApi) => void
 }
 
-interface CarouselContextProps extends CarouselProps {carouselRef: ReturnType<typeof useEmblaCarousel>[0]
+interface CarouselContextProps extends CarouselProps {
+    carouselRef: ReturnType<typeof useEmblaCarousel>[0]
     api: ReturnType<typeof useEmblaCarousel>[1]
     scrollPrev: () => void
     scrollNext: () => void
     canScrollPrev: boolean
-    canScrollNext: boolean}
+    canScrollNext: boolean
+}
 
 const CarouselContext = React.createContext<CarouselContextProps | null>(null)
 
@@ -160,7 +162,7 @@ const CarouselContent = React.forwardRef<
             <div
                 ref={ref}
                 className={cn(
-                    "flex",
+                    "flex rtl:flex-row-reverse",
                     orientation === "horizontal" ? "-ml-4" : "-mt-4 flex-col",
                     className
                 )}

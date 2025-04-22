@@ -16,7 +16,7 @@ import { useSidenav } from "@/providers/sidenav-provider"
 import { useQueryClient } from "@tanstack/react-query"
 import { CreditCardIcon, LanguagesIcon, LogOutIcon, User2 } from "lucide-react"
 import { useRouter } from "nextjs-toploader/app"
-import { JSX, useMemo, useState } from "react"
+import { JSX, useMemo, useState, useEffect } from "react"
 import CreditIcon from "../icons/credit-icon"
 import MobileNavDrawer from "./mobile-nav-drawer"
 import Cookies from "js-cookie"
@@ -27,7 +27,14 @@ export default function UserHeader() {
     const { isSidenavOpen } = useSidenav()
     const { data: user, isLoading, isError } = useCurrentUser()
     const [isUserSettingOpen, setIsUserSettingOpen] = useState(false)
+    const [isRTL, setIsRTL] = useState(false)
     const router = useRouter()
+
+    useEffect(() => {
+        const language = Cookies.get("selected-language") || "en"
+        setIsRTL(language === "ar")
+    }, [])
+
     const handleLogout = async () => {
         setIsUserSettingOpen(false)
         try {
@@ -76,37 +83,70 @@ export default function UserHeader() {
         router.replace("/auth/login")
         return null
     }
+
     return (
         <header
             className={cn(
                 "w-full h-[10vh] z-10 fixed transition-all duration-300 bg-white",
                 {
-                    " lg:pl-[300px]": isSidenavOpen,
-                    " lg:pl-[100px]": !isSidenavOpen,
+                    " lg:pl-[300px]": isSidenavOpen && !isRTL,
+                    " lg:pr-[300px]": isSidenavOpen && isRTL,
+                    " lg:pl-[100px]": !isSidenavOpen && !isRTL,
+                    " lg:pr-[100px]": !isSidenavOpen && isRTL,
                 }
             )}
         >
-            <div className="flex h-full border-b-2 items-center px-4  sm:px-8 lg:px-20">
+            <div
+                className={cn(
+                    "flex h-full border-b-2 items-center px-4 sm:px-8 lg:px-20",
+                    {
+                        "flex-row-reverse": isRTL,
+                    }
+                )}
+            >
                 <MobileNavDrawer />
-                <div className="ml-auto flex items-center gap-1">
+                <div
+                    className={cn("ml-auto flex items-center gap-1", {
+                        "-ml-10 mr-auto": isRTL,
+                    })}
+                >
                     <Popover
                         open={isUserSettingOpen}
                         onOpenChange={setIsUserSettingOpen}
                     >
-                        <PopoverTrigger className="cursor-pointer  w-fit p-1  mt-2 rounded-2xl  flex items-center  gap-2 font-bold text-lg text-neutral-600 md:px-3 py-1 active:scale-95 hover:bg-neutral-100 transition-transform">
-                            <div className="flex text-nowrap flex-col">
-                                <p className="first-letter:uppercase md:text-base text-sm pr-px max-w-[200px] truncate w-fit mx-2">
+                        <PopoverTrigger className="cursor-pointer w-fit p-1 mt-2 rounded-2xl flex items-center gap-2 font-bold text-lg text-neutral-600 md:px-3 py-1 active:scale-95 hover:bg-neutral-100 transition-transform">
+                            <div
+                                className={cn("flex text-nowrap flex-col", {
+                                    "items-end": isRTL,
+                                    "items-start": !isRTL,
+                                })}
+                            >
+                                <p
+                                    className={cn(
+                                        "first-letter:uppercase md:text-base text-sm pr-px max-w-[200px] truncate w-fit mx-2",
+                                        {
+                                            "pl-px pr-0": isRTL,
+                                        }
+                                    )}
+                                >
                                     {" "}
                                     {user?.identities?.[0].displayName}
                                 </p>
-                                <div className="md:text-sm text-xs w-full  gap-2 justify-end flex text-neutral-500  text-left font-semibold">
+                                <div
+                                    className={cn(
+                                        "md:text-sm text-xs w-full gap-2 justify-end flex text-neutral-500 text-left font-semibold",
+                                        {
+                                            "justify-start text-right": isRTL,
+                                        }
+                                    )}
+                                >
                                     <TooltipWrapper
                                         asChild
                                         content="Your credit balance"
                                     >
-                                        <div className="flex w-fit   items-center cursor-pointer gap-1 rounded-full text-sm md:mt-0 mt-1 md:text-lg bg-blue-100/70 border border-blue-200 pl-2 pr-3 py-[1px] scale-95 text-neutral-600/90 hover:bg-blue-100 transition-colors">
+                                        <div className="flex w-fit items-center cursor-pointer gap-1 rounded-full text-sm md:mt-0 mt-1 md:text-lg bg-blue-100/70 border border-blue-200 pl-2 pr-3 py-[1px] scale-95 text-neutral-600/90 hover:bg-blue-100 transition-colors">
                                             <CreditIcon className="h-6 w-6 md:scale-125 opacity-80" />
-                                            <span className="font-extrabold  pr-1">
+                                            <span className="font-extrabold pr-1">
                                                 {user?.credit_balance?.toFixed(
                                                     1
                                                 )}
@@ -122,12 +162,19 @@ export default function UserHeader() {
                         </PopoverTrigger>
 
                         <PopoverContent
-                            align="end"
-                            className="w-72 -translate-x-2 p-0 rounded-xl shadow-lg border border-neutral-200"
+                            align={isRTL ? "start" : "end"}
+                            className={cn(
+                                "w-72 p-0 rounded-xl shadow-lg border border-neutral-200",
+                                {
+                                    "-translate-x-2": !isRTL,
+                                    "translate-x-2": isRTL,
+                                }
+                            )}
                         >
                             <UserMenu
                                 items={menuItems}
                                 close={() => setIsUserSettingOpen(false)}
+                                isRTL={isRTL}
                             />
                         </PopoverContent>
                     </Popover>
@@ -139,7 +186,7 @@ export default function UserHeader() {
 
 function UserProfile({ name, image }: UserProfileProps) {
     return (
-        <div className="group relative rounded-full   active:scale-95 transition-all  ">
+        <div className="group relative rounded-full active:scale-95 transition-all">
             <Avatar className="h-[50px] opacity-90 w-[50px]">
                 <AvatarImage src={image} alt={name} />
                 <AvatarFallback className="bg-neutral-100 border text-neutral-400">
@@ -149,7 +196,16 @@ function UserProfile({ name, image }: UserProfileProps) {
         </div>
     )
 }
-function UserMenu({ items, close }: { items: MenuItem[]; close: () => void }) {
+
+function UserMenu({
+    items,
+    close,
+    isRTL,
+}: {
+    items: MenuItem[]
+    close: () => void
+    isRTL: boolean
+}) {
     const [language, setLanguage] = useState({
         label: "English",
         value: "en",
@@ -162,24 +218,37 @@ function UserMenu({ items, close }: { items: MenuItem[]; close: () => void }) {
             { label: "Français", value: "fr", flag: "/flags/france.svg" },
         ]
     }, [])
+
     return (
         <div>
-            <div className=" ">
+            <div>
                 <button
                     className={cn(
-                        "flex group relative  text-neutral-500 w-full cursor-pointer items-center gap-3 px-4 py-3 text-base font-bold",
+                        "flex group relative text-neutral-500 w-full cursor-pointer items-center gap-3 px-4 py-3 text-base font-bold",
                         "transition-colors hover:bg-blue-100/70 hover:text-blue-400 last:border-b active:bg-blue-200/70"
                     )}
                 >
-                    <div className="  group-hover:flex hidden bg-white  w-64 h-44 -left-64 top-0 absolute ">
+                    <div
+                        className={cn(
+                            "group-hover:flex hidden bg-white w-64 h-44 top-0 absolute",
+                            {
+                                "-left-64": !isRTL,
+                                "-right-64": isRTL,
+                            }
+                        )}
+                    >
                         <div className="w-64 mt-0 rounded-none border-none overflow-visible shadow-none bg-transparent p-0!">
-                            <div className="rounded-2xl -mt-1 overflow-hidden border-2 bg-white   ">
-                                <div className="">
+                            <div className="rounded-2xl -mt-1 overflow-hidden border-2 bg-white">
+                                <div>
                                     {languages.map((lang) => (
                                         <div
                                             key={lang.value}
                                             className={cn(
-                                                "flex items-center active:scale-95 transition-all  h-12 border-t-2 px-6 w-full cursor-pointer   hover:bg-blue-100/70 "
+                                                "flex items-center active:scale-95 transition-all h-12 border-t-2 px-6 w-full cursor-pointer hover:bg-blue-100/70",
+                                                {
+                                                    "flex-row-reverse justify-between":
+                                                        isRTL,
+                                                }
                                             )}
                                             onClick={() => {
                                                 setLanguage(lang)
@@ -204,7 +273,8 @@ function UserMenu({ items, close }: { items: MenuItem[]; close: () => void }) {
                                             />
                                             <span
                                                 className={cn(
-                                                    "text-sm font-bold text-neutral-600 ml-1"
+                                                    "text-sm font-bold text-neutral-600 ml-1",
+                                                    { "ml-0 mr-1": isRTL }
                                                 )}
                                             >
                                                 {lang.label}
@@ -216,7 +286,9 @@ function UserMenu({ items, close }: { items: MenuItem[]; close: () => void }) {
                         </div>
                     </div>
                     <LanguagesIcon className="w-6 h-6 opacity-70" />
-                    Change language
+                    <span className={cn({ "mr-auto": isRTL })}>
+                        Change language
+                    </span>
                 </button>
                 {items.map((item, index) => (
                     <button
@@ -225,17 +297,21 @@ function UserMenu({ items, close }: { items: MenuItem[]; close: () => void }) {
                         className={cn(
                             "flex w-full cursor-pointer items-center gap-3 px-4 py-3 text-base font-bold",
                             "transition-colors hover:bg-blue-100/70 hover:text-blue-400 last:border-b active:bg-blue-200/70",
-                            item.className
+                            item.className,
+                            { "flex-row-reverse": isRTL }
                         )}
                     >
                         {item.icon}
-                        {item.label}
+                        <span className={cn({ "mr-auto": isRTL })}>
+                            {item.label}
+                        </span>
                     </button>
                 ))}
             </div>
         </div>
     )
 }
+
 type MenuItem = {
     icon: JSX.Element
     label: string

@@ -20,8 +20,8 @@ interface Props {
 }
 export default function FloatingSection(props: Props) {
     const lang = useLanguage()
-    const { data: userData } = useCurrentUser()
     const t = translations[lang]
+    const { data: userData } = useCurrentUser()
 
     return (
         <section className="col-span-1  py-4 pr-0 md:pr-4 pl-0 md:pl-5">
@@ -183,6 +183,8 @@ export function ShareDialog({ children }: { children: ReactNode }) {
     const currentUser = useCurrentUser()
     const [copied, setCopied] = useState(false)
     const isDark = false
+    const lang = useLanguage()
+    const t = translations[lang]
 
     const [shareLink, setShareLink] = useState("")
 
@@ -229,7 +231,7 @@ export function ShareDialog({ children }: { children: ReactNode }) {
                         isDark ? "text-gray-100" : "text-neutral-600"
                     }`}
                 >
-                    Invite friends
+                    {t["Invite friends"]}
                 </DialogTitle>
                 <DialogDescription
                     className={`text-sm ${
@@ -247,7 +249,7 @@ export function ShareDialog({ children }: { children: ReactNode }) {
                                 }`}
                             >
                                 <input
-                                    className={`w-full p-2 sm:p-3 text-base sm:text-lg font-semibold bg-transparent outline-none flex-1 ${
+                                    className={`w-full text-left rtl:font-medium p-2 sm:p-3 text-base sm:text-lg font-semibold bg-transparent outline-none flex-1 ${
                                         isDark
                                             ? "text-gray-200"
                                             : "text-neutral-700"
@@ -291,7 +293,7 @@ export function ShareDialog({ children }: { children: ReactNode }) {
                                 </div>
                                 <div className="relative flex justify-center">
                                     <span className="bg-white px-4 text-gray-500">
-                                        or share directly
+                                        {t["or share directly"]}
                                     </span>
                                 </div>
                             </div>
@@ -396,6 +398,7 @@ const translations = {
         "or share directly": "or share directly",
         Facebook: "Facebook",
         WhatsApp: "WhatsApp",
+        "Invite friends": "Invite friends",
     },
     ar: {
         "Get free credits": "احصل على رصيد مجاني",
@@ -407,6 +410,7 @@ const translations = {
         "or share directly": "أو شارك مباشرة",
         Facebook: "فيسبوك",
         WhatsApp: "واتساب",
+        "Invite friends": "دعوة الأصدقاء",
     },
     fr: {
         "Get free credits": "Obtenez des crédits gratuits",
@@ -418,5 +422,6 @@ const translations = {
         "or share directly": "ou partager directement",
         Facebook: "Facebook",
         WhatsApp: "WhatsApp",
+        "Invite friends": "Inviter des amis",
     },
 }

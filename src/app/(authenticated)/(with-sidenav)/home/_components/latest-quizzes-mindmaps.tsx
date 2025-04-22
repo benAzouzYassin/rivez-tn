@@ -11,11 +11,15 @@ import { Skeleton } from "@/components/ui/skeleton"
 import { readLastNMindmaps } from "@/data-access/mindmaps/read"
 import { readLastNQuizzes } from "@/data-access/quizzes/read"
 import { useCurrentUser } from "@/hooks/use-current-user"
+import { useLanguage } from "@/hooks/use-language"
 import { formatDate } from "@/utils/date"
 import { useQueries } from "@tanstack/react-query"
 import { useRouter } from "nextjs-toploader/app"
+import { translation } from "../translation"
 
 export default function LatestQuizzesMindmaps() {
+    const lang = useLanguage()
+    const t = translation[lang]
     const { data: currentUser } = useCurrentUser()
     const [quizzesQuery, mindMapsQuery] = useQueries({
         queries: [
@@ -52,7 +56,7 @@ export default function LatestQuizzesMindmaps() {
                 title: item.name,
                 image: item.image,
                 id: item.id,
-                description: "Created the " + formatDate(item.created_at),
+                description: t["Created the "] + formatDate(item.created_at),
                 tag: "Mindmaps",
             }
         }) || []),
@@ -69,9 +73,9 @@ export default function LatestQuizzesMindmaps() {
         return <LatestQuizzesMindmapsSekelton />
     }
     return (
-        <div className=" mb-10 mx-auto md:px-10 px-6 -mt-2 max-w-[1500px]">
+        <div className=" mb-10  mx-auto md:px-10 px-6 -mt-2 max-w-[1500px]">
             <h2 className="text-3xl font-extrabold text-blue-700/70 mb-4">
-                Last quizzes and mindmaps :{" "}
+                {t["Last quizzes and mindmaps :"]}{" "}
             </h2>
 
             <Carousel
@@ -94,20 +98,20 @@ export default function LatestQuizzesMindmaps() {
                                             router.push(`/mind-maps/${item.id}`)
                                         }
                                     }}
-                                    className="h-auto min-h-48 hover:bg-blue-50 transition-all active:translate-y-1 active:shadow-transparent cursor-pointer hover:border-blue-300 hover:shadow-blue-300"
+                                    className="h-auto   min-h-48 hover:bg-blue-50 transition-all active:translate-y-1 active:shadow-transparent cursor-pointer hover:border-blue-300 hover:shadow-blue-300"
                                 >
-                                    <div className="p-4 sm:p-6 flex flex-col sm:flex-row">
+                                    <div className="p-4 sm:p-6 flex flex-col sm:rtl:flex-row-reverse sm:flex-row">
                                         {item.image ? (
                                             <img
                                                 alt={`${item.title} thumbnail`}
                                                 src={item.image}
-                                                className="w-full sm:w-44 object-center object-cover bg-neutral-200 rounded-2xl h-32 sm:mr-6 mb-4 sm:mb-0"
+                                                className="w-full sm:w-44 border object-center object-cover bg-neutral-200 rounded-2xl h-32 sm:mr-6 mb-4 sm:mb-0"
                                             />
                                         ) : (
                                             <div className="w-full sm:w-44 bg-neutral-200 rounded-2xl h-32 sm:mr-6 mb-4 sm:mb-0"></div>
                                         )}
                                         <div className="flex-1">
-                                            <h3 className="text-xl sm:text-2xl text-neutral-700 font-extrabold line-clamp-2">
+                                            <h3 className="text-xl  sm:text-2xl text-neutral-700 font-extrabold line-clamp-2">
                                                 {item.title}
                                             </h3>
                                             <p className="text-gray-500 font-medium mt-2 line-clamp-2 sm:line-clamp-3">
