@@ -11,6 +11,7 @@ import FillInTheBlank from "./layouts-icons/fill-in-the-blank"
 import MatchingPairs from "./layouts-icons/matching-pairs"
 import MultipleChoiceHorizontal from "./layouts-icons/multiple-choice-horizontal"
 import MultipleChoiceVertical from "./layouts-icons/multiple-choice-vertical"
+import { getLanguage } from "@/utils/get-language"
 
 type Props = {
     contentClassName?: string
@@ -20,27 +21,29 @@ type Props = {
 
 export default function LayoutSelectDialog(props: Props) {
     const [isOpen, setIsOpen] = useState(false)
+    const lang = getLanguage()
+    const t = translation[lang]
 
     return (
         <Dialog onOpenChange={setIsOpen} open={isOpen}>
             <DialogTrigger asChild>{props.trigger}</DialogTrigger>
             <DialogContent
                 className={cn(
-                    " rounded-xl pb-6 px-2 !min-w-[1100px] overflow-x-hidden border w-[1100px]  max-w-[1100px] ",
+                    " rounded-xl pb-6 px-2 !min-w-[900px] overflow-x-hidden border w-[900px]  max-w-[900px] ",
                     props.contentClassName
                 )}
             >
                 <div className="p-4 bg-muted">
                     <DialogTitle className="text-center  pb-3 text-neutral-500 font-extrabold text-3xl">
-                        Select a question layout
+                        {t["Select a question layout"]}
                     </DialogTitle>
                     <DialogDescription></DialogDescription>
                 </div>
-                <div className="p-0 min-w-[1000px] ">
-                    <div className="p-0 grid gap-5 grid-cols-3">
+                <div className="p-0 min-w-[900px] ">
+                    <div className="p-0 grid gap-y-8 gap-x-0 grid-cols-2">
                         <div className="fle flex-col items-center justify-center">
                             <h3 className="text-base font-bold text-neutral-500 text-center ">
-                                Image on left, options on right
+                                {t["Image on left, options on right"]}
                             </h3>
                             <div
                                 onClick={() => {
@@ -64,7 +67,7 @@ export default function LayoutSelectDialog(props: Props) {
                             }}
                         >
                             <h3 className="text-base font-bold text-neutral-500 text-center ">
-                                Image on the top, options on bottom
+                                {t["Image on the top, options on bottom"]}
                             </h3>
 
                             <MultipleChoiceVertical
@@ -82,7 +85,7 @@ export default function LayoutSelectDialog(props: Props) {
                             }}
                         >
                             <h3 className="text-base font-bold text-neutral-500 text-center ">
-                                Terms on left, definitions on right
+                                {t["Terms on left, definitions on right"]}
                             </h3>
 
                             <MatchingPairs
@@ -98,7 +101,7 @@ export default function LayoutSelectDialog(props: Props) {
                             }}
                         >
                             <h3 className="text-base font-bold text-neutral-500 text-center ">
-                                Options without an image.
+                                {t["Options without an image."]}
                             </h3>
 
                             <MultipleChoiceVertical
@@ -108,7 +111,7 @@ export default function LayoutSelectDialog(props: Props) {
                                 className="!w-[310px] h-[210px]"
                             />
                         </div>
-                        <div
+                        {/* <div
                             className="flex flex-col items-center justify-center"
                             onClick={() => {
                                 setIsOpen(false)
@@ -116,7 +119,7 @@ export default function LayoutSelectDialog(props: Props) {
                             }}
                         >
                             <h3 className="text-base font-bold text-neutral-500 text-center ">
-                                Fill in the blank.
+                                {t["Fill in the blank."]}
                             </h3>
 
                             <FillInTheBlank
@@ -124,7 +127,7 @@ export default function LayoutSelectDialog(props: Props) {
                                 questionTextClassName="mb-7 mt-8"
                                 className="!w-[310px] h-[210px]"
                             />
-                        </div>
+                        </div> */}
                     </div>
                 </div>
             </DialogContent>
@@ -137,3 +140,36 @@ type LayoutOptions =
     | "matching-pairs"
     | "multiple-choice-without-image"
     | "fill-in-the-blank"
+
+const translation = {
+    en: {
+        "Select a question layout": "Select a question layout",
+        "Image on left, options on right": "Image on left, options on right",
+        "Image on the top, options on bottom":
+            "Image on the top, options on bottom",
+        "Terms on left, definitions on right":
+            "Terms on left, definitions on right",
+        "Options without an image.": "Options without an image.",
+        "Fill in the blank.": "Fill in the blank.",
+    },
+    ar: {
+        "Select a question layout": "اختر تصميم السؤال",
+        "Image on left, options on right":
+            "الصورة على اليسار، الخيارات على اليمين",
+        "Image on the top, options on bottom":
+            "الصورة في الأعلى، الخيارات في الأسفل",
+        "Terms on left, definitions on right":
+            "المصطلحات على اليسار، التعاريف على اليمين",
+        "Options without an image.": "خيارات بدون صورة.",
+        "Fill in the blank.": "املأ الفراغ.",
+    },
+    fr: {
+        "Select a question layout": "Sélectionner une mise en page de question",
+        "Image on left, options on right": "Image à gauche, options à droite",
+        "Image on the top, options on bottom": "Image en haut, options en bas",
+        "Terms on left, definitions on right":
+            "Termes à gauche, définitions à droite",
+        "Options without an image.": "Options sans image.",
+        "Fill in the blank.": "Remplir le blanc.",
+    },
+}

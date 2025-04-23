@@ -15,7 +15,54 @@ import { useQuery } from "@tanstack/react-query"
 import { Check, Clock, SkipForward, X } from "lucide-react"
 import { useParams } from "next/navigation"
 import { columns } from "./table-columns"
+import { useMemo } from "react"
+import { getLanguage } from "@/utils/get-language"
 export default function Page() {
+    const translation = useMemo(() => {
+        return {
+            en: {
+                "Time Spent": "Time Spent",
+                Average: "Average",
+                "s per question": "s per question",
+                "Success Rate": "Success Rate",
+                Questions: "Questions",
+                "success rate": "success rate",
+                "Failed Questions": "Failed Questions",
+                "failure rate": "failure rate",
+                Skipped: "Skipped",
+                "skip rate": "skip rate",
+                "Questions Answers :": "Questions Answers :",
+            },
+            fr: {
+                "Time Spent": "Temps passé",
+                Average: "Moyenne",
+                "s per question": "s par question",
+                "Success Rate": "Taux de réussite",
+                Questions: "Questions",
+                "success rate": "taux de réussite",
+                "Failed Questions": "Questions échouées",
+                "failure rate": "taux d'échec",
+                Skipped: "Passé",
+                "skip rate": "taux de passage",
+                "Questions Answers :": "Réponses aux questions :",
+            },
+            ar: {
+                "Time Spent": "الوقت المستغرق",
+                Average: "المتوسط",
+                "s per question": "ثانية لكل سؤال",
+                "Success Rate": "معدل النجاح",
+                Questions: "أسئلة",
+                "success rate": "معدل النجاح",
+                "Failed Questions": "الأسئلة الفاشلة",
+                "failure rate": "معدل الفشل",
+                Skipped: "تم التخطي",
+                "skip rate": "معدل التخطي",
+                "Questions Answers :": "إجابات الأسئلة :",
+            },
+        }
+    }, [])
+    const lang = getLanguage()
+    const t = translation[lang] || translation.en
     const params = useParams()
     const id = Number(params["id"])
     const { isLoading, isError, data } = useQuery({
@@ -77,11 +124,11 @@ export default function Page() {
         }
     })
     return (
-        <main className="p-10">
-            <div className="flex w-full items-center gap-4">
+        <main className="md:p-10 p-3">
+            <div className="flex md:flex-row md:rtl:flex-row-reverse flex-col w-full items-center gap-4">
                 <div
                     className={cn(
-                        "min-h-14 h-14 ml-4 relative w-14 min-w-14 rounded-xl",
+                        "min-h-14 h-14  ltr:ml-4  md:mt-0 mt-4 relative w-14 min-w-14 rounded-xl",
                         {
                             "bg-zinc-200/70": !data?.user?.avatar_url,
                         }
@@ -98,24 +145,24 @@ export default function Page() {
                     )}
                 </div>
                 <div>
-                    <h1 className="text-left text-2xl font-bold">
+                    <h1 className="md:text-left text-center text-2xl font-bold">
                         {data?.user?.username ||
                             data?.user?.email ||
                             data?.user_submit_name}
                     </h1>
-                    <p className="font-semibold">
+                    <p className="font-semibold md:text-left text-center">
                         {formatDate(data?.created_at)}
                     </p>
                 </div>
-                <div className="text-2xl font-extrabold text-blue-600 ml-auto">
+                <div className="text-2xl md:text-left text-center font-extrabold text-blue-600 md:ml-auto">
                     {data?.quiz?.name}
                 </div>
             </div>
-            <section className="grid gap-5 mt-10 grid-cols-4">
+            <section className="grid gap-5 mt-10 md:grid-cols-2 grid-cols-1 lg:grid-cols-4">
                 <Card className="p-6 h-40 shadow-black/60 border-black/60">
                     <div className="flex justify-between items-start mb-2">
                         <span className="text-neutral-400 font-bold">
-                            Time Spent
+                            {t["Time Spent"]}
                         </span>
                         <Clock className="w-6 h-6 stroke-3 text-neutral-400" />
                     </div>
@@ -124,41 +171,41 @@ export default function Page() {
                             {data?.seconds_spent?.toFixed(1)}s
                         </div>
                         <div className="text-sm font-bold text-neutral-400">
-                            Average{" "}
+                            {t["Average"]}{" "}
                             {data?.seconds_spent &&
                             data?.quiz_submission_answers?.length
                                 ? (
-                                      data?.seconds_spent /
-                                      data?.quiz_submission_answers?.length
+                                      data.seconds_spent /
+                                      data.quiz_submission_answers.length
                                   ).toFixed(2)
                                 : 0}
-                            s per question
+                            {t["s per question"]}
                         </div>
                     </div>
                 </Card>
 
                 <Card className="p-6 shadow-green-400 border-green-400">
                     <div className="flex justify-between items-start mb-2">
-                        <span className="font-bold  text-neutral-400">
-                            Success Rate
+                        <span className="font-bold text-neutral-400">
+                            {t["Success Rate"]}
                         </span>
-                        <Check className="w-6 h-6 stroke-3  text-neutral-400 " />
+                        <Check className="w-6 h-6 stroke-3 text-neutral-400" />
                     </div>
                     <div className="space-y-1">
-                        <div className="text-3xl mt-3 text-green-500/90  font-extrabold">
+                        <div className="text-3xl mt-3 text-green-500/90 font-extrabold">
                             {successQuestions}{" "}
                             <span className="text-xl -translate-y-1 inline-flex">
-                                Questions
+                                {t["Questions"]}
                             </span>
                         </div>
-                        <div className="text-sm font-bold  text-neutral-400">
+                        <div className="text-sm font-bold text-neutral-400">
                             {(
                                 ((successQuestions || 0) /
                                     (data?.quiz_submission_answers?.length ||
                                         1)) *
                                 100
                             ).toFixed(1)}
-                            % success rate
+                            %{t["success rate"]}
                         </div>
                     </div>
                 </Card>
@@ -166,7 +213,7 @@ export default function Page() {
                 <Card className="p-6 shadow-red-300 border-red-300">
                     <div className="flex justify-between items-start mb-2">
                         <span className="text-neutral-400 font-bold">
-                            Failed Questions
+                            {t["Failed Questions"]}
                         </span>
                         <X className="w-6 h-6 stroke-3 text-neutral-400" />
                     </div>
@@ -174,7 +221,7 @@ export default function Page() {
                         <div className="text-3xl mt-3 text-red-500/90 font-extrabold">
                             {failedQuestions}{" "}
                             <span className="text-xl -translate-y-1 inline-flex">
-                                Questions
+                                {t["Questions"]}
                             </span>
                         </div>
                         <div className="text-sm font-bold text-neutral-400">
@@ -184,7 +231,7 @@ export default function Page() {
                                         1)) *
                                 100
                             ).toFixed(1)}
-                            % failure rate
+                            %{t["failure rate"]}
                         </div>
                     </div>
                 </Card>
@@ -192,15 +239,15 @@ export default function Page() {
                 <Card className="p-6 shadow-neutral-300 border-neutral-300">
                     <div className="flex justify-between items-start mb-2">
                         <span className="text-neutral-400 font-bold">
-                            Skipped
+                            {t["Skipped"]}
                         </span>
                         <SkipForward className="w-6 h-6 stroke-3 text-neutral-400" />
                     </div>
                     <div className="space-y-1">
-                        <div className="text-3xl  mt-3 font-extrabold text-neutral-500">
+                        <div className="text-3xl mt-3 font-extrabold text-neutral-500">
                             {skippedQuestions}{" "}
                             <span className="text-xl -translate-y-1 inline-flex">
-                                Questions
+                                {t["Questions"]}
                             </span>
                         </div>
                         <div className="text-sm font-bold text-neutral-400">
@@ -210,14 +257,15 @@ export default function Page() {
                                         1)) *
                                 100
                             ).toFixed(1)}
-                            % skip rate
+                            %{t["skip rate"]}
                         </div>
                     </div>
                 </Card>
             </section>
+
             <div className="mt-10 pb-20">
                 <h2 className="text-2xl mb-4 font-extrabold">
-                    Questions Answers :{" "}
+                    {t["Questions Answers :"]}
                 </h2>
                 <DataTable columns={columns} data={tableData || []} />
             </div>

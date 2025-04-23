@@ -13,13 +13,13 @@ import {
     DialogTrigger,
 } from "../ui/dialog"
 import TooltipWrapper from "../ui/tooltip"
-import { useLanguage } from "@/hooks/use-language"
+import { getLanguage } from "@/utils/get-language"
 
 interface Props {
     fixed?: boolean
 }
 export default function FloatingSection(props: Props) {
-    const lang = useLanguage()
+    const lang = getLanguage()
     const t = translations[lang]
     const { data: userData } = useCurrentUser()
 
@@ -183,7 +183,7 @@ export function ShareDialog({ children }: { children: ReactNode }) {
     const currentUser = useCurrentUser()
     const [copied, setCopied] = useState(false)
     const isDark = false
-    const lang = useLanguage()
+    const lang = getLanguage()
     const t = translations[lang]
 
     const [shareLink, setShareLink] = useState("")

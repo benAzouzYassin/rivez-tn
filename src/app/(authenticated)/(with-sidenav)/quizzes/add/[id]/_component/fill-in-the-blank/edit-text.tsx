@@ -11,9 +11,13 @@ import { cn } from "@/lib/ui-utils"
 import { PenLine } from "lucide-react"
 import { ButtonHTMLAttributes, useEffect, useState } from "react"
 import useQuizStore, { FillInTheBlankStoreContent } from "../../store"
-interface Props extends ButtonHTMLAttributes<any> {questionId: string
+import { getLanguage } from "@/utils/get-language"
+
+interface Props extends ButtonHTMLAttributes<any> {
+    questionId: string
     questionContent: FillInTheBlankStoreContent
-    parts: string[]}
+    parts: string[]
+}
 
 const BLANK_SEPARATOR = "___"
 export default function EditText({
@@ -23,13 +27,17 @@ export default function EditText({
     parts,
     ...props
 }: Props) {
+    const lang = getLanguage()
+    const t = translation[lang]
     const [isOpen, setIsOpen] = useState(false)
     const updateQuestion = useQuizStore((s) => s.updateQuestion)
     const [inputValue, setInputValue] = useState(parts.join(BLANK_SEPARATOR))
     const [isError, setIsError] = useState(false)
+
     useEffect(() => {
         setInputValue(parts.join(BLANK_SEPARATOR))
     }, [parts])
+
     return (
         <Dialog open={isOpen} onOpenChange={setIsOpen}>
             <DialogTrigger asChild>
@@ -45,16 +53,18 @@ export default function EditText({
                 </button>
             </DialogTrigger>
             <DialogContent className="max-w-[650px]">
-                <DialogTitle></DialogTitle>
-                <DialogDescription></DialogDescription>
+                <DialogTitle>{t["Edit Text"]}</DialogTitle>
+                <DialogDescription>
+                    {t["Edit the text content for the question."]}
+                </DialogDescription>
 
                 <div className="flex flex-col gap-4">
                     <p className="-mb-2 font-semibold text-lg text-neutral-700">
-                        To make a blank field insert this text :
+                        {t["To make a blank field insert this text :"]}
                         {` ${BLANK_SEPARATOR}`}
                     </p>
                     <Textarea
-                        placeholder="Enter text content"
+                        placeholder={t["Enter text content"]}
                         value={inputValue}
                         onChange={(e) => {
                             setInputValue(e.target.value)
@@ -63,7 +73,9 @@ export default function EditText({
                             }
                         }}
                         className="w-full  text-lg min-h-24 font-bold"
-                        errorMessage={isError ? "This field is required." : ""}
+                        errorMessage={
+                            isError ? t["This field is required."] : ""
+                        }
                     />
 
                     <div className="flex justify-end gap-3 -mt-5">
@@ -98,7 +110,7 @@ export default function EditText({
                                     setIsOpen(false)
                                 }}
                             >
-                                Add paragraph
+                                {t["Add paragraph"]}
                             </Button>
                         </div>
                     </div>
@@ -106,4 +118,36 @@ export default function EditText({
             </DialogContent>
         </Dialog>
     )
+}
+
+const translation = {
+    en: {
+        "Edit Text": "Edit Text",
+        "Edit the text content for the question.":
+            "Edit the text content for the question.",
+        "To make a blank field insert this text :":
+            "To make a blank field insert this text :",
+        "Enter text content": "Enter text content",
+        "This field is required.": "This field is required.",
+        "Add paragraph": "Add paragraph",
+    },
+    ar: {
+        "Edit Text": "تعديل النص",
+        "Edit the text content for the question.": "تعديل محتوى النص للسؤال.",
+        "To make a blank field insert this text :":
+            "لإنشاء حقل فارغ، أدخل هذا النص:",
+        "Enter text content": "أدخل محتوى النص",
+        "This field is required.": "هذا الحقل مطلوب.",
+        "Add paragraph": "إضافة فقرة",
+    },
+    fr: {
+        "Edit Text": "Modifier le texte",
+        "Edit the text content for the question.":
+            "Modifier le contenu du texte pour la question.",
+        "To make a blank field insert this text :":
+            "Pour créer un champ vide, insérez ce texte :",
+        "Enter text content": "Entrer le contenu du texte",
+        "This field is required.": "Ce champ est obligatoire.",
+        "Add paragraph": "Ajouter un paragraphe",
+    },
 }

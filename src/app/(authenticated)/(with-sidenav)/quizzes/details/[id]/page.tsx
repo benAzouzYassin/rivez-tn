@@ -9,8 +9,11 @@ import { Check, Clock, SkipForward, X } from "lucide-react"
 import { useParams } from "next/navigation"
 import Submissions from "./_components/submissions"
 import { QuestionsBarChart } from "./_components/questions-bar-chart"
+import { getLanguage } from "@/utils/get-language"
 
 export default function Page() {
+    const lang = getLanguage()
+    const t = translation[lang]
     const params = useParams()
     const id = Number(params["id"])
     const { isLoading, isError, data } = useQuery({
@@ -62,16 +65,16 @@ export default function Page() {
                 <Card className="p-4 md:p-6 h-auto md:h-44 shadow-black/60 border-black/60">
                     <div className="flex justify-between items-start mb-2">
                         <span className="text-neutral-400 font-bold">
-                            Average Time
+                            {t["Average Time"]}
                         </span>
                         <Clock className="w-5 h-5 md:w-6 md:h-6 stroke-3 text-neutral-400" />
                     </div>
                     <div className="space-y-1">
                         <div className="text-2xl md:text-3xl mt-2 md:mt-3 text-black/70 font-extrabold">
-                            {data?.avgTimeSpent.toFixed(2)}
+                            {data?.avgTimeSpent.toFixed(1)} {t["minute"]}
                         </div>
                         <div className="text-xs md:text-sm font-bold text-neutral-400">
-                            The average seconds per submission
+                            {t["The average seconds per submission"]}
                         </div>
                     </div>
                 </Card>
@@ -79,20 +82,18 @@ export default function Page() {
                 <Card className="p-4 md:p-6 shadow-green-400 border-green-400">
                     <div className="flex justify-between items-start mb-2">
                         <span className="font-bold text-neutral-400">
-                            Success Rate
+                            {t["Success Rate"]}
                         </span>
                         <Check className="w-5 h-5 md:w-6 md:h-6 stroke-3 text-neutral-400" />
                     </div>
                     <div className="space-y-1">
                         <div className="text-2xl md:text-3xl mt-2 md:mt-3 text-green-600/70 font-extrabold">
-                            {((data?.avgCorrect || 0) * 100).toFixed(1)}
-                            <span className="text-lg md:text-xl -translate-y-1 inline-flex">
-                                %
-                            </span>
+                            {((data?.avgCorrect || 0) * 100).toFixed(1)} %
+                            <span className="text-lg md:text-xl -translate-y-1 inline-flex"></span>
                         </div>
                         <div className="text-xs md:text-sm font-bold text-neutral-400">
-                            {((data?.avgCorrect || 0) * 100).toFixed(1)}% of
-                            questions are answered correctly
+                            {((data?.avgCorrect || 0) * 100).toFixed(1)} %{" "}
+                            {t[" of questions are answered correctly"]}
                         </div>
                     </div>
                 </Card>
@@ -100,20 +101,18 @@ export default function Page() {
                 <Card className="p-4 md:p-6 shadow-red-300 border-red-300">
                     <div className="flex justify-between items-start mb-2">
                         <span className="text-neutral-400 font-bold">
-                            Failure Rate
+                            {t["Failure Rate"]}
                         </span>
                         <X className="w-5 h-5 md:w-6 md:h-6 stroke-3 text-neutral-400" />
                     </div>
                     <div className="space-y-1">
                         <div className="text-2xl md:text-3xl mt-2 md:mt-3 text-red-500/80 font-extrabold">
-                            {((data?.avgFailed || 0) * 100).toFixed(1)}
-                            <span className="text-lg md:text-xl -translate-y-1 inline-flex">
-                                %
-                            </span>
+                            {((data?.avgFailed || 0) * 100).toFixed(1)} %
+                            <span className="text-lg md:text-xl -translate-y-1 inline-flex"></span>
                         </div>
                         <div className="text-xs md:text-sm font-bold text-neutral-400">
-                            {((data?.avgFailed || 0) * 100).toFixed(1)}%
-                            questions are answered wrongly
+                            {((data?.avgFailed || 0) * 100).toFixed(1)} %{" "}
+                            {t[" questions are answered wrongly"]}
                         </div>
                     </div>
                 </Card>
@@ -121,20 +120,18 @@ export default function Page() {
                 <Card className="p-4 md:p-6 shadow-neutral-300 border-neutral-300">
                     <div className="flex justify-between items-start mb-2">
                         <span className="text-neutral-400 font-bold">
-                            Skip Rate
+                            {t["Skip Rate"]}
                         </span>
                         <SkipForward className="w-5 h-5 md:w-6 md:h-6 stroke-3 text-neutral-400" />
                     </div>
                     <div className="space-y-1">
                         <div className="text-2xl md:text-3xl mt-2 md:mt-3 font-extrabold text-neutral-500">
-                            {((data?.avgSkipped || 0) * 100).toFixed(0)}{" "}
-                            <span className="text-lg md:text-xl -translate-y-1 inline-flex">
-                                %
-                            </span>
+                            {((data?.avgSkipped || 0) * 100).toFixed(0)} %
+                            <span className="text-lg md:text-xl -translate-y-1 inline-flex"></span>
                         </div>
                         <div className="text-xs md:text-sm font-bold text-neutral-400">
-                            {((data?.avgSkipped || 0) * 100).toFixed(0)}%
-                            questions are skipped
+                            {((data?.avgSkipped || 0) * 100).toFixed(0)} %
+                            {t[" questions are skipped"]}
                         </div>
                     </div>
                 </Card>
@@ -142,7 +139,7 @@ export default function Page() {
 
             <div className="mt-6 md:mt-10">
                 <h2 className="text-xl md:text-2xl mb-3 md:mb-4 text-black/80 font-extrabold">
-                    Quiz submissions :{" "}
+                    {t["Quiz submissions :"]}{" "}
                 </h2>
                 <Submissions />
             </div>
@@ -167,4 +164,52 @@ export type AnswerTableItem = {
     status: "skipped" | "failed" | "succeeded"
     responseContent: string[] | string[][]
     correctAnswers: string[] | string[][]
+}
+
+const translation = {
+    en: {
+        minute: "minute",
+        "Average Time": "Average Time",
+        "The average seconds per submission":
+            "The average seconds per submission",
+        "Success Rate": "Success Rate",
+        " of questions are answered correctly":
+            " of questions are answered correctly",
+        "Failure Rate": "Failure Rate",
+        " questions are answered wrongly": " questions are answered wrongly",
+        "Skip Rate": "Skip Rate",
+        " questions are skipped": " questions are skipped",
+        "Quiz submissions :": "Quiz submissions :",
+    },
+    ar: {
+        minute: "دقيقة",
+
+        "Average Time": "متوسط الوقت",
+        "The average seconds per submission": "متوسط الثواني لكل عملية إرسال",
+        "Success Rate": "معدل النجاح",
+        " of questions are answered correctly":
+            " من الأسئلة يتم الإجابة عليها بشكل صحيح",
+        "Failure Rate": "معدل الفشل",
+        " questions are answered wrongly":
+            " من الأسئلة يتم الإجابة عليها بشكل خاطئ",
+        "Skip Rate": "معدل التخطي",
+        " questions are skipped": " من الأسئلة يتم تخطيها",
+        "Quiz submissions :": "عمليات إرسال الاختبار :",
+    },
+    fr: {
+        minute: "minute",
+
+        "Average Time": "Temps moyen",
+        "The average seconds per submission":
+            "La moyenne des secondes par soumission",
+        "Success Rate": "Taux de réussite",
+        " of questions are answered correctly":
+            " des questions sont répondues correctement",
+        "Failure Rate": "Taux d'échec",
+        " questions are answered wrongly":
+            " des questions sont répondues incorrectement",
+        "Skip Rate": "Taux de saut",
+        " questions are skipped": "des questions sont sautées",
+        "Quiz submissions :": "Soumissions au quiz :",
+    },
 }

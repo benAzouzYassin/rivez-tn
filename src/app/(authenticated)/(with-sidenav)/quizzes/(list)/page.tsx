@@ -22,8 +22,13 @@ import { useState } from "react"
 import Item from "./_components/item"
 import ItemSkeleton from "./_components/item-skeleton"
 import Search from "./_components/search"
+import { getLanguage } from "@/utils/get-language"
+
+import { translation } from "./translation"
 
 export default function Page() {
+    const lang = getLanguage()
+    const t = translation[lang]
     const { isSidenavOpen } = useSidenav()
     const isAdmin = useIsAdmin()
     const { data: userData } = useCurrentUser()
@@ -100,13 +105,13 @@ export default function Page() {
     const tabs = [
         {
             id: "shared",
-            label: "Shared Quizzes ",
+            label: t["Shared Quizzes"],
             icon: <Share2Icon size={18} />,
             count: response?.count || 0,
         },
         {
             id: "personal",
-            label: "My Quizzes",
+            label: t["My Quizzes"],
             icon: <BookOpen size={18} />,
             count: 0,
         },
@@ -120,16 +125,16 @@ export default function Page() {
                 className={cn(
                     "sm:flex hidden fixed  z-50   bg-white border-t top-[10vh] pt-4  justify-between md:items-center",
                     {
-                        "lg:left-[300px] left-0 lg:w-[calc(100vw-306px)] w-screen px-3 md:px-8  ":
+                        "lg:left-[300px] lg:rtl:right-[300px] left-0 lg:w-[calc(100vw-306px)] w-screen px-3 md:px-8  ":
                             isSidenavOpen,
-                        "lg:left-[100px] left-0 lg:w-[calc(100vw-106px)] md:px-8 px-3 w-screen  ":
+                        "lg:left-[100px] lg:rtl:right-[100px] left-0 lg:w-[calc(100vw-106px)] md:px-8 px-3 w-screen  ":
                             !isSidenavOpen,
                     }
                 )}
             >
                 {" "}
                 <h1 className="text-4xl md:pt-0 pt-3 text-neutral-600  font-extrabold">
-                    Quizzes
+                    {t["Quizzes"]}
                 </h1>
                 <div className="md:flex-row flex flex-col-reverse md:pb-0 pb-2 items-end md:items-center md:gap-2">
                     <div className="mt-5 w-full ">
@@ -141,8 +146,8 @@ export default function Page() {
 
                     <Link href={"/quizzes/add"}>
                         <Button className="text-base h-[3.2rem]">
-                            <Plus className="-mr-1 !w-5 stroke-2 !h-5" /> Add
-                            Quiz
+                            <Plus className="-mr-1 !w-5 stroke-2 !h-5" />{" "}
+                            {t["Add Quiz"]}
                         </Button>
                     </Link>
                     {isAdmin && (

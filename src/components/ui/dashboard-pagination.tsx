@@ -8,6 +8,7 @@ import {
     SelectValue,
 } from "@/components/ui/select"
 import { cn } from "@/lib/ui-utils"
+import { getLanguage } from "@/utils/get-language"
 
 type Props = {
     itemsCount: number
@@ -26,6 +27,8 @@ export default function DashboardPagination({
     onItemsPerPageChange,
     className,
 }: Props) {
+    const lang = getLanguage()
+    const t = translation[lang]
     const [currentItemsPerPage, setCurrentItemsPerPage] = useState(itemsPerPage)
     const totalPages = Math.ceil(itemsCount / currentItemsPerPage)
 
@@ -90,13 +93,16 @@ export default function DashboardPagination({
         >
             <div className="flex items-center gap-4">
                 <div className="text-sm flex items-center text-neutral-600">
-                    Showing
+                    {t["Showing"]}
                     <Select
                         value={currentItemsPerPage.toString()}
                         onValueChange={handleItemsPerPageChange}
                     >
                         <SelectTrigger className=" h-8 rounded-lg  px-1 mx-2 !w-fit translate-y-2 text-xs">
-                            <SelectValue placeholder="Items per page" />
+                            <SelectValue
+                                className="flex flex-row rtl:flex-row-reverse"
+                                placeholder={t["Items per page"]}
+                            />
                         </SelectTrigger>
                         <SelectContent>
                             {[5, 9, 10, 12, 20, 50, 100].map((option) => (
@@ -104,18 +110,25 @@ export default function DashboardPagination({
                                     key={option}
                                     value={option.toString()}
                                 >
-                                    {option} items
+                                    <span className="ltr:hidden">
+                                        {t["items"]}
+                                    </span>{" "}
+                                    {option}{" "}
+                                    <span className="rtl:hidden">
+                                        {t["items"]}
+                                    </span>
                                 </SelectItem>
                             ))}
                         </SelectContent>
                     </Select>{" "}
-                    from {startItem} to {endItem} of {itemsCount}
+                    {t["from"]} {startItem} {t["to"]} {endItem} {t["of"]}{" "}
+                    {itemsCount} {t["items"]}
                 </div>
             </div>
 
             {/* Pagination Buttons */}
             {totalPages > 1 && (
-                <div className="flex items-center sm:ml-auto space-x-2">
+                <div className="flex items-center ltr:sm:ml-auto rtl:mr-auto space-x-2">
                     {getPageNumbers().map((page, index) => {
                         if (page === "...") {
                             return (
@@ -159,4 +172,30 @@ export default function DashboardPagination({
             )}
         </div>
     )
+}
+const translation = {
+    en: {
+        Showing: "Showing",
+        items: "items",
+        from: "from",
+        to: "to",
+        of: "of",
+        "Items per page": "Items per page",
+    },
+    ar: {
+        Showing: "يتم عرض",
+        items: "عناصر",
+        from: "من",
+        to: "إلى",
+        of: "من جملة",
+        "Items per page": "لعناصر في كل صفحة",
+    },
+    fr: {
+        Showing: "Affichage",
+        items: "éléments",
+        from: "de",
+        to: "à",
+        of: "de",
+        "Items per page": "Éléments par page",
+    },
 }

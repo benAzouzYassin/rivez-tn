@@ -11,14 +11,15 @@ import { Skeleton } from "@/components/ui/skeleton"
 import { readLastNMindmaps } from "@/data-access/mindmaps/read"
 import { readLastNQuizzes } from "@/data-access/quizzes/read"
 import { useCurrentUser } from "@/hooks/use-current-user"
-import { useLanguage } from "@/hooks/use-language"
+import { getLanguage } from "@/utils/get-language"
+
 import { formatDate } from "@/utils/date"
 import { useQueries } from "@tanstack/react-query"
 import { useRouter } from "nextjs-toploader/app"
 import { translation } from "../translation"
 
 export default function LatestQuizzesMindmaps() {
-    const lang = useLanguage()
+    const lang = getLanguage()
     const t = translation[lang]
     const { data: currentUser } = useCurrentUser()
     const [quizzesQuery, mindMapsQuery] = useQueries({

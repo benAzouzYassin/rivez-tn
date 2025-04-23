@@ -8,10 +8,10 @@ import {
     Telescope,
 } from "lucide-react"
 import { useCurrentUser } from "./use-current-user"
-import { useLanguage } from "./use-language"
+import { getLanguage } from "@/utils/get-language"
 
 export function useNavigationItems() {
-    const lang = useLanguage()
+    const lang = getLanguage()
     const t = translation[lang]
     const user = useCurrentUser()
     const adminItems =

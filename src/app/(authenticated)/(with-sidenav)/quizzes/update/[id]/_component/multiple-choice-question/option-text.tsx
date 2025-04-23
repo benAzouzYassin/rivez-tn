@@ -23,7 +23,9 @@ function OptionText(props: Props) {
             }}
             value={props?.text || ""}
             placeholder={"........"}
-            className={"font-extrabold focus-within:outline-none text-xl"}
+            className={
+                "font-extrabold grow max-w-[calc(100%-80px)] focus-within:outline-none text-xl"
+            }
         />
     )
 }

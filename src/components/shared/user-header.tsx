@@ -20,7 +20,7 @@ import { JSX, useMemo, useState, useEffect } from "react"
 import CreditIcon from "../icons/credit-icon"
 import MobileNavDrawer from "./mobile-nav-drawer"
 import Cookies from "js-cookie"
-import { availableLanguages } from "@/hooks/use-language"
+import { availableLanguages } from "@/utils/get-language"
 
 export default function UserHeader() {
     const queryClient = useQueryClient()
@@ -230,7 +230,7 @@ function UserMenu({
                 >
                     <div
                         className={cn(
-                            "group-hover:flex hidden bg-white w-64 h-44 top-0 absolute",
+                            "group-hover:flex hidden  w-64 h-36  top-0 absolute",
                             {
                                 "-left-64": !isRTL,
                                 "-right-64": isRTL,

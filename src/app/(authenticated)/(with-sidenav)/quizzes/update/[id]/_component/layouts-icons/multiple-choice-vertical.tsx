@@ -1,6 +1,7 @@
 import { cn } from "@/lib/ui-utils"
 
 export default function MultipleChoiceVertical(props: {
+    isIcon?: boolean
     className?: string
     itemClassName?: string
     imageClassName?: string
@@ -15,7 +16,7 @@ export default function MultipleChoiceVertical(props: {
         >
             <div
                 className={cn(
-                    "border ml-4 p-2 w-40 rounded-xl",
+                    "border ml-4  p-2 w-40 rounded-xl",
                     props.className
                 )}
             >
@@ -33,7 +34,12 @@ export default function MultipleChoiceVertical(props: {
                 >
                     {" "}
                 </div>
-                <div className="grid mt-2 grid-cols-2 gap-y-[6px] gap-x-2">
+                <div
+                    className={cn(
+                        "grid mt-2 rtl:pr-4 grid-cols-2 gap-y-[6px] gap-x-2",
+                        { "rtl:pr-0": props.isIcon }
+                    )}
+                >
                     <div
                         className={cn(
                             "bg-neutral-200 h-4 rounded-md w-full",

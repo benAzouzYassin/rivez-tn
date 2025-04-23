@@ -4,7 +4,7 @@ import XIcon from "../icons/xIcon"
 import { cn } from "@/lib/ui-utils"
 import { useRouter } from "nextjs-toploader/app"
 
-interface Props extends ComponentProps<typeof Button> {}
+type Props = ComponentProps<typeof Button>
 export default function BackButton({ className, onClick, ...props }: Props) {
     const router = useRouter()
     return (

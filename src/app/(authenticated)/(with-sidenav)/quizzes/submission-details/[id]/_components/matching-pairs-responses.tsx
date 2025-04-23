@@ -1,6 +1,7 @@
 import { ErrorDisplay } from "@/components/shared/error-display"
 import { cn } from "@/lib/ui-utils"
 import { areArraysEqual } from "@/utils/array"
+import { containsArabic } from "@/utils/is-arabic"
 import { ArrowRight } from "lucide-react"
 import { z } from "zod"
 
@@ -20,9 +21,10 @@ export default function MatchingPairsResponses(props: Props) {
     if (!isValidCorrectAnswers || !isValidResponses) {
         return <ErrorDisplay />
     }
+    const isRtl = containsArabic(props.correctAnswers.join(" "))
 
     return (
-        <div className="space-y-6">
+        <div dir={isRtl ? "rtl" : "ltr"} className="space-y-6">
             {props.responses.map((pair, index) => {
                 const isCorrect = props.correctAnswers.find((item) =>
                     areArraysEqual(item as string[], pair)

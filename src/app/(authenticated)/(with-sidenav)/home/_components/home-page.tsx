@@ -6,11 +6,12 @@ import GenerateQuiz from "../_icons/generate-quiz"
 import Mindmap from "../_icons/mindmap"
 import SummarizeDocument from "../_icons/summarize-document"
 import LatestQuizzesMindmaps from "./latest-quizzes-mindmaps"
-import { useLanguage } from "@/hooks/use-language"
+import { getLanguage } from "@/utils/get-language"
+
 import { translation } from "../translation"
 
 export default function HomePage() {
-    const lang = useLanguage()
+    const lang = getLanguage()
     const t = translation[lang]
     return (
         <section className="pb-20 max-w-[1520px] mx-auto">

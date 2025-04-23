@@ -7,12 +7,14 @@ import { cn } from "@/lib/ui-utils"
 interface Props {
     displayOrder: number
     className?: string
+    onAdd?: () => void
 }
 function AddQuestionButton(props: Props) {
     const addQuestion = useUpdateQuizStore((s) => s.addQuestion)
     return (
         <LayoutSelectDialog
             onSelect={(layoutType) => {
+                props.onAdd?.()
                 switch (layoutType) {
                     case "fill-in-the-blank":
                         addQuestion({
