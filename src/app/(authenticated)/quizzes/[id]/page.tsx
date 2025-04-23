@@ -77,7 +77,10 @@ export default function Page() {
     return (
         <>
             {!isFinished && questions.length > 0 && (
-                <header className="w-full fixed top-0 z-50  flex items-center border-b h-24 md:px-20  bg-white/95 backdrop-blur-sm supports-backdrop-filter:bg-white/60">
+                <header
+                    dir="ltr"
+                    className="w-full fixed top-0 z-50  flex items-center border-b h-24 md:px-20  bg-white/95 backdrop-blur-sm supports-backdrop-filter:bg-white/60"
+                >
                     <BackButton className="md:ml-auto ml-2 mr-2 opacity-50" />
                     <ProgressBar
                         className="md:w-[65%] w-[80%] "

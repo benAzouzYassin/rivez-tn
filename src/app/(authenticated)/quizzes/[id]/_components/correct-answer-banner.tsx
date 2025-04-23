@@ -1,15 +1,35 @@
 import ReportQuiz from "@/components/shared/report-quiz"
 import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/ui-utils"
+import { getLanguage } from "@/utils/get-language"
 import { wait } from "@/utils/wait"
 import { Check } from "lucide-react"
+import { useMemo } from "react"
+
 type Props = {
     isOpen: boolean
     onNextClick: () => void
 }
+
 export default function CorrectAnswerBanner(props: Props) {
+    const translation = useMemo(
+        () => ({
+            en: { "Correct answer!": "Correct answer!", Continue: "Continue" },
+            ar: { "Correct answer!": "إجابة صحيحة !", Continue: "استمر" },
+            fr: {
+                "Correct answer!": "Bonne réponse !",
+                Continue: "Continuer",
+            },
+        }),
+        []
+    )
+
+    const lang = getLanguage()
+    const t = translation[lang]
+
     return (
         <div
+            dir="ltr"
             className={cn(
                 "border overflow-hidden opacity-0 translate-y-10 h-0 ease-in flex flex-col md:flex-row py-3 md:py-5 px-4 md:px-20 transition-all border-green-200 bg-[#D2FFCC] fixed w-full bottom-0",
                 {
@@ -24,7 +44,7 @@ export default function CorrectAnswerBanner(props: Props) {
                 </div>
                 <div>
                     <p className="text-lg md:text-xl ml-4 font-bold text-[#58A700]">
-                        Correct answer!
+                        {t["Correct answer!"]}
                     </p>
                     <ReportQuiz
                         quizId=""
@@ -46,10 +66,10 @@ export default function CorrectAnswerBanner(props: Props) {
                     )
                 }}
                 disabled={!props.isOpen}
-                className="w-full md:w-auto mt-4 md:mt-0 md:ml-auto h-10 md:h-12 px-5 md:px-7 text-base md:text-lg font-bold my-auto"
+                className="w-full md:w-auto mt-4  md:ml-auto h-10 md:h-12 px-5 md:px-7 text-base md:text-lg font-bold my-auto"
                 variant={"green"}
             >
-                Continue
+                {t["Continue"]}
             </Button>
         </div>
     )

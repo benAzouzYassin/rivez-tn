@@ -1,3 +1,5 @@
+import CreditIcon from "@/components/icons/credit-icon"
+import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import {
@@ -7,19 +9,17 @@ import {
     DialogTitle,
     DialogTrigger,
 } from "@/components/ui/dialog"
+import { lowPrice } from "@/constants/prices"
 import { cn } from "@/lib/ui-utils"
+import { wait } from "@/utils/wait"
 import { ChevronLeft, Edit, Sparkles } from "lucide-react"
 import { ReactNode, useRef, useState } from "react"
-import FillInTheBlank from "./layouts-icons/fill-in-the-blank"
+import { Store } from "../store"
+import AddQuestionWithAiForm from "./add-question-with-ai-form"
 import MatchingPairs from "./layouts-icons/matching-pairs"
 import MultipleChoiceHorizontal from "./layouts-icons/multiple-choice-horizontal"
 import MultipleChoiceVertical from "./layouts-icons/multiple-choice-vertical"
-import { Store } from "../store"
-import AddQuestionWithAiForm from "./add-question-with-ai-form"
-import { wait } from "@/utils/wait"
-import { Badge } from "@/components/ui/badge"
-import CreditIcon from "@/components/icons/credit-icon"
-import { lowPrice } from "@/constants/prices"
+import { useCurrentUser } from "@/hooks/use-current-user"
 
 type Props = {
     contentClassName?: string
@@ -36,6 +36,7 @@ type Props = {
 }
 
 export default function LayoutSelectDialog(props: Props) {
+    const { data: userData } = useCurrentUser()
     const price = lowPrice
     const [isOpen, setIsOpen] = useState(false)
     const [tab, setTab] = useState<"layout-select" | "mode-select" | "ai-form">(
@@ -43,7 +44,8 @@ export default function LayoutSelectDialog(props: Props) {
     )
     const selectedLayout = useRef<LayoutOptions>(null)
     const handleLayoutSelect = (layout: LayoutOptions) => {
-        if (props.enableAi) {
+        const customerCredit = Number(userData?.credit_balance || "0")
+        if (props.enableAi && customerCredit >= lowPrice) {
             selectedLayout.current = layout
             setTab("mode-select")
         } else {

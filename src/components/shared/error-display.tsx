@@ -3,7 +3,8 @@
 import { motion } from "framer-motion"
 import { useRouter } from "nextjs-toploader/app"
 import { Button } from "../ui/button"
-import { useEffect } from "react"
+import { useEffect, useMemo } from "react"
+import { getLanguage } from "@/utils/get-language"
 
 interface ErrorDisplayProps {
     message?: string
@@ -11,11 +12,35 @@ interface ErrorDisplayProps {
 }
 
 export const ErrorDisplay: React.FC<ErrorDisplayProps> = ({
-    message = "An error has occurred",
+    message,
     hideButton,
 }) => {
     const router = useRouter()
-
+    const translation = useMemo(
+        () => ({
+            en: {
+                defaultMessage: "An error has occurred",
+                description:
+                    "Something went wrong. Please try again or return to the home page.",
+                goBack: "Go back",
+            },
+            fr: {
+                defaultMessage: "Une erreur s'est produite",
+                description:
+                    "Une erreur est survenue. Veuillez réessayer ou retourner à la page d'accueil.",
+                goBack: "Retourner",
+            },
+            ar: {
+                defaultMessage: "حدث خطأ",
+                description:
+                    "حدث خطأ ما. يرجى المحاولة مرة أخرى أو العودة إلى الصفحة الرئيسية.",
+                goBack: "العودة",
+            },
+        }),
+        []
+    )
+    const lang = getLanguage()
+    const t = translation[lang]
     useEffect(() => {
         if (window !== undefined) {
             window.scrollTo({
@@ -76,15 +101,14 @@ export const ErrorDisplay: React.FC<ErrorDisplayProps> = ({
                 className="text-5xl font-black text-red-500 mt-6 text-center"
                 variants={itemVariants}
             >
-                {message}
+                {message || t["defaultMessage"]}
             </motion.h1>
 
             <motion.p
                 className="text-neutral-500 mt-4 font-medium text-center max-w-[600px] text-lg"
                 variants={itemVariants}
             >
-                Something went wrong. Please try again or return to the home
-                page.
+                {t["description"]}{" "}
             </motion.p>
 
             {/* Button */}
@@ -97,7 +121,7 @@ export const ErrorDisplay: React.FC<ErrorDisplayProps> = ({
                         onClick={router.back}
                         className="w-full col-span-3 text-xl h-14 bg-neutral-800 border-neutral-500 shadow-neutral-500"
                     >
-                        Go back
+                        {t["goBack"]}
                     </Button>
                 </motion.div>
             )}
