@@ -1,4 +1,5 @@
 "use client"
+
 import SuccessIcon from "@/components/icons/success"
 import TimeIcon from "@/components/icons/time"
 import XpIcon from "@/components/icons/xp"
@@ -8,15 +9,55 @@ import { formatSeconds } from "@/utils/date"
 import { useQueryClient } from "@tanstack/react-query"
 import { motion } from "framer-motion"
 import { useRouter } from "nextjs-toploader/app"
+import { useMemo } from "react"
+import { getLanguage } from "@/utils/get-language"
 
 type Props = {
     secondsSpent: number
     correctQuestions: number
     xpGained: number
 }
+
 export default function ResultPage(props: Props) {
     const queryClient = useQueryClient()
     const router = useRouter()
+
+    const translation = useMemo(
+        () => ({
+            en: {
+                "Correct Answers": "Correct Answers",
+                "XP Gained": "XP Gained",
+                "Time Spent": "Time Spent",
+                "Quiz Over": "Quiz Over",
+                "GG Message":
+                    "GG! Well played! 🎉 Your effort was truly impressive, and we appreciate the time and energy you put into this quiz. Thank you for participating.",
+                "Back to home": "Back to home",
+            },
+            fr: {
+                "Correct Answers": "Réponses correctes",
+                "XP Gained": "XP gagné",
+                "Time Spent": "Temps passé",
+                "Quiz Over": "Quiz terminé",
+                "GG Message":
+                    "GG ! Bien joué ! 🎉 Votre effort a été vraiment impressionnant, et nous apprécions le temps et l'énergie que vous avez consacrés à ce quiz. Merci d'avoir participé.",
+                "Back to home": "Retour à l'accueil",
+            },
+            ar: {
+                "Correct Answers": "الإجابات الصحيحة",
+                "XP Gained": "النقاط المكتسبة",
+                "Time Spent": "الوقت المستغرق",
+                "Quiz Over": "انتهى الاختبار",
+                "GG Message":
+                    "عمل رائع! 🎉 لقد كان جهدك مميزًا حقًا، ونحن نقدر الوقت والطاقة التي بذلتها في هذا الاختبار. شكرًا لمشاركتك.",
+                "Back to home": "العودة إلى الصفحة الرئيسية",
+            },
+        }),
+        []
+    )
+
+    const lang = getLanguage()
+    const t = translation[lang]
+
     const containerVariants = {
         hidden: { opacity: 0 },
         visible: {
@@ -53,22 +94,23 @@ export default function ResultPage(props: Props) {
         {
             Icon: SuccessIcon,
             value: props.correctQuestions.toString(),
-            label: "Correct Answers",
+            label: t["Correct Answers"],
             iconClass: "w-12 h-12",
         },
         {
             Icon: XpIcon,
             value: props.xpGained.toString(),
-            label: "XP Gained",
+            label: t["XP Gained"],
             iconClass: "w-10 h-10",
         },
         {
             Icon: TimeIcon,
             value: formatSeconds(props.secondsSpent),
-            label: "Time Spent",
+            label: t["Time Spent"],
             iconClass: "w-10 h-10",
         },
     ]
+
     const handleBackBtn = () => {
         queryClient.invalidateQueries({
             predicate: (q) => {
@@ -106,15 +148,13 @@ export default function ResultPage(props: Props) {
                     className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl text-center uppercase font-black text-neutral-800 mt-2 md:mt-3"
                     variants={itemVariants}
                 >
-                    Quiz Over
+                    {t["Quiz Over"]}
                 </motion.p>
                 <motion.p
                     className="text-neutral-500 mt-3 md:mt-5 font-semibold text-center max-w-[600px] text-sm sm:text-base md:text-lg"
                     variants={itemVariants}
                 >
-                    GG! Well played! 🎉 Your effort was truly impressive, and we
-                    appreciate the time and energy you put into this quiz. Thank
-                    you for participating.
+                    {t["GG Message"]}
                 </motion.p>
             </motion.div>
 
@@ -158,7 +198,7 @@ export default function ResultPage(props: Props) {
                     variant={"green"}
                     className="w-full col-span-2 sm:col-span-3 text-base sm:text-lg md:text-xl h-12 md:h-14 bg-neutral-800 border-neutral-500 shadow-neutral-500 mt-2 sm:mt-0"
                 >
-                    Back to home
+                    {t["Back to home"]}
                 </Button>
             </motion.div>
         </motion.section>

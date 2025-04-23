@@ -86,7 +86,7 @@ export const ErrorDisplay: React.FC<ErrorDisplayProps> = ({
 
     return (
         <motion.section
-            className="h-fit pt-20 pb-4 flex flex-col items-center justify-center bg-white"
+            className="h-fit md:pt-20 pb-4 flex flex-col items-center justify-center bg-white"
             initial="hidden"
             animate="visible"
             variants={containerVariants}
@@ -98,7 +98,7 @@ export const ErrorDisplay: React.FC<ErrorDisplayProps> = ({
 
             {/* Error Message */}
             <motion.h1
-                className="text-5xl font-black text-red-500 mt-6 text-center"
+                className="text-5xl font-black text-red-500 md:mt-6 text-center"
                 variants={itemVariants}
             >
                 {message || t["defaultMessage"]}

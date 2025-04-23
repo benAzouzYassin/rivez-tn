@@ -39,7 +39,7 @@ import { useQueryClient } from "@tanstack/react-query"
 import { EditIcon, Loader2, SaveIcon, Trash2Icon } from "lucide-react"
 import { useRouter } from "nextjs-toploader/app"
 import { parseAsBoolean, parseAsString, useQueryState } from "nuqs"
-import { useEffect, useRef, useState } from "react"
+import { useEffect, useRef, useState, useMemo } from "react"
 import { convertItemsToNodes } from "../_utils/convert-to-nodes"
 import EditMindmapDialog from "./_components/edit-dialog"
 import { uploadFlowImage } from "../_utils/upload-flow-image"
@@ -50,11 +50,11 @@ import { CHEAP_TYPES } from "./constants"
 import { useRefetchUser } from "@/hooks/use-refetch-user"
 import { mindmapsContentDb } from "../_utils/indexed-db"
 import GeneralLoadingScreen from "@/components/shared/general-loading-screen"
+import { getLanguage } from "@/utils/get-language"
 
 export default function Page() {
     const queryClient = useQueryClient()
     const refetchUser = useRefetchUser()
-
     const router = useRouter()
     const [isStreaming, setIsStreaming] = useState(false)
     const [imageUrl, setImageUrl] = useState("")
@@ -82,6 +82,54 @@ export default function Page() {
     const [pdfPagesLocalId] = useQueryState("pdfPagesLocalId")
     const [imagesInBase64Id] = useQueryState("imagesInBase64Id")
     const [youtubeUrl] = useQueryState("youtubeUrl")
+
+    const lang = getLanguage()
+    const t = useMemo(
+        () =>
+            ({
+                en: {
+                    "Save Mindmap": "Save Mindmap",
+                    "Generating your mindmap": "Generating your mindmap",
+                    "Something went wrong": "Something went wrong",
+                    "Remove the mindmap": "Remove the mindmap",
+                    Delete: "Delete",
+                    Modify: "Modify",
+                    "Added successfully.": "Added successfully.",
+                    "Something went wrong.": "Something went wrong.",
+                    "Generated successfully.": "Generated successfully.",
+                    "content type is not valid": "content type is not valid",
+                },
+                fr: {
+                    "Save Mindmap": "Enregistrer la carte mentale",
+                    "Generating your mindmap":
+                        "Génération de votre carte mentale",
+                    "Something went wrong": "Une erreur est survenue",
+                    "Remove the mindmap": "Supprimer la carte mentale",
+                    Delete: "Supprimer",
+                    Modify: "Modifier",
+                    "Added successfully.": "Ajouté avec succès.",
+                    "Something went wrong.": "Une erreur est survenue.",
+                    "Generated successfully.": "Généré avec succès.",
+                    "content type is not valid":
+                        "le type de contenu n'est pas valide",
+                },
+                ar: {
+                    "Save Mindmap": "حفظ الخريطة الذهنية",
+
+                    "Generating your mindmap": "جارٍ إنشاء الخريطة الذهنية",
+                    "Something went wrong": "حدث خطأ ما",
+                    "Remove the mindmap": "إزالة الخريطة الذهنية",
+                    Delete: "حذف",
+                    Modify: "تعديل",
+                    "Added successfully.": "تمت الإضافة بنجاح.",
+                    "Something went wrong.": "حدث خطأ ما.",
+                    "Generated successfully.": "تم الإنشاء بنجاح.",
+                    "content type is not valid": "نوع المحتوى غير صالح",
+                },
+            }[lang]),
+        [lang]
+    )
+
     useEffect(() => {
         if (!shouldGenerate) return
         if (!contentType) return setIsError(true)
@@ -90,7 +138,7 @@ export default function Page() {
             setShouldGenerate(false)
             setIsLoading(true)
             setIsStreaming(true)
-            toastLoading("Generating your mindmap")
+            toastLoading(t["Generating your mindmap"])
             const onChange = (data: TGeneratedMindmap) => {
                 didGenerate = true
                 setAiResult(data)
@@ -156,14 +204,14 @@ export default function Page() {
                 )
                 if (!didGenerate) {
                     setIsError(true)
-                    toastError("Something went wrong")
+                    toastError(t["Something went wrong"])
                     handleMindMapRefund({
                         generationType: CHEAP_TYPES.includes(contentType)
                             ? "CHEAP"
                             : "NORMAL",
                     }).catch(console.error)
                 } else {
-                    toastSuccess("Generated successfully.")
+                    toastSuccess(t["Generated successfully."])
                     refetchUser()
                     wait(10).then(() => {
                         setShouldUploadImage(true)
@@ -182,7 +230,7 @@ export default function Page() {
                     onStreamEnd
                 ).catch((err) => {
                     dismissToasts("loading")
-                    toastError("Something went wrong")
+                    toastError(t["Something went wrong"])
                     setIsLoading(false)
                     setIsError(true)
                     handleMindMapRefund({
@@ -216,7 +264,7 @@ export default function Page() {
                             onStreamEnd
                         ).catch((err) => {
                             dismissToasts("loading")
-                            toastError("Something went wrong")
+                            toastError(t["Something went wrong"])
                             setIsLoading(false)
                             setIsError(true)
                             handleMindMapRefund({
@@ -253,7 +301,7 @@ export default function Page() {
                             onStreamEnd
                         ).catch((err) => {
                             dismissToasts("loading")
-                            toastError("Something went wrong")
+                            toastError(t["Something went wrong"])
                             setIsLoading(false)
                             setIsError(true)
                             handleMindMapRefund({
@@ -280,7 +328,7 @@ export default function Page() {
                     onStreamEnd
                 ).catch((err) => {
                     dismissToasts("loading")
-                    toastError("Something went wrong")
+                    toastError(t["Something went wrong"])
                     setIsLoading(false)
                     setIsError(true)
                     handleMindMapRefund({
@@ -290,7 +338,7 @@ export default function Page() {
                     }).catch(() => console.error)
                 })
             } else {
-                console.log("content type is not valid")
+                console.log(t["content type is not valid"])
                 setIsError(true)
             }
         }
@@ -308,8 +356,11 @@ export default function Page() {
         pdfPagesLocalId,
         imagesInBase64Id,
         youtubeUrl,
+        t,
     ])
+
     const { data: userData } = useCurrentUser()
+
     const handleSave = () => {
         setIsSaving(true)
 
@@ -331,20 +382,22 @@ export default function Page() {
             language: language,
         })
             .then(() => {
-                toastSuccess("Added successfully.")
+                toastSuccess(t["Added successfully."])
                 queryClient.invalidateQueries({
                     predicate: (q) => q.queryKey.includes("mindmaps"),
                 })
                 router.back()
             })
             .catch((err) => {
-                toastError("Something went wrong.")
+                toastError(t["Something went wrong."])
             })
             .finally(() => setIsSaving(false))
     }
+
     if (isError) {
         return <ErrorDisplay />
     }
+
     return (
         <section>
             <div
@@ -369,14 +422,14 @@ export default function Page() {
                     <WarningDialog
                         isOpen={isCanceling}
                         onOpenChange={setIsCanceling}
-                        confirmText="Remove the mindmap"
+                        confirmText={t["Remove the mindmap"]}
                         onConfirm={async () => {
                             router.back()
                         }}
                     >
                         <Button className="font-bold" variant={"red"}>
                             <Trash2Icon />
-                            Delete
+                            {t.Delete}
                         </Button>
                     </WarningDialog>
 
@@ -387,7 +440,7 @@ export default function Page() {
                         variant={"blue"}
                     >
                         <EditIcon />
-                        Modify
+                        {t.Modify}
                     </Button>
                     <Button
                         disabled={isLoading || isStreaming}
@@ -396,7 +449,7 @@ export default function Page() {
                         className="font-bold"
                     >
                         <SaveIcon />
-                        Save Mindmap
+                        {t["Save Mindmap"]}
                     </Button>
                 </div>
                 <ReactFlow
@@ -473,6 +526,7 @@ export default function Page() {
         </section>
     )
 }
+
 const nodeTypes = {
     customNode: CustomNode,
 }

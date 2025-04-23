@@ -34,7 +34,7 @@ export default function AnimatedTabs({
                 className
             )}
         >
-            <div className="flex sm:flex-row flex-col-reverse w-full sm:w-fit gap-2">
+            <div className="flex sm:flex-row rtl:sm:flex-row-reverse flex-col-reverse w-full sm:w-fit gap-2">
                 {tabs.map((tab) => (
                     <div
                         key={tab.id}
@@ -65,7 +65,7 @@ export default function AnimatedTabs({
                                 >
                                     {tab.icon}
                                 </span>
-                                <span className="font-semibold rtl:-translate-x-1 text-nowrap transition-all duration-0">
+                                <span className="font-semibold rtl:-translate-x-2 text-nowrap transition-all duration-0">
                                     {tab.label}
                                 </span>
                             </div>

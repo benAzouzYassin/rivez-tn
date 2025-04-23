@@ -1,4 +1,6 @@
 "use client"
+
+import { useState, useMemo } from "react"
 import { ErrorDisplay } from "@/components/shared/error-display"
 import { Button } from "@/components/ui/button"
 import DashboardPagination from "@/components/ui/dashboard-pagination"
@@ -10,13 +12,13 @@ import { useSidenav } from "@/providers/sidenav-provider"
 import { useQuery } from "@tanstack/react-query"
 import { BookOpen, Plus, Share2Icon } from "lucide-react"
 import { parseAsInteger, parseAsString, useQueryState } from "nuqs"
-import { useState } from "react"
 import AddDialog from "./_components/add-dialog"
 import Item from "./_components/item"
 import ItemSkeleton from "./_components/item-skeleton"
 import Search from "./_components/search"
 import ShareDialog from "./_components/share-dialog"
 import AnimatedTabs from "@/components/shared/animated-tabs"
+import { getLanguage } from "@/utils/get-language"
 
 export default function Page() {
     const [activeTab, setActiveTab] = useState("personal")
@@ -34,11 +36,41 @@ export default function Page() {
         "items-per-page",
         parseAsInteger.withDefault(9)
     )
-
     const [currentPage, setCurrentPage] = useQueryState(
         "page",
         parseAsInteger.withDefault(1)
     )
+
+    const translation = useMemo(
+        () => ({
+            en: {
+                "Mind maps": "Mind maps",
+                "Shared Quizzes": "Shared Quizzes",
+                "My Quizzes": "My Quizzes",
+                "no items...": "no items...",
+                "Add mindmap": "Add mindmap",
+            },
+            fr: {
+                "Mind maps": "Cartes mentales",
+                "Shared Quizzes": "Quiz partagés",
+                "My Quizzes": "Mes quiz",
+                "no items...": "aucun élément...",
+                "Add mindmap": "Ajouter une carte mentale",
+            },
+            ar: {
+                "Mind maps": "الخرائط  الذهنية",
+                "Shared Quizzes": "الاختبارات المشتركة",
+                "My Quizzes": "اختباراتي",
+                "no items...": "لا توجد عناصر...",
+                "Add mindmap": "إضافة خريطة ذهنية",
+            },
+        }),
+        []
+    )
+
+    const lang = getLanguage()
+    const t = translation[lang]
+
     const {
         data: response,
         isError,
@@ -87,13 +119,13 @@ export default function Page() {
     const tabs = [
         {
             id: "shared",
-            label: "Shared Quizzes ",
+            label: t["Shared Quizzes"],
             icon: <Share2Icon size={18} />,
             count: response?.count || 0,
         },
         {
             id: "personal",
-            label: "My Quizzes",
+            label: t["My Quizzes"],
             icon: <BookOpen size={18} />,
             count: 0,
         },
@@ -108,16 +140,15 @@ export default function Page() {
                 className={cn(
                     "flex w-full fixed  z-40  bg-white border-t top-[10vh] pt-4  justify-between items-center",
                     {
-                        "md:left-[300px] md:w-[calc(100vw-306px)] md:px-8  ":
+                        "ltr:md:left-[300px] rtl:md:right-[300px]  md:w-[calc(100vw-306px)] md:px-8  ":
                             isSidenavOpen,
-                        "md:left-[100px] md:w-[calc(100vw-106px)] md:px-8  ":
+                        "ltr:md:left-[100px] rtl:md:right-[100px] md:w-[calc(100vw-106px)] md:px-8  ":
                             !isSidenavOpen,
                     }
                 )}
             >
-                {" "}
                 <h1 className="md:text-4xl text-3xl text-neutral-600  font-extrabold">
-                    Mind maps
+                    {t["Mind maps"]}
                 </h1>
                 <div className="flex  items-center gap-2">
                     <div className="mt-5 md:block hidden ">
@@ -165,10 +196,10 @@ export default function Page() {
                         {!data?.length && !isFetching && (
                             <div className="flex w-full items-center justify-center gap-4 h-80 col-span-3 flex-col">
                                 <p className="text-5xl font-bold text-neutral-400">
-                                    no items...
+                                    {t["no items..."]}
                                 </p>
                                 <Button onClick={() => setIsAdding(true)}>
-                                    <Plus /> Add mindmap
+                                    <Plus /> {t["Add mindmap"]}
                                 </Button>
                             </div>
                         )}

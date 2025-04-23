@@ -2,6 +2,8 @@ import { Handle, Position, useReactFlow } from "@xyflow/react"
 import { ChevronRight, Loader2, Trash2Icon } from "lucide-react"
 import { memo, useState } from "react"
 import NodeSheet from "./node-sheet"
+import { containsArabic } from "@/utils/is-arabic"
+import { cn } from "@/lib/ui-utils"
 
 interface CustomNodeProps {
     data: {
@@ -48,6 +50,8 @@ function CustomNode({ data }: CustomNodeProps) {
             return result
         }
     }
+    const isArabicTitle = containsArabic(data.title)
+    const isArabicDescription = containsArabic(data.description)
 
     return (
         <>
@@ -88,10 +92,24 @@ function CustomNode({ data }: CustomNodeProps) {
                 ) : (
                     <>
                         <div className="grow">
-                            <h3 className="text-sm font-bold text-neutral-600 font-sans first-letter:uppercase">
+                            <h3
+                                className={cn(
+                                    "text-sm font-bold text-neutral-600 font-sans first-letter:uppercase",
+                                    { "text-right": isArabicTitle }
+                                )}
+                            >
                                 {data.title}
                             </h3>
-                            <p className="text-[8px] font-semibold text-neutral-500">
+                            <p
+                                className={cn(
+                                    "text-[8px] font-semibold text-neutral-500",
+                                    {
+                                        "text-right":
+                                            isArabicDescription &&
+                                            isArabicTitle,
+                                    }
+                                )}
+                            >
                                 {data.description}
                             </p>
                         </div>

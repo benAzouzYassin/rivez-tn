@@ -1,3 +1,5 @@
+"use client"
+
 import { Button } from "@/components/ui/button"
 import {
     Dialog,
@@ -11,7 +13,8 @@ import {
 } from "@/components/ui/dialog"
 import { cn } from "@/lib/ui-utils"
 import { Loader2, TriangleAlert } from "lucide-react"
-import { ReactNode, useState } from "react"
+import { ReactNode, useState, useMemo } from "react"
+import { getLanguage } from "@/utils/get-language"
 
 type Props = {
     onConfirm: () => Promise<void>
@@ -25,19 +28,60 @@ type Props = {
     onOpenChange: (value: boolean) => void
     confirmBtnClassName?: string
 }
+
 const WarningDialog = ({
     onConfirm,
-    title = "Are you absolutely sure?",
-    description = "This action cannot be undone. This will permanently delete this item from our servers.",
+    title,
+    description,
     children,
-    confirmText = "Delete",
-    cancelText = "Cancel",
+    confirmText,
+    cancelText,
     isOpen,
     onOpenChange,
     confirmBtnClassName,
     titleClassName,
 }: Props) => {
     const [isLoading, setIsLoading] = useState(false)
+
+    const translation = useMemo(
+        () => ({
+            en: {
+                "Are you absolutely sure?": "Are you absolutely sure?",
+                "This action cannot be undone. This will permanently delete this item from our servers.":
+                    "This action cannot be undone. This will permanently delete this item from our servers.",
+                Delete: "Delete",
+                Cancel: "Cancel",
+            },
+            fr: {
+                "Are you absolutely sure?": "Êtes-vous absolument sûr(e) ?",
+                "This action cannot be undone. This will permanently delete this item from our servers.":
+                    "Cette action ne peut pas être annulée. Cela supprimera définitivement cet élément de nos serveurs.",
+                Delete: "Supprimer",
+                Cancel: "Annuler",
+            },
+            ar: {
+                "Are you absolutely sure?": "هل أنت متأكد تمامًا؟",
+                "This action cannot be undone. This will permanently delete this item from our servers.":
+                    "لا يمكن التراجع عن هذا الإجراء. سيؤدي هذا إلى حذف هذا العنصر نهائيًا من خوادمنا.",
+                Delete: "حذف",
+                Cancel: "إلغاء",
+            },
+        }),
+        []
+    )
+
+    const lang = getLanguage()
+    const t = translation[lang]
+
+    // Use translated defaults if no custom values provided
+    const finalTitle = title || t["Are you absolutely sure?"]
+    const finalDescription =
+        description ||
+        t[
+            "This action cannot be undone. This will permanently delete this item from our servers."
+        ]
+    const finalConfirmText = confirmText || t["Delete"]
+    const finalCancelText = cancelText || t["Cancel"]
 
     const handleConfirm = async () => {
         try {
@@ -55,7 +99,7 @@ const WarningDialog = ({
         <Dialog open={isOpen} onOpenChange={onOpenChange}>
             {!!children && <DialogTrigger asChild>{children}</DialogTrigger>}
 
-            <DialogContent className=" md:min-w-[600px] xl:max-w-[35vw] !rounded-2xl">
+            <DialogContent className="md:min-w-[600px] xl:max-w-[35vw] !rounded-2xl">
                 <DialogHeader>
                     <DialogTitle
                         className={cn(
@@ -64,10 +108,10 @@ const WarningDialog = ({
                         )}
                     >
                         <TriangleAlert className="h-6 w-6 mt-[3px] stroke-3" />
-                        {title}
+                        {finalTitle}
                     </DialogTitle>
                     <DialogDescription className="text-gray-500 mt-1 font-sans text-sm ">
-                        {description}
+                        {finalDescription}
                     </DialogDescription>
                 </DialogHeader>
 
@@ -84,7 +128,7 @@ const WarningDialog = ({
                             )}
                             variant={"secondary"}
                         >
-                            {cancelText}
+                            {finalCancelText}
                         </Button>
                     </DialogClose>
 
@@ -105,7 +149,7 @@ const WarningDialog = ({
                                 <Loader2 className="h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent" />
                             </div>
                         ) : (
-                            confirmText
+                            finalConfirmText
                         )}
                     </Button>
                 </DialogFooter>

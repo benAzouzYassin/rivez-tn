@@ -1,3 +1,5 @@
+"use client"
+
 import PopoverList from "@/components/ui/popover-list"
 import WarningDialog from "@/components/ui/warning-dialog"
 import { deleteMindmapById } from "@/data-access/mindmaps/delete"
@@ -14,7 +16,8 @@ import { cn } from "@/lib/ui-utils"
 import { useQueryClient } from "@tanstack/react-query"
 import { Info, MoreVerticalIcon, Share2, Trash2 } from "lucide-react"
 import { useRouter } from "nextjs-toploader/app"
-import { useState } from "react"
+import { useState, useMemo } from "react"
+import { getLanguage } from "@/utils/get-language"
 
 interface Props {
     itemId: number
@@ -24,6 +27,7 @@ interface Props {
     isSharing: boolean
     setIsSharing: (value: boolean) => void
 }
+
 export default function MoreButton(props: Props) {
     const { data: userData } = useCurrentUser()
     const isOwner = userData?.id === props.authorId
@@ -31,12 +35,48 @@ export default function MoreButton(props: Props) {
     const queryClient = useQueryClient()
     const router = useRouter()
     const [isDeleting, setIsDeleting] = useState(false)
+
+    const translation = useMemo(
+        () => ({
+            en: {
+                Details: "Details",
+                "Share link": "Share link",
+                Delete: "Delete",
+                "Deleting...": "Deleting...",
+                "Deleted successfully.": "Deleted successfully.",
+                "Something went wrong.": "Something went wrong.",
+            },
+            fr: {
+                Details: "Détails",
+                "Share link": "Partager le lien",
+                Delete: "Supprimer",
+                "Deleting...": "Suppression...",
+                "Deleted successfully.": "Supprimé avec succès.",
+                "Something went wrong.": "Une erreur s'est produite.",
+            },
+            ar: {
+                Details: "التفاصيل",
+                "Share link": "مشاركة الرابط",
+                Delete: "حذف",
+                "Deleting...": "جار الحذف...",
+                "Deleted successfully.": "تم الحذف بنجاح.",
+                "Something went wrong.": "حدث خطأ ما.",
+            },
+        }),
+        []
+    )
+
+    const lang = getLanguage()
+    const t = translation[lang]
+
     const handleDelete = () => {
         setIsDeleting(true)
     }
+
     const handleShare = () => {
         props.setIsSharing(true)
     }
+
     if (isOwner || isAdmin)
         return (
             <>
@@ -45,18 +85,18 @@ export default function MoreButton(props: Props) {
                     items={[
                         {
                             icon: <Info className="w-5 h-5" />,
-                            label: "Details",
+                            label: t["Details"],
                             onClick: () =>
                                 router.push(`/mind-maps/${props.itemId}`),
                         },
                         {
                             icon: <Share2 className="w-5 h-5" />,
-                            label: "Share link",
+                            label: t["Share link"],
                             onClick: handleShare,
                         },
                         {
                             icon: <Trash2 className="w-5 h-5" />,
-                            label: "Delete",
+                            label: t["Delete"],
                             className: "focus:bg-red-200",
                             isDanger: true,
                             onClick: handleDelete,
@@ -67,7 +107,7 @@ export default function MoreButton(props: Props) {
                         role="button"
                         onClick={(e) => e.stopPropagation()}
                         className={cn(
-                            "h-8 border-2 bg-white   hover:bg-neutral-100 flex items-center justify-center rounded-lg w-8 p-0 hover:cursor-pointer active:scale-95",
+                            "h-8 border-2 bg-white hover:bg-neutral-100 flex items-center justify-center rounded-lg w-8 p-0 hover:cursor-pointer active:scale-95",
                             props.className
                         )}
                     >
@@ -77,7 +117,7 @@ export default function MoreButton(props: Props) {
                 <WarningDialog
                     isOpen={isDeleting}
                     onConfirm={async () => {
-                        toastLoading("Deleting...")
+                        toastLoading(t["Deleting..."])
                         deleteMindmapById(props.itemId)
                             .then((res) => {
                                 queryClient.refetchQueries({
@@ -85,11 +125,11 @@ export default function MoreButton(props: Props) {
                                         q.queryKey.includes("mindmaps"),
                                 })
                                 dismissToasts("loading")
-                                toastSuccess("Deleted successfully.")
+                                toastSuccess(t["Deleted successfully."])
                             })
                             .catch(() => {
                                 dismissToasts("loading")
-                                toastError("Something went wrong.")
+                                toastError(t["Something went wrong."])
                             })
                     }}
                     onOpenChange={setIsDeleting}

@@ -108,14 +108,14 @@ export default function UserHeader() {
                 <MobileNavDrawer />
                 <div
                     className={cn("ml-auto flex items-center gap-1", {
-                        "-ml-10 mr-auto": isRTL,
+                        "md:-ml-10 md:mr-auto": isRTL,
                     })}
                 >
                     <Popover
                         open={isUserSettingOpen}
                         onOpenChange={setIsUserSettingOpen}
                     >
-                        <PopoverTrigger className="cursor-pointer w-fit p-1 mt-2 rounded-2xl flex items-center gap-2 font-bold text-lg text-neutral-600 md:px-3 py-1 active:scale-95 hover:bg-neutral-100 transition-transform">
+                        <PopoverTrigger className="cursor-pointer rtl:md:flex-row rtl:flex-row-reverse w-fit p-1 mt-2 rounded-2xl flex items-center gap-2 font-bold text-lg text-neutral-600 md:px-3 py-1 active:scale-95 hover:bg-neutral-100 transition-transform">
                             <div
                                 className={cn("flex text-nowrap flex-col", {
                                     "items-end": isRTL,
