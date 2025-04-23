@@ -22,12 +22,16 @@ import { toastError } from "@/lib/toasts"
 import { cn } from "@/lib/ui-utils"
 import { useQuery } from "@tanstack/react-query"
 import { Lightbulb, Loader2 } from "lucide-react"
-import { useEffect, useRef, useState } from "react"
+import { useEffect, useRef, useState, useMemo } from "react"
+import { getLanguage } from "@/utils/get-language"
+import { containsArabic } from "@/utils/is-arabic"
+
 interface Props {
     questionId: number
     questionText: string
     questionContent: string
 }
+
 export default function HintsSheet(props: Props) {
     const { data: userData } = useCurrentUser()
     const refetchUser = useRefetchUser()
@@ -36,7 +40,26 @@ export default function HintsSheet(props: Props) {
     const [isGenerating, setIsGenerating] = useState(false)
     const [generatedContent, setGeneratedContent] = useState("")
     const isStreaming = useRef<boolean>(false)
-    const { isLoading, data } = useQuery({
+    const isArabicQuestion = containsArabic(props.questionText)
+    const translation = useMemo(
+        () => ({
+            en: {
+                Hint: "Hint",
+                "Something went wrong": "Something went wrong",
+            },
+            ar: { Hint: "تلميح", "Something went wrong": "حدث خطأ ما" },
+            fr: {
+                Hint: "Indice",
+                "Something went wrong": "Quelque chose a mal tourné",
+            },
+        }),
+        []
+    )
+
+    const lang = getLanguage()
+    const t = translation[lang] || translation.en
+
+    const { isLoading, data, isFetching, refetch } = useQuery({
         queryKey: ["questions_hints", props.questionId],
         enabled: isOpen,
         queryFn: () =>
@@ -44,8 +67,9 @@ export default function HintsSheet(props: Props) {
                 questionId: props.questionId,
             }),
     })
+
     useEffect(() => {
-        if (!isLoading && !data && userData?.id && isOpen) {
+        if (!isFetching && !data && userData?.id && isOpen) {
             let contentToSave = ""
             setIsGenerating(true)
             let didGenerate = false
@@ -71,7 +95,7 @@ export default function HintsSheet(props: Props) {
                         })
                     })
                     .catch(() => {
-                        toastError("Something went wrong")
+                        toastError(t["Something went wrong"])
                     })
             }
             const handleStreamChange = (chunk: string) => {
@@ -91,7 +115,7 @@ export default function HintsSheet(props: Props) {
                     if (hintId) {
                         updateHint(hintId, {
                             content: contentToSave,
-                        })
+                        }).then(() => refetch())
                     }
                 }
             }
@@ -106,32 +130,39 @@ export default function HintsSheet(props: Props) {
         userData?.id,
         setIsGenerating,
         isOpen,
+        isFetching,
+        refetch,
+        t,
     ])
+
     return (
         <Sheet open={isOpen} onOpenChange={setIsOpen}>
             <SheetTrigger asChild>
-                <button className="h-10 text-center hidden   bg-white hover:bg-blue-50 cursor-pointer active:scale-95 transition-all  text-blue-600/80 font-bold text-lg md:flex items-center justify-center fixed rounded-l-xl border-blue-500/70 top-44 border-r-0 right-0 w-20 gap-px border-2">
+                <button
+                    className="h-10 text-center hidden bg-white hover:bg-blue-50 cursor-pointer active:scale-95 transition-all text-blue-600/80 font-bold text-lg md:flex items-center justify-center fixed ltr:rounded-l-xl rtl:rounded-r-xl border-blue-500/70 top-44 ltr:border-r-0 rtl:left-0 ltr:right-0 w-20 gap-px border-2"
+                    aria-label={t.Hint}
+                >
                     <Lightbulb className="w-6 h-6" />
-                    Hint
+                    {t.Hint}
                 </button>
             </SheetTrigger>
             <SheetContent
+                side={isArabicQuestion ? "left" : "right"}
                 className={cn(
-                    "transition-all overflow-hidden  px-2 py-0 w-96 min-w-[70vw]"
+                    "transition-all overflow-hidden px-2 py-0 w-96 min-w-[75vw]"
                 )}
             >
                 {isError ? (
                     <ErrorDisplay hideButton />
                 ) : (
                     <>
-                        {isLoading ||
-                            (isGenerating && (
-                                <div className="w-full h-[70vh] flex items-start justify-start">
-                                    <MarkdownShadowLoading />
-                                    <SheetDescription></SheetDescription>
-                                    <SheetTitle></SheetTitle>
-                                </div>
-                            ))}
+                        {(isLoading || isGenerating) && (
+                            <div className="w-full h-[70vh] flex items-start justify-start">
+                                <MarkdownShadowLoading />
+                                <SheetDescription></SheetDescription>
+                                <SheetTitle></SheetTitle>
+                            </div>
+                        )}
                         <ScrollArea className="px-4">
                             {!isLoading && !isGenerating && (
                                 <Markdown

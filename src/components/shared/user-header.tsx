@@ -21,6 +21,7 @@ import CreditIcon from "../icons/credit-icon"
 import MobileNavDrawer from "./mobile-nav-drawer"
 import Cookies from "js-cookie"
 import { availableLanguages } from "@/utils/get-language"
+import { customToFixed } from "@/utils/numbers"
 
 export default function UserHeader() {
     const queryClient = useQueryClient()
@@ -147,7 +148,11 @@ export default function UserHeader() {
                                         <div className="flex w-fit items-center cursor-pointer gap-1 rounded-full text-sm md:mt-0 mt-1 md:text-lg bg-blue-100/70 border border-blue-200 pl-2 pr-3 py-[1px] scale-95 text-neutral-600/90 hover:bg-blue-100 transition-colors">
                                             <CreditIcon className="h-6 w-6 md:scale-125 opacity-80" />
                                             <span className="font-extrabold pr-1">
-                                                {user?.credit_balance?.toFixed(
+                                                {customToFixed(
+                                                    Number(
+                                                        user?.credit_balance ||
+                                                            0
+                                                    ),
                                                     1
                                                 )}
                                             </span>

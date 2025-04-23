@@ -47,9 +47,9 @@ export default function Sidenav(props: Props) {
                 )}
 
                 {isSidenavOpen ? (
-                    <ChevronRight className="rtl:hidden ltr:block !w-5 transition-all text-white stroke-[2.5] !h-5" />
-                ) : (
                     <ChevronLeft className="rtl:hidden ltr:block !w-5 transition-all text-white stroke-[2.5] !h-5" />
+                ) : (
+                    <ChevronRight className="rtl:hidden ltr:block !w-5 transition-all text-white stroke-[2.5] !h-5" />
                 )}
             </Button>
             <ScrollArea className="h-[calc(100vh-14.1rem)] px-2 mt-14">

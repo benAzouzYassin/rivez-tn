@@ -50,6 +50,8 @@ export async function POST(req: NextRequest) {
                 .single()
                 .throwOnError()
         ).data.credit_balance
+        console.log("userBalance", userBalance)
+        console.log("QUESTION_COST", QUESTION_COST)
 
         if (userBalance < QUESTION_COST) {
             return NextResponse.json(
@@ -60,7 +62,7 @@ export async function POST(req: NextRequest) {
             )
         }
         const newBalance = userBalance - QUESTION_COST
-
+        console.log("new balance ==>", newBalance)
         await supabaseAdmin
             .from("user_profiles")
             .update({
@@ -110,6 +112,9 @@ const bodySchema = z.object({
     }),
 })
 
-export interface GenerateSingleQuestionBodyType extends z.infer<typeof bodySchema> {questionType: keyof typeof POSSIBLE_QUESTIONS}
+export interface GenerateSingleQuestionBodyType
+    extends z.infer<typeof bodySchema> {
+    questionType: keyof typeof POSSIBLE_QUESTIONS
+}
 
 export const maxDuration = 60
