@@ -22,12 +22,14 @@ import { cn } from "@/lib/ui-utils"
 import { wait } from "@/utils/wait"
 import { ChevronLeft } from "lucide-react"
 import Link from "next/link"
-import { useState } from "react"
+import { useState, useMemo } from "react"
+import { getLanguage } from "@/utils/get-language"
 
 interface Props {
     isOpen: boolean
     onOpenChange: (value: boolean) => void
 }
+
 export default function InsufficientCreditsDialog(props: Props) {
     const [tab, setTab] = useState<"default" | "payment">("default")
     const options = [10, 20, 30, 40, 50]
@@ -36,11 +38,85 @@ export default function InsufficientCreditsDialog(props: Props) {
         null | "online" | "e-dinar" | "bank" | "poste"
     >(null)
 
+    const lang = getLanguage()
+    const t = useMemo(
+        () =>
+            ({
+                en: {
+                    "You've run out of credits!": "You've run out of credits !",
+                    "Purchase more credits to continue using our services":
+                        "Purchase more credits to continue using our services",
+                    "More Credits": "More Credits",
+                    OR: "OR",
+                    Amount: "Amount",
+                    "Please select a price": "Please select a price",
+                    "credit for": "credit for",
+                    Dinars: "Dinars",
+                    "Payment Methods": "Payment Methods",
+                    "Online payment": "Online payment",
+                    "E-Dinar": "E-Dinar",
+                    "Bank transfer": "Bank transfer",
+                    "Mandat post (soon..)": "Mandat post (soon..)",
+                    Back: "Back",
+                    "Contact our support team :": "Contact our support team :",
+                    Whatsapp: "Whatsapp",
+                    Facebook: "Facebook",
+                    "Something went wrong": "Something went wrong",
+                },
+                fr: {
+                    "You've run out of credits!":
+                        "Vous n'avez plus de crédits !",
+                    "Purchase more credits to continue using our services":
+                        "Achetez plus de crédits pour continuer à utiliser nos services",
+                    "More Credits": "Plus de crédits",
+                    OR: "OU",
+                    Amount: "Montant",
+                    "Please select a price": "Veuillez sélectionner un prix",
+                    "credit for": "crédits pour",
+                    Dinars: "Dinars",
+                    "Payment Methods": "Méthodes de paiement",
+                    "Online payment": "Paiement en ligne",
+                    "E-Dinar": "E-Dinar",
+                    "Bank transfer": "Virement bancaire",
+                    "Mandat post (soon..)": "Mandat postal (bientôt..)",
+                    Back: "Retour",
+                    "Contact our support team :":
+                        "Contactez notre équipe d'assistance :",
+                    Whatsapp: "Whatsapp",
+                    Facebook: "Facebook",
+                    "Something went wrong": "Une erreur est survenue",
+                },
+                ar: {
+                    "You've run out of credits!": "لقد نفذ رصيدك !",
+                    "Purchase more credits to continue using our services":
+                        "اشترِ المزيد من الرصيد للاستمرار في استخدام خدماتنا",
+                    "More Credits": "رصيد إضافي",
+                    OR: "أو",
+                    Amount: "المبلغ",
+                    "Please select a price": "يرجى اختيار السعر",
+                    "credit for": "رصيد مقابل",
+                    Dinars: "دينار",
+                    "Payment Methods": "طرق الدفع",
+                    "Online payment": "الدفع عبر الإنترنت",
+                    "E-Dinar": "إي-دينار",
+                    "Bank transfer": "التحويل البنكي",
+                    "Mandat post (soon..)": "التحويل البريدي (قريبًا..)",
+                    Back: "عودة",
+                    "Contact our support team :":
+                        "تواصل مع فريق الدعم الخاص بنا :",
+                    Whatsapp: "واتساب",
+                    Facebook: "فيسبوك",
+                    "Something went wrong": "حدث خطأ ما",
+                },
+            }[lang]),
+        [lang]
+    )
+
     const handleOnlinePayment = async () => {
         const price = Number(selectedPrice)
         if (!price || isNaN(price)) {
             setLoadingButton(null)
-            return toastError("Something went wrong")
+            return toastError(t["Something went wrong"])
         }
         const creditCount = CREDITS_FOR_10_DINARS * (price / 10)
         const link = await generatePaymentLink({
@@ -48,7 +124,7 @@ export default function InsufficientCreditsDialog(props: Props) {
         })
         if (!link) {
             setLoadingButton(null)
-            return toastError("Something went wrong")
+            return toastError(t["Something went wrong"])
         }
         window.open(link)
         wait(10).then(() => {
@@ -68,11 +144,14 @@ export default function InsufficientCreditsDialog(props: Props) {
 
                         <div className="text-center space-y-3">
                             <p className="md:text-2xl text-xl text-neutral-700 font-bold">
-                                You&apos;ve run out of credits!
+                                {t["You've run out of credits!"]}
                             </p>
                             <p className="text-neutral-600">
-                                Purchase more credits to continue using our
-                                services
+                                {
+                                    t[
+                                        "Purchase more credits to continue using our services"
+                                    ]
+                                }
                             </p>
                         </div>
                         <Button
@@ -81,11 +160,13 @@ export default function InsufficientCreditsDialog(props: Props) {
                                 setTab("payment")
                             }}
                         >
-                            More Credits
+                            {t["More Credits"]}
                         </Button>
                         <div className="flex items-center  w-full">
                             <hr className="rounded-full w-full bg-[#E5E5E5] h-1" />
-                            <p className="mx-2 font-bold text-[#AFAFAF]">OR</p>
+                            <p className="mx-2 font-bold text-[#AFAFAF]">
+                                {t.OR}
+                            </p>
                             <hr className="rounded-full w-full bg-[#E5E5E5] h-1" />
                         </div>
                     </div>
@@ -100,11 +181,11 @@ export default function InsufficientCreditsDialog(props: Props) {
                             variant={"secondary"}
                         >
                             <ChevronLeft className="!w-5 !h-5 -mr-1 stroke-[2.5]" />{" "}
-                            Back
+                            {t.Back}
                         </Button>
                         <div className="mt-10"></div>
                         <label className="font-bold  text-neutral-700 ml-1 text-lg">
-                            Amount{" "}
+                            {t.Amount}{" "}
                         </label>
                         <Select
                             value={selectedPrice}
@@ -117,11 +198,12 @@ export default function InsufficientCreditsDialog(props: Props) {
                                             {CREDITS_FOR_10_DINARS *
                                                 (Number(selectedPrice) /
                                                     10)}{" "}
-                                            credit for {selectedPrice} Dinars{" "}
+                                            {t["credit for"]} {selectedPrice}{" "}
+                                            {t.Dinars}{" "}
                                         </div>
                                     ) : (
                                         <div className="">
-                                            Please select a price
+                                            {t["Please select a price"]}
                                         </div>
                                     )}
                                 </div>
@@ -135,7 +217,7 @@ export default function InsufficientCreditsDialog(props: Props) {
                                         >
                                             {CREDITS_FOR_10_DINARS *
                                                 (Number(item) / 10)}{" "}
-                                            credit for {item} Dinars{" "}
+                                            {t["credit for"]} {item} {t.Dinars}{" "}
                                         </SelectItem>
                                     )
                                 })}
@@ -144,7 +226,7 @@ export default function InsufficientCreditsDialog(props: Props) {
 
                         <div className="md:grid md:gap-x-8 gap-y-3 flex flex-col md:gap-y-5 md:grid-cols-2 mt-2">
                             <div className="col-span-2 text-center font-bold text-neutral-700 text-2xl">
-                                Payment Methods
+                                {t["Payment Methods"]}
                             </div>
                             <Button
                                 isLoading={loadingButton == "online"}
@@ -168,7 +250,7 @@ export default function InsufficientCreditsDialog(props: Props) {
                                     />
                                 </div>
                                 <p className="mt-5 text-2xl font-bold">
-                                    Online payment
+                                    {t["Online payment"]}
                                 </p>
                             </Button>
                             <Button
@@ -188,7 +270,7 @@ export default function InsufficientCreditsDialog(props: Props) {
                                     />
                                 </div>
                                 <p className="z-50  text-2xl font-bold">
-                                    E-Dinar
+                                    {t["E-Dinar"]}
                                 </p>
                             </Button>
                             <Link
@@ -205,7 +287,7 @@ export default function InsufficientCreditsDialog(props: Props) {
                                         src="/icons/banque-zitouna.png"
                                     />
                                     <p className="mt-5 text-2xl font-bold">
-                                        Bank transfer
+                                        {t["Bank transfer"]}
                                     </p>
                                 </Button>
                             </Link>
@@ -220,7 +302,7 @@ export default function InsufficientCreditsDialog(props: Props) {
                                     src="/icons/tunisian-post.png"
                                 />
                                 <p className="mt-5 text-2xl font-bold">
-                                    Mandat post (soon..)
+                                    {t["Mandat post (soon..)"]}
                                 </p>
                             </Button>
                         </div>
@@ -232,8 +314,7 @@ export default function InsufficientCreditsDialog(props: Props) {
                             "-mt-9": tab === "default",
                         })}
                     >
-                        {" "}
-                        Contact our support team :
+                        {t["Contact our support team :"]}
                     </div>
                     <div className="flex md:flex-row flex-col justify-center gap-3 mt-4 items-center">
                         <Link
@@ -247,7 +328,7 @@ export default function InsufficientCreditsDialog(props: Props) {
                                 variant={"secondary"}
                             >
                                 <WhatsAppIcon className=" !w-10 !h-10" />{" "}
-                                Whatsapp
+                                {t.Whatsapp}
                             </Button>
                         </Link>
                         <Link
@@ -259,7 +340,7 @@ export default function InsufficientCreditsDialog(props: Props) {
                                 variant={"secondary"}
                             >
                                 <FacebookIcon className=" !w-10 scale-90 border rounded-full p-1 !h-10" />{" "}
-                                Facebook
+                                {t.Facebook}
                             </Button>
                         </Link>
                     </div>
@@ -269,6 +350,7 @@ export default function InsufficientCreditsDialog(props: Props) {
         </Dialog>
     )
 }
+
 function Icon() {
     return (
         <svg

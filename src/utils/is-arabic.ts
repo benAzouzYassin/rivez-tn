@@ -4,10 +4,16 @@ export function containsArabic(text: string): boolean {
     const strippedText = stripMarkdownSyntax(text)
 
     if (!strippedText.trim()) return false
-    const arabicRegex =
-        /[\u0600-\u06FF\u0750-\u077F\u08A0-\u08FF\uFB50-\uFDFF\uFE70-\uFEFF]/
 
-    return arabicRegex.test(strippedText)
+    const arabicRegex =
+        /[\u0600-\u06FF\u0750-\u077F\u08A0-\u08FF\uFB50-\uFDFF\uFE70-\uFEFF]/g
+
+    const arabicMatches = strippedText.match(arabicRegex)
+    const arabicCount = arabicMatches ? arabicMatches.length : 0
+
+    const totalChars = strippedText.replace(/\s/g, "").length
+
+    return totalChars > 0 && arabicCount / totalChars > 0.5
 }
 
 function stripMarkdownSyntax(text: string): string {

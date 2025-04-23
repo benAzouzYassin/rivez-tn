@@ -26,7 +26,7 @@ import { cn } from "@/lib/ui-utils"
 import { wait } from "@/utils/wait"
 import dynamic from "next/dynamic"
 import { useRouter } from "nextjs-toploader/app"
-import { useState } from "react"
+import { useState, useMemo } from "react"
 import { mindmapsContentDb } from "../../_utils/indexed-db"
 import { FileInputLoading } from "./file-input-loading"
 import { Badge } from "@/components/ui/badge"
@@ -35,21 +35,26 @@ import { highPrice, lowPrice } from "@/constants/prices"
 import { useCurrentUser } from "@/hooks/use-current-user"
 import InsufficientCreditsDialog from "@/components/shared/insufficient-credits-dialog"
 import { useIsSmallScreen } from "@/hooks/is-small-screen"
+import { getLanguage } from "@/utils/get-language"
+import { customToFixed } from "@/utils/numbers"
+
 const PdfInput = dynamic(() => import("./pdf-input"), {
     loading: () => <FileInputLoading />,
 })
 const ImageInput = dynamic(() => import("./image-input"), {
     loading: () => <FileInputLoading />,
 })
+
 interface Props {
     isOpen: boolean
     setIsOpen: (value: boolean) => void
 }
+
 export default function AddDialog(props: Props) {
     const isSmallScreen = useIsSmallScreen()
     const [isInsufficientCredits, setIsInsufficientCredits] = useState(false)
     const { data: user } = useCurrentUser()
-    const creditBalance = user?.credit_balance?.toFixed(1)
+    const creditBalance = customToFixed(user?.credit_balance, 1)
     const [currentTab, setCurrentTab] = useState<
         "subject" | "document" | "youtube" | "image" | null
     >(null)
@@ -61,42 +66,144 @@ export default function AddDialog(props: Props) {
     const [isSubmitting, setIsSubmitting] = useState(false)
     const [youtubeUrl, setYoutubeUrl] = useState("")
     const router = useRouter()
+
+    const translation = useMemo(
+        () => ({
+            en: {
+                "Add Mindmap": "Add Mindmap",
+                "Generate a Mind Map": "Generate a Mind Map",
+                "Text Input": "Text Input",
+                "Upload PDF": "Upload PDF",
+                "YouTube Video": "YouTube Video",
+                "Extract from Images": "Extract from Images",
+                "Create a mind map from any topic or subject you specify.":
+                    "Create a mind map from any topic or subject you specify.",
+                "Upload a PDF file to generate questions from its content.":
+                    "Upload a PDF file to generate questions from its content.",
+                "Convert a YouTube video into a mind map by entering its URL.":
+                    "Convert a YouTube video into a mind map by entering its URL.",
+                "Upload images with text to generate visual mind maps.":
+                    "Upload images with text to generate visual mind maps.",
+                Back: "Back",
+                "Topic or Subject": "Topic or Subject",
+                "Enter the main topic or subject for the mind map.":
+                    "Enter the main topic or subject for the mind map.",
+                "Additional Instructions": "Additional Instructions",
+                "Provide any specific guidelines or requests for AI processing.":
+                    "Provide any specific guidelines or requests for AI processing.",
+                "Generate Mind Map": "Generate Mind Map",
+                "Youtube url": "Youtube url",
+                "https://www.youtube.com/watch?v=something":
+                    "https://www.youtube.com/watch?v=something",
+                "Insufficient credits": "Insufficient credits",
+                "You do not have enough credits to perform this action.":
+                    "You do not have enough credits to perform this action.",
+            },
+            fr: {
+                "Add Mindmap": "Ajouter une carte mentale",
+                "Generate a Mind Map": "Générer une carte mentale",
+                "Text Input": "Saisie de texte",
+                "Upload PDF": "Télécharger un PDF",
+                "YouTube Video": "Vidéo YouTube",
+                "Extract from Images": "Extraire des images",
+                "Create a mind map from any topic or subject you specify.":
+                    "Créez une carte mentale à partir de n'importe quel sujet que vous spécifiez.",
+                "Upload a PDF file to generate questions from its content.":
+                    "Téléchargez un fichier PDF pour générer des questions à partir de son contenu.",
+                "Convert a YouTube video into a mind map by entering its URL.":
+                    "Convertissez une vidéo YouTube en carte mentale en entrant son URL.",
+                "Upload images with text to generate visual mind maps.":
+                    "Téléchargez des images avec du texte pour générer des cartes mentales visuelles.",
+                Back: "Retour",
+                "Topic or Subject": "Sujet ou thème",
+                "Enter the main topic or subject for the mind map.":
+                    "Entrez le sujet principal pour la carte mentale.",
+                "Additional Instructions": "Instructions supplémentaires",
+                "Provide any specific guidelines or requests for AI processing.":
+                    "Fournissez des directives spécifiques ou des demandes pour le traitement par IA.",
+                "Generate Mind Map": "Générer la carte mentale",
+                "Youtube url": "URL YouTube",
+                "https://www.youtube.com/watch?v=something":
+                    "https://www.youtube.com/watch?v=something",
+                "Insufficient credits": "Crédits insuffisants",
+                "You do not have enough credits to perform this action.":
+                    "Vous n'avez pas assez de crédits pour effectuer cette action.",
+            },
+            ar: {
+                "Add Mindmap": "إضافة خريطة ذهنية",
+                "Generate a Mind Map": "إنشاء خريطة ذهنية",
+                "Text Input": "إدخال نص",
+                "Upload PDF": "رفع ملف PDF",
+                "YouTube Video": "فيديو يوتيوب",
+                "Extract from Images": "استخراج من الصور",
+                "Create a mind map from any topic or subject you specify.":
+                    "أنشئ خريطة ذهنية من أي موضوع تحدده.",
+                "Upload a PDF file to generate questions from its content.":
+                    "قم بتحميل ملف PDF لإنشاء أسئلة من محتواه.",
+                "Convert a YouTube video into a mind map by entering its URL.":
+                    "حوّل فيديو يوتيوب إلى خريطة ذهنية بإدخال الرابط.",
+                "Upload images with text to generate visual mind maps.":
+                    "قم بتحميل صور تحتوي على نص لإنشاء خرائط ذهنية بصرية.",
+                Back: "عودة",
+                "Topic or Subject": "الموضوع أو العنوان",
+                "Enter the main topic or subject for the mind map.":
+                    "أدخل الموضوع الرئيسي للخريطة الذهنية.",
+                "Additional Instructions": "تعليمات إضافية",
+                "Provide any specific guidelines or requests for AI processing.":
+                    "قدم أي إرشادات أو طلبات محددة لمعالجة الذكاء الاصطناعي.",
+                "Generate Mind Map": "إنشاء الخريطة الذهنية",
+                "Youtube url": "رابط يوتيوب",
+                "https://www.youtube.com/watch?v=something":
+                    "https://www.youtube.com/watch?v=something",
+                "Insufficient credits": "رصيد غير كافٍ",
+                "You do not have enough credits to perform this action.":
+                    "ليس لديك رصيد كافٍ لتنفيذ هذا الإجراء.",
+            },
+        }),
+        []
+    )
+
+    const lang = getLanguage()
+    const t = translation[lang]
+
     const items = [
         {
             price: lowPrice,
             disabled: false,
             value: "subject",
-            text: "Text Input",
+            text: t["Text Input"],
             icon: <LetterTextIcon className="w-7 text-indigo-500 h-7" />,
             description:
-                "Create a mind map from any topic or subject you specify.",
+                t["Create a mind map from any topic or subject you specify."],
         },
         {
             price: highPrice,
             disabled: isSmallScreen,
             value: "document",
-            text: "Upload PDF",
+            text: t["Upload PDF"],
             icon: <FileTextIcon className="w-7 h-7 text-indigo-500" />,
             description:
-                "Upload a PDF file to generate questions from its content.",
+                t["Upload a PDF file to generate questions from its content."],
         },
         {
             price: highPrice,
             disabled: false,
             value: "youtube",
-            text: "YouTube Video",
+            text: t["YouTube Video"],
             icon: <Video className="w-7 text-indigo-500 h-7" />,
             description:
-                "Convert a YouTube video into a mind map by entering its URL.",
+                t[
+                    "Convert a YouTube video into a mind map by entering its URL."
+                ],
         },
         {
             price: highPrice,
             disabled: false,
             value: "image",
-            text: "Extract from Images",
+            text: t["Extract from Images"],
             icon: <ImageIcon className="w-7 text-indigo-500 h-7" />,
             description:
-                "Upload images with text to generate visual mind maps.",
+                t["Upload images with text to generate visual mind maps."],
         },
     ]
 
@@ -141,6 +248,7 @@ export default function AddDialog(props: Props) {
             setIsSubmitting(false)
         }
     }
+
     return (
         <>
             <Dialog
@@ -156,8 +264,8 @@ export default function AddDialog(props: Props) {
             >
                 <DialogTrigger asChild>
                     <Button className="text-base md:w-fit w-full h-[3.2rem]">
-                        <Plus className="-mr-1 !w-5 stroke-2 !h-5" /> Add
-                        Mindmap
+                        <Plus className="-mr-1 !w-5 stroke-2 !h-5" />{" "}
+                        {t["Add Mindmap"]}
                     </Button>
                 </DialogTrigger>
                 <DialogContent
@@ -170,7 +278,7 @@ export default function AddDialog(props: Props) {
                 >
                     <DialogHeader>
                         <DialogTitle className="md:text-4xl text-2xl mt-20 md:mt-2 text-center font-bold text-neutral-500">
-                            Generate a Mind Map
+                            {t["Generate a Mind Map"]}
                         </DialogTitle>
                         <DialogDescription className="text-neutral-600"></DialogDescription>
                     </DialogHeader>
@@ -229,10 +337,10 @@ export default function AddDialog(props: Props) {
                         <Button
                             onClick={() => setCurrentTab(null)}
                             variant={"secondary"}
-                            className="absolute gap-1 left-3 text-base font-bold text-neutral-500 top-5 rounded-xl"
+                            className="absolute gap-1 rtl:right-3 ltr:left-3 text-base font-bold text-neutral-500 top-5 rounded-xl"
                         >
                             <ChevronLeft className="min-w-6 min-h-6" />
-                            Back
+                            {t["Back"]}
                         </Button>
                     )}
                     {currentTab === "document" && (
@@ -249,7 +357,7 @@ export default function AddDialog(props: Props) {
                                 isLoading={isSubmitting}
                                 disabled={pdfPages.length === 0}
                             >
-                                Generate Mind Map
+                                {t["Generate Mind Map"]}
                             </Button>
                         </form>
                     )}
@@ -262,7 +370,7 @@ export default function AddDialog(props: Props) {
                                 isLoading={isSubmitting}
                                 disabled={imagesInBase64.length === 0}
                             >
-                                Generate Mind Map
+                                {t["Generate Mind Map"]}
                             </Button>
                         </form>
                     )}
@@ -273,7 +381,7 @@ export default function AddDialog(props: Props) {
                                     htmlFor="text"
                                     className="font-medium text-neutral-600"
                                 >
-                                    Topic or Subject
+                                    {t["Topic or Subject"]}
                                     <span className="text-red-400 text-xl font-semibold">
                                         *
                                     </span>
@@ -284,7 +392,11 @@ export default function AddDialog(props: Props) {
                                     id="text"
                                     value={topic}
                                     onChange={(e) => setTopic(e.target.value)}
-                                    placeholder="Enter the main topic or subject for the mind map."
+                                    placeholder={
+                                        t[
+                                            "Enter the main topic or subject for the mind map."
+                                        ]
+                                    }
                                     required
                                 />
                             </div>
@@ -294,7 +406,7 @@ export default function AddDialog(props: Props) {
                                     htmlFor="requirement"
                                     className="font-medium text-neutral-600"
                                 >
-                                    Additional Instructions
+                                    {t["Additional Instructions"]}
                                 </label>
                                 <Textarea
                                     className="h-24"
@@ -303,7 +415,11 @@ export default function AddDialog(props: Props) {
                                     onChange={(e) =>
                                         setInstructions(e.target.value)
                                     }
-                                    placeholder="Provide any specific guidelines or requests for AI processing."
+                                    placeholder={
+                                        t[
+                                            "Provide any specific guidelines or requests for AI processing."
+                                        ]
+                                    }
                                 />
                             </div>
                             <Button
@@ -312,7 +428,7 @@ export default function AddDialog(props: Props) {
                                 isLoading={isSubmitting}
                                 disabled={!topic}
                             >
-                                Generate Mind Map
+                                {t["Generate Mind Map"]}
                             </Button>
                         </form>
                     )}
@@ -323,7 +439,7 @@ export default function AddDialog(props: Props) {
                                     htmlFor="text"
                                     className="font-medium text-neutral-600"
                                 >
-                                    Youtube url
+                                    {t["Youtube url"]}
                                     <span className="text-red-400 text-xl font-semibold">
                                         *
                                     </span>
@@ -336,7 +452,11 @@ export default function AddDialog(props: Props) {
                                     onChange={(e) =>
                                         setYoutubeUrl(e.target.value)
                                     }
-                                    placeholder="https://www.youtube.com/watch?v=something"
+                                    placeholder={
+                                        t[
+                                            "https://www.youtube.com/watch?v=something"
+                                        ]
+                                    }
                                     required
                                 />
                             </div>
@@ -348,7 +468,7 @@ export default function AddDialog(props: Props) {
                                 isLoading={isSubmitting}
                                 disabled={!youtubeUrl}
                             >
-                                Generate Mind Map
+                                {t["Generate Mind Map"]}
                             </Button>
                         </form>
                     )}

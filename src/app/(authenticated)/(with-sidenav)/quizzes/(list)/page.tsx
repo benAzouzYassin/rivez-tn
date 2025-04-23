@@ -164,15 +164,15 @@ export default function Page() {
                 </div>
             </div>
 
-            <div className="w-full md:border-2 min-h-screen md:mt-18 -mt-3 sm:mt-36 rounded-2xl  md:p-5">
-                <div className="flex items-center">
+            <div className="w-full md:border-2 min-h-screen  md:mt-18 sm:mt-36 rounded-2xl  md:p-5">
+                <div className="flex items-center rtl:flex-row-reverse">
                     <h1 className="text-4xl  md:hidden block pb-5  text-neutral-600  font-extrabold">
-                        Quizzes
+                        {t["Quizzes"]}
                     </h1>
                     <Link href={"/quizzes/add"} className="md:hidden ml-auto">
                         <Button className="text-base h-[3rem] -mt-4">
-                            <Plus className="-mr-1 !w-5 stroke-2 !h-5" /> Add
-                            Quiz
+                            <Plus className="-mr-1 !w-5 stroke-2 !h-5" />{" "}
+                            {t["Add Quiz"]}
                         </Button>
                     </Link>
                 </div>

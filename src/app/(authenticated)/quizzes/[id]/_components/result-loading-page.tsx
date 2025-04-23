@@ -1,8 +1,20 @@
 "use client"
 
+import { getLanguage } from "@/utils/get-language"
 import { motion } from "framer-motion"
+import { useMemo } from "react"
 
 export default function ResultLoadingPage() {
+    const translation = useMemo(
+        () => ({
+            en: { "Processing answers": "Processing answers" },
+            fr: { "Processing answers": "Traitement des réponses" },
+            ar: { "Processing answers": "جاري معالجة الإجابات" },
+        }),
+        []
+    )
+    const lang = getLanguage()
+    const t = translation[lang]
     const containerVariants = {
         hidden: { opacity: 0 },
         visible: {
@@ -53,7 +65,7 @@ export default function ResultLoadingPage() {
                     className="text-3xl md:text-4xl lg:text-5xl pb-1 flex flex-wrap justify-center items-end font-black text-transparent bg-clip-text bg-gradient-to-r from-neutral-600 to-neutral-800"
                     variants={circleVariants}
                 >
-                    <span>Processing answers</span>
+                    <span>{t["Processing answers"]}</span>
                     <div className="flex items-center gap-1 -translate-y-1 md:-translate-y-2 ml-1">
                         <div className="w-2 h-2 md:w-3 md:h-3 bg-neutral-700 rounded-full"></div>
                         <div className="w-2 h-2 md:w-3 md:h-3 bg-neutral-700 rounded-full"></div>

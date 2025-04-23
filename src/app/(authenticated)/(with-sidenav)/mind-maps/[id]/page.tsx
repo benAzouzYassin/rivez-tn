@@ -1,4 +1,5 @@
 "use client"
+
 import {
     addEdge,
     Background,
@@ -12,7 +13,7 @@ import {
     useEdgesState,
     useNodesState,
 } from "@xyflow/react"
-import { useCallback, useEffect, useState } from "react"
+import { useCallback, useEffect, useState, useMemo } from "react"
 
 import { ErrorDisplay } from "@/components/shared/error-display"
 import { readMindMapById } from "@/data-access/mindmaps/read"
@@ -27,6 +28,7 @@ import { Button } from "@/components/ui/button"
 import GenerateQuizDialog from "./_components/generate-quiz-dialog"
 import { attachSharedMindmapToUser } from "@/data-access/mindmaps/share"
 import { useCurrentUser } from "@/hooks/use-current-user"
+import { getLanguage } from "@/utils/get-language"
 
 const nodeTypes = {
     customNode: CustomNode,
@@ -47,6 +49,28 @@ export default function Page() {
     const { isSidenavOpen } = useSidenav()
     const [nodes, setNodes, onNodesChange] = useNodesState([] as Node[])
     const [edges, setEdges, onEdgesChange] = useEdgesState([] as Edge[])
+
+    const translation = useMemo(
+        () => ({
+            en: {
+                "Convert quiz": "Convert to quiz",
+                Loading: "Loading...",
+            },
+            fr: {
+                "Convert quiz": "Convertir en quiz",
+                Loading: "Chargement...",
+            },
+            ar: {
+                "Convert quiz": "تحويل إلى اختبار",
+                Loading: "جار التحميل...",
+            },
+        }),
+        []
+    )
+
+    const lang = getLanguage()
+    const t = translation[lang]
+
     useEffect(() => {
         if (data && Array.isArray(data.nodes) && Array.isArray(data.edges)) {
             setNodes(
@@ -88,6 +112,7 @@ export default function Page() {
         return (
             <div className="h-[92vh] flex items-center justify-center">
                 <Loader2 className="w-8 h-8 stroke-[2.5] stroke-blue-400 animate-spin duration-300" />
+                <span className="sr-only">{t["Loading"]}</span>
             </div>
         )
     }
@@ -108,7 +133,7 @@ export default function Page() {
                         variant={"blue"}
                         onClick={handleGenerateQuiz}
                     >
-                        Convert quiz <Sparkles />
+                        {t["Convert quiz"]} <Sparkles />
                     </Button>
                     <GenerateQuizDialog
                         content={JSON.stringify(data?.items)}

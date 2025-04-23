@@ -5,7 +5,8 @@ export function negativeToZero(n: number) {
     return n
 }
 
-export function customToFixed(num: number, digits = 0) {
+export function customToFixed(num: number | undefined, digits = 0) {
+    if (num === undefined) return undefined
     digits = Math.floor(digits)
 
     if (digits < 0 || digits > 20) {

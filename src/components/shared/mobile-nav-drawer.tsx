@@ -8,7 +8,7 @@ import {
     DrawerTrigger,
 } from "@/components/ui/drawer"
 import { useNavigationItems } from "@/hooks/use-navigation-items"
-import { AlignLeft, XIcon } from "lucide-react"
+import { AlignCenter, AlignLeft, XIcon } from "lucide-react"
 import { useState } from "react"
 import { NavButton } from "./nav-button"
 
@@ -19,7 +19,7 @@ export default function MobileNavDrawer() {
         <Drawer open={isOpen} onOpenChange={setIsOpen}>
             <DrawerTrigger asChild>
                 <button className="h-10 cursor-pointer lg:hidden z-[999] w-10 rounded-full">
-                    <AlignLeft className="h-10 text-neutral-500 stroke-[2.3] w-10" />
+                    <AlignCenter className="h-10 text-neutral-500 stroke-[2.3] w-10" />
                     <span className="sr-only">Toggle menu</span>
                 </button>
             </DrawerTrigger>
