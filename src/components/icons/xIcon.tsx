@@ -1,6 +1,6 @@
 import { HTMLAttributes } from "react"
 
-interface Props extends HTMLAttributes<SVGElement> {}
+type Props = HTMLAttributes<SVGElement>
 export default function XIcon(props: Props) {
     return (
         <svg

@@ -23,9 +23,12 @@ import { useForm } from "react-hook-form"
 import { z } from "zod"
 import StatusButton from "./status-button"
 import { useIsAdmin } from "@/hooks/use-is-admin"
+import { getLanguage } from "@/utils/get-language"
 
 export default function UpdateQuizDialog(props: Props) {
     const isAdmin = useIsAdmin()
+    const lang = getLanguage()
+    const t = translation[lang]
     const [imageUrl, setImageUrl] = useState<string | null>(null)
     const [createdAt, setCreatedAt] = useState<string>("")
     const [isUploadingImage, setIsUploadingImage] = useState(false)
@@ -39,12 +42,12 @@ export default function UpdateQuizDialog(props: Props) {
             z.object({
                 name: z
                     .string()
-                    .min(1, "Name is required")
-                    .max(100, "Input exceeds maximum length"),
+                    .min(1, t["Name is required"])
+                    .max(100, t["Input exceeds maximum length"]),
                 category: z.string().nullable(),
                 description: z.string().optional(),
             }),
-        []
+        [t]
     )
 
     const {
@@ -76,13 +79,14 @@ export default function UpdateQuizDialog(props: Props) {
                 })
                 .catch((err) => {
                     console.error(err)
-                    toastError("Something went wrong.")
+                    toastError(t["Something went wrong"])
                 })
                 .finally(() => {
                     setIsLoading(false)
                 })
         }
-    }, [props.quizId, setValue, props.isOpen])
+    }, [props.quizId, setValue, props.isOpen, t])
+
     const onSubmit = async (data: z.infer<typeof formSchema>) => {
         try {
             await updateQuiz(props.quizId, {
@@ -100,7 +104,7 @@ export default function UpdateQuizDialog(props: Props) {
             reset()
             setImageUrl(null)
         } catch (error) {
-            toastError("Something wrong happened.")
+            toastError(t["Something wrong happened"])
             console.error(error)
             setIsSubmitting(false)
         }
@@ -108,21 +112,21 @@ export default function UpdateQuizDialog(props: Props) {
 
     return (
         <Dialog open={props.isOpen} onOpenChange={props.onOpenChange}>
-            <DialogContent className="sm:max-w-[45vw] sm:min-w-[500px]  max-h-[97vh] overflow-y-auto py-10">
+            <DialogContent className="sm:max-w-[45vw] sm:min-w-[500px] max-h-[97vh] overflow-y-auto py-10">
                 <DialogTitle className="text-2xl font-bold text-center text-[#3C3C3C]">
-                    Update Quiz
+                    {t["Update Quiz"]}
                 </DialogTitle>
                 <DialogDescription></DialogDescription>
                 {isLoading ? (
                     <div className="w-full h-[70vh] flex items-center justify-center">
-                        <Loader2 className="w-10 h-10   animate-spin duration-[animation-duration:350ms] text-blue-400" />
+                        <Loader2 className="w-10 h-10 animate-spin duration-[animation-duration:350ms] text-blue-400" />
                     </div>
                 ) : (
-                    <section className="flex relative  flex-col gap-4">
+                    <section className="flex relative flex-col gap-4">
                         {isAdmin && (
                             <div className="w-fit flex items-center justify-start h-10">
                                 <p className="text-nowrap mr-2 text-lg font-semibold">
-                                    Status :{" "}
+                                    {t["Status"]} :{" "}
                                 </p>
                                 <StatusButton
                                     itemId={props.quizId}
@@ -132,13 +136,13 @@ export default function UpdateQuizDialog(props: Props) {
                         )}
                         <Input
                             {...register("name")}
-                            placeholder="Quiz Name"
+                            placeholder={t["Quiz Name"]}
                             className="w-full"
                             errorMessage={errors.name?.message}
                         />
                         <Textarea
                             {...register("description")}
-                            placeholder="Description (optional)"
+                            placeholder={t["Description (optional)"]}
                             className="min-h-[100px]"
                         />
                         <ImageUpload
@@ -157,13 +161,50 @@ export default function UpdateQuizDialog(props: Props) {
                             className="font-extrabold uppercase text-sm"
                             variant="blue"
                         >
-                            Save changes
+                            {t["Save changes"]}
                         </Button>
                     </section>
                 )}
             </DialogContent>
         </Dialog>
     )
+}
+
+const translation = {
+    en: {
+        "Update Quiz": "Update Quiz",
+        Status: "Status",
+        "Quiz Name": "Quiz Name",
+        "Description (optional)": "Description (optional)",
+        "Save changes": "Save changes",
+        "Name is required": "Name is required",
+        "Input exceeds maximum length": "Input exceeds maximum length",
+        "Something went wrong": "Something went wrong.",
+        "Something wrong happened": "Something wrong happened.",
+    },
+    ar: {
+        "Update Quiz": "تحديث الاختبار",
+        Status: "الحالة",
+        "Quiz Name": "اسم الاختبار",
+        "Description (optional)": "الوصف (اختياري)",
+        "Save changes": "حفظ التغييرات",
+        "Name is required": "الاسم مطلوب",
+        "Input exceeds maximum length": "المدخلات تتجاوز الحد الأقصى للطول",
+        "Something went wrong": "حدث خطأ ما.",
+        "Something wrong happened": "حدث خطأ ما.",
+    },
+    fr: {
+        "Update Quiz": "Mettre à jour le quiz",
+        Status: "Statut",
+        "Quiz Name": "Nom du quiz",
+        "Description (optional)": "Description (facultative)",
+        "Save changes": "Enregistrer les modifications",
+        "Name is required": "Le nom est requis",
+        "Input exceeds maximum length":
+            "La saisie dépasse la longueur maximale",
+        "Something went wrong": "Quelque chose s'est mal passé.",
+        "Something wrong happened": "Quelque chose s'est mal passé.",
+    },
 }
 
 interface Props {

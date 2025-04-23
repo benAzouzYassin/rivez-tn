@@ -17,6 +17,8 @@ import {
 } from "@/components/ui/table"
 import { cn } from "@/lib/ui-utils"
 import { Skeleton } from "@/components/ui/skeleton"
+import { useMemo } from "react"
+import { getLanguage } from "@/utils/get-language"
 
 interface DataTableProps<TData, TValue> {
     columns: ColumnDef<TData, TValue>[]
@@ -29,6 +31,22 @@ export function DataTable<TData, TValue>({
     data,
     isLoading: loading = false,
 }: DataTableProps<TData, TValue>) {
+    const translation = useMemo(
+        () => ({
+            en: {
+                NoResults: "No results.",
+            },
+            fr: {
+                NoResults: "Aucun résultat.",
+            },
+            ar: {
+                NoResults: "لا توجد نتائج.",
+            },
+        }),
+        []
+    )
+    const lang = getLanguage()
+    const t = translation[lang]
     const table = useReactTable({
         data,
         columns,
@@ -105,7 +123,7 @@ export function DataTable<TData, TValue>({
                                     colSpan={columns.length}
                                     className="h-24 text-center"
                                 >
-                                    No results.
+                                    {t["NoResults"]}
                                 </TableCell>
                             </TableRow>
                         )}

@@ -8,9 +8,11 @@ import {
     ChartTooltipContent,
 } from "@/components/ui/chart"
 import { readQuizQuestionsDetails } from "@/data-access/quizzes/read"
+import { getLanguage } from "@/utils/get-language"
 import { useQuery } from "@tanstack/react-query"
 import { Loader2 } from "lucide-react"
 import { useParams } from "next/navigation"
+import { useMemo } from "react"
 import { Bar, BarChart, CartesianGrid, XAxis, YAxis } from "recharts"
 
 const chartConfig = {
@@ -29,6 +31,25 @@ const chartConfig = {
 } satisfies ChartConfig
 
 export function QuestionsBarChart() {
+    const translation = useMemo(
+        () => ({
+            en: {
+                "the last 100 submission data :":
+                    "the last 100 submission data :",
+            },
+            fr: {
+                "the last 100 submission data :":
+                    "les 100 dernières données de soumission :",
+            },
+            ar: {
+                "the last 100 submission data :":
+                    "آخر 100 من البيانات التي تم إرسالها :",
+            },
+        }),
+        []
+    )
+    const lang = useMemo(getLanguage, [])
+    const t = translation[lang]
     const params = useParams()
     const quizId = Number(params["id"])
     const { data, isLoading } = useQuery({
@@ -53,8 +74,8 @@ export function QuestionsBarChart() {
     )
     return (
         <Card className=" mt-10 pb-2 pt-5  w-full">
-            <h2 className="text-2xl px-5 font-extrabold  text-black/80">
-                Questions last 100 submission data :
+            <h2 className="text-2xl  px-5 font-extrabold  text-black/80">
+                {t["the last 100 submission data :"]}
             </h2>
 
             {isLoading ? (

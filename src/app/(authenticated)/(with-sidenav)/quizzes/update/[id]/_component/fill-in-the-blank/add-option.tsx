@@ -8,11 +8,15 @@ import {
 import { cn } from "@/lib/ui-utils"
 import { PlusCircle } from "lucide-react"
 import { ButtonHTMLAttributes, useState } from "react"
-import useUpdateQuizStore, { FillInTheBlankStoreContent } from "../../store"
+import useQuizStore, { FillInTheBlankStoreContent } from "../../store"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
-interface Props extends ButtonHTMLAttributes<any> {questionId: string
-    questionContent: FillInTheBlankStoreContent}
+import { getLanguage } from "@/utils/get-language"
+
+interface Props extends ButtonHTMLAttributes<any> {
+    questionId: string
+    questionContent: FillInTheBlankStoreContent
+}
 
 export default function AddOptionButton({
     questionId,
@@ -20,8 +24,10 @@ export default function AddOptionButton({
     questionContent,
     ...props
 }: Props) {
+    const lang = getLanguage()
+    const t = translation[lang]
     const [isOpen, setIsOpen] = useState(false)
-    const updateQuestion = useUpdateQuizStore((s) => s.updateQuestion)
+    const updateQuestion = useQuizStore((s) => s.updateQuestion)
     const [inputValue, setInputValue] = useState("")
     const [isError, setIsError] = useState(false)
     return (
@@ -39,8 +45,10 @@ export default function AddOptionButton({
                 </button>
             </DialogTrigger>
             <DialogContent>
-                <DialogTitle></DialogTitle>
-                <DialogDescription></DialogDescription>
+                <DialogTitle>{t["Add Option"]}</DialogTitle>
+                <DialogDescription>
+                    {t["Add a new option to the question."]}
+                </DialogDescription>
                 <form
                     onSubmit={(e) => {
                         e.preventDefault()
@@ -78,13 +86,39 @@ export default function AddOptionButton({
                         }}
                         type="text"
                         errorMessage={
-                            isError ? "This field is required" : undefined
+                            isError ? t["This field is required"] : undefined
                         }
-                        placeholder="New option value..."
+                        placeholder={t["New option value..."]}
                     />
-                    <Button>Add option</Button>
+                    <Button>{t["Add option"]}</Button>
                 </form>
             </DialogContent>
         </Dialog>
     )
+}
+
+const translation = {
+    en: {
+        "Add Option": "Add Option",
+        "Add a new option to the question.":
+            "Add a new option to the question.",
+        "This field is required": "This field is required",
+        "New option value...": "New option value...",
+        "Add option": "Add option",
+    },
+    ar: {
+        "Add Option": "إضافة خيار",
+        "Add a new option to the question.": "أضف خيارًا جديدًا للسؤال.",
+        "This field is required": "هذا الحقل مطلوب",
+        "New option value...": "قيمة الخيار الجديد...",
+        "Add option": "أضف خيارًا",
+    },
+    fr: {
+        "Add Option": "Ajouter une option",
+        "Add a new option to the question.":
+            "Ajouter une nouvelle option à la question.",
+        "This field is required": "Ce champ est obligatoire",
+        "New option value...": "Nouvelle valeur de l'option...",
+        "Add option": "Ajouter une option",
+    },
 }

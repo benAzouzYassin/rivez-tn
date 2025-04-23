@@ -2,13 +2,17 @@
 import { Input } from "@/components/ui/input"
 import { SearchIcon } from "lucide-react"
 import { useEffect, useState } from "react"
+import { getLanguage } from "@/utils/get-language"
 
+import { translation } from "../translation"
 interface Props {
     onSearchChange: (value: string) => void
     searchValue: string
 }
 export default function Search(props: Props) {
+    const lang = getLanguage()
     const [inputValue, setInputValue] = useState("")
+    const t = translation[lang]
     useEffect(() => {
         if (props.searchValue) {
             setInputValue((prev) => {
@@ -38,7 +42,7 @@ export default function Search(props: Props) {
                     setInputValue(e.target.value)
                 }}
                 value={inputValue}
-                placeholder="Search"
+                placeholder={t["Search"]}
                 type="text"
                 className="min-w-[350px] pl-10 text-base font-semibold"
             />

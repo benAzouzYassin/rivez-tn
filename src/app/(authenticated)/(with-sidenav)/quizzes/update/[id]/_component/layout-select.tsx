@@ -5,13 +5,15 @@ import FillInTheBlank from "./layouts-icons/fill-in-the-blank"
 import MatchingPairs from "./layouts-icons/matching-pairs"
 import MultipleChoiceHorizontal from "./layouts-icons/multiple-choice-horizontal"
 import MultipleChoiceVertical from "./layouts-icons/multiple-choice-vertical"
+import { getLanguage } from "@/utils/get-language"
 
 interface Props {
     selectedQuestion: QuizQuestionType
 }
 function LayoutSelect(props: Props) {
     const updateQuestion = useUpdateQuizStore((s) => s.updateQuestion)
-
+    const lang = getLanguage()
+    const t = translation[lang]
     return (
         <LayoutSelectDialog
             onSelect={(layoutType) => {
@@ -122,16 +124,22 @@ function LayoutSelect(props: Props) {
                 }
             }}
             trigger={
-                <div className="flex items-center">
-                    <p className="text-center text-lg font-bold">Layout :</p>
+                <div className="flex items-center rtl:-mt-5 rtl:-mr-12">
+                    <p className="text-center text-lg font-bold">
+                        {t["Display type : "]}
+                    </p>
                     {props.selectedQuestion.layout === "vertical" &&
                         props.selectedQuestion.imageType !== "none" &&
                         props.selectedQuestion.type === "MULTIPLE_CHOICE" && (
-                            <MultipleChoiceVertical textClassName="hidden" />
+                            <MultipleChoiceVertical
+                                isIcon
+                                textClassName="hidden"
+                            />
                         )}
                     {props.selectedQuestion.imageType === "none" &&
                         props.selectedQuestion.type === "MULTIPLE_CHOICE" && (
                             <MultipleChoiceVertical
+                                isIcon
                                 textClassName="mt-3 h-2 w-[80%]"
                                 imageClassName="hidden"
                                 itemClassName="h-5 rounded  mt-2 "
@@ -141,7 +149,7 @@ function LayoutSelect(props: Props) {
                     {props.selectedQuestion.layout === "horizontal" &&
                         props.selectedQuestion.imageType !== "none" &&
                         props.selectedQuestion.type === "MULTIPLE_CHOICE" && (
-                            <MultipleChoiceHorizontal />
+                            <MultipleChoiceHorizontal isIcon />
                         )}
                     {props.selectedQuestion.type === "MATCHING_PAIRS" && (
                         <MatchingPairs />
@@ -159,3 +167,15 @@ function LayoutSelect(props: Props) {
     )
 }
 export default memo(LayoutSelect)
+
+const translation = {
+    en: {
+        "Display type : ": "Display type : ",
+    },
+    ar: {
+        "Display type : ": "نوع العرض : ",
+    },
+    fr: {
+        "Display type : ": "type d'affichage",
+    },
+}

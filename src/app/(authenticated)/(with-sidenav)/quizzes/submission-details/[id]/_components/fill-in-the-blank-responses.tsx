@@ -6,6 +6,7 @@ import {
 import { ReactNode } from "react"
 import { z } from "zod"
 import FillInTheBlankItem from "./fill-in-the-blank-item"
+import { containsArabic } from "@/utils/is-arabic"
 
 export default function FillInTheBlankResponses(props: Props) {
     const BLANK_SEPARATOR = "___"
@@ -55,8 +56,9 @@ export default function FillInTheBlankResponses(props: Props) {
         })
         return result
     }
+    const isRtl = containsArabic(paragraphs.join(" "))
     return (
-        <div>
+        <div dir={isRtl ? "rtl" : "ltr"}>
             {paragraphs.map((paragraph, paragraphIndex) => {
                 const segments = paragraph.split(BLANK_SEPARATOR)
 

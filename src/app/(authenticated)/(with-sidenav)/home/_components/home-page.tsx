@@ -6,11 +6,12 @@ import GenerateQuiz from "../_icons/generate-quiz"
 import Mindmap from "../_icons/mindmap"
 import SummarizeDocument from "../_icons/summarize-document"
 import LatestQuizzesMindmaps from "./latest-quizzes-mindmaps"
-import { useLanguage } from "@/hooks/use-language"
+import { getLanguage } from "@/utils/get-language"
+
 import { translation } from "../translation"
 
 export default function HomePage() {
-    const lang = useLanguage()
+    const lang = getLanguage()
     const t = translation[lang]
     return (
         <section className="pb-20 max-w-[1520px] mx-auto">
@@ -31,7 +32,7 @@ export default function HomePage() {
                                         {t["Quizzes"]}
                                     </p>
                                 </div>
-                                <p className="mt-2 pl-2 pr-4 text-base md:text-lg text-neutral-500 font-semibold text-wrap text-left">
+                                <p className="mt-2 pl-2 pr-4 text-base md:text-lg text-neutral-500 font-semibold text-wrap rtl:text-right ltr:text-left">
                                     {
                                         t[
                                             "Create and take interactive quizzes to test your knowledge. Perfect for exam prep and reinforcing key concepts through active recall. Quizzes can be generated from text, documents, images and videos."
@@ -51,7 +52,7 @@ export default function HomePage() {
                                         {t["Mindmap"]}
                                     </p>
                                 </div>
-                                <p className="mt-2 pl-2 pr-4 text-base md:text-lg text-neutral-500 font-semibold text-wrap text-left">
+                                <p className="mt-2 pl-2 pr-4 text-base md:text-lg text-neutral-500 font-semibold text-wrap rtl:text-right text-left">
                                     {
                                         t[
                                             "Visualize complex topics and their connections. by generating structured mindmaps to simplify any topic."
@@ -71,7 +72,7 @@ export default function HomePage() {
                                         {t["Summarize"]}
                                     </p>
                                 </div>
-                                <p className="mt-2 pl-2 pr-4 text-base md:text-lg text-neutral-500 font-semibold text-wrap text-left">
+                                <p className="mt-2 pl-2 pr-4 text-base md:text-lg text-neutral-500 font-semibold text-wrap text-left rtl:text-right">
                                     {
                                         t[
                                             "Extract key points from documents and lectures. Get concise summaries that highlight essential information."
@@ -87,7 +88,7 @@ export default function HomePage() {
                 </div>
             </div>
             <LatestQuizzesMindmaps />
-            <div className="h-auto px-4 sm:px-10 max-w-[1520px] mx-auto gap-4 sm:gap-7 grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3">
+            <div className="h-auto px-4 sm:px-10 max-w-[1520px] mx-auto gap-4 sm:gap-7 grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 rtl:text-right">
                 <Link href={"/quizzes"} className="w-full">
                     <Button
                         variant={"secondary"}
@@ -99,7 +100,7 @@ export default function HomePage() {
                                 {t["Quizzes"]}
                             </p>
                         </div>
-                        <p className="mt-2 pl-2 pr-4 text-base md:text-lg text-neutral-500 font-semibold text-wrap text-left">
+                        <p className="mt-2 pl-2 pr-4 text-base md:text-lg text-neutral-500 font-semibold text-wrap rtl:text-right text-left">
                             {
                                 t[
                                     "Save time and use AI to automatically create quizzes that helps you practice."
@@ -119,7 +120,7 @@ export default function HomePage() {
                                 {t["Mindmap"]}
                             </p>
                         </div>
-                        <p className="mt-2 pl-2 pr-4 text-base md:text-lg text-neutral-500 font-semibold text-wrap text-left">
+                        <p className="mt-2 pl-2 pr-4 text-base md:text-lg text-neutral-500 font-semibold text-wrap rtl:text-right text-left">
                             {
                                 t[
                                     "Simplify complex topics by generating mindmaps that visualize any topic."
@@ -139,7 +140,7 @@ export default function HomePage() {
                                 {t["Summarize"]}
                             </p>
                         </div>
-                        <p className="mt-2 pl-2 pr-4 text-base md:text-lg text-neutral-500 font-semibold text-wrap text-left">
+                        <p className="mt-2 pl-2 pr-4  text-base md:text-lg text-neutral-500 font-semibold text-wrap rtl:text-right text-left">
                             {
                                 t[
                                     "Transform any content into concise and clear summaries."

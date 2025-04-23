@@ -6,7 +6,7 @@ import Continue from "../_icons/continue"
 import Star from "../_icons/star"
 import Banner from "./banner"
 
-interface Props extends ComponentProps<typeof Banner> {}
+type Props = ComponentProps<typeof Banner>
 
 export default function LearningPathSection(props: Props) {
     const fakeItems = [

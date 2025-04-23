@@ -11,6 +11,7 @@ import { PublishingStatusType } from "@/data-access/types"
 import { Check, Copy } from "lucide-react"
 import { useEffect, useState } from "react"
 import ShareDialogSkeleton from "./share-dialog-skeleton"
+import { getLanguage } from "@/utils/get-language"
 
 interface Props {
     isOpen: boolean
@@ -19,6 +20,8 @@ interface Props {
     id: number
 }
 export default function ShareQuizDialog(props: Props) {
+    const lang = getLanguage()
+    const t = translation[lang]
     const [copied, setCopied] = useState(false)
     const [quizLink, setQuizLink] = useState("")
     const [isError, setIsError] = useState(false)
@@ -73,9 +76,11 @@ export default function ShareQuizDialog(props: Props) {
         <Dialog open={props.isOpen} onOpenChange={props.onOpenChange}>
             <DialogContent className="sm:max-w-[700px] w-full max-w-[95vw] !rounded-xl p-4 sm:p-6">
                 <DialogTitle className="text-xl sm:text-2xl md:text-3xl text-neutral-600 text-center font-bold">
-                    Share Quiz
+                    {t["Share Quiz"]}
                 </DialogTitle>
-                <DialogDescription className="text-sm text-gray-500"></DialogDescription>
+                <DialogDescription className="text-sm text-gray-500">
+                    {t["Share this quiz with others."]}
+                </DialogDescription>
                 {isLoading && <ShareDialogSkeleton />}
                 {isError && <ErrorDisplay hideButton />}
                 {!isLoading && !isError && (
@@ -88,7 +93,7 @@ export default function ShareQuizDialog(props: Props) {
                                     readOnly
                                 />
                             </div>
-                            <TooltipWrapper asChild content="Copy link">
+                            <TooltipWrapper asChild content={t["Copy link"]}>
                                 <button
                                     onClick={handleCopy}
                                     className="p-2 sm:p-3 h-12 sm:h-14 w-full md:w-14 rounded-lg border-2 border-blue-400/80 active:scale-90 text-blue-600 cursor-pointer hover:bg-blue-50 transition-all duration-300 flex items-center justify-center relative overflow-hidden"
@@ -99,7 +104,7 @@ export default function ShareQuizDialog(props: Props) {
                                             copied ? "scale-0" : "scale-100"
                                         }`}
                                     >
-                                        <p className="md:hidden">Copy</p>{" "}
+                                        <p className="md:hidden">{t["Copy"]}</p>{" "}
                                         <Copy size={20} />
                                     </span>
                                     <span
@@ -122,7 +127,7 @@ export default function ShareQuizDialog(props: Props) {
                                         <FacebookIcon className="w-8 sm:w-10 h-8 sm:h-10 text-blue-500 group-hover:scale-110 transition-transform duration-300" />
                                     </button>
                                     <span className="mt-1 sm:mt-2 text-xs sm:text-sm font-medium text-gray-600">
-                                        Facebook
+                                        {t["Facebook"]}
                                     </span>
                                 </div>
                                 <div className="flex cursor-pointer flex-col items-center">
@@ -133,7 +138,7 @@ export default function ShareQuizDialog(props: Props) {
                                         <WhatsAppIcon className="w-8 sm:w-10 h-8 sm:h-10 text-green-500 group-hover:scale-110 transition-transform duration-300" />
                                     </button>
                                     <span className="mt-1 sm:mt-2 text-xs sm:text-sm font-medium text-gray-600">
-                                        WhatsApp
+                                        {t["WhatsApp"]}
                                     </span>
                                 </div>
                             </div>
@@ -198,4 +203,30 @@ function FacebookIcon({ className }: { className?: string }) {
             />
         </svg>
     )
+}
+const translation = {
+    en: {
+        "Share Quiz": "Share Quiz",
+        "Share this quiz with others.": "Share this quiz with others.",
+        "Copy link": "Copy link",
+        Copy: "Copy",
+        Facebook: "Facebook",
+        WhatsApp: "WhatsApp",
+    },
+    ar: {
+        "Share Quiz": "مشاركة الاختبار",
+        "Share this quiz with others.": "شارك هذا الاختبار مع الآخرين.",
+        "Copy link": "نسخ الرابط",
+        Copy: "نسخ",
+        Facebook: "فيسبوك",
+        WhatsApp: "واتساب",
+    },
+    fr: {
+        "Share Quiz": "Partager le quiz",
+        "Share this quiz with others.": "Partagez ce quiz avec d'autres.",
+        "Copy link": "Copier le lien",
+        Copy: "Copier",
+        Facebook: "Facebook",
+        WhatsApp: "WhatsApp",
+    },
 }

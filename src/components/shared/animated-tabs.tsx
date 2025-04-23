@@ -55,7 +55,7 @@ export default function AnimatedTabs({
                                     className="bg-gradient-to-r rounded-lg z-10 bg-blue-50 border-blue-300 border-2 text-white absolute top-0 left-0 w-full h-full"
                                 ></motion.div>
                             )}
-                            <div className="flex z-20 items-center">
+                            <div className="flex z-20   items-center">
                                 <span
                                     className={`mr-2 transition-all duration-0 ${
                                         activeTab === tab.id
@@ -65,7 +65,7 @@ export default function AnimatedTabs({
                                 >
                                     {tab.icon}
                                 </span>
-                                <span className="font-semibold text-nowrap transition-all duration-0">
+                                <span className="font-semibold rtl:-translate-x-1 text-nowrap transition-all duration-0">
                                     {tab.label}
                                 </span>
                             </div>

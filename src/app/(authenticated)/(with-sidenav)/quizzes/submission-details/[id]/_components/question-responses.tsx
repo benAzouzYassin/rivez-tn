@@ -17,6 +17,7 @@ import { useState } from "react"
 import FillInTheBlankResponses from "./fill-in-the-blank-responses"
 import MatchingPairsResponses from "./matching-pairs-responses"
 import MultipleChoiceResponses from "./multiple-choice-responses"
+import { containsArabic } from "@/utils/is-arabic"
 
 type Props = {
     question: string
@@ -46,20 +47,24 @@ const QuestionResponses = ({
     questionContent,
 }: Props) => {
     const [isOpen, setIsOpen] = useState(false)
+    const isRtl = containsArabic(question)
 
     return (
-        <>
+        <div dir={isRtl ? "rtl" : "ltr"}>
             <Button
-                variant={"outline"}
-                className="rounded-xl px-4 border-blue-300/80 bg-blue-50/80  text-blue-500 hover:text-blue-500 text-sm"
+                variant={"secondary"}
+                className="px-3"
                 onClick={() => setIsOpen(true)}
             >
-                Details <Eye className="!w-5 !h-5 " />
+                <Eye className="!w-6 text-neutral-400 !h-6 " />
             </Button>
 
             <Dialog open={isOpen} onOpenChange={setIsOpen}>
                 <DialogTrigger asChild></DialogTrigger>
-                <DialogContent className="max-w-2xl">
+                <DialogContent
+                    dir={isRtl ? "rtl" : "ltr"}
+                    className="max-w-2xl"
+                >
                     <div className="px-2">
                         <DialogTitle className="text-2xl font-semibold text-neutral-800 mb-6"></DialogTitle>
                         <DialogDescription className="mt-4">
@@ -110,7 +115,7 @@ const QuestionResponses = ({
                     </div>
                 </DialogContent>
             </Dialog>
-        </>
+        </div>
     )
 }
 

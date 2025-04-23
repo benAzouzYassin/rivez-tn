@@ -7,6 +7,10 @@ import { ItemType } from "../page"
 import MoreButton from "./more-button"
 import { useState } from "react"
 import ShareQuizDialog from "./share-quiz-dialog"
+import { containsArabic } from "@/utils/is-arabic"
+import { getLanguage } from "@/utils/get-language"
+
+import { translation } from "../translation"
 
 interface Props {
     item: ItemType
@@ -14,6 +18,8 @@ interface Props {
 }
 
 export default function Item({ item, disableMoreBtn }: Props) {
+    const lang = getLanguage()
+    const t = translation[lang]
     const [isUpdateDialogOpen, setIsUpdateDialogOpen] = useState(false)
     const [isSharing, setIsSharing] = useState(false)
     const router = useRouter()
@@ -76,10 +82,16 @@ export default function Item({ item, disableMoreBtn }: Props) {
                         />
                     )}
                     <div className="flex  justify-between items-start">
-                        <div className=" max-w-[90%]">
-                            <h2 className="text-2xl truncate pb-2   first-letter:uppercase font-bold">
-                                {item.name}
-                            </h2>
+                        <div className=" ltr:max-w-[90%] w-full">
+                            <div className="w-full ">
+                                <h2
+                                    className={cn(
+                                        "text-2xl ltr:max-w-[90%]  truncate pb-2   pr-6 rtl:pl-0  rtl:pr-6  first-letter:uppercase text-left font-bold"
+                                    )}
+                                >
+                                    {item.name}
+                                </h2>
+                            </div>
                             {!!item.category?.name && (
                                 <div className="text-base font-bold">
                                     Category :{" "}
@@ -95,25 +107,21 @@ export default function Item({ item, disableMoreBtn }: Props) {
                     </div>
                 </CardHeader>
 
-                <CardContent className="pb-4">
-                    <div className="flex flex-col 2xl:flex-row gap-4 2xl:items-center">
+                <CardContent className="pb-4 ">
+                    <div className="flex flex-col  2xl:flex-row gap-4 2xl:items-center">
                         <Badge
                             variant={"blue"}
-                            className="text-sm text-nowrap rounded-full !font-bold "
+                            className="text-sm  text-nowrap grow rounded-full  !font-bold "
                         >
-                            <FileQuestion className="w-4 h-4 text-blue-500 mr-1" />
-                            {questionCount}{" "}
-                            {questionCount === 1 ? "Question" : "Questions"}
+                            <FileQuestion className="w-4 h-4  text-blue-500 rtl:ml-1 mr-1" />
+                            {questionCount} {t["Questions"]}
                         </Badge>
                         <Badge
                             variant={"green"}
-                            className="text-sm text-nowrap rounded-full !font-bold "
+                            className="text-sm text-nowrap  grow rounded-full !font-bold "
                         >
-                            <Users className="w-4 h-4 text-green-500 mr-1" />
-                            {submissionCount}{" "}
-                            {submissionCount === 1
-                                ? "Submission"
-                                : "Submissions"}
+                            <Users className="w-4 h-4 text-green-500 rtl:ml-1 mr-1" />
+                            {submissionCount} {t["Submissions"]}
                         </Badge>
                     </div>
                 </CardContent>

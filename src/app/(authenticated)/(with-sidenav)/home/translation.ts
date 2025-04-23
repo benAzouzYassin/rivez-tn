@@ -15,6 +15,7 @@ const en = {
     "Transform any content into concise and clear summaries.":
         "Transform any content into concise and clear summaries.",
     "Last quizzes and mindmaps :": "Last quizzes and mindmaps :",
+    "Created the ": "Created the ",
 }
 
 const ar = {
@@ -33,7 +34,8 @@ const ar = {
         "بسّط المواضيع المعقدة عن طريق إنشاء خرائط ذهنية تصور أي موضوع.",
     "Transform any content into concise and clear summaries.":
         "حوّل أي محتوى إلى ملخصات موجزة وواضحة.",
-    "Last quizzes and mindmaps :": "",
+    "Last quizzes and mindmaps :": "آخر الاختبارات والخرائط الذهنية :",
+    "Created the ": "تم الإنشاء في ",
 } satisfies Translation
 
 const fr = {
@@ -52,7 +54,8 @@ const fr = {
         "Simplifiez des sujets complexes en générant des cartes mentales qui visualisent n'importe quel sujet.",
     "Transform any content into concise and clear summaries.":
         "Transformez n'importe quel contenu en résumés concis et clairs.",
-    "Last quizzes and mindmaps :": "",
+    "Last quizzes and mindmaps :": "Derniers quiz et cartes mentales :",
+    "Created the ": "Créé le ",
 } satisfies Translation
 
 export const translation = {

@@ -49,11 +49,11 @@ export function NavButton({
                         }
                     }}
                     className={cn(
-                        "py-7 text-base   bg-white text-[#545454] hover:bg-neutral-100 border-white font-extrabold rounded-xl shadow-none w-full justify-start",
+                        "py-7 text-base    bg-white text-[#545454] hover:bg-neutral-100 border-white font-extrabold rounded-xl shadow-none w-full justify-start",
                         additionalClasses,
-                        "transition-all",
+                        "transition-all rtl:flex-row-reverse",
                         {
-                            "bg-[#D3EEFA]/50 text-[#27b3ef] hover:bg-[#cdeffd]/80 border-[#8cd9f9]/70 border-2":
+                            "bg-[#D3EEFA]/50 text-[#27b3ef]  hover:bg-[#cdeffd]/80 border-[#8cd9f9]/70 border-2":
                                 isSelected,
                         }
                     )}
@@ -67,7 +67,7 @@ export function NavButton({
                     duration={0}
                     content={item.name}
                     contentClassName={cn(
-                        "  translate-y-12 rounded-lg  font-bold text-neutral-600/90 text-sm  w-[110px] text-center translate-x-[90px]",
+                        "  translate-y-12 rounded-lg  font-bold text-neutral-600/90 text-sm  w-[110px] text-center rtl:translate-x-[-90px] ltr:translate-x-[90px]",
                         { "opacity-0 ": isNameVisible }
                     )}
                     asChild
@@ -81,7 +81,7 @@ export function NavButton({
                             }
                         }}
                         className={cn(
-                            "py-7 text-base  bg-white text-[#545454] hover:bg-neutral-100 border-white font-extrabold rounded-xl shadow-none w-full justify-start",
+                            "py-7 text-base  bg-white   text-[#545454] hover:bg-neutral-100 border-white font-extrabold rounded-xl shadow-none w-full justify-start",
                             additionalClasses,
                             "transition-all",
                             {

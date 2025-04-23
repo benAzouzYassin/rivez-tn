@@ -6,6 +6,7 @@ import { FileTextIcon, Loader2, Upload, X } from "lucide-react"
 import { ReactNode, useCallback, useEffect } from "react"
 import { useDropzone } from "react-dropzone"
 import { Button } from "./button"
+import { getLanguage } from "@/utils/get-language"
 
 interface Props {
     onChange: (file: File | null) => void
@@ -42,19 +43,22 @@ export function FileInput({
     displayCancelBtn,
     onCancel,
 }: Props) {
+    const lang = getLanguage()
+    const t = translation[lang]
+
     const onDrop = useCallback(
         (acceptedFiles: File[]) => {
             const file = acceptedFiles[0]
             if (file) {
                 if (file.size > 10 * 1024 * 1024) {
                     // 10MB limit
-                    toastError("File size too large. Maximum size is 10MB")
+                    toastError(t["File size too large"])
                     return
                 }
                 onChange(file)
             }
         },
-        [onChange]
+        [onChange, t]
     )
 
     const acceptedImagesTypes = allowImage
@@ -164,7 +168,7 @@ export function FileInput({
                                     variant={"outline-red"}
                                     className="h-10 font-extrabold mt-5"
                                 >
-                                    Cancel
+                                    {t["Cancel"]}
                                 </Button>
                             )}
                         </div>
@@ -176,7 +180,7 @@ export function FileInput({
                                 !previewAsDocument)) && (
                             <img
                                 src={preview}
-                                alt="Preview"
+                                alt={t["Preview"]}
                                 className={cn(
                                     "rounded-lg h-[200px] w-full object-contain",
                                     imageClassName
@@ -217,18 +221,17 @@ export function FileInput({
                                 <Upload className="w-8 h-8 md:w-10 md:h-10 mb-2 mx-auto text-neutral-400" />
                                 <p className="text-sm md:text-base text-neutral-600 mb-1 md:mb-2">
                                     {isDragActive
-                                        ? "Drop the file here"
-                                        : "Drag & drop a file here"}
+                                        ? t["Drop the file here"]
+                                        : t["Drag & drop a file here"]}
                                 </p>
                                 <p className="text-xs md:text-sm text-neutral-500">
-                                    or click to select a file
+                                    {t["or click to select a file"]}
                                 </p>
                                 <p className="text-xs text-neutral-400 mt-1 md:mt-2">
-                                    Images (PNG, JPG, GIF) or Documents (PDF,
-                                    DOC, DOCX, XLS, XLSX)
+                                    {t["Accepted file types"]}
                                 </p>
                                 <p className="text-xs text-neutral-400">
-                                    up to 10MB
+                                    {t["up to 10MB"]}
                                 </p>
                             </>
                         )}
@@ -237,4 +240,42 @@ export function FileInput({
             </div>
         </div>
     )
+}
+
+const translation = {
+    en: {
+        Cancel: "Cancel",
+        Preview: "Preview",
+        "Drop the file here": "Drop the file here",
+        "Drag & drop a file here": "Drag & drop a file here",
+        "or click to select a file": "or click to select a file",
+        "Accepted file types":
+            "Images (PNG, JPG, GIF) or Documents (PDF, DOC, DOCX, XLS, XLSX)",
+        "up to 10MB": "up to 10MB",
+        "File size too large": "File size too large. Maximum size is 10MB",
+    },
+    ar: {
+        Cancel: "إلغاء",
+        Preview: "معاينة",
+        "Drop the file here": "أفلت الملف هنا",
+        "Drag & drop a file here": "اسحب وأفلت ملفًا هنا",
+        "or click to select a file": "أو انقر لتحديد ملف",
+        "Accepted file types":
+            "الصور (PNG, JPG, GIF) أو المستندات (PDF, DOC, DOCX, XLS, XLSX)",
+        "up to 10MB": "حتى 10 ميجابايت",
+        "File size too large":
+            "حجم الملف كبير جدًا. الحد الأقصى للحجم هو 10 ميجابايت",
+    },
+    fr: {
+        Cancel: "Annuler",
+        Preview: "Aperçu",
+        "Drop the file here": "Déposez le fichier ici",
+        "Drag & drop a file here": "Glissez et déposez un fichier ici",
+        "or click to select a file": "ou cliquez pour sélectionner un fichier",
+        "Accepted file types":
+            "Images (PNG, JPG, GIF) ou Documents (PDF, DOC, DOCX, XLS, XLSX)",
+        "up to 10MB": "jusqu'à 10 Mo",
+        "File size too large":
+            "Taille du fichier trop grande. La taille maximale est de 10 Mo",
+    },
 }

@@ -1,6 +1,6 @@
 import type { Metadata } from "next"
 import "./globals.css"
-import { Nunito } from "next/font/google"
+import { Nunito, Noto_Sans_Arabic } from "next/font/google"
 import NextTopLoader from "nextjs-toploader"
 import { Toaster } from "react-hot-toast"
 import QueryClientProvider from "@/providers/query-client"
@@ -14,6 +14,12 @@ const nunito = Nunito({
     subsets: ["latin"],
     weight: ["300", "400", "500", "600", "700", "800", "900", "1000"],
 })
+const notoSansArabic = Noto_Sans_Arabic({
+    subsets: ["arabic"],
+
+    weight: ["300", "400", "500", "600", "700", "800", "900"],
+})
+
 export const metadata: Metadata = {
     title: "Fikr",
     description: "",
@@ -40,7 +46,9 @@ export default async function RootLayout({
                 {/* <script src="https://unpkg.com/react-scan/dist/auto.global.js"></script> */}
             </head>
             <body
-                className={`${nunito.className} overflow-y-auto overflow-x-hidden antialiased  min-w-screen`}
+                className={`${
+                    lang === "ar" ? notoSansArabic.className : nunito.className
+                } overflow-y-auto overflow-x-hidden antialiased  min-w-screen`}
             >
                 <Toaster />
                 <NextTopLoader

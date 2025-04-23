@@ -69,7 +69,7 @@ export default function LayoutSelectDialog(props: Props) {
             <DialogTrigger asChild>{props.trigger}</DialogTrigger>
             <DialogContent
                 className={cn(
-                    " rounded-xl pb-6 !min-w-[1000px] overflow-hidden border w-[1000px]  max-w-[1000px] ",
+                    " rounded-xl pb-6 !min-w-[900px] overflow-hidden border w-[900px]  max-w-[900px] ",
                     props.contentClassName,
                     {
                         "w-fit": tab === "mode-select",
@@ -164,7 +164,7 @@ export default function LayoutSelectDialog(props: Props) {
                 {tab === "layout-select" && (
                     <>
                         <div className="p-0">
-                            <div className="p-0 grid gap-5 grid-cols-3">
+                            <div className="p-0 grid gap-y-5 grid-cols-2">
                                 <div className="fle flex-col items-center justify-center">
                                     <h3 className="text-base font-bold text-neutral-500 text-center ">
                                         Image on left, options on right
@@ -237,7 +237,7 @@ export default function LayoutSelectDialog(props: Props) {
                                         className="!w-[310px] h-[210px]"
                                     />
                                 </div>
-                                <div
+                                {/* <div
                                     className="flex flex-col items-center justify-center"
                                     onClick={() => {
                                         handleLayoutSelect("fill-in-the-blank")
@@ -252,7 +252,7 @@ export default function LayoutSelectDialog(props: Props) {
                                         questionTextClassName="mb-7 mt-8"
                                         className="!w-[310px] h-[210px]"
                                     />
-                                </div>
+                                </div> */}
                             </div>
                         </div>
                     </>

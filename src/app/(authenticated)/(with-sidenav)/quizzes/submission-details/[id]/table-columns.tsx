@@ -5,6 +5,37 @@ import { ColumnDef } from "@tanstack/react-table"
 import QuestionResponses from "./_components/question-responses"
 import { AnswerTableItem } from "./page"
 import { formatSeconds } from "@/utils/date"
+import { getLanguage } from "@/utils/get-language"
+
+const translation = {
+    en: {
+        Question: "Question",
+        "Time spent": "Time spent",
+        Status: "Status",
+        Min: "Min",
+        failed: "Failed",
+        succeeded: "Succeeded",
+        skipped: "Skipped",
+    },
+    fr: {
+        Question: "Question",
+        "Time spent": "Temps passé",
+        Status: "Statut",
+        Min: "Min",
+        failed: "Échoué",
+        succeeded: "Réussi",
+        skipped: "Passé",
+    },
+    ar: {
+        Question: "السؤال",
+        "Time spent": "الوقت المستغرق",
+        Status: "الحالة",
+        Min: "دقيقة",
+        failed: "فشل",
+        succeeded: "نجح",
+        skipped: "تخطى",
+    },
+}
 
 export const columns: ColumnDef<AnswerTableItem>[] = [
     {
@@ -38,7 +69,11 @@ export const columns: ColumnDef<AnswerTableItem>[] = [
     },
     {
         id: "Question",
-        header: "Question",
+        header: () => {
+            const lang = getLanguage()
+            const t = translation[lang] || translation.en
+            return <>{t.Question}</>
+        },
         cell: ({ row }) => (
             <div className="flex items-center text-base justify-center font-bold">
                 {row.original.question}
@@ -47,34 +82,47 @@ export const columns: ColumnDef<AnswerTableItem>[] = [
     },
     {
         id: "Time spent",
-        header: "Time spent",
-        cell: ({ row }) => (
-            <div className="flex items-center text-base justify-center font-bold">
-                {formatSeconds(row.original?.timeSpent || 0)} Min
-            </div>
-        ),
+        header: () => {
+            const lang = getLanguage()
+            const t = translation[lang] || translation.en
+            return <>{t["Time spent"]}</>
+        },
+        cell: ({ row }) => {
+            const lang = getLanguage()
+            const t = translation[lang] || translation.en
+            return (
+                <div className="flex items-center text-base justify-center font-bold">
+                    {formatSeconds(row.original?.timeSpent || 0)} {t.Min}
+                </div>
+            )
+        },
     },
-
     {
         id: "Status",
-        header: "Status",
+        header: () => {
+            const lang = getLanguage()
+            const t = translation[lang] || translation.en
+            return <>{t.Status}</>
+        },
         cell: ({ row }) => {
+            const lang = getLanguage()
+            const t = translation[lang] || translation.en
+            const status = row.original.status
             return (
                 <div className="flex items-center justify-center font-bold">
-                    {row.original.status === "failed" && (
-                        <Badge variant={"red"}> {row.original.status}</Badge>
+                    {status === "failed" && (
+                        <Badge variant={"red"}>{t.failed}</Badge>
                     )}
-                    {row.original.status === "succeeded" && (
-                        <Badge variant={"green"}> {row.original.status}</Badge>
+                    {status === "succeeded" && (
+                        <Badge variant={"green"}>{t.succeeded}</Badge>
                     )}
-                    {row.original.status === "skipped" && (
-                        <Badge variant={"gray"}> {row.original.status}</Badge>
+                    {status === "skipped" && (
+                        <Badge variant={"gray"}>{t.skipped}</Badge>
                     )}
                 </div>
             )
         },
     },
-
     {
         id: "actions",
         cell: ({ row }) => (

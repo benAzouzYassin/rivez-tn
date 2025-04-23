@@ -37,7 +37,7 @@ export default function PopoverList(props: Props) {
                 <PopoverContent
                     onClick={(e) => e.stopPropagation()}
                     className={cn(
-                        "min-w-[200px]  rounded-xl overflow-hidden border !w-(--radix-popover-trigger-width) p-0",
+                        "min-w-[240px]  rounded-xl overflow-hidden border !w-(--radix-popover-trigger-width) p-0",
                         props.contentClassName
                     )}
                     align="center"
