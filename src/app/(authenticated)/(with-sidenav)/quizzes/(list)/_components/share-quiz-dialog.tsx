@@ -9,7 +9,7 @@ import TooltipWrapper from "@/components/ui/tooltip"
 import { updateQuiz } from "@/data-access/quizzes/update"
 import { PublishingStatusType } from "@/data-access/types"
 import { Check, Copy } from "lucide-react"
-import { useEffect, useState } from "react"
+import { useEffect, useMemo, useState } from "react"
 import ShareDialogSkeleton from "./share-dialog-skeleton"
 import { getLanguage } from "@/utils/get-language"
 
@@ -20,6 +20,37 @@ interface Props {
     id: number
 }
 export default function ShareQuizDialog(props: Props) {
+    const translation = useMemo(
+        () => ({
+            en: {
+                "Share Quiz": "Share Quiz",
+                "Share this quiz with others.": "Share this quiz with others.",
+                "Copy link": "Copy link",
+                Copy: "Copy",
+                Facebook: "Facebook",
+                WhatsApp: "WhatsApp",
+            },
+            ar: {
+                "Share Quiz": "مشاركة الاختبار",
+                "Share this quiz with others.": "شارك هذا الاختبار مع الآخرين.",
+                "Copy link": "نسخ الرابط",
+                Copy: "نسخ",
+                Facebook: "فيسبوك",
+                WhatsApp: "واتساب",
+            },
+            fr: {
+                "Share Quiz": "Partager le quiz",
+                "Share this quiz with others.":
+                    "Partagez ce quiz avec d'autres.",
+                "Copy link": "Copier le lien",
+                Copy: "Copier",
+                Facebook: "Facebook",
+                WhatsApp: "WhatsApp",
+            },
+        }),
+        []
+    )
+
     const lang = getLanguage()
     const t = translation[lang]
     const [copied, setCopied] = useState(false)
@@ -203,30 +234,4 @@ function FacebookIcon({ className }: { className?: string }) {
             />
         </svg>
     )
-}
-const translation = {
-    en: {
-        "Share Quiz": "Share Quiz",
-        "Share this quiz with others.": "Share this quiz with others.",
-        "Copy link": "Copy link",
-        Copy: "Copy",
-        Facebook: "Facebook",
-        WhatsApp: "WhatsApp",
-    },
-    ar: {
-        "Share Quiz": "مشاركة الاختبار",
-        "Share this quiz with others.": "شارك هذا الاختبار مع الآخرين.",
-        "Copy link": "نسخ الرابط",
-        Copy: "نسخ",
-        Facebook: "فيسبوك",
-        WhatsApp: "واتساب",
-    },
-    fr: {
-        "Share Quiz": "Partager le quiz",
-        "Share this quiz with others.": "Partagez ce quiz avec d'autres.",
-        "Copy link": "Copier le lien",
-        Copy: "Copier",
-        Facebook: "Facebook",
-        WhatsApp: "WhatsApp",
-    },
 }

@@ -1,17 +1,26 @@
+"use client"
+
 import { dismissToasts, toastError, toastLoading } from "@/lib/toasts"
 import { tryCatchAsync } from "@/utils/try-catch"
 import { wait } from "@/utils/wait"
 import { FilesIcon } from "lucide-react"
 import * as pdfjsLib from "pdfjs-dist"
-import {} from "pdfjs-dist"
 import { ChangeEvent, DragEvent, useCallback, useEffect, useState } from "react"
 import { z } from "zod"
 import { usePdfSummarizerStore } from "../store"
 import { useIsSmallScreen } from "@/hooks/is-small-screen"
 import { useRouter } from "nextjs-toploader/app"
+import { useMemo } from "react"
+import { getLanguage } from "@/utils/get-language"
 
 pdfjsLib.GlobalWorkerOptions.workerSrc =
     "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js"
+
+interface Translation {
+    [key: string]: {
+        [key: string]: string
+    }
+}
 
 export default function FilesUpload() {
     const isSmallScreen = useIsSmallScreen()
@@ -20,6 +29,48 @@ export default function FilesUpload() {
     const addFileToState = usePdfSummarizerStore((s) => s.addFile)
     const reset = usePdfSummarizerStore((s) => s.reset)
     const selectPages = usePdfSummarizerStore((s) => s.selectPages)
+
+    const lang = getLanguage()
+
+    const translation: Translation = useMemo(
+        () => ({
+            en: {
+                "Summarize documents": "Summarize documents",
+                "Drop PDFs here or click to browse":
+                    "Drop PDFs here or click to browse",
+                "Only PDF files are supported": "Only PDF files are supported",
+                "You can also paste files (Ctrl+V / Cmd+V)":
+                    "You can also paste files (Ctrl+V / Cmd+V)",
+                "Loading your files...": "Loading your files...",
+                "Something went wrong with": "Something went wrong with",
+            },
+            fr: {
+                "Summarize documents": "Résumer des documents",
+                "Drop PDFs here or click to browse":
+                    "Déposez les fichiers PDF ici ou cliquez pour parcourir",
+                "Only PDF files are supported":
+                    "Seuls les fichiers PDF sont pris en charge",
+                "You can also paste files (Ctrl+V / Cmd+V)":
+                    "Vous pouvez également coller des fichiers (Ctrl+V / Cmd+V)",
+                "Loading your files...": "Chargement de vos fichiers...",
+                "Something went wrong with": "Une erreur est survenue avec",
+            },
+            ar: {
+                "Summarize documents": "تلخيص المستندات",
+                "Drop PDFs here or click to browse":
+                    "أسقط ملفات PDF هنا أو انقر للتصفح",
+                "Only PDF files are supported": "يتم دعم ملفات PDF فقط",
+                "You can also paste files (Ctrl+V / Cmd+V)":
+                    "يمكنك أيضًا لصق الملفات (Ctrl+V / Cmd+V)",
+                "Loading your files...": "جارٍ تحميل ملفاتك...",
+                "Something went wrong with": "حدث خطأ مع",
+            },
+        }),
+        []
+    )
+
+    const t = translation[lang]
+
     const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
         reset()
         const selectedFiles = Array.from(e?.target?.files || []).filter(
@@ -50,14 +101,16 @@ export default function FilesUpload() {
 
     const handleFiles = useCallback(
         async (files: File[]) => {
-            toastLoading("Loading your files...")
+            toastLoading(t["Loading your files..."])
             for await (const file of files) {
                 const { data: result, error } = await tryCatchAsync(
                     Promise.all([getFileData(file), getFilePages(file)])
                 )
                 if (error) {
                     dismissToasts("loading")
-                    return toastError(`Something went wrong with ${file.name}`)
+                    return toastError(
+                        `${t["Something went wrong with"]} ${file.name}`
+                    )
                 }
                 const [fileData, pages] = result
                 const fileToAdd = {
@@ -79,7 +132,7 @@ export default function FilesUpload() {
                 router.push("pdf-summarizer/multiple-pages")
             }
         },
-        [addFileToState, isSmallScreen, router, selectPages]
+        [addFileToState, isSmallScreen, router, selectPages, t]
     )
 
     const getFileData = (file: File): Promise<pdfjsLib.PDFDocumentProxy> => {
@@ -100,6 +153,7 @@ export default function FilesUpload() {
             fileReader.readAsArrayBuffer(file)
         })
     }
+
     const getFilePages = (file: File): Promise<string[]> => {
         return new Promise((resolve, reject) => {
             let done = false
@@ -158,6 +212,7 @@ export default function FilesUpload() {
         },
         [handleFiles]
     )
+
     useEffect(() => {
         window.addEventListener("paste", handlePaste)
 
@@ -165,21 +220,22 @@ export default function FilesUpload() {
             window.removeEventListener("paste", handlePaste)
         }
     }, [handlePaste])
+
     return (
-        <div className="w-full max-w-3xl  pt-20 md:px-0 px-3 md:pt-28 space-y-6">
+        <div className="w-full max-w-3xl pt-20 md:px-0 px-3 md:pt-28 space-y-6">
             <div className="text-center mb-10">
                 <h1 className="text-4xl font-bold text-neutral-600 mb-5">
-                    Summarize your documents
+                    {t["Summarize documents"]}
                 </h1>
             </div>
 
             <div
-                className={`flex active:scale-95  flex-col items-center justify-center h-64 md:h-96 ${
+                className={`flex active:scale-95 flex-col items-center justify-center h-64 md:h-96 ${
                     isDragging
                         ? "bg-blue-50 border-blue-400"
                         : "bg-white border-gray-300"
-                } border-2 border-dashed  rounded-3xl transition-all duration-200 ease-in-out  hover:border-blue-300 hover:bg-blue-50`}
-                onDragOver={(e) => handleDragOver}
+                } border-2 border-dashed rounded-3xl transition-all duration-200 ease-in-out hover:border-blue-300 hover:bg-blue-50`}
+                onDragOver={handleDragOver}
                 onDragLeave={handleDragLeave}
                 onDrop={handleDrop}
             >
@@ -200,13 +256,13 @@ export default function FilesUpload() {
                         <FilesIcon className="h-10 w-10 text-red-400/90" />
                     </div>
                     <p className="text-xl font-bold text-neutral-500 mb-1 text-center">
-                        Drop PDFs here or click to browse
+                        {t["Drop PDFs here or click to browse"]}
                     </p>
                     <p className="text-sm font-semibold text-neutral-500 text-center">
-                        Only PDF files are supported
+                        {t["Only PDF files are supported"]}
                     </p>
                     <p className="text-sm text-blue-500 font-medium text-center">
-                        You can also paste files (Ctrl+V / Cmd+V)
+                        {t["You can also paste files (Ctrl+V / Cmd+V)"]}
                     </p>
                 </label>
             </div>

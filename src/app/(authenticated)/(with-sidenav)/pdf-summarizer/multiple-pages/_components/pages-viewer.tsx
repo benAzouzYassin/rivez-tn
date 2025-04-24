@@ -9,10 +9,12 @@ import {
     DownloadIcon,
     HelpCircle,
 } from "lucide-react"
-import { useRef, useState } from "react"
+import { useRef, useState, useMemo } from "react"
 import { useReactToPrint } from "react-to-print"
-import GenerateQuizDialog from "../../_components/generate-quiz-dialog"
 import SideItem from "./side-item"
+import GenerateQuizDialog from "../../_components/generate-quiz-dialog"
+import { containsArabic } from "@/utils/is-arabic"
+import { getLanguage } from "@/utils/get-language"
 
 interface Props {
     files: {
@@ -24,6 +26,32 @@ interface Props {
 }
 
 export default function PagesViewer(props: Props) {
+    const translation = useMemo(
+        () => ({
+            en: {
+                Previous: "Previous",
+                Next: "Next",
+                Save: "Save",
+                "Convert into Quiz": "Convert into Quiz",
+            },
+            ar: {
+                Previous: "السابق",
+                Next: "التالي",
+                Save: "حفظ",
+                "Convert into Quiz": "تحويل إلى اختبار",
+            },
+            fr: {
+                Previous: "Précédent",
+                Next: "Suivant",
+                Save: "Enregistrer",
+                "Convert into Quiz": "Convertir en quiz",
+            },
+        }),
+        []
+    )
+
+    const lang = getLanguage()
+    const t = translation[lang]
     const [isQuizDialogOpen, setIsQuizDialogOpen] = useState(false)
     const [isPrinting, setIsPrinting] = useState(false)
     const contentRef = useRef<HTMLDivElement>(null)
@@ -113,8 +141,10 @@ export default function PagesViewer(props: Props) {
         setIsQuizDialogOpen(true)
     }
 
+    const isRTL = containsArabic(activeFile.markdownPages.join(" "))
+
     return (
-        <div className="flex h-[89vh] overflow-hidden bg-gray-50">
+        <div dir={"ltr"} className="flex h-[89vh] overflow-hidden bg-gray-50">
             <div className="xl:w-[360px] w-0 h-[95vh] overflow-y-hidden fixed pb-20 bg-white">
                 <ScrollArea className="w-full scale-x-[-1] xl:block hidden h-[95vh] -mt-1 border overflow-y-auto py-4">
                     <div className="scale-x-[-1] pl-5 pr-3 pb-20 pt-5">
@@ -148,7 +178,14 @@ export default function PagesViewer(props: Props) {
                     ref={contentRef}
                     className="bg-white md:p-5 p-2  rounded-lg h-[90vh]  overflow-y-auto pb-20 -mt-1 pt-8 border mx-auto"
                 >
-                    <div className="md:flex hidden print:hidden  -mb-6  justify-end gap-2">
+                    <div
+                        className={cn(
+                            "md:flex hidden print:hidden  -mb-6  justify-end gap-2",
+                            {
+                                "justify-start -mb-3": isRTL,
+                            }
+                        )}
+                    >
                         <Button
                             isLoading={isPrinting}
                             onClick={() => {
@@ -158,11 +195,12 @@ export default function PagesViewer(props: Props) {
                                 })
                             }}
                         >
-                            Save <DownloadIcon className="ml-1" />
+                            {t["Save"]}{" "}
+                            <DownloadIcon className={isRTL ? "mr-1" : "ml-1"} />
                         </Button>
                         <Button onClick={handleConvertToQuiz} variant={"blue"}>
-                            Convert all into Quiz{" "}
-                            <HelpCircle className="ml-1" />
+                            {t["Convert into Quiz"]}{" "}
+                            <HelpCircle className={isRTL ? "mr-1" : "ml-1"} />
                         </Button>
                     </div>
                     <div
@@ -192,8 +230,12 @@ export default function PagesViewer(props: Props) {
                                 className="text-base h-11 px-4 rounded-xl"
                                 disabled={isPreviousDisabled}
                             >
-                                <ChevronLeft className="min-w-5 min-h-5 -mr-1 stroke-3" />
-                                Previous
+                                <ChevronLeft
+                                    className={`min-w-5 min-h-5 ${
+                                        isRTL ? "-ml-1" : "-mr-1"
+                                    } stroke-3`}
+                                />
+                                {t["Previous"]}
                             </Button>
 
                             <Button
@@ -201,8 +243,12 @@ export default function PagesViewer(props: Props) {
                                 disabled={isNextDisabled}
                                 className="text-base h-11 px-6 rounded-xl"
                             >
-                                Next{" "}
-                                <ChevronRight className="min-w-5 min-h-5 -ml-2 stroke-3" />
+                                {t["Next"]}{" "}
+                                <ChevronRight
+                                    className={`min-w-5 min-h-5 ${
+                                        isRTL ? "-mr-2" : "-ml-2"
+                                    } stroke-3`}
+                                />
                             </Button>
                         </div>
                     </div>

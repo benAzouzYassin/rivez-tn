@@ -7,6 +7,7 @@ import {
     useCallback,
     useMemo,
 } from "react"
+import { getLanguage } from "@/utils/get-language"
 
 interface Props {
     handleSummarize: (data: { images: File[]; language: string }) => void
@@ -14,6 +15,43 @@ interface Props {
 
 export default function ImageUpload(props: Props) {
     const [isDragging, setIsDragging] = useState(false)
+    const lang = getLanguage()
+
+    const translation = useMemo(
+        () => ({
+            en: {
+                "Upload the images": "Upload the images",
+                "Drop images here or click to browse":
+                    "Drop images here or click to browse",
+                "Supports JPG, PNG, GIF, and other image formats":
+                    "Supports JPG, PNG, GIF, and other image formats",
+                "You can also paste images (Ctrl+V / Cmd+V)":
+                    "You can also paste images (Ctrl+V / Cmd+V)",
+            },
+            fr: {
+                "Upload the images": "Téléchargez les images",
+                "Drop images here or click to browse":
+                    "Déposez les images ici ou cliquez pour parcourir",
+                "Supports JPG, PNG, GIF, and other image formats":
+                    "Prend en charge JPG, PNG, GIF et d'autres formats d'image",
+                "You can also paste images (Ctrl+V / Cmd+V)":
+                    "Vous pouvez également coller des images (Ctrl+V / Cmd+V)",
+            },
+            ar: {
+                "Upload the images": "قم بتحميل الصور",
+                "Drop images here or click to browse":
+                    "أسقط الصور هنا أو انقر للتصفح",
+                "Supports JPG, PNG, GIF, and other image formats":
+                    "يدعم JPG و PNG و GIF وغيرها من تنسيقات الصور",
+                "You can also paste images (Ctrl+V / Cmd+V)":
+                    "يمكنك أيضًا لصق الصور (Ctrl+V / Cmd+V)",
+            },
+        }),
+        []
+    )
+
+    const t = translation[lang]
+
     const handleFiles = useCallback(
         async (files: File[]) => {
             props.handleSummarize({
@@ -35,7 +73,6 @@ export default function ImageUpload(props: Props) {
             for (let i = 0; i < items.length; i++) {
                 const item = items[i]
 
-                // Check if the pasted item is an image
                 if (item.type.startsWith("image/")) {
                     const file = item.getAsFile()
                     if (file) {
@@ -50,6 +87,7 @@ export default function ImageUpload(props: Props) {
         },
         [handleFiles]
     )
+
     useEffect(() => {
         window.addEventListener("paste", handlePaste)
 
@@ -89,7 +127,7 @@ export default function ImageUpload(props: Props) {
         <div className="w-full max-w-3xl pt-28 space-y-6">
             <div className="text-center mb-10">
                 <h1 className="text-4xl font-bold text-neutral-600 mb-5">
-                    Upload your images
+                    {t["Upload the images"]}
                 </h1>
             </div>
 
@@ -120,13 +158,13 @@ export default function ImageUpload(props: Props) {
                         <ImageIcon className="h-10 w-10 text-blue-400/90" />
                     </div>
                     <p className="text-xl font-bold text-neutral-500 mb-1 text-center">
-                        Drop images here or click to browse
+                        {t["Drop images here or click to browse"]}
                     </p>
                     <p className="text-sm font-semibold text-neutral-500 text-center mb-2">
-                        Supports JPG, PNG, GIF, and other image formats
+                        {t["Supports JPG, PNG, GIF, and other image formats"]}
                     </p>
                     <p className="text-sm text-blue-500 font-medium text-center">
-                        You can also paste images (Ctrl+V / Cmd+V)
+                        {t["You can also paste images (Ctrl+V / Cmd+V)"]}
                     </p>
                 </label>
             </div>

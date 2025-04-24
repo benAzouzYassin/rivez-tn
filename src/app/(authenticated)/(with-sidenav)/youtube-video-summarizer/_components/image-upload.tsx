@@ -1,31 +1,101 @@
-import { Button } from "@/components/ui/button"
-import {
-    Dialog,
-    DialogContent,
-    DialogDescription,
-    DialogTitle,
-} from "@/components/ui/dialog"
-import { Input } from "@/components/ui/input"
-import {
-    Select,
-    SelectContent,
-    SelectItem,
-    SelectTrigger,
-    SelectValue,
-} from "@/components/ui/select"
-import { Switch } from "@/components/ui/switch"
 import { ImageIcon } from "lucide-react"
-import { ChangeEvent, DragEvent, useState } from "react"
+import {
+    ChangeEvent,
+    DragEvent,
+    useState,
+    useEffect,
+    useCallback,
+    useMemo,
+} from "react"
+import { getLanguage } from "@/utils/get-language"
+
 interface Props {
     handleSummarize: (data: { images: File[]; language: string }) => void
 }
+
 export default function ImageUpload(props: Props) {
-    const [files, setFiles] = useState<File[]>([])
     const [isDragging, setIsDragging] = useState(false)
-    const [language, setLanguage] = useState("")
-    const [customLang, setCustomLang] = useState("")
-    const [isSelectingLang, setIsSelectingLang] = useState(false)
-    const [isCustomLang, setIsCustomLang] = useState(false)
+    const lang = getLanguage()
+
+    const translation = useMemo(
+        () => ({
+            en: {
+                "Upload the images": "Upload the images",
+                "Drop images here or click to browse":
+                    "Drop images here or click to browse",
+                "Supports JPG, PNG, GIF, and other image formats":
+                    "Supports JPG, PNG, GIF, and other image formats",
+                "You can also paste images (Ctrl+V / Cmd+V)":
+                    "You can also paste images (Ctrl+V / Cmd+V)",
+            },
+            fr: {
+                "Upload the images": "Téléchargez les images",
+                "Drop images here or click to browse":
+                    "Déposez les images ici ou cliquez pour parcourir",
+                "Supports JPG, PNG, GIF, and other image formats":
+                    "Prend en charge JPG, PNG, GIF et d'autres formats d'image",
+                "You can also paste images (Ctrl+V / Cmd+V)":
+                    "Vous pouvez également coller des images (Ctrl+V / Cmd+V)",
+            },
+            ar: {
+                "Upload the images": "قم بتحميل الصور",
+                "Drop images here or click to browse":
+                    "أسقط الصور هنا أو انقر للتصفح",
+                "Supports JPG, PNG, GIF, and other image formats":
+                    "يدعم JPG و PNG و GIF وغيرها من تنسيقات الصور",
+                "You can also paste images (Ctrl+V / Cmd+V)":
+                    "يمكنك أيضًا لصق الصور (Ctrl+V / Cmd+V)",
+            },
+        }),
+        []
+    )
+
+    const t = translation[lang]
+
+    const handleFiles = useCallback(
+        async (files: File[]) => {
+            props.handleSummarize({
+                images: files,
+                language: "",
+            })
+        },
+        [props]
+    )
+
+    const handlePaste = useCallback(
+        (event: ClipboardEvent) => {
+            const items = event.clipboardData?.items
+
+            if (!items) return
+
+            const imageFiles: File[] = []
+
+            for (let i = 0; i < items.length; i++) {
+                const item = items[i]
+
+                if (item.type.startsWith("image/")) {
+                    const file = item.getAsFile()
+                    if (file) {
+                        imageFiles.push(file)
+                    }
+                }
+            }
+
+            if (imageFiles.length > 0) {
+                handleFiles(imageFiles)
+            }
+        },
+        [handleFiles]
+    )
+
+    useEffect(() => {
+        window.addEventListener("paste", handlePaste)
+
+        return () => {
+            window.removeEventListener("paste", handlePaste)
+        }
+    }, [handlePaste])
+
     const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
         const selectedFiles = Array.from(e?.target?.files || []).filter(
             (file) => file.type.startsWith("image/")
@@ -53,71 +123,16 @@ export default function ImageUpload(props: Props) {
         handleFiles(droppedFiles || [])
     }
 
-    const handleFiles = async (files: File[]) => {
-        setFiles(files)
-        setIsSelectingLang(true)
-    }
-    const handleConfirm = () => {
-        setIsSelectingLang(false)
-        props.handleSummarize({
-            images: files,
-            language,
-        })
-    }
     return (
         <div className="w-full max-w-3xl pt-28 space-y-6">
             <div className="text-center mb-10">
                 <h1 className="text-4xl font-bold text-neutral-600 mb-5">
-                    Upload your images
+                    {t["Upload the images"]}
                 </h1>
             </div>
-            <Dialog open={isSelectingLang} onOpenChange={setIsSelectingLang}>
-                <DialogContent>
-                    <DialogTitle className="text-2xl font-bold text-neutral-600">
-                        Select Language (Optional)
-                    </DialogTitle>
-                    <DialogDescription></DialogDescription>
 
-                    {!isCustomLang ? (
-                        <Select onValueChange={setLanguage}>
-                            <SelectTrigger className="w-full">
-                                <SelectValue placeholder="Select a language" />
-                            </SelectTrigger>
-                            <SelectContent>
-                                <SelectItem value="english">English</SelectItem>
-                                <SelectItem value="arabic">Arabic</SelectItem>
-                                <SelectItem value="french">French</SelectItem>
-                                <SelectItem value="spanish">Spanish</SelectItem>
-                            </SelectContent>
-                        </Select>
-                    ) : (
-                        <Input
-                            placeholder="Type your language"
-                            className="w-full"
-                            value={customLang}
-                            onChange={(e) => setCustomLang(e.target.value)}
-                        />
-                    )}
-                    <div className="flex items-center gap-2 -mt-6">
-                        <span className="font-semibold text-neutral-600">
-                            Use Custom Language
-                        </span>
-                        <Switch
-                            className="scale-125 cursor-pointer"
-                            checked={isCustomLang}
-                            onCheckedChange={setIsCustomLang}
-                        />
-                    </div>
-                    <Button
-                        onClick={handleConfirm}
-                        className="mt-4 text-lg w-full"
-                    >
-                        Confirm
-                    </Button>
-                </DialogContent>
-            </Dialog>
             <div
-                className={`flex active:scale-95 flex-col items-center justify-center h-96 ${
+                className={`flex active:scale-95 flex-col items-center justify-center h-64 md:h-96 ${
                     isDragging
                         ? "bg-blue-50 border-blue-400"
                         : "bg-white border-gray-300"
@@ -142,11 +157,14 @@ export default function ImageUpload(props: Props) {
                     <div className="w-20 h-20 bg-blue-50 rounded-full flex items-center justify-center mb-4">
                         <ImageIcon className="h-10 w-10 text-blue-400/90" />
                     </div>
-                    <p className="text-xl font-bold text-neutral-500 mb-1">
-                        Drop images here or click to browse
+                    <p className="text-xl font-bold text-neutral-500 mb-1 text-center">
+                        {t["Drop images here or click to browse"]}
                     </p>
-                    <p className="text-sm font-semibold text-neutral-500">
-                        Supports JPG, PNG, GIF, and other image formats
+                    <p className="text-sm font-semibold text-neutral-500 text-center mb-2">
+                        {t["Supports JPG, PNG, GIF, and other image formats"]}
+                    </p>
+                    <p className="text-sm text-blue-500 font-medium text-center">
+                        {t["You can also paste images (Ctrl+V / Cmd+V)"]}
                     </p>
                 </label>
             </div>

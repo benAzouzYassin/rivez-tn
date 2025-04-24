@@ -9,7 +9,6 @@ import { wait } from "@/utils/wait"
 import { Loader2 } from "lucide-react"
 import { useEffect } from "react"
 import { usePdfSummarizerStore } from "../store"
-import SummarizeSinglePageBtn from "./summarize-single-page-btn"
 
 interface Props {
     documentLocalId: string
@@ -85,16 +84,6 @@ export default function SinglePagePreview(props: Props) {
             <DialogContent className="h-[90vh] !px-10 pt-4 min-w-fit">
                 <div className="flex h-16 mt-5 justify-between items-center ">
                     <DialogTitle>Page {props.index + 1}</DialogTitle>
-                    <div className="flex items-center">
-                        <Button
-                            onClick={() => props.onOpenChange(false)}
-                            className="text-lg text-neutral-600 font-bold mr-2 h-[44px]"
-                            variant={"secondary"}
-                        >
-                            Cancel
-                        </Button>
-                        <SummarizeSinglePageBtn />
-                    </div>
                 </div>
 
                 <div
