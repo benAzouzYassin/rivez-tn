@@ -81,11 +81,7 @@ export default function SinglePagePreview(props: Props) {
 
     return (
         <Dialog open={props.isOpen} onOpenChange={props.onOpenChange}>
-            <DialogContent className="h-[90vh] !px-10 pt-4 min-w-fit">
-                <div className="flex h-16 mt-5 justify-between items-center ">
-                    <DialogTitle>Page {props.index + 1}</DialogTitle>
-                </div>
-
+            <DialogContent className="h-[90vh] !px-20 min-w-fit">
                 <div
                     id={`pdf-dialog-preview`}
                     onClick={(e) => e.stopPropagation()}
@@ -93,7 +89,7 @@ export default function SinglePagePreview(props: Props) {
                 >
                     <Loader2 className="animate-spin duration-400 opacity-30" />
                 </div>
-
+                <DialogTitle className="text-center"></DialogTitle>
                 <DialogDescription></DialogDescription>
             </DialogContent>
         </Dialog>

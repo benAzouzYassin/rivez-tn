@@ -7,7 +7,7 @@ import { usePdfSummarizerStore } from "./store"
 import { useSearchParams } from "next/navigation"
 import dynamic from "next/dynamic"
 import { Button } from "@/components/ui/button"
-import { ChevronLeft } from "lucide-react"
+import { ArrowLeft, ChevronLeft } from "lucide-react"
 import { useRouter } from "nextjs-toploader/app"
 const FilesUpload = dynamic(() => import("./_components/files-uplod"), {
     ssr: false,
@@ -30,11 +30,10 @@ export default function Page() {
             {!files.length && (
                 <Button
                     onClick={router.back}
-                    className="absolute font-bold text-neutral-500 top-2 left-2 md:top-4 md:left-4 "
+                    className="absolute font-bold text-neutral-500 top-2 left-2 md:top-4 md:left-4 px-6  "
                     variant={"secondary"}
                 >
-                    <ChevronLeft className="!w-5 !h-5 -mr-1 stroke-[2.5]" />{" "}
-                    Back
+                    <ArrowLeft className="!w-5 !h-5 scale-125 -mr-1 stroke-[2.5]" />{" "}
                 </Button>
             )}
             {files.length ? (
