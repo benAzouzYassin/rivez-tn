@@ -20,6 +20,7 @@ type Props = {
     defaultLang: string
 }
 export function LanguageSelector(props: Props) {
+    const [isLoading, setIsLoading] = useState(false)
     const [isOpen, setIsOpen] = useState(false)
     const [language, setLanguage] = useState<
         (typeof languages)[number] | undefined
@@ -36,6 +37,7 @@ export function LanguageSelector(props: Props) {
         <Popover open={isOpen} onOpenChange={setIsOpen}>
             <PopoverTrigger asChild>
                 <Button
+                    isLoading={isLoading}
                     variant="secondary"
                     className={cn(
                         "px-3 font-bold rounded-2xl md:rounded-xl z-50 text-neutral-400 h-9.5 md:h-10 text-sm",
@@ -53,12 +55,9 @@ export function LanguageSelector(props: Props) {
                     )}
                 </Button>
             </PopoverTrigger>
-            <PopoverContent className="w-64 mt-0 rounded-none border-none overflow-visible shadow-none bg-transparent p-0!">
-                <div className="rounded-2xl mt-1 overflow-hidden border-2 bg-white   pt-3">
-                    <div className="font-bold text-neutral-400 text-lg pb-3 px-6">
-                        Languages
-                    </div>
-                    <div className="border-t">
+            <PopoverContent className="w-64 rtl:-translate-x-2 mt-0 rounded-none border-none overflow-visible shadow-none bg-transparent p-0!">
+                <div className="rounded-2xl mt-1 overflow-hidden border-2 bg-white   ">
+                    <div className="">
                         {languages.map((lang) => (
                             <button
                                 key={lang.value}
@@ -66,10 +65,16 @@ export function LanguageSelector(props: Props) {
                                     "flex items-center active:scale-95 transition-all  h-12 border-t px-6 w-full cursor-pointer   hover:bg-blue-100/70 "
                                 )}
                                 onClick={() => {
-                                    setLanguage(lang)
-                                    setIsOpen(false)
-                                    Cookies.set("selected-language", lang.value)
-                                    window.location.reload()
+                                    if (lang !== language) {
+                                        setIsLoading(true)
+                                        setLanguage(lang)
+                                        setIsOpen(false)
+                                        Cookies.set(
+                                            "selected-language",
+                                            lang.value
+                                        )
+                                        window.location.reload()
+                                    }
                                 }}
                             >
                                 <img
