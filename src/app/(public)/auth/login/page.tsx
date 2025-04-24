@@ -1,4 +1,5 @@
 "use client"
+
 import Google from "@/components/icons/google"
 import BackButton from "@/components/shared/back-button"
 import AnimatedLoader from "@/components/ui/animated-loader"
@@ -17,6 +18,8 @@ import { useRouter } from "nextjs-toploader/app"
 import { useMemo, useState } from "react"
 import { useForm } from "react-hook-form"
 import { z } from "zod"
+import { getLanguage } from "@/utils/get-language"
+import { LanguageSelector } from "@/components/shared/language-selector"
 
 export default function Page() {
     const { isLoading: isFetchingCurrentUser, refetch: refetchUser } =
@@ -26,23 +29,91 @@ export default function Page() {
     const [isPasswordAuth, setIsPasswordAuth] = useState(false)
     const [isGoogleAuth, setIsGoogleAuth] = useState(false)
 
+    const translation = useMemo(
+        () => ({
+            en: {
+                loginTitle: "login to your profile",
+                emailOrPhone: "Email or phone",
+                password: "Password",
+                forgot: "FORGOT ?",
+                login: "LOGIN",
+                register: "REGISTER",
+                or: "OR",
+                google: "GOOGLE",
+                terms: "Terms",
+                privacy: "Privacy Policy",
+                agreement: "by signing in, you agree to our",
+                emailRequired: "Email or phone is required",
+                emailMax: "Input exceeds maximum length",
+                passwordRequired: "Password is required",
+                passwordMin: "Password must be at least 6 characters",
+                loginError: "Wrong email or password.",
+                and: "and",
+            },
+            fr: {
+                loginTitle: "connectez-vous à votre profil",
+                emailOrPhone: "E-mail ou téléphone",
+                password: "Mot de passe",
+                forgot: "MOT DE PASSE OUBLIÉ ?",
+                login: "SE CONNECTER",
+                register: "S'INSCRIRE",
+                or: "OU",
+                google: "GOOGLE",
+                terms: "Conditions",
+                privacy: "Politique de confidentialité",
+                agreement: "en vous connectant, vous acceptez nos",
+                emailRequired: "L'e-mail ou le téléphone est requis",
+                emailMax: "L'entrée dépasse la longueur maximale",
+                passwordRequired: "Le mot de passe est requis",
+                passwordMin:
+                    "Le mot de passe doit comporter au moins 6 caractères",
+                loginError: "E-mail ou mot de passe incorrect.",
+                and: "et",
+            },
+            ar: {
+                and: "و",
+                loginTitle: "تسجيل الدخول إلى حسابك",
+                emailOrPhone: "البريد الإلكتروني أو الهاتف",
+                password: "كلمة المرور",
+                forgot: "نسيت؟",
+                login: "تسجيل الدخول",
+                register: "تسجيل",
+                or: "أو",
+                google: "جوجل",
+                terms: "الشروط",
+                privacy: "سياسة الخصوصية",
+                agreement: "بتسجيلك ، فإنك توافق على",
+                emailRequired: "البريد الإلكتروني",
+                emailMax: " يتجاوز الحد الأقصى للطول",
+                passwordRequired: "كلمة المرور مطلوبة",
+                passwordMin: "يجب أن تكون كلمة المرور 6 أحرف على الأقل",
+                loginError: "البريد الإلكتروني أو كلمة المرور غير صحيحة.",
+            },
+        }),
+        []
+    )
+
+    const lang = getLanguage()
+    const t = translation[lang]
+
     const formSchema = useMemo(
         () =>
             z.object({
                 identifier: z
                     .string()
-                    .min(1, "Email or phone is required")
-                    .max(100, "Input exceeds maximum length"),
+                    .min(1, t.emailRequired)
+                    .max(100, t.emailMax),
                 password: z
                     .string()
-                    .min(1, "Password is required")
-                    .min(6, "Password must be at least 6 characters"),
+                    .min(1, t.passwordRequired)
+                    .min(6, t.passwordMin),
             }),
-        []
+        [t]
     )
 
     const {
         register,
+        watch,
         handleSubmit,
         formState: { errors, isSubmitting },
     } = useForm<z.infer<typeof formSchema>>({
@@ -52,7 +123,7 @@ export default function Page() {
             password: "",
         },
     })
-
+    const passwordInput = watch("password")
     const onSubmit = async (formData: z.infer<typeof formSchema>) => {
         setIsPasswordAuth(true)
         const { success } = await loginUserWithPassword({
@@ -66,9 +137,8 @@ export default function Page() {
                 )
             })
         } else {
-            toastError("Wrong email or password.")
+            toastError(t.loginError)
         }
-
         dismissToasts("loading")
         setIsPasswordAuth(false)
     }
@@ -80,48 +150,53 @@ export default function Page() {
             </main>
         )
     }
+
     return (
         <main className="flex min-h-[100vh] relative flex-col items-center justify-center">
             <section>
                 <BackButton className="absolute top-8 left-2 md:left-16" />
-
-                <Button
-                    onClick={() => router.push("/auth/register")}
-                    className="absolute w-fit! px-7! uppercase font-bold text-[#1CB0F6] top-8 right-3 md:right-16"
-                    variant={"secondary"}
-                >
-                    REGISTER
-                </Button>
+                <div className="absolute top-8 right-3 gap-2 md:right-16 flex items-center justify-center">
+                    <LanguageSelector defaultLang="en" />
+                    <Button
+                        onClick={() => router.push("/auth/register")}
+                        className=" w-fit! px-7! uppercase font-bold text-[#1CB0F6]  "
+                        variant={"secondary"}
+                    >
+                        {t.register}
+                    </Button>
+                </div>
                 <form
                     onSubmit={handleSubmit(onSubmit)}
-                    className="flex flex-col px-2 max-w-[95vw] "
+                    className="flex flex-col px-2 max-w-[95vw]"
                 >
                     <h1 className="text-2xl first-letter:capitalize mb-5 font-bold text-center text-[#3C3C3C]">
-                        login to your profile
+                        {t.loginTitle}
                     </h1>
                     <Input
                         {...register("identifier")}
                         type="text"
                         className="md:min-w-96 w-full"
-                        placeholder="Email or phone"
+                        placeholder={t.emailOrPhone}
                         errorMessage={errors.identifier?.message}
                     />
-                    <div className="relative ">
+                    <div className="relative">
                         <Input
                             {...register("password")}
                             type="password"
                             className="md:min-w-96 w-full"
-                            placeholder="Password"
+                            placeholder={t.password}
                             errorMessage={errors.password?.message}
                         />
-                        <div className="absolute right-3 top-[12px] ">
-                            <Link
-                                href={"/auth/forget-password"}
-                                className="font-bold hover:underline underline-offset-2 text-[#AFAFAF] text-sm"
-                            >
-                                FORGOT ?
-                            </Link>
-                        </div>
+                        {passwordInput.length < 1 && (
+                            <div className="absolute rtl:left-3 ltr:right-3 top-[12px]">
+                                <Link
+                                    href="/auth/forget-password"
+                                    className="font-bold hover:underline underline-offset-2 text-[#AFAFAF] text-sm"
+                                >
+                                    {t.forgot}
+                                </Link>
+                            </div>
+                        )}
                     </div>
                     <Button
                         type="submit"
@@ -129,12 +204,12 @@ export default function Page() {
                         variant={"blue"}
                         isLoading={isSubmitting || isPasswordAuth}
                     >
-                        LOGIN
+                        {t.login}
                     </Button>
                 </form>
                 <div className="flex items-center mt-5 w-full">
                     <hr className="rounded-full w-full bg-[#E5E5E5] h-1" />
-                    <p className="mx-2 font-bold text-[#AFAFAF]">OR</p>
+                    <p className="mx-2 font-bold text-[#AFAFAF]">{t.or}</p>
                     <hr className="rounded-full w-full bg-[#E5E5E5] h-1" />
                 </div>
                 <div className="px-2">
@@ -157,25 +232,26 @@ export default function Page() {
                         className="font-bold w-full mt-3 text-[#4285F4] uppercase text-sm"
                         variant={"secondary"}
                     >
-                        <Google className="w-4! scale-105 h-4!" /> GOOGLE
+                        <Google className="w-4! scale-105 h-4!" /> {t.google}
                     </Button>
                 </div>
                 <div className="flex items-center justify-center mt-5">
                     <p className="text-[#AFAFAF] first-letter:capitalize text-sm max-w-[350px] text-center font-medium">
-                        by signing in to Fikr, you agree to our{" "}
+                        {t.agreement}{" "}
                         <Link
                             className="font-bold hover:underline underline-offset-2"
-                            href={""}
+                            href=""
                         >
-                            Terms
+                            {t.terms}
                         </Link>{" "}
-                        and{" "}
+                        {t["and"]}{" "}
                         <Link
                             className="font-bold hover:underline underline-offset-2"
-                            href={""}
+                            href=""
                         >
-                            Privacy Policy.
+                            {t.privacy}
                         </Link>
+                        .
                     </p>
                 </div>
             </section>

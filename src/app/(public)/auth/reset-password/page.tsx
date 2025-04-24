@@ -1,11 +1,12 @@
 "use client"
 
 import BackButton from "@/components/shared/back-button"
+import { LanguageSelector } from "@/components/shared/language-selector"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { updateUserPassword } from "@/data-access/users/update"
-import { useRefetchUser } from "@/hooks/use-refetch-user"
 import { dismissToasts, toastError, toastSuccess } from "@/lib/toasts"
+import { getLanguage } from "@/utils/get-language"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useQueryClient } from "@tanstack/react-query"
 import { Eye, EyeOff } from "lucide-react"
@@ -20,23 +21,81 @@ export default function Page() {
     const [isResetting, setIsResetting] = useState(false)
     const [showPassword, setShowPassword] = useState(false)
     const [showConfirmPassword, setShowConfirmPassword] = useState(false)
+
+    const translation = useMemo(
+        () => ({
+            en: {
+                title: "Reset Your Password",
+                newPassword: "New password",
+                confirmPassword: "Confirm new password",
+                login: "LOGIN",
+                submit: "RESET PASSWORD",
+                backToLogin: "Login here",
+                remember: "Remember your password?",
+                passwordRequired: "Password is required",
+                confirmPasswordRequired: "Password confirmation is required",
+                minPassword: "Password must be at least 6 characters",
+                mismatch: "Passwords don't match",
+                resetSuccess: "Password reset successful!",
+                resetError: "Failed to reset password. Please try again.",
+            },
+            fr: {
+                title: "Réinitialiser votre mot de passe",
+                newPassword: "Nouveau mot de passe",
+                confirmPassword: "Confirmer le mot de passe",
+                login: "SE CONNECTER",
+                submit: "RÉINITIALISER LE MOT DE PASSE",
+                backToLogin: "Connectez-vous ici",
+                remember: "Vous vous souvenez de votre mot de passe ?",
+                passwordRequired: "Le mot de passe est requis",
+                confirmPasswordRequired:
+                    "La confirmation du mot de passe est requise",
+                minPassword:
+                    "Le mot de passe doit comporter au moins 6 caractères",
+                mismatch: "Les mots de passe ne correspondent pas",
+                resetSuccess: "Réinitialisation du mot de passe réussie !",
+                resetError:
+                    "Échec de la réinitialisation du mot de passe. Veuillez réessayer.",
+            },
+            ar: {
+                title: "إعادة تعيين كلمة المرور",
+                newPassword: "كلمة المرور الجديدة",
+                confirmPassword: "تأكيد كلمة المرور الجديدة",
+                login: "تسجيل الدخول",
+                submit: "إعادة تعيين كلمة المرور",
+                backToLogin: "سجّل الدخول هنا",
+                remember: "هل تتذكر كلمة المرور؟",
+                passwordRequired: "كلمة المرور مطلوبة",
+                confirmPasswordRequired: "تأكيد كلمة المرور مطلوب",
+                minPassword: "يجب أن تكون كلمة المرور 6 أحرف على الأقل",
+                mismatch: "كلمتا المرور غير متطابقتين",
+                resetSuccess: "تمت إعادة تعيين كلمة المرور بنجاح!",
+                resetError: "فشل في إعادة تعيين كلمة المرور. حاول مرة أخرى.",
+            },
+        }),
+        []
+    )
+
+    const lang = getLanguage()
+    const t = translation[lang]
+
     const formSchema = useMemo(
         () =>
             z
                 .object({
                     newPassword: z
                         .string()
-                        .min(1, "Password is required")
-                        .min(6, "Password must be at least 6 characters"),
+                        .min(1, t.passwordRequired)
+                        .min(6, t.minPassword),
                     confirmPassword: z
                         .string()
-                        .min(1, "Password confirmation is required"),
+                        .min(1, t.confirmPasswordRequired),
                 })
                 .refine((data) => data.newPassword === data.confirmPassword, {
-                    message: "Passwords don't match",
+                    message: t.mismatch,
                     path: ["confirmPassword"],
                 }),
-        []
+        [t]
     )
 
     const {
@@ -59,56 +118,52 @@ export default function Page() {
         })
 
         if (success) {
-            toastSuccess("Password reset successful!")
+            toastSuccess(t.resetSuccess)
             router.replace("/home")
         } else {
             console.error("Password reset error:", error)
-            toastError(
-                error instanceof Error
-                    ? error.message
-                    : "Failed to reset password. Please try again."
-            )
+            toastError(error instanceof Error ? error.message : t.resetError)
         }
 
         dismissToasts("loading")
         setIsResetting(false)
-        queryClient.invalidateQueries({
-            queryKey: ["current-user"],
-        })
+        queryClient.invalidateQueries({ queryKey: ["current-user"] })
     }
 
     return (
         <main className="flex min-h-[100vh] relative flex-col items-center justify-center">
             <section>
                 <BackButton className="absolute top-8 left-2 md:left-16" />
-
-                <Button
-                    onClick={() => router.push("/auth/login")}
-                    className="absolute w-fit! px-7! uppercase font-bold text-[#1CB0F6] top-8 right-3 md:right-16"
-                    variant={"secondary"}
-                >
-                    LOGIN
-                </Button>
+                <div className="flex absolute gap-2 items-center justify-center top-8 right-3 md:right-16">
+                    <LanguageSelector defaultLang="en" />
+                    <Button
+                        onClick={() => router.push("/auth/login")}
+                        className="w-fit! px-7! uppercase font-bold text-[#1CB0F6] "
+                        variant={"secondary"}
+                    >
+                        {t.login}
+                    </Button>
+                </div>
                 <form
                     onSubmit={handleSubmit(onSubmit)}
                     className="flex flex-col w-[95vw] md:w-auto"
                 >
                     <h1 className="text-2xl first-letter:capitalize mb-5 font-bold text-center text-[#3C3C3C]">
-                        Reset Your Password
+                        {t.title}
                     </h1>
 
-                    <div className="relative w-full ">
+                    <div className="relative w-full">
                         <Input
                             {...register("newPassword")}
                             type={showPassword ? "text" : "password"}
                             className="w-full md:min-w-96"
-                            placeholder="New password"
+                            placeholder={t.newPassword}
                             errorMessage={errors.newPassword?.message}
                         />
                         <button
                             type="button"
                             onClick={() => setShowPassword(!showPassword)}
-                            className="absolute right-3 top-3 text-neutral-400 hover:text-neutral-500"
+                            className="absolute rtl:left-3 cursor-pointer    ltr:right-3 top-3 text-neutral-400 hover:text-neutral-500"
                         >
                             {showPassword ? (
                                 <EyeOff className="h-6 w-6" />
@@ -123,7 +178,7 @@ export default function Page() {
                             {...register("confirmPassword")}
                             type={showConfirmPassword ? "text" : "password"}
                             className="w-full md:min-w-96"
-                            placeholder="Confirm new password"
+                            placeholder={t.confirmPassword}
                             errorMessage={errors.confirmPassword?.message}
                         />
                         <button
@@ -131,7 +186,7 @@ export default function Page() {
                             onClick={() =>
                                 setShowConfirmPassword(!showConfirmPassword)
                             }
-                            className="absolute right-3 top-3 text-neutral-400 hover:text-neutral-500"
+                            className="absolute rtl:left-3 cursor-pointer    ltr:right-3 top-3 text-neutral-400 hover:text-neutral-500"
                         >
                             {showConfirmPassword ? (
                                 <EyeOff className="h-6 w-6" />
@@ -147,17 +202,17 @@ export default function Page() {
                         variant={"blue"}
                         isLoading={isSubmitting || isResetting}
                     >
-                        RESET PASSWORD
+                        {t.submit}
                     </Button>
                 </form>
                 <div className="flex items-center justify-center mt-5">
                     <p className="text-[#AFAFAF] first-letter:capitalize text-sm max-w-[350px] text-center font-medium">
-                        Remember your password?{" "}
+                        {t.remember}{" "}
                         <button
                             onClick={() => router.push("/auth/login")}
-                            className="font-bold text-[#1CB0F6] hover:underline underline-offset-2"
+                            className="font-bold text-[#1CB0F6] cursor-pointer hover:underline underline-offset-2"
                         >
-                            Login here
+                            {t.backToLogin}
                         </button>
                     </p>
                 </div>
