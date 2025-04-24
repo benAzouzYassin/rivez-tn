@@ -1,16 +1,16 @@
 "use client"
 
-import { Button } from "@/components/ui/button"
-import { ChevronLeft } from "lucide-react"
-import { useRouter } from "nextjs-toploader/app"
-import ImageUpload from "./_components/image-upload"
-import { useRef, useState } from "react"
-import { summarizeImages } from "@/data-access/summarize/images/summarize"
 import { ErrorDisplay } from "@/components/shared/error-display"
 import GeneralLoadingScreen from "@/components/shared/general-loading-screen"
-import { useRefetchUser } from "@/hooks/use-refetch-user"
-import PagesViewer from "./_components/pages-viewer"
+import { Button } from "@/components/ui/button"
 import { handleRefund } from "@/data-access/summarize/images/handle-refund"
+import { summarizeImages } from "@/data-access/summarize/images/summarize"
+import { useRefetchUser } from "@/hooks/use-refetch-user"
+import { ArrowLeft } from "lucide-react"
+import { useRouter } from "nextjs-toploader/app"
+import { useRef, useState } from "react"
+import ImageUpload from "./_components/image-upload"
+import PagesViewer from "./_components/pages-viewer"
 
 export default function Page() {
     const refetchUser = useRefetchUser()
@@ -71,10 +71,10 @@ export default function Page() {
         <section className=" relative items-center  min-h-[89vh] bg-neutral-50">
             <Button
                 onClick={router.back}
-                className="absolute font-bold text-neutral-500 top-4 left-4 "
+                className="absolute font-bold text-neutral-500 top-2 left-2 md:top-4 md:left-4 px-6  "
                 variant={"secondary"}
             >
-                <ChevronLeft className="!w-5 !h-5 -mr-1 stroke-[2.5]" /> Back
+                <ArrowLeft className="!w-5 !h-5 scale-125 -mr-1 stroke-[2.5]" />{" "}
             </Button>
             <div className="flex items-center  justify-center">
                 {result?.files?.[0]?.markdownPages?.length >= 1 ? (

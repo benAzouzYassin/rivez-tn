@@ -77,7 +77,7 @@ const translation = {
         "Mind maps": "Cartes mentales",
         Summarize: "Résumer",
         "Our Offers": "Nos offres",
-        "Get credits": "Obtenir des crédits",
+        "Get credits": "Nos offres",
     },
     ar: {
         Dashboard: "لوحة القيادة",
@@ -86,6 +86,6 @@ const translation = {
         "Mind maps": "خرائط ذهنية",
         Summarize: "تلخيص",
         "Our Offers": "عروضنا",
-        "Get credits": "الحصول على أرصدة",
+        "Get credits": "الحصول على رصيد",
     },
 }
