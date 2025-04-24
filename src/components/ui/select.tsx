@@ -21,7 +21,7 @@ const SelectTrigger = React.forwardRef<
         <SelectPrimitive.Trigger
             ref={ref}
             className={cn(
-                "flex w-full items-center hover:cursor-pointer justify-between",
+                "flex rtl:flex-row-reverse w-full items-center hover:cursor-pointer justify-between",
                 "rounded-xl transition-all duration-200",
                 "font-semibold border-2 p-3 h-12",
                 "placeholder:font-medium",
@@ -128,7 +128,7 @@ const SelectItem = React.forwardRef<
     <SelectPrimitive.Item
         ref={ref}
         className={cn(
-            "relative flex h-10 w-full active:scale-[97%] rounded-sm px-2 py-2 hover:cursor-pointer select-none items-center shadow-[0px_1px_0px] transition-all pl-4 text-base font-medium outline-none",
+            "relative flex rtl:flex-row-reverse h-10 w-full active:scale-[97%] rounded-sm px-2 py-2 hover:cursor-pointer select-none items-center shadow-[0px_1px_0px] transition-all pl-4 text-base font-medium outline-none",
             // Light mode styles
             {
                 "shadow-neutral-200 hover:bg-sky-200/70 focus:bg-sky-200/70 focus:text-neutral-900":

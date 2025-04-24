@@ -1,3 +1,5 @@
+"use client"
+
 import { POSSIBLE_QUESTIONS } from "@/app/api/quiz/generate-quiz/constants"
 import { Button } from "@/components/ui/button"
 import {
@@ -27,7 +29,7 @@ import { toastError } from "@/lib/toasts"
 import { useSidenav } from "@/providers/sidenav-provider"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useQueryClient } from "@tanstack/react-query"
-import { ChevronDown, ChevronLeft, Sparkles } from "lucide-react"
+import { ChevronDown, Sparkles } from "lucide-react"
 import { useRouter } from "nextjs-toploader/app"
 import { useEffect, useMemo, useState } from "react"
 import { Controller, useForm } from "react-hook-form"
@@ -38,6 +40,7 @@ import useQuizStore from "../../../quizzes/add/[id]/store"
 import { Badge } from "@/components/ui/badge"
 import CreditIcon from "@/components/icons/credit-icon"
 import { mediumPrice } from "@/constants/prices"
+import { getLanguage } from "@/utils/get-language"
 
 const POSSIBLE_QUESTIONS_TYPES = Object.keys(POSSIBLE_QUESTIONS)
 
@@ -59,6 +62,7 @@ interface Props {
     onOpenChange: (value: boolean) => void
     content: string
 }
+
 export default function GenerateQuizDialog(props: Props) {
     const queryClient = useQueryClient()
     const { data: userData } = useCurrentUser()
@@ -68,11 +72,72 @@ export default function GenerateQuizDialog(props: Props) {
     const { isSidenavOpen, toggleSidenav } = useSidenav()
     const resetEditableQuizStore = useQuizStore((s) => s.reset)
     const addToEditQuizWithAi = useQuizStore((s) => s.generateQuizWithAi)
+
     useEffect(() => {
         if (props.isOpen) {
             resetEditableQuizStore()
         }
     }, [resetEditableQuizStore, props.isOpen])
+
+    const translation = useMemo(
+        () => ({
+            en: {
+                generateQuiz: "Generate Quiz",
+                quizNamePlaceholder: "Quiz Name",
+                maxQuestionsPlaceholder: "Max questions",
+                minQuestionsPlaceholder: "Min questions",
+                advancedOptions: "Advanced options",
+                notesPlaceholder: "Any notes for the AI...",
+                languagePlaceholder: "Language",
+                languageEnglish: "English",
+                languageArabic: "Arabic (soon...)",
+                languageFrench: "French (soon...)",
+                allowedQuestionsPlaceholder: "Allowed questions",
+                generateButton: "Generate Quiz",
+                somethingWrong: "Something wrong happened.",
+                "is required": " is required",
+                "Input exceeds maximum length": "Input exceeds maximum length",
+            },
+            fr: {
+                generateQuiz: "Générer un quiz",
+                quizNamePlaceholder: "Nom du quiz",
+                maxQuestionsPlaceholder: "Nombre max de questions",
+                minQuestionsPlaceholder: "Nombre min de questions",
+                advancedOptions: "Options avancées",
+                notesPlaceholder: "Des notes pour l'IA...",
+                languagePlaceholder: "Langue",
+                languageEnglish: "Anglais",
+                languageArabic: "Arabe (bientôt...)",
+                languageFrench: "Français (bientôt...)",
+                allowedQuestionsPlaceholder: "Questions autorisées",
+                generateButton: "Générer le quiz",
+                somethingWrong: "Une erreur est survenue.",
+                "is required": " est requis",
+                "Input exceeds maximum length": "dépasse la longueur maximale",
+            },
+            ar: {
+                generateQuiz: "إنشاء اختبار",
+                quizNamePlaceholder: "اسم الاختبار",
+                maxQuestionsPlaceholder: "الحد الأقصى للأسئلة",
+                minQuestionsPlaceholder: "الحد الأدنى للأسئلة",
+                advancedOptions: "خيارات متقدمة",
+                notesPlaceholder: "أي ملاحظات للذكاء الاصطناعي...",
+                languagePlaceholder: "اللغة",
+                languageEnglish: "الإنجليزية",
+                languageArabic: "العربية (قريباً...)",
+                languageFrench: "الفرنسية (قريباً...)",
+                allowedQuestionsPlaceholder: "الأسئلة المسموح بها",
+                generateButton: "إنشاء الاختبار",
+                somethingWrong: "حدث خطأ ما.",
+                "is required": " إلزامي",
+                "Input exceeds maximum length": "يتجاوز الحد الأقصى للطول",
+            },
+        }),
+        []
+    )
+
+    const lang = getLanguage()
+    const t = translation[lang]
 
     const formSchema = useMemo(
         () =>
@@ -88,8 +153,8 @@ export default function GenerateQuizDialog(props: Props) {
                 notes: z.string().nullable(),
                 name: z
                     .string()
-                    .min(1, "Name is required")
-                    .max(100, "Input exceeds maximum length"),
+                    .min(1, t.quizNamePlaceholder + t["is required"])
+                    .max(100, t["Input exceeds maximum length"]),
                 category: z.string().nullable().optional(),
                 language: z.string().nullable().optional(),
                 difficulty: z.string().nullable().optional(),
@@ -100,8 +165,9 @@ export default function GenerateQuizDialog(props: Props) {
                     .nullable()
                     .optional(),
             }),
-        []
+        [t]
     )
+
     const form = useForm<FormValues>({
         resolver: zodResolver(formSchema),
         defaultValues: {
@@ -136,7 +202,6 @@ export default function GenerateQuizDialog(props: Props) {
                 { ...data, quizId, content: props.content },
                 "content",
                 () => {
-                    // on success
                     queryClient.refetchQueries({
                         predicate: (query) =>
                             query.queryKey.includes("current-user"),
@@ -146,17 +211,17 @@ export default function GenerateQuizDialog(props: Props) {
 
             setImageUrl(null)
         } catch (error) {
-            toastError("Something wrong happened.")
+            toastError(t.somethingWrong)
             console.error(error)
             setIsLoading(false)
         }
     }
+
     return (
         <Dialog open={props.isOpen} onOpenChange={props.onOpenChange}>
             <DialogContent className="md:!min-w-[800px]  md:w-[800px]">
                 <DialogTitle className="mt-10 text-neutral-600 text-center text-3xl font-extrabold">
-                    {" "}
-                    Generate Quiz{" "}
+                    {t.generateQuiz}{" "}
                     <Badge
                         variant={"blue"}
                         className="scale-80 -ml-1 py-0 px-2 font-bold inline-flex gap-[3px]  !text-lg"
@@ -168,7 +233,7 @@ export default function GenerateQuizDialog(props: Props) {
                 <section className="flex flex-col w-full mt-1 gap-1 max-w-[900px]">
                     <Input
                         {...form.register("name")}
-                        placeholder="Quiz Name"
+                        placeholder={t.quizNamePlaceholder}
                         className="w-full"
                         errorMessage={form.formState.errors.name?.message}
                     />
@@ -177,7 +242,7 @@ export default function GenerateQuizDialog(props: Props) {
                         <Input
                             {...form.register("maxQuestions")}
                             defaultValue={undefined}
-                            placeholder="Max questions"
+                            placeholder={t.maxQuestionsPlaceholder}
                             className="w-full"
                             type="number"
                             errorMessage={
@@ -187,7 +252,7 @@ export default function GenerateQuizDialog(props: Props) {
                         <Input
                             {...form.register("minQuestions")}
                             defaultValue={undefined}
-                            placeholder="Min questions"
+                            placeholder={t.minQuestionsPlaceholder}
                             className="w-full"
                             type="number"
                             errorMessage={
@@ -198,7 +263,7 @@ export default function GenerateQuizDialog(props: Props) {
                     <Collapsible className="group ">
                         <CollapsibleTrigger className="w-full data-[state=open]:font-bold  data-[state=open]:text-neutral-500 data-[state=open]:bg-blue-300/80 data-[state=open]:border-transparent   mb-4 hover:bg-neutral-100 flex justify-between items-center rounded-xl transition-all duration-200 bg-[#F7F7F7]/50 font-medium border-2 p-3 h-12 border-[#E5E5E5] text-[#AFAFAF] cursor-pointer">
                             <span className="underline underline-offset-4">
-                                Advanced options
+                                {t.advancedOptions}
                             </span>
                             <ChevronDown className="group-data-[state=open]:rotate-180 transition-transform duration-500" />
                         </CollapsibleTrigger>
@@ -207,7 +272,7 @@ export default function GenerateQuizDialog(props: Props) {
                                 <div className=" mt-5">
                                     <Textarea
                                         {...form.register("notes")}
-                                        placeholder="Any notes for the ai..."
+                                        placeholder={t.notesPlaceholder}
                                         className="w-full"
                                         errorMessage={
                                             form.formState.errors.notes?.message
@@ -215,38 +280,6 @@ export default function GenerateQuizDialog(props: Props) {
                                     />
                                 </div>
 
-                                <div className=" -mt-1 gap-8">
-                                    <Select
-                                        defaultValue={
-                                            form.getValues().language ||
-                                            undefined
-                                        }
-                                        onValueChange={(val) =>
-                                            form.setValue("language", val)
-                                        }
-                                    >
-                                        <SelectTrigger className="data-[placeholder]:text-neutral-400">
-                                            <SelectValue placeholder="Language" />
-                                        </SelectTrigger>
-                                        <SelectContent>
-                                            <SelectItem value="EN">
-                                                English
-                                            </SelectItem>
-                                            <SelectItem disabled value="AR">
-                                                Arabic{" "}
-                                                <span className="text-sm italic">
-                                                    (soon...)
-                                                </span>
-                                            </SelectItem>
-                                            <SelectItem disabled value="FR">
-                                                French{" "}
-                                                <span className="text-sm italic">
-                                                    (soon...)
-                                                </span>
-                                            </SelectItem>
-                                        </SelectContent>
-                                    </Select>
-                                </div>
                                 <div className=" -mt-1 gap-8">
                                     <div className="pb-3">
                                         <Controller
@@ -271,7 +304,9 @@ export default function GenerateQuizDialog(props: Props) {
                                                             }
                                                         }
                                                     )}
-                                                    placeholder="Allowed questions"
+                                                    placeholder={
+                                                        t.allowedQuestionsPlaceholder
+                                                    }
                                                     inputClassName="w-full mb-2"
                                                     onSelect={onChange}
                                                     onUnselect={(
@@ -309,14 +344,14 @@ export default function GenerateQuizDialog(props: Props) {
                                         )}
                                     />
                                 </div>
+                                <ImageUpload
+                                    className=""
+                                    imageUrl={imageUrl}
+                                    onImageUrlChange={setImageUrl}
+                                />
                             </div>
                         </CollapsibleContent>
                     </Collapsible>
-                    <ImageUpload
-                        className=""
-                        imageUrl={imageUrl}
-                        onImageUrlChange={setImageUrl}
-                    />
 
                     <Button
                         isLoading={isLoading}
@@ -326,7 +361,7 @@ export default function GenerateQuizDialog(props: Props) {
                         }}
                         className="font-extrabold uppercase py-7 mt-5 text-sm"
                     >
-                        Generate Quiz <Sparkles className="!w-5 !h-5" />
+                        {t.generateButton} <Sparkles className="!w-5 !h-5" />
                     </Button>
                 </section>
                 <DialogDescription></DialogDescription>

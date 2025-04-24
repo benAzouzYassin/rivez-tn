@@ -1,3 +1,5 @@
+"use client"
+
 import {
     Select,
     SelectContent,
@@ -5,6 +7,8 @@ import {
     SelectTrigger,
 } from "@/components/ui/select"
 import { Database } from "@/types/database.types"
+import { useMemo } from "react"
+import { getLanguage } from "@/utils/get-language"
 
 interface Props {
     selected: Database["public"]["Tables"]["quizzes"]["Row"]["difficulty"]
@@ -12,7 +16,35 @@ interface Props {
     className?: string
     errorMessage?: string
 }
+
 export function DifficultySelect(props: Props) {
+    const translation = useMemo(
+        () => ({
+            en: {
+                difficultyPlaceholder: "Difficulty",
+                HARD: "Hard",
+                MEDIUM: "Medium",
+                NORMAL: "Normal",
+            },
+            fr: {
+                difficultyPlaceholder: "Difficulté",
+                HARD: "Difficile",
+                MEDIUM: "Moyenne",
+                NORMAL: "Normale",
+            },
+            ar: {
+                difficultyPlaceholder: "الصعوبة",
+                HARD: "صعب",
+                MEDIUM: "متوسط",
+                NORMAL: "عادي",
+            },
+        }),
+        []
+    )
+
+    const lang = getLanguage()
+    const t = translation[lang]
+
     const possibleValues: Exclude<Props["selected"], null>[] = [
         "HARD",
         "MEDIUM",
@@ -28,14 +60,18 @@ export function DifficultySelect(props: Props) {
                 errorMessage={props.errorMessage}
                 className={props.className}
             >
-                {props.selected || (
-                    <span className="text-neutral-400/80">Difficulty</span>
+                {props.selected ? (
+                    t[props.selected]
+                ) : (
+                    <span className="text-neutral-400/80">
+                        {t.difficultyPlaceholder}
+                    </span>
                 )}
             </SelectTrigger>
             <SelectContent>
                 {possibleValues.map((item) => (
                     <SelectItem value={item} key={item}>
-                        {item}
+                        {t[item]}
                     </SelectItem>
                 ))}
             </SelectContent>

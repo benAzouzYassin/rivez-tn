@@ -3,8 +3,9 @@ import InsufficientCreditsDialog from "@/components/shared/insufficient-credits-
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { useCurrentUser } from "@/hooks/use-current-user"
+import { getLanguage } from "@/utils/get-language"
 import { useRouter } from "nextjs-toploader/app"
-import { ReactNode, useState } from "react"
+import { ReactNode, useMemo, useState } from "react"
 
 type Props = {
     icon: ReactNode
@@ -27,6 +28,16 @@ export default function Item({
     price,
     isPerPage,
 }: Props) {
+    const translation = useMemo(
+        () => ({
+            en: { "per page": "per page" },
+            fr: { "per page": "par page" },
+            ar: { "per page": "لكل صفحة" },
+        }),
+        []
+    )
+    const lang = getLanguage()
+    const t = translation[lang]
     const router = useRouter()
     const [isInsufficientCredits, setIsInsufficientCredits] = useState(false)
     const { data: user } = useCurrentUser()
@@ -55,13 +66,13 @@ export default function Item({
                     <div className="flex flex-col justify-center items-center   mx-auto ">
                         <div className="text-xl  text-neutral-600  font-extrabold">
                             <h3> {text}</h3>{" "}
-                            <div className="flex items-center justify-center">
+                            <div className="flex rtl:flex-row-reverse flex-row items-center justify-center">
                                 <Badge
                                     variant={"blue"}
                                     className=" mx-auto  items-center justify-center !min-w-20 py-0 scale-80 px-2 font-bold inline-flex gap-[3px]  !text-lg"
                                 >
                                     {price} <CreditIcon className="!w-5 !h-5" />{" "}
-                                    {isPerPage && "per page"}
+                                    {isPerPage && t["per page"]}
                                 </Badge>
                             </div>
                             {disabled && (
