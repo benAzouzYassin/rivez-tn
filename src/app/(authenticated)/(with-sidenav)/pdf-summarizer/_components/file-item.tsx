@@ -7,12 +7,17 @@ interface Props {
     localId: string
     name: string
     isSelected: boolean
+    pagesIds: string[]
 }
 export default function FileItem(props: Props) {
     const setSelected = usePdfSummarizerStore((s) => s.setSelectedFileLocalId)
     const deleteFile = usePdfSummarizerStore((s) => s.deleteFile)
+    const unselectPages = usePdfSummarizerStore((s) => s.unSelectPages)
+
     const handleDelete = (e: MouseEvent) => {
         e.stopPropagation()
+        console.log(props.pagesIds)
+        unselectPages(props.pagesIds)
         deleteFile(props.localId)
     }
     const handleSelect = () => {

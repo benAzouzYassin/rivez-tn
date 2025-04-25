@@ -138,6 +138,9 @@ export default function PagesSelection() {
                                             isSelected={
                                                 f.localId === selectedLocalId
                                             }
+                                            pagesIds={f.pages.map(
+                                                (p) => p.localId
+                                            )}
                                             localId={f.localId}
                                             name={f.name}
                                             key={f.localId}
