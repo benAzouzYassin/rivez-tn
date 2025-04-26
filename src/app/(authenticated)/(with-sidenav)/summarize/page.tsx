@@ -18,7 +18,7 @@ export default function Page() {
                 "Summarize something": "Summarize something",
                 "Choose a method to create your summary quickly and easily.":
                     "Choose a method to create your summary quickly and easily.",
-                "PDF Document Upload": "PDF Document Upload",
+                "PDF Document": "PDF Document",
                 "Upload PDF files to generate summaries.":
                     "Upload PDF files to generate summaries.",
                 "From Images": "From Images",
@@ -32,7 +32,7 @@ export default function Page() {
                 "Summarize something": "Résumez quelque chose",
                 "Choose a method to create your summary quickly and easily.":
                     "Choisissez une méthode pour créer votre résumé rapidement et facilement.",
-                "PDF Document Upload": "Téléchargement de document PDF",
+                "PDF Document": "Document PDF",
                 "Upload PDF files to generate summaries.":
                     "Téléchargez des fichiers PDF pour générer des résumés.",
                 "From Images": "À partir d'images",
@@ -46,7 +46,7 @@ export default function Page() {
                 "Summarize something": "لخص شيئًا ما",
                 "Choose a method to create your summary quickly and easily.":
                     "اختر طريقة لإنشاء ملخصك بسرعة وسهولة.",
-                "PDF Document Upload": "تحميل مستند PDF",
+                "PDF Document": "مستند PDF",
                 "Upload PDF files to generate summaries.":
                     "قم بتحميل ملفات PDF لإنشاء ملخصات.",
                 "From Images": "من الصور",
@@ -71,7 +71,7 @@ export default function Page() {
                     isPerPage: true,
                     disabled: isSmallScreen,
                     route: "/pdf-summarizer",
-                    text: t["PDF Document Upload"],
+                    text: t["PDF Document"],
                     icon: (
                         <FileTextIcon className="!w-7 !h-7 text-indigo-500" />
                     ),
