@@ -138,7 +138,7 @@ export default function UserHeader() {
                 <MobileNavDrawer />
                 <div
                     className={cn("ml-auto flex items-center gap-1", {
-                        "md:-ml-10 md:mr-auto": isRTL,
+                        "lg:-ml-10 lg:mr-auto": isRTL,
                     })}
                 >
                     <Popover

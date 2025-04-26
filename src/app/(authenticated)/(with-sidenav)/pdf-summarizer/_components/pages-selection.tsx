@@ -84,7 +84,7 @@ export default function PagesSelection() {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [setSelected, files])
 
-    const numColumns = 3
+    const numColumns = files.length > 1 ? 3 : 4
     const totalItems = filteredPages.length
     const totalRows = Math.ceil(totalItems / numColumns)
 
@@ -208,9 +208,9 @@ export default function PagesSelection() {
                                 itemContent={(rowIndex) => (
                                     <div
                                         className={cn(
-                                            "grid grid-cols-2 2xl:grid-cols-4 gap-5 py-2",
+                                            "grid grid-cols-2 2xl:grid-cols-4  gap-5 py-2",
                                             {
-                                                "2xl:grid-cols-3":
+                                                "2xl:grid-cols-3 ":
                                                     files.length > 1,
                                             }
                                         )}
