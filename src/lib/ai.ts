@@ -6,4 +6,5 @@ const openRouter = createOpenRouter({
 })
 
 export const normalModel = openRouter("openai/gpt-4o-mini")
+export const cheapModel = openRouter("openai/gpt-4.1-nano")
 export const premiumModel = openRouter("openai/gpt-4.1-mini")

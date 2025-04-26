@@ -20,7 +20,7 @@ import { JSX, useMemo, useState, useEffect } from "react"
 import CreditIcon from "../icons/credit-icon"
 import MobileNavDrawer from "./mobile-nav-drawer"
 import Cookies from "js-cookie"
-import { availableLanguages } from "@/utils/get-language"
+import { availableLanguages, getLanguage } from "@/utils/get-language"
 import { customToFixed } from "@/utils/numbers"
 
 export default function UserHeader() {
@@ -36,6 +36,36 @@ export default function UserHeader() {
         setIsRTL(language === "ar")
     }, [])
 
+    const translation = useMemo(
+        () => ({
+            en: {
+                buyCredits: "Buy credits",
+                logout: "Logout",
+                yourCreditBalance: "Your credit balance",
+                changeLanguage: "Change language",
+                logoutError: "Error while trying to logout...",
+            },
+            fr: {
+                buyCredits: "Acheter des crédits",
+                logout: "Déconnexion",
+                yourCreditBalance: "Votre solde de crédits",
+                changeLanguage: "Changer de langue",
+                logoutError: "Erreur lors de la déconnexion...",
+            },
+            ar: {
+                buyCredits: "شراء الرصيد",
+                logout: "تسجيل الخروج",
+                yourCreditBalance: "الرصيد",
+                changeLanguage: "تغيير اللغة",
+                logoutError: "حدث خطأ أثناء محاولة تسجيل الخروج...",
+            },
+        }),
+        []
+    )
+
+    const lang = getLanguage()
+    const t = translation[lang]
+
     const handleLogout = async () => {
         setIsUserSettingOpen(false)
         try {
@@ -47,14 +77,14 @@ export default function UserHeader() {
             queryClient.invalidateQueries()
         } catch (error) {
             console.error("Logout failed:", error)
-            toastError("Error while trying to logout...")
+            toastError(t.logoutError)
         }
     }
 
     const menuItems: MenuItem[] = [
         {
             icon: <CreditCardIcon className="w-6 h-6 opacity-70" />,
-            label: "Buy credits",
+            label: t.buyCredits,
             onClick: () => {
                 setIsUserSettingOpen(false)
                 router.push("/offers")
@@ -63,7 +93,7 @@ export default function UserHeader() {
         },
         {
             icon: <LogOutIcon className="w-6 h-6 opacity-70" />,
-            label: "Logout",
+            label: t.logout,
             onClick: () => {
                 setIsUserSettingOpen(false)
                 handleLogout()
@@ -143,7 +173,7 @@ export default function UserHeader() {
                                 >
                                     <TooltipWrapper
                                         asChild
-                                        content="Your credit balance"
+                                        content={t.yourCreditBalance}
                                     >
                                         <div className="flex w-fit items-center cursor-pointer gap-1 rounded-full text-sm md:mt-0 mt-1 md:text-lg bg-blue-100/70 border border-blue-200 pl-2 pr-3 py-[1px] scale-95 text-neutral-600/90 hover:bg-blue-100 transition-colors">
                                             <CreditIcon className="h-6 w-6 md:scale-125 opacity-80" />
@@ -180,6 +210,7 @@ export default function UserHeader() {
                                 items={menuItems}
                                 close={() => setIsUserSettingOpen(false)}
                                 isRTL={isRTL}
+                                changeLanguageLabel={t.changeLanguage}
                             />
                         </PopoverContent>
                     </Popover>
@@ -206,10 +237,12 @@ function UserMenu({
     items,
     close,
     isRTL,
+    changeLanguageLabel,
 }: {
     items: MenuItem[]
     close: () => void
     isRTL: boolean
+    changeLanguageLabel: string
 }) {
     const [language, setLanguage] = useState({
         label: "English",
@@ -229,7 +262,7 @@ function UserMenu({
             <div>
                 <button
                     className={cn(
-                        "flex group relative text-neutral-500 w-full cursor-pointer items-center gap-3 px-4 py-3 text-base font-bold",
+                        "flex group rtl:flex-row-reverse relative text-neutral-500 w-full cursor-pointer items-center gap-3 px-4 py-3 text-base font-bold",
                         "transition-colors hover:bg-blue-100/70 hover:text-blue-400 last:border-b active:bg-blue-200/70"
                     )}
                 >
@@ -292,7 +325,7 @@ function UserMenu({
                     </div>
                     <LanguagesIcon className="w-6 h-6 opacity-70" />
                     <span className={cn({ "mr-auto": isRTL })}>
-                        Change language
+                        {changeLanguageLabel}
                     </span>
                 </button>
                 {items.map((item, index) => (

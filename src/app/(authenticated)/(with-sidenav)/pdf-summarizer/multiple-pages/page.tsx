@@ -13,6 +13,7 @@ import { useRouter } from "nextjs-toploader/app"
 import { useEffect, useRef, useState } from "react"
 import { usePdfSummarizerStore } from "../store"
 import PagesViewer from "./_components/pages-viewer"
+import { imageBitmapToBase64 } from "@/utils/image"
 
 export default function Page() {
     const [isInsufficientCredits, setIsInsufficientCredits] = useState(false)
@@ -81,7 +82,18 @@ export default function Page() {
                 const lang = searchParams.get("lang") || null
 
                 summarizeMultiplePage(
-                    { files: getSelectedPages(), language: lang },
+                    {
+                        files: getSelectedPages().map((file) => ({
+                            ...file,
+                            pages: file.pages.map((p) => {
+                                return {
+                                    textContent: p.textContent,
+                                    imageInBase64: p.imageInBase64,
+                                }
+                            }),
+                        })),
+                        language: lang,
+                    },
                     onResultChange,
                     onStreamEnd
                 ).catch((err) => {
@@ -92,6 +104,7 @@ export default function Page() {
             })
             .catch((err) => {
                 setIsLoading(false)
+                console.error(err)
                 toastError("something went wrong")
             })
     }, [getSelectedPages, refetchUser, searchParams])

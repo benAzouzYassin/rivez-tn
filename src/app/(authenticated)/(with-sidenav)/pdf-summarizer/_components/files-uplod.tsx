@@ -1,17 +1,26 @@
 "use client"
 
+import { useIsSmallScreen } from "@/hooks/is-small-screen"
 import { dismissToasts, toastError, toastLoading } from "@/lib/toasts"
+import { getLanguage } from "@/utils/get-language"
 import { tryCatchAsync } from "@/utils/try-catch"
 import { wait } from "@/utils/wait"
 import { FilesIcon } from "lucide-react"
+import { useRouter } from "nextjs-toploader/app"
 import * as pdfjsLib from "pdfjs-dist"
-import { ChangeEvent, DragEvent, useCallback, useEffect, useState } from "react"
+import {
+    ChangeEvent,
+    DragEvent,
+    useCallback,
+    useEffect,
+    useMemo,
+    useRef,
+    useState,
+} from "react"
 import { z } from "zod"
 import { usePdfSummarizerStore } from "../store"
-import { useIsSmallScreen } from "@/hooks/is-small-screen"
-import { useRouter } from "nextjs-toploader/app"
-import { useMemo } from "react"
-import { getLanguage } from "@/utils/get-language"
+import { getImageData } from "../utils"
+import { imageBitmapToBase64 } from "@/utils/image"
 
 pdfjsLib.GlobalWorkerOptions.workerSrc =
     "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js"
@@ -29,7 +38,7 @@ export default function FilesUpload() {
     const addFileToState = usePdfSummarizerStore((s) => s.addFile)
     const reset = usePdfSummarizerStore((s) => s.reset)
     const selectPages = usePdfSummarizerStore((s) => s.selectPages)
-
+    const canvasRef = useRef(document.createElement("canvas"))
     const lang = getLanguage()
 
     const translation: Translation = useMemo(
@@ -113,15 +122,31 @@ export default function FilesUpload() {
                     )
                 }
                 const [fileData, pages] = result
+                const pagesData = await Promise.all(
+                    pages.map(async (p, i) => {
+                        const imageData =
+                            (await getImageData(fileData, i + 1).catch((err) =>
+                                console.error(err)
+                            )) || undefined
+                        const imageInBase64 = imageData
+                            ? imageBitmapToBase64(
+                                  imageData?.bitmap,
+                                  canvasRef.current
+                              )
+                            : null
+                        return {
+                            content: p,
+                            localId: crypto.randomUUID(),
+                            index: i,
+                            imageInBase64: imageInBase64,
+                        }
+                    })
+                )
                 const fileToAdd = {
                     localId: crypto.randomUUID(),
                     file: fileData,
                     name: file.name,
-                    pages: pages.map((p, i) => ({
-                        content: p,
-                        localId: crypto.randomUUID(),
-                        index: i,
-                    })),
+                    pages: pagesData,
                 }
                 addFileToState(fileToAdd)
                 selectPages(fileToAdd.pages.map((item) => item.localId))

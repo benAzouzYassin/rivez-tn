@@ -2,13 +2,13 @@
 
 import { useEffect } from "react"
 
+import { Button } from "@/components/ui/button"
+import { ArrowLeft } from "lucide-react"
+import dynamic from "next/dynamic"
+import { useSearchParams } from "next/navigation"
+import { useRouter } from "nextjs-toploader/app"
 import PagesSelection from "./_components/pages-selection"
 import { usePdfSummarizerStore } from "./store"
-import { useSearchParams } from "next/navigation"
-import dynamic from "next/dynamic"
-import { Button } from "@/components/ui/button"
-import { ArrowLeft, ChevronLeft } from "lucide-react"
-import { useRouter } from "nextjs-toploader/app"
 const FilesUpload = dynamic(() => import("./_components/files-uplod"), {
     ssr: false,
 })

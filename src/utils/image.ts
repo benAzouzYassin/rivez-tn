@@ -15,6 +15,7 @@ export async function extractImagesText({
         model: aiModel,
         system: `for each image given to you extract it's text in details and without changes.
         - never speak to the user.
+        - if an image is empty return this string : "empty".
         - your output should strictly follow this zod schema : 
         z.array(
             z.object({
@@ -46,4 +47,35 @@ export async function extractImagesText({
         }
     }
     return outputJson ? partialParseJson(extractedText) : extractedText
+}
+export function imageBitmapToBase64(
+    imageBitmap: ImageBitmap,
+    canvas: HTMLCanvasElement,
+    quality = 0.8
+): string | null {
+    try {
+        canvas.width = imageBitmap.width
+        canvas.height = imageBitmap.height
+
+        const ctx = canvas.getContext("2d", { alpha: true })
+        if (!ctx) {
+            throw new Error("Could not get 2D context from canvas.")
+        }
+
+        ctx.drawImage(imageBitmap, 0, 0)
+
+        const dataUrl = canvas.toDataURL("image/webp", quality)
+        if (!dataUrl.startsWith("data:image/webp;base64,")) {
+            return null
+        }
+
+        const base64 = dataUrl.split(",")[1]
+
+        imageBitmap.close()
+
+        return base64
+    } catch (error) {
+        imageBitmap.close()
+        return null
+    }
 }
