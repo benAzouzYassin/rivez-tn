@@ -6,8 +6,9 @@ import { createQuiz } from "@/data-access/quizzes/create"
 import { useCurrentUser } from "@/hooks/use-current-user"
 import { toastError } from "@/lib/toasts"
 import { useSidenav } from "@/providers/sidenav-provider"
+import { getLanguage } from "@/utils/get-language"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { ChevronLeft, Edit } from "lucide-react"
+import { ArrowLeft, Edit } from "lucide-react"
 import { useRouter } from "nextjs-toploader/app"
 import { useMemo, useState } from "react"
 import { Controller, useForm } from "react-hook-form"
@@ -22,17 +23,57 @@ export default function Page() {
     const [isLoading, setIsLoading] = useState(false)
     const router = useRouter()
     const user = useCurrentUser()
+
+    // Translation object
+    const translation = useMemo(
+        () => ({
+            en: {
+                "Create custom quiz": "Create custom quiz",
+                "Go back": "Go back",
+                "Quiz Name": "Quiz Name",
+                "Name is required": "Name is required",
+                "Input exceeds maximum length": "Input exceeds maximum length",
+                "Create Quiz": "Create Quiz",
+                "Something wrong happened.": "Something wrong happened.",
+            },
+            fr: {
+                "Create custom quiz": "Créer un quiz personnalisé",
+                "Go back": "Retourner",
+                "Quiz Name": "Nom du quiz",
+                "Name is required": "Le nom est requis",
+                "Input exceeds maximum length":
+                    "La saisie dépasse la longueur maximale",
+                "Create Quiz": "Créer le quiz",
+                "Something wrong happened.": "Une erreur s'est produite.",
+            },
+            ar: {
+                "Create custom quiz": "إنشاء اختبار مخصص",
+                "Go back": "العودة",
+                "Quiz Name": "اسم الاختبار",
+                "Name is required": "الاسم مطلوب",
+                "Input exceeds maximum length":
+                    "تجاوز الإدخال الحد الأقصى للطول",
+                "Create Quiz": "إنشاء اختبار",
+                "Something wrong happened.": "حدث خطأ ما.",
+            },
+        }),
+        []
+    )
+
+    const lang = getLanguage()
+    const t = translation[lang]
+
     const formSchema = useMemo(
         () =>
             z.object({
                 name: z
                     .string()
-                    .min(1, "Name is required")
-                    .max(100, "Input exceeds maximum length"),
+                    .min(1, t["Name is required"])
+                    .max(100, t["Input exceeds maximum length"]),
                 category: z.string().nullable(),
                 difficulty: z.string().optional().nullable(),
             }),
-        []
+        [t]
     )
 
     const {
@@ -67,30 +108,30 @@ export default function Page() {
             router.push(`/quizzes/add/${quizId}`)
             setImageUrl(null)
         } catch (error) {
-            toastError("Something wrong happened.")
+            toastError(t["Something wrong happened."])
             console.error(error)
             setIsLoading(false)
         }
     }
+
     return (
-        <main className="flex relative items-center pb-10  flex-col">
+        <main className="flex relative items-center pb-10 flex-col">
             <h1 className="mt-10 text-neutral-600 text-3xl font-extrabold">
-                Create custom quiz
+                {t["Create custom quiz"]}
             </h1>
-            <div className="flex items-center  h-0">
+            <div className="flex items-center h-0">
                 <Button
-                    onClick={() => router.back()}
-                    className=" text-sm gap-1   absolute top-4 left-5"
-                    variant="secondary"
+                    onClick={router.back}
+                    className="absolute font-bold text-neutral-500 top-2 left-2 md:top-4 md:left-4 px-6  "
+                    variant={"secondary"}
                 >
-                    <ChevronLeft className="stroke-3 -ml-1 text-neutral-500 !w-4 !h-4" />
-                    Go back
+                    <ArrowLeft className="!w-5 !h-5 scale-125 -mr-1 stroke-[2.5]" />{" "}
                 </Button>
             </div>
             <section className="flex flex-col w-full mt-8 gap-1 max-w-[900px]">
                 <Input
                     {...register("name")}
-                    placeholder="Quiz Name"
+                    placeholder={t["Quiz Name"]}
                     className="w-full"
                     errorMessage={errors.name?.message}
                 />
@@ -106,18 +147,18 @@ export default function Page() {
                     )}
                 />
 
-                {/* <ImageUpload
+                <ImageUpload
                     className=""
                     imageUrl={imageUrl}
                     onImageUrlChange={setImageUrl}
-                /> */}
+                />
                 <Button
                     isLoading={isSubmitting || isLoading}
                     type="button"
                     onClick={handleSubmit(onSubmit)}
                     className="font-extrabold uppercase py-7 mt-5 text-sm"
                 >
-                    Create Quiz <Edit />
+                    {t["Create Quiz"]} <Edit />
                 </Button>
             </section>
         </main>

@@ -3,6 +3,11 @@ import { z } from "zod"
 export const POSSIBLE_QUESTIONS = {
     MULTIPLE_CHOICE_WITHOUT_IMAGE: {
         name: "MULTIPLE_CHOICE_WITHOUT_IMAGE",
+        localizedNames: {
+            en: "multiple choice without image",
+            fr: "choix multiples sans image",
+            ar: "اختيارات متعددة بدون صورة",
+        },
         examples: [
             {
                 questionText:
@@ -45,6 +50,11 @@ export const POSSIBLE_QUESTIONS = {
 
     MULTIPLE_CHOICE_WITH_IMAGE: {
         name: "MULTIPLE_CHOICE_WITH_IMAGE",
+        localizedNames: {
+            en: "multiple choice with image",
+            fr: "choix multiples avec image",
+            ar: "اختيارات متعددة مع صورة",
+        },
         examples: [
             {
                 questionText: "What are the animals who eat meat.",
@@ -90,7 +100,11 @@ export const POSSIBLE_QUESTIONS = {
     },
     TRUE_OR_FALSE: {
         name: "TRUE_OR_FALSE",
-
+        localizedNames: {
+            en: "true or false",
+            fr: "vrai ou faux",
+            ar: "صح أم خطأ",
+        },
         examples: [
             {
                 questionText: "The Earth is flat.",
@@ -132,7 +146,11 @@ export const POSSIBLE_QUESTIONS = {
 
     MATCHING_PAIRS: {
         name: "MATCHING_PAIRS",
-
+        localizedNames: {
+            en: "matching pairs",
+            fr: "paires correspondantes",
+            ar: "توصيل الأزواج",
+        },
         examples: [
             {
                 questionText: "Match the countries with their capitals:",
@@ -203,6 +221,11 @@ export const POSSIBLE_QUESTIONS = {
     },
     FILL_IN_THE_BLANK: {
         name: "FILL_IN_THE_BLANK",
+        localizedNames: {
+            en: "fill in the blank",
+            fr: "remplir les blancs",
+            ar: "املأ الفراغ",
+        },
         examples: [
             {
                 questionText: "Fill in the missing parts:",

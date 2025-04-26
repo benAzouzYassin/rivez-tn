@@ -7,14 +7,7 @@ import {
     CollapsibleTrigger,
 } from "@/components/ui/collapsible"
 import { Input } from "@/components/ui/input"
-import {
-    Select,
-    SelectContent,
-    SelectItem,
-    SelectTrigger,
-    SelectValue,
-} from "@/components/ui/select"
-import { ChevronDown, ChevronLeft, Sparkles, ZapIcon } from "lucide-react"
+import { ArrowLeft, ChevronDown, Sparkles } from "lucide-react"
 import { Controller } from "react-hook-form"
 
 import { POSSIBLE_QUESTIONS } from "@/app/api/quiz/generate-quiz/constants"
@@ -23,9 +16,11 @@ import GeneralLoadingScreen from "@/components/shared/general-loading-screen"
 import SearchSelectMultiple from "@/components/ui/search-select-multiple"
 import { Textarea } from "@/components/ui/textarea"
 import { createQuiz } from "@/data-access/quizzes/create"
+import { useIsSmallScreen } from "@/hooks/is-small-screen"
 import { useCurrentUser } from "@/hooks/use-current-user"
 import { toastError, toastSuccess } from "@/lib/toasts"
 import { useSidenav } from "@/providers/sidenav-provider"
+import { getLanguage } from "@/utils/get-language"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useQueryClient } from "@tanstack/react-query"
 import { useRouter } from "nextjs-toploader/app"
@@ -35,10 +30,16 @@ import { z } from "zod"
 import { useQuestionsStore as useViewOnlyQuizStore } from "../../../../quizzes/[id]/store"
 import { default as useEditableQuizStore } from "../[id]/store"
 import { DifficultySelect } from "../_components/difficulty-select"
-import ImageUpload from "../_components/image-upload"
-import { useIsSmallScreen } from "@/hooks/is-small-screen"
 
 const POSSIBLE_QUESTIONS_TYPES = Object.keys(POSSIBLE_QUESTIONS)
+
+const getQuestionName = (
+    questionType: keyof typeof POSSIBLE_QUESTIONS,
+    lang: "en" | "fr" | "ar"
+) => {
+    const name = POSSIBLE_QUESTIONS[questionType]?.localizedNames?.[lang]
+    return name || ""
+}
 
 export type FormValues = {
     category: string | null
@@ -54,6 +55,56 @@ export type FormValues = {
 }
 
 export default function SubjectForm() {
+    const translation = useMemo(
+        () => ({
+            en: {
+                generateFromSubject: "Generate from subject",
+                goBack: "Go back",
+                quizName: "Quiz Name",
+                subject: "Subject",
+                maxQuestions: "Max questions",
+                minQuestions: "Min questions",
+                advancedOptions: "Advanced options",
+                notesPlaceholder: "Any notes for the ai...",
+                allowedQuestions: "Allowed questions",
+                generateQuiz: "Generate Quiz",
+                generatingQuiz: "Generating your quiz",
+                error: "Something went wrong...",
+            },
+            fr: {
+                generateFromSubject: "Générer à partir d'un sujet",
+                goBack: "Retourner",
+                quizName: "Nom du quiz",
+                subject: "Sujet",
+                maxQuestions: "Questions max",
+                minQuestions: "Questions min",
+                advancedOptions: "Options avancées",
+                notesPlaceholder: "Des notes pour l'IA...",
+                allowedQuestions: "Questions autorisées",
+                generateQuiz: "Générer le quiz",
+                generatingQuiz: "Génération de votre quiz",
+                error: "Une erreur s'est produite...",
+            },
+            ar: {
+                generateFromSubject: "إنشاء من موضوع",
+                goBack: "عودة",
+                quizName: "اسم الاختبار",
+                subject: "الموضوع",
+                maxQuestions: "الأسئلة القصوى",
+                minQuestions: "الحد الأدنى للأسئلة",
+                advancedOptions: "خيارات متقدمة",
+                notesPlaceholder: "أي ملاحظات للذكاء الاصطناعي...",
+                allowedQuestions: "الأسئلة المسموح بها",
+                generateQuiz: "إنشاء الاختبار",
+                generatingQuiz: "يتم إنشاء الاختبار",
+                error: "حدث خطأ ما...",
+            },
+        }),
+        []
+    )
+    const lang = getLanguage()
+    const t = translation[lang]
+
     const isSmallScreen = useIsSmallScreen()
     const sideNav = useSidenav()
     const queryClient = useQueryClient()
@@ -176,43 +227,42 @@ export default function SubjectForm() {
     }
 
     if (isGeneratingToTakeQuiz) {
-        return <GeneralLoadingScreen text="Generating your quiz" />
+        return <GeneralLoadingScreen text={t.generatingQuiz} />
     }
     if (isToTakeQuizError) {
-        return <ErrorDisplay message="Something went wrong..." />
+        return <ErrorDisplay message={t.error} />
     }
     return (
         <main className="flex relative items-center pb-20  flex-col">
             <h1 className="md:mt-10 mt-24 text-neutral-600 text-3xl font-extrabold">
-                Generate from subject
+                {t.generateFromSubject}
             </h1>
             <div className="flex items-center  h-0">
                 <Button
-                    onClick={() => router.back()}
-                    className=" text-sm gap-1   absolute top-0 md:top-4 left-2 md:left-5"
-                    variant="secondary"
+                    onClick={router.back}
+                    className="absolute font-bold text-neutral-500 top-2 left-2 md:top-4 md:left-4 px-6  "
+                    variant={"secondary"}
                 >
-                    <ChevronLeft className="stroke-3 -ml-1 text-neutral-500 !w-4 !h-4" />
-                    Go back
+                    <ArrowLeft className="!w-5 !h-5 scale-125 -mr-1 stroke-[2.5]" />{" "}
                 </Button>
             </div>
             <section className="flex md:px-0 px-3 flex-col w-full mt-8 gap-1 max-w-[900px]">
                 <Input
                     {...form.register("name")}
-                    placeholder="Quiz Name"
+                    placeholder={t.quizName}
                     className="w-full"
                     errorMessage={form.formState.errors.name?.message}
                 />
                 <Input
                     {...form.register("mainTopic")}
-                    placeholder="Subject"
+                    placeholder={t.subject}
                     className="w-full"
                     errorMessage={form.formState.errors.mainTopic?.message}
                 />
                 <div className="grid md:grid-cols-2 md:gap-8">
                     <Input
                         {...form.register("maxQuestions")}
-                        placeholder="Max questions"
+                        placeholder={t.maxQuestions}
                         className="w-full"
                         type="number"
                         defaultValue={undefined}
@@ -222,7 +272,7 @@ export default function SubjectForm() {
                     />
                     <Input
                         {...form.register("minQuestions")}
-                        placeholder="Min questions"
+                        placeholder={t.minQuestions}
                         className="w-full"
                         type="number"
                         defaultValue={undefined}
@@ -234,7 +284,7 @@ export default function SubjectForm() {
                 <Collapsible className="group ">
                     <CollapsibleTrigger className="w-full data-[state=open]:font-bold  data-[state=open]:text-neutral-500 data-[state=open]:bg-blue-300/80 data-[state=open]:border-transparent   mb-4 hover:bg-neutral-100 flex justify-between items-center rounded-xl transition-all duration-200 bg-[#F7F7F7]/50 font-medium border-2 p-3 h-12 border-[#E5E5E5] text-[#AFAFAF] cursor-pointer">
                         <span className="underline underline-offset-4">
-                            Advanced options
+                            {t.advancedOptions}
                         </span>
                         <ChevronDown className="group-data-[state=open]:rotate-180 transition-transform duration-500" />
                     </CollapsibleTrigger>
@@ -243,7 +293,7 @@ export default function SubjectForm() {
                             <div className=" mt-5">
                                 <Textarea
                                     {...form.register("notes")}
-                                    placeholder="Any notes for the ai..."
+                                    placeholder={t.notesPlaceholder}
                                     className="w-full"
                                     errorMessage={
                                         form.formState.errors.notes?.message
@@ -268,13 +318,13 @@ export default function SubjectForm() {
                                                 ).map((questionType) => {
                                                     return {
                                                         id: questionType,
-                                                        label: questionType
-                                                            .split("_")
-                                                            .join(" ")
-                                                            .toLowerCase(),
+                                                        label: getQuestionName(
+                                                            questionType as any,
+                                                            lang
+                                                        ),
                                                     }
                                                 })}
-                                                placeholder="Allowed questions"
+                                                placeholder={t.allowedQuestions}
                                                 inputClassName="w-full mb-2"
                                                 onSelect={onChange}
                                                 onUnselect={(unselectedId) => {
@@ -334,7 +384,7 @@ export default function SubjectForm() {
                         }}
                         className="font-extrabold uppercase py-7 mt-5 text-sm"
                     >
-                        Generate Quiz <Sparkles className="!w-5 !h-5" />
+                        {t.generateQuiz} <Sparkles className="!w-5 !h-5" />
                     </Button>
                 </div>
             </section>
