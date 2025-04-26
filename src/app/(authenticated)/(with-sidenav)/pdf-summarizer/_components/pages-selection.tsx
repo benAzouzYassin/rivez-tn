@@ -27,7 +27,6 @@ export default function PagesSelection() {
     const selectPages = usePdfSummarizerStore((s) => s.selectPages)
     const unSelectPages = usePdfSummarizerStore((s) => s.unSelectPages)
     const [searchQuery, setSearchQuery] = useState("")
-
     const translation = useMemo(
         () => ({
             en: {

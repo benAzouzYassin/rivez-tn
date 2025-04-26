@@ -16,7 +16,6 @@ export default function FileItem(props: Props) {
 
     const handleDelete = (e: MouseEvent) => {
         e.stopPropagation()
-        console.log(props.pagesIds)
         unselectPages(props.pagesIds)
         deleteFile(props.localId)
     }

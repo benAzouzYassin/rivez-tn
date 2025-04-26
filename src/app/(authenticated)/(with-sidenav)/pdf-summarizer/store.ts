@@ -6,7 +6,12 @@ interface State {
         localId: string
         file: PDFDocumentProxy
         name: string
-        pages: { content: string; localId: string; index: number }[]
+        pages: {
+            content: string
+            localId: string
+            index: number
+            imageInBase64: string | null
+        }[]
     }[]
     selectedFileLocalId: string | null
     selectedPagesLocalIds: string[]
@@ -27,7 +32,7 @@ interface Actions {
     getPageContent: (localId: string) => string | undefined
     getSelectedPages: () => {
         name: string
-        pages: string[]
+        pages: { textContent: string; imageInBase64: string | null }[]
         id: string
     }[]
 }
@@ -74,32 +79,39 @@ export const usePdfSummarizerStore = create<Store>((set, get) => ({
             }
         })
     },
-    addFile: (file) =>
+    addFile: (file) => {
         set((state) => ({
             files: [...state.files, file],
-        })),
+        }))
+    },
     setSelectedFileLocalId: (selectedFileLocalId) =>
         set({ selectedFileLocalId }),
     getSelectedPages: () => {
         const selectedPagesIds = get().selectedPagesLocalIds
         return get().files.reduce(
             (acc, current) => {
-                const fileSelectedPages = current.pages
-                    .filter((page) => selectedPagesIds.includes(page.localId))
-                    .map((page) => page.content)
+                const fileSelectedPages = current.pages.filter((page) =>
+                    selectedPagesIds.includes(page.localId)
+                )
 
                 return [
                     ...acc,
                     {
                         id: current.localId,
                         name: current.name,
-                        pages: fileSelectedPages,
+                        pages: fileSelectedPages.map((p) => ({
+                            textContent: p.content,
+                            imageInBase64: p.imageInBase64,
+                        })),
                     },
                 ]
             },
             [] as {
                 name: string
-                pages: string[]
+                pages: {
+                    imageInBase64: string | null
+                    textContent: string
+                }[]
                 id: string
             }[]
         )

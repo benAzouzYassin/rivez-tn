@@ -1,11 +1,12 @@
 import { getUserInServerSide } from "@/data-access/users/authenticate-user-ssr"
-import { normalModel, premiumModel } from "@/lib/ai"
+import { cheapModel, normalModel, premiumModel } from "@/lib/ai"
 import { supabaseAdminServerSide } from "@/lib/supabase-server-side"
 import { streamText } from "ai"
 import { NextRequest, NextResponse } from "next/server"
 import { z } from "zod"
 import { PAGE_COST } from "../constants"
 import { generatePrompt, systemPrompt } from "./prompt"
+import { extractImagesText } from "@/utils/image"
 
 export async function POST(req: NextRequest) {
     try {
@@ -27,13 +28,28 @@ export async function POST(req: NextRequest) {
         if (!success) {
             return NextResponse.json({ error }, { status: 400 })
         }
-        const prompt = generatePrompt({
-            language: data.language,
-            files: data.files.map((f) => {
+
+        const files = await Promise.all(
+            data.files.map(async (f) => {
                 return {
                     ...f,
+                    pages: await Promise.all(
+                        f.pages.map(async (p) => ({
+                            textContent: p.textContent,
+                            imageContent: p.imageInBase64
+                                ? await extractImagesText({
+                                      aiModel: cheapModel,
+                                      imagesBase64: [p.imageInBase64],
+                                  })
+                                : "",
+                        }))
+                    ),
                 }
-            }),
+            })
+        )
+        const prompt = generatePrompt({
+            language: data.language,
+            files: files,
         })
         const llmResponse = streamText({
             model: normalModel,
@@ -55,7 +71,9 @@ export async function POST(req: NextRequest) {
             PAGE_COST *
             data.files
                 .flatMap((file) => file.pages)
-                .filter((page) => page.length > 50).length
+                .filter(
+                    (page) => page.textContent.length > 50 || page.imageInBase64
+                ).length
 
         if (userBalance < totalCost) {
             return NextResponse.json(
@@ -91,7 +109,12 @@ const bodySchema = z.object({
     files: z.array(
         z.object({
             name: z.string(),
-            pages: z.array(z.string()),
+            pages: z.array(
+                z.object({
+                    textContent: z.string(),
+                    imageInBase64: z.string().optional().nullable(),
+                })
+            ),
             id: z.string(),
         })
     ),

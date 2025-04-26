@@ -258,7 +258,6 @@ const useQuizStore = create<Store>((set, get) => ({
                             isGenerationQuizError: true,
                             shadowQuestionsCount: 0,
                         })
-                        console.log("refund when stream end ")
                         handleQuizRefund({
                             cause: "",
                             quizId: data.quizId,
@@ -538,15 +537,15 @@ export type QuizQuestionType = {
     codeSnippets: MultipleChoiceContent["codeSnippets"] | null
 }
 
-export interface FillInTheBlankStoreContent extends Omit<
-    Omit<FillInTheBlankContent, "correct">,
-    "options"
-> {options: { text: string; localId: string }[]
+export interface FillInTheBlankStoreContent
+    extends Omit<Omit<FillInTheBlankContent, "correct">, "options"> {
+    options: { text: string; localId: string }[]
     correct: {
         option: string
         index: number
         optionId: string
-    }[]}
+    }[]
+}
 export interface MultipleChoiceOptions {
     options: { text: string; localId: string; isCorrect: boolean | null }[]
 }
