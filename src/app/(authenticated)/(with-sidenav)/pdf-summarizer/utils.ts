@@ -28,8 +28,8 @@ export async function getImageData(
                                         bitmap: ImageBitmap
                                     }) => {
                                         if (
-                                            data.width > 500 &&
-                                            data.height > 500
+                                            data.width > 800 &&
+                                            data.height > 1000
                                         ) {
                                             resolve(data)
                                         } else {
