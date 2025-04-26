@@ -5,6 +5,8 @@ import {
     SelectTrigger,
 } from "@/components/ui/select"
 import { Database } from "@/types/database.types"
+import { useMemo } from "react"
+import { getLanguage } from "@/utils/get-language"
 
 interface Props {
     selected: Database["public"]["Tables"]["quizzes"]["Row"]["difficulty"]
@@ -13,6 +15,34 @@ interface Props {
     errorMessage?: string
 }
 export function DifficultySelect(props: Props) {
+    // Translation object
+    const translation = useMemo(
+        () => ({
+            en: {
+                Difficulty: "Difficulty",
+                HARD: "Hard",
+                MEDIUM: "Medium",
+                NORMAL: "Easy",
+            },
+            fr: {
+                Difficulty: "Difficulté",
+                HARD: "Difficile",
+                MEDIUM: "Moyen",
+                NORMAL: "Facile",
+            },
+            ar: {
+                Difficulty: "الصعوبة",
+                HARD: "صعب",
+                MEDIUM: "متوسط",
+                NORMAL: "سهل",
+            },
+        }),
+        []
+    )
+
+    const lang = getLanguage()
+    const t = translation[lang]
+
     const possibleValues: Exclude<Props["selected"], null>[] = [
         "HARD",
         "MEDIUM",
@@ -28,14 +58,18 @@ export function DifficultySelect(props: Props) {
                 errorMessage={props.errorMessage}
                 className={props.className}
             >
-                {props.selected || (
-                    <span className="text-neutral-400/80">Difficulty</span>
+                {props.selected ? (
+                    t[props.selected]
+                ) : (
+                    <span className="text-neutral-400/80">
+                        {t["Difficulty"]}
+                    </span>
                 )}
             </SelectTrigger>
             <SelectContent>
                 {possibleValues.map((item) => (
                     <SelectItem value={item} key={item}>
-                        {item}
+                        {t[item]}
                     </SelectItem>
                 ))}
             </SelectContent>

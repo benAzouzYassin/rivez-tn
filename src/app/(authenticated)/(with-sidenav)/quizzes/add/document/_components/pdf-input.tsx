@@ -4,10 +4,11 @@ import * as pdfjsLib from "pdfjs-dist"
 import { FileTextIcon } from "lucide-react"
 import { FileInput } from "@/components/ui/file-input"
 import { dismissToasts, toastError, toastLoading } from "@/lib/toasts"
-import { useRef, useState } from "react"
+import { useRef, useState, useMemo } from "react"
 import { z } from "zod"
 import { getPdfPageImageData } from "@/lib/pdf"
 import { imageBitmapToBase64 } from "@/utils/image"
+import { getLanguage } from "@/utils/get-language"
 
 pdfjsLib.GlobalWorkerOptions.workerSrc =
     "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js"
@@ -17,7 +18,43 @@ type Props = {
         value: { textContent: string; imageInBase64: string | null }[]
     ) => void
 }
+
 export default function PdfInput(props: Props) {
+    const translation = useMemo(
+        () => ({
+            en: {
+                uploading: "Uploading your pdf...",
+                errorParsing: "Error while parsing the pdf.",
+                error: "Something went wrong...",
+                dragDrop: "Drag & drop a pdf file here",
+                clickToSelect: "or click to select a file",
+                allowedTypes: "Documents (PDF)",
+                maxSize: "up to 10MB",
+            },
+            fr: {
+                uploading: "Téléchargement de votre PDF...",
+                errorParsing: "Erreur lors de l'analyse du PDF.",
+                error: "Une erreur s'est produite...",
+                dragDrop: "Glissez-déposez un fichier PDF ici",
+                clickToSelect: "ou cliquez pour sélectionner un fichier",
+                allowedTypes: "Documents (PDF)",
+                maxSize: "jusqu'à 10 Mo",
+            },
+            ar: {
+                uploading: "جاري رفع ملف PDF الخاص بك...",
+                errorParsing: "حدث خطأ أثناء معالجة ملف PDF.",
+                error: "حدث خطأ ما...",
+                dragDrop: "اسحب وأفلت ملف PDF هنا",
+                clickToSelect: "أو انقر لاختيار ملف",
+                allowedTypes: " مستندات (PDF)",
+                maxSize: "حتى 10 ميجابايت",
+            },
+        }),
+        []
+    )
+    const lang = getLanguage()
+    const t = translation[lang]
+
     const [isUploadingPdf, setIsUploadingPdf] = useState(false)
     const [fileName, setFileName] = useState("")
     const canvasRef = useRef(document.createElement("canvas"))
@@ -40,12 +77,13 @@ export default function PdfInput(props: Props) {
             fileReader.readAsArrayBuffer(file)
         })
     }
+
     return (
         <FileInput
             fileName={fileName}
             isLoading={isUploadingPdf}
             onChange={async (file) => {
-                toastLoading("Uploading your pdf...")
+                toastLoading(t.uploading)
                 try {
                     if (file) {
                         const workerInstance = new window.Worker(
@@ -98,9 +136,7 @@ export default function PdfInput(props: Props) {
                                             setIsUploadingPdf(false)
                                         })
                                 } else {
-                                    throw new Error(
-                                        "Error while parsing the pdf."
-                                    )
+                                    throw new Error(t.errorParsing)
                                 }
                                 workerInstance.terminate()
                             }
@@ -110,7 +146,7 @@ export default function PdfInput(props: Props) {
                         props.onPDFPagesChanges([])
                     }
                 } catch (error) {
-                    toastError("Something went wrong...")
+                    toastError(t.error)
                     setIsUploadingPdf(false)
                 } finally {
                     dismissToasts("loading")
@@ -123,17 +159,14 @@ export default function PdfInput(props: Props) {
             renderEmptyContent={() => (
                 <>
                     <FileTextIcon className="w-10 h-10 mb-2 mx-auto text-red-400" />
-                    <p className="text-neutral-600 mb-2">
-                        Drag & drop a pdf file here
-                    </p>
+                    <p className="text-neutral-600 mb-2">{t.dragDrop}</p>
                     <p className="text-sm text-neutral-500">
-                        or click to select a file
+                        {t.clickToSelect}
                     </p>
                     <p className="text-xs text-neutral-400 mt-2">
-                        Images (PNG, JPG, GIF) or Documents (PDF, DOC, DOCX,
-                        XLS, XLSX)
+                        {t.allowedTypes}
                     </p>
-                    <p className="text-xs text-neutral-400">up to 10MB</p>
+                    <p className="text-xs text-neutral-400">{t.maxSize}</p>
                 </>
             )}
         />

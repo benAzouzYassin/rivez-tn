@@ -53,7 +53,7 @@ export default function Sidenav(props: Props) {
                 )}
             </Button>
             <ScrollArea className="h-[calc(100vh-14.1rem)] px-2 mt-14">
-                <div className="pl-[6px] rtl:pr-[6px] rtl:pl-0">
+                <div className="ltr:pl-[12px] rtl:pr-[6px] rtl:pl-0">
                     <NavButton
                         item={props.items[0]}
                         isNameVisible={isSidenavOpen}
