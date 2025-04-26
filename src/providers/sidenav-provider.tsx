@@ -1,4 +1,5 @@
 "use client"
+import { useIsSmallScreen } from "@/hooks/is-small-screen"
 import React, { createContext, useContext, ReactNode, useState } from "react"
 
 interface SidenavContextType {
@@ -15,12 +16,13 @@ interface SidenavProviderProps {
 export const SidenavProvider: React.FC<SidenavProviderProps> = ({
     children,
 }) => {
+    const isSmallScreen = useIsSmallScreen()
     const [isSidenavOpen, setIsSidenavOpen] = useState(true)
 
     const toggleSidenav = () => setIsSidenavOpen((prev) => !prev)
 
     const value = {
-        isSidenavOpen,
+        isSidenavOpen: isSidenavOpen && isSmallScreen === false,
         toggleSidenav,
     }
 

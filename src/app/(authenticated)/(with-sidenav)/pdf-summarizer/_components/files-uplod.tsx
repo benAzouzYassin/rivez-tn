@@ -1,8 +1,10 @@
 "use client"
 
 import { useIsSmallScreen } from "@/hooks/is-small-screen"
+import { getPdfPageImageData } from "@/lib/pdf"
 import { dismissToasts, toastError, toastLoading } from "@/lib/toasts"
 import { getLanguage } from "@/utils/get-language"
+import { imageBitmapToBase64 } from "@/utils/image"
 import { tryCatchAsync } from "@/utils/try-catch"
 import { wait } from "@/utils/wait"
 import { FilesIcon } from "lucide-react"
@@ -19,8 +21,6 @@ import {
 } from "react"
 import { z } from "zod"
 import { usePdfSummarizerStore } from "../store"
-import { getImageData } from "../utils"
-import { imageBitmapToBase64 } from "@/utils/image"
 
 pdfjsLib.GlobalWorkerOptions.workerSrc =
     "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js"
@@ -125,8 +125,8 @@ export default function FilesUpload() {
                 const pagesData = await Promise.all(
                     pages.map(async (p, i) => {
                         const imageData =
-                            (await getImageData(fileData, i + 1).catch((err) =>
-                                console.error(err)
+                            (await getPdfPageImageData(fileData, i + 1).catch(
+                                (err) => console.error(err)
                             )) || undefined
                         const imageInBase64 = imageData
                             ? imageBitmapToBase64(

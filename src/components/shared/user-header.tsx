@@ -22,6 +22,7 @@ import MobileNavDrawer from "./mobile-nav-drawer"
 import Cookies from "js-cookie"
 import { availableLanguages, getLanguage } from "@/utils/get-language"
 import { customToFixed } from "@/utils/numbers"
+import { useIsSmallScreen } from "@/hooks/is-small-screen"
 
 export default function UserHeader() {
     const queryClient = useQueryClient()
@@ -232,6 +233,12 @@ function UserProfile({ name, image }: UserProfileProps) {
         </div>
     )
 }
+import {
+    Dialog,
+    DialogContent,
+    DialogHeader,
+    DialogTitle,
+} from "@/components/ui/dialog"
 
 function UserMenu({
     items,
@@ -244,11 +251,14 @@ function UserMenu({
     isRTL: boolean
     changeLanguageLabel: string
 }) {
+    const isSmallScreen = useIsSmallScreen()
     const [language, setLanguage] = useState({
         label: "English",
         value: "en",
         flag: "/flags/usa.svg",
     })
+    const [isLanguageDialogOpen, setIsLanguageDialogOpen] = useState(false)
+
     const languages = useMemo(() => {
         return [
             { label: "English", value: "en", flag: "/flags/usa.svg" },
@@ -256,6 +266,16 @@ function UserMenu({
             { label: "Français", value: "fr", flag: "/flags/france.svg" },
         ]
     }, [])
+
+    const handleLanguageChange = (lang: any) => {
+        setLanguage(lang)
+        if (availableLanguages.includes(lang.value)) {
+            Cookies.set("selected-language", lang.value)
+            window.location.reload()
+        }
+        setIsLanguageDialogOpen(false)
+        close()
+    }
 
     return (
         <div>
@@ -265,69 +285,67 @@ function UserMenu({
                         "flex group rtl:flex-row-reverse relative text-neutral-500 w-full cursor-pointer items-center gap-3 px-4 py-3 text-base font-bold",
                         "transition-colors hover:bg-blue-100/70 hover:text-blue-400 last:border-b active:bg-blue-200/70"
                     )}
+                    onClick={() => {
+                        if (isSmallScreen) {
+                            setIsLanguageDialogOpen(true)
+                        }
+                    }}
                 >
-                    <div
-                        className={cn(
-                            "group-hover:flex hidden  w-64 h-36  top-0 absolute",
-                            {
-                                "-left-64": !isRTL,
-                                "-right-64": isRTL,
-                            }
-                        )}
-                    >
-                        <div className="w-64 mt-0 rounded-none border-none overflow-visible shadow-none bg-transparent p-0!">
-                            <div className="rounded-2xl -mt-1 overflow-hidden border-2 bg-white">
-                                <div>
-                                    {languages.map((lang) => (
-                                        <div
-                                            key={lang.value}
-                                            className={cn(
-                                                "flex items-center active:scale-95 transition-all h-12 border-t-2 px-6 w-full cursor-pointer hover:bg-blue-100/70",
-                                                {
-                                                    "flex-row-reverse justify-between":
-                                                        isRTL,
-                                                }
-                                            )}
-                                            onClick={() => {
-                                                setLanguage(lang)
-                                                if (
-                                                    availableLanguages.includes(
-                                                        lang.value as any
-                                                    )
-                                                ) {
-                                                    Cookies.set(
-                                                        "selected-language",
-                                                        lang.value
-                                                    )
-                                                    window.location.reload()
-                                                }
-                                                close()
-                                            }}
-                                        >
-                                            <img
-                                                alt={lang.label}
-                                                className="rounded-sm h-5 w-5 mr-2"
-                                                src={lang.flag}
-                                            />
-                                            <span
+                    {!isSmallScreen && (
+                        <div
+                            className={cn(
+                                "group-hover:flex hidden w-64 h-36 top-0 absolute",
+                                {
+                                    "-left-64": !isRTL,
+                                    "-right-64": isRTL,
+                                }
+                            )}
+                        >
+                            <div className="w-64 mt-0 rounded-none border-none overflow-visible shadow-none bg-transparent p-0!">
+                                <div className="rounded-2xl -mt-1 overflow-hidden border-2 bg-white">
+                                    <div>
+                                        {languages.map((lang) => (
+                                            <div
+                                                key={lang.value}
                                                 className={cn(
-                                                    "text-sm font-bold text-neutral-600 ml-1",
-                                                    { "ml-0 mr-1": isRTL }
+                                                    "flex items-center active:scale-95 transition-all h-12 border-t-2 px-6 w-full cursor-pointer hover:bg-blue-100/70",
+                                                    {
+                                                        "flex-row-reverse justify-between":
+                                                            isRTL,
+                                                    }
                                                 )}
+                                                onClick={() =>
+                                                    handleLanguageChange(lang)
+                                                }
                                             >
-                                                {lang.label}
-                                            </span>
-                                        </div>
-                                    ))}
+                                                <img
+                                                    alt={lang.label}
+                                                    className="rounded-sm h-5 w-5 mr-2"
+                                                    src={lang.flag}
+                                                />
+                                                <span
+                                                    className={cn(
+                                                        "text-sm font-bold text-neutral-600 ml-1",
+                                                        {
+                                                            "ml-0 mr-1": isRTL,
+                                                        }
+                                                    )}
+                                                >
+                                                    {lang.label}
+                                                </span>
+                                            </div>
+                                        ))}
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    )}
                     <LanguagesIcon className="w-6 h-6 opacity-70" />
                     <span className={cn({ "mr-auto": isRTL })}>
                         {changeLanguageLabel}
                     </span>
                 </button>
+
                 {items.map((item, index) => (
                     <button
                         key={index}
@@ -346,6 +364,70 @@ function UserMenu({
                     </button>
                 ))}
             </div>
+
+            {isSmallScreen && (
+                <Dialog
+                    open={isLanguageDialogOpen}
+                    onOpenChange={setIsLanguageDialogOpen}
+                >
+                    <DialogContent
+                        className={cn("sm:max-w-md", { rtl: isRTL })}
+                    >
+                        <DialogHeader>
+                            <DialogTitle>{changeLanguageLabel}</DialogTitle>
+                        </DialogHeader>
+                        <div className="max-h-[60vh] overflow-y-auto py-2">
+                            {languages.map((lang) => (
+                                <div
+                                    key={lang.value}
+                                    className={cn(
+                                        "flex items-center p-3 w-full cursor-pointer hover:bg-blue-100/70 rounded-md",
+                                        {
+                                            "flex-row-reverse": isRTL,
+                                            "bg-blue-50":
+                                                language.value === lang.value,
+                                        }
+                                    )}
+                                    onClick={() => handleLanguageChange(lang)}
+                                >
+                                    <img
+                                        alt={lang.label}
+                                        className="rounded-sm h-6 w-6 mr-3"
+                                        src={lang.flag}
+                                    />
+                                    <span
+                                        className={cn("font-medium", {
+                                            "ml-0 mr-3": isRTL,
+                                        })}
+                                    >
+                                        {lang.label}
+                                    </span>
+                                    {language.value === lang.value && (
+                                        <svg
+                                            xmlns="http://www.w3.org/2000/svg"
+                                            className={cn(
+                                                "h-5 w-5 text-blue-500",
+                                                {
+                                                    "mr-auto": isRTL,
+                                                    "ml-auto": !isRTL,
+                                                }
+                                            )}
+                                            viewBox="0 0 20 20"
+                                            fill="currentColor"
+                                        >
+                                            <path
+                                                fillRule="evenodd"
+                                                d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                                                clipRule="evenodd"
+                                            />
+                                        </svg>
+                                    )}
+                                </div>
+                            ))}
+                        </div>
+                    </DialogContent>
+                </Dialog>
+            )}
         </div>
     )
 }

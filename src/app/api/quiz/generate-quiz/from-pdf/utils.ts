@@ -2,7 +2,7 @@ import { POSSIBLE_QUESTIONS } from "../constants"
 
 interface PromptParams {
     name: string
-    pdfPages: string[]
+    pdfPages: { textContent: string; imageContent: string | null }[]
     language: string
     notes: string | null
     minQuestions: number
@@ -77,7 +77,7 @@ ${allowedQuestions.map((question, index) => {
 
 PDF CONTENT  : 
 ${pdfPages.reduce((acc, curr, i) => {
-    return acc + `\n page ${i + 1}: ${curr}`
+    return acc + `\n page ${i + 1}: ${curr.textContent} \n${curr.imageContent}`
 }, "")}
 
 

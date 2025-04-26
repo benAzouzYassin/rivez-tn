@@ -52,7 +52,7 @@ interface Actions {
             maxQuestions: number | null
             minQuestions: number | null
             notes: string | null
-            pdfPages?: string[]
+            pdfPages?: { textContent: string; imageInBase64: string | null }[]
             allowedQuestions?: string[] | null
             quizId: number
             imagesBase64?: string[]
