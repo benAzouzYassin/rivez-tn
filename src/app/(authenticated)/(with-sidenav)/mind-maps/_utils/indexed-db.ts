@@ -2,7 +2,7 @@ import Dexie, { type EntityTable } from "dexie"
 
 interface TContent {
     id: number
-    pdfPages: string[]
+    pdfPages: { textContent: string; imageInBase64: string | null }[]
     imagesInBase64: string[]
 }
 

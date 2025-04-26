@@ -1,67 +1,51 @@
 "use client"
+import * as pdfjsLib from "pdfjs-dist"
 
 import { FileTextIcon } from "lucide-react"
 import { FileInput } from "@/components/ui/file-input"
 import { dismissToasts, toastError, toastLoading } from "@/lib/toasts"
-import { useState, useMemo } from "react"
+import { useRef, useState } from "react"
 import { z } from "zod"
-import { getLanguage } from "@/utils/get-language"
+import { getPdfPageImageData } from "@/lib/pdf"
+import { imageBitmapToBase64 } from "@/utils/image"
+
+pdfjsLib.GlobalWorkerOptions.workerSrc =
+    "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js"
 
 type Props = {
-    onPDFPagesChanges: (value: string[]) => void
+    onPDFPagesChanges: (
+        value: { textContent: string; imageInBase64: string | null }[]
+    ) => void
 }
-
 export default function PdfInput(props: Props) {
     const [isUploadingPdf, setIsUploadingPdf] = useState(false)
     const [fileName, setFileName] = useState("")
+    const canvasRef = useRef(document.createElement("canvas"))
 
-    const lang = getLanguage()
-    const t = useMemo(
-        () =>
-            ({
-                en: {
-                    "Uploading your pdf...": "Uploading your pdf...",
-                    "Drag & drop a pdf file here":
-                        "Drag & drop a pdf file here",
-                    "or click to select a file": "or click to select a file",
-                    "PDF Documents": "PDF Documents",
-                    "up to 5MB": "up to 5MB",
-                    "Error while parsing the pdf.":
-                        "Error while parsing the pdf.",
-                    "Something went wrong...": "Something went wrong...",
-                },
-                fr: {
-                    "Uploading your pdf...": "Téléchargement de votre PDF...",
-                    "Drag & drop a pdf file here":
-                        "Glissez-déposez un fichier PDF ici",
-                    "or click to select a file":
-                        "ou cliquez pour sélectionner un fichier",
-                    "PDF Documents": "Documents PDF",
-                    "up to 5MB": "jusqu'à 5 Mo",
-                    "Error while parsing the pdf.":
-                        "Erreur lors de l'analyse du PDF.",
-                    "Something went wrong...": "Une erreur est survenue...",
-                },
-                ar: {
-                    "Uploading your pdf...": "جارٍ رفع ملف PDF الخاص بك...",
-                    "Drag & drop a pdf file here": "اسحب وأفلت ملف PDF هنا",
-                    "or click to select a file": "أو انقر لاختيار ملف",
-                    "PDF Documents": "ملفات PDF",
-                    "up to 5MB": "حتى 5 ميغابايت",
-                    "Error while parsing the pdf.":
-                        "حدث خطأ أثناء تحليل ملف PDF.",
-                    "Something went wrong...": "حدث خطأ ما...",
-                },
-            }[lang]),
-        [lang]
-    )
+    const getFileData = (file: File): Promise<pdfjsLib.PDFDocumentProxy> => {
+        return new Promise((resolve, reject) => {
+            const fileReader = new FileReader()
+            fileReader.onload = function () {
+                const typedarray = new Uint8Array(this.result as ArrayBuffer)
 
+                pdfjsLib
+                    .getDocument(typedarray)
+                    .promise.then((pdf) => {
+                        resolve(pdf)
+                    })
+                    .catch((error) => {
+                        reject(error)
+                    })
+            }
+            fileReader.readAsArrayBuffer(file)
+        })
+    }
     return (
         <FileInput
             fileName={fileName}
             isLoading={isUploadingPdf}
             onChange={async (file) => {
-                toastLoading(t["Uploading your pdf..."])
+                toastLoading("Uploading your pdf...")
                 try {
                     if (file) {
                         const workerInstance = new window.Worker(
@@ -75,16 +59,47 @@ export default function PdfInput(props: Props) {
                         workerInstance.onmessage = (event) => {
                             if (event.data.result) {
                                 const content = event.data.result
-                                setIsUploadingPdf(false)
-                                const { data, success } = z
+                                const { data: pages, success } = z
                                     .array(z.string())
                                     .safeParse(content)
                                 if (success) {
-                                    props.onPDFPagesChanges(data || [])
                                     setFileName(file.name)
+                                    getFileData(file)
+                                        .then((pdfDoc) => {
+                                            return Promise.all(
+                                                pages.map(
+                                                    async (page, index) => {
+                                                        const imageData =
+                                                            (await getPdfPageImageData(
+                                                                pdfDoc,
+                                                                index + 1
+                                                            ).catch((err) =>
+                                                                console.error(
+                                                                    err
+                                                                )
+                                                            )) || undefined
+                                                        const imageInBase64 =
+                                                            imageData
+                                                                ? imageBitmapToBase64(
+                                                                      imageData?.bitmap,
+                                                                      canvasRef.current
+                                                                  )
+                                                                : null
+                                                        return {
+                                                            imageInBase64,
+                                                            textContent: page,
+                                                        }
+                                                    }
+                                                )
+                                            )
+                                        })
+                                        .then((pages) => {
+                                            props.onPDFPagesChanges(pages || [])
+                                            setIsUploadingPdf(false)
+                                        })
                                 } else {
                                     throw new Error(
-                                        t["Error while parsing the pdf."]
+                                        "Error while parsing the pdf."
                                     )
                                 }
                                 workerInstance.terminate()
@@ -95,7 +110,7 @@ export default function PdfInput(props: Props) {
                         props.onPDFPagesChanges([])
                     }
                 } catch (error) {
-                    toastError(t["Something went wrong..."])
+                    toastError("Something went wrong...")
                     setIsUploadingPdf(false)
                 } finally {
                     dismissToasts("loading")
@@ -109,15 +124,16 @@ export default function PdfInput(props: Props) {
                 <>
                     <FileTextIcon className="w-10 h-10 mb-2 mx-auto text-red-400" />
                     <p className="text-neutral-600 mb-2">
-                        {t["Drag & drop a pdf file here"]}
+                        Drag & drop a pdf file here
                     </p>
                     <p className="text-sm text-neutral-500">
-                        {t["or click to select a file"]}
+                        or click to select a file
                     </p>
                     <p className="text-xs text-neutral-400 mt-2">
-                        {t["PDF Documents"]}
+                        Images (PNG, JPG, GIF) or Documents (PDF, DOC, DOCX,
+                        XLS, XLSX)
                     </p>
-                    <p className="text-xs text-neutral-400">{t["up to 5MB"]}</p>
+                    <p className="text-xs text-neutral-400">up to 10MB</p>
                 </>
             )}
         />

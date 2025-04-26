@@ -121,8 +121,8 @@ export default function Page() {
             className={cn(
                 "h-[92vh]  -mt-4 md:-mt-2 border border-gray-300 relative",
                 {
-                    "md:w-[calc(100vw-306px)]": isSidenavOpen,
-                    "md:w-[calc(100vw-100px)]": !isSidenavOpen,
+                    "lg:w-[calc(100vw-306px)] w-screen": isSidenavOpen,
+                    "lg:w-[calc(100vw-100px)] w-screen": !isSidenavOpen,
                 }
             )}
         >

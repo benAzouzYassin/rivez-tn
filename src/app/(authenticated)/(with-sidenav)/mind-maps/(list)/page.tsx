@@ -55,14 +55,14 @@ export default function Page() {
                 "Shared Quizzes": "Quiz partagés",
                 "My Quizzes": "Mes quiz",
                 "no items...": "aucun élément...",
-                "Add mindmap": "Ajouter une carte mentale",
+                "Add mindmap": "Ajouter",
             },
             ar: {
                 "Mind maps": "الخرائط  الذهنية",
                 "Shared Quizzes": "الاختبارات المشتركة",
                 "My Quizzes": "اختباراتي",
                 "no items...": "لا توجد عناصر...",
-                "Add mindmap": "إضافة خريطة ذهنية",
+                "Add mindmap": "إضافة",
             },
         }),
         []
@@ -138,11 +138,11 @@ export default function Page() {
         <section className="flex isolate flex-col min-h-[50vh] md:px-10 px-3 py-10">
             <div
                 className={cn(
-                    "flex w-full fixed  z-40  bg-white border-t top-[10vh] pt-4  justify-between items-center",
+                    "flex w-full fixed pb-4 md:pb-2 z-40  bg-white border-t top-[10vh] pt-4  justify-between items-center lg:max-w-screen sm:max-w-screen md:max-w-[90vw]",
                     {
-                        "ltr:md:left-[300px] rtl:md:right-[300px]  md:w-[calc(100vw-306px)] md:px-8  ":
+                        "ltr:lg:left-[300px] rtl:md:right-[300px]  lg:w-[calc(100vw-306px)] lg:px-8  ":
                             isSidenavOpen,
-                        "ltr:md:left-[100px] rtl:md:right-[100px] md:w-[calc(100vw-106px)] md:px-8  ":
+                        "ltr:lg:left-[100px] rtl:lg:right-[100px] lg:w-[calc(100vw-106px)] lg:px-8  ":
                             !isSidenavOpen,
                     }
                 )}
@@ -150,7 +150,7 @@ export default function Page() {
                 <h1 className="md:text-4xl text-3xl text-neutral-600  font-extrabold">
                     {t["Mind maps"]}
                 </h1>
-                <div className="flex  items-center gap-2">
+                <div className="flex md:flex-col-reverse sm:flex-row lg:flex-row  items-center gap-2">
                     <div className="mt-5 md:block hidden ">
                         <Search
                             searchValue={searchValue}
@@ -158,13 +158,13 @@ export default function Page() {
                         />
                     </div>
 
-                    <div className="md:scale-100 flex md:pr-0 pr-4 scale-90 ">
+                    <div className="md:scale-100 flex md:self-end sm:self-auto lg:self-auto md:pr-0 pr-4 scale-90 ">
                         <AddDialog isOpen={isAdding} setIsOpen={setIsAdding} />
                     </div>
                 </div>
             </div>
 
-            <div className="w-full  min-h-screen md:mt-18 mt-3  ">
+            <div className="w-full  min-h-screen md:mt-28 lg:mt-18 mt-8  ">
                 <div
                     className={cn(
                         "grid  rounded-2xl md:grid-cols-2 grid-cols-1  xl:grid-cols-3  min-[1700px]:grid-cols-4 ml-auto px-2 py-2   gap-8 mb-2"

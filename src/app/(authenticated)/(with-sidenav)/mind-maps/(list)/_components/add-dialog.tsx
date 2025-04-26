@@ -62,7 +62,9 @@ export default function AddDialog(props: Props) {
     const [language, setLanguage] = useState("")
     const [topic, setTopic] = useState("")
     const [instructions, setInstructions] = useState("")
-    const [pdfPages, setPdfPages] = useState<string[]>([])
+    const [pdfPages, setPdfPages] = useState<
+        { textContent: string; imageInBase64: string | null }[]
+    >([])
     const [isSubmitting, setIsSubmitting] = useState(false)
     const [youtubeUrl, setYoutubeUrl] = useState("")
     const router = useRouter()
@@ -345,11 +347,7 @@ export default function AddDialog(props: Props) {
                     )}
                     {currentTab === "document" && (
                         <form onSubmit={handleSubmit} className="mt-6">
-                            <PdfInput
-                                onPDFPagesChanges={(value: string[]) =>
-                                    setPdfPages(value)
-                                }
-                            />
+                            <PdfInput onPDFPagesChanges={setPdfPages} />
 
                             <Button
                                 type="submit"

@@ -404,8 +404,8 @@ export default function Page() {
                 className={cn(
                     "h-[90vh]  border border-gray-300 relative isolate",
                     {
-                        "md:w-[calc(100vw-306px)]": isSidenavOpen,
-                        "md:w-[calc(100vw-100px)]": !isSidenavOpen,
+                        "lg:w-[calc(100vw-306px)] w-screen": isSidenavOpen,
+                        "lg:w-[calc(100vw-100px)] w-screen": !isSidenavOpen,
                     }
                 )}
             >
