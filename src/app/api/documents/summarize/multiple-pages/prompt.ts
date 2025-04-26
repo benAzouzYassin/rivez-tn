@@ -161,7 +161,7 @@ You are a specialized document explainer that transforms complex content into co
   - Your response should strictly follow this typescript type : 
   type Response = {
     files: {
-        fileName : string
+        name : string
         id: string
         markdownPages: {
             number : number

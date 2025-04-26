@@ -49,6 +49,7 @@ export default function Page() {
 
                 let didGenerate = false
                 const onResultChange = (data: TResult) => {
+                    console.log("result change ===>", data)
                     if (!didGenerate) didGenerate = true
                     if (data.files.at(0)?.markdownPages.length) {
                         setIsLoading(false)
