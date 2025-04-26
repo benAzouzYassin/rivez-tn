@@ -6,6 +6,8 @@ import { NextRequest, NextResponse } from "next/server"
 import { z } from "zod"
 import { HIGH_COST } from "../constants"
 import { getSystemPrompt, getUserPrompt } from "./prompt"
+import { extractImagesText } from "@/utils/image"
+import { cheapModel } from "../../../../../lib/ai"
 
 export async function POST(req: NextRequest) {
     try {
@@ -29,7 +31,23 @@ export async function POST(req: NextRequest) {
         if (!success) {
             return NextResponse.json({ error }, { status: 400 })
         }
-        const prompt = getUserPrompt(data)
+        const pdfPages = await Promise.all(
+            data.pdfPages.map(async (page) => {
+                return {
+                    textContent: page.textContent,
+                    imageContent: page.imageInBase64
+                        ? (await extractImagesText({
+                              imagesBase64: [page.imageInBase64],
+                              aiModel: cheapModel,
+                          })) || ""
+                        : "",
+                }
+            })
+        )
+        const prompt = getUserPrompt({
+            ...data,
+            pdfPages,
+        })
 
         const userBalance = (
             await supabaseAdmin
@@ -72,7 +90,12 @@ export async function POST(req: NextRequest) {
 }
 
 const bodySchema = z.object({
-    pdfPages: z.array(z.string()),
+    pdfPages: z.array(
+        z.object({
+            textContent: z.string(),
+            imageInBase64: z.string().optional().nullable(),
+        })
+    ),
     language: z.string().max(1000).optional().nullable(),
     additionalInstructions: z.string().max(5000).optional().nullable(),
 })

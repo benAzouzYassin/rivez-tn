@@ -1,17 +1,45 @@
 "use client"
+import * as pdfjsLib from "pdfjs-dist"
 
 import { FileTextIcon } from "lucide-react"
 import { FileInput } from "@/components/ui/file-input"
 import { dismissToasts, toastError, toastLoading } from "@/lib/toasts"
-import { useState } from "react"
+import { useRef, useState } from "react"
 import { z } from "zod"
+import { getPdfPageImageData } from "@/lib/pdf"
+import { imageBitmapToBase64 } from "@/utils/image"
+
+pdfjsLib.GlobalWorkerOptions.workerSrc =
+    "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js"
 
 type Props = {
-    onPDFPagesChanges: (value: string[]) => void
+    onPDFPagesChanges: (
+        value: { textContent: string; imageInBase64: string | null }[]
+    ) => void
 }
 export default function PdfInput(props: Props) {
     const [isUploadingPdf, setIsUploadingPdf] = useState(false)
     const [fileName, setFileName] = useState("")
+    const canvasRef = useRef(document.createElement("canvas"))
+
+    const getFileData = (file: File): Promise<pdfjsLib.PDFDocumentProxy> => {
+        return new Promise((resolve, reject) => {
+            const fileReader = new FileReader()
+            fileReader.onload = function () {
+                const typedarray = new Uint8Array(this.result as ArrayBuffer)
+
+                pdfjsLib
+                    .getDocument(typedarray)
+                    .promise.then((pdf) => {
+                        resolve(pdf)
+                    })
+                    .catch((error) => {
+                        reject(error)
+                    })
+            }
+            fileReader.readAsArrayBuffer(file)
+        })
+    }
     return (
         <FileInput
             fileName={fileName}
@@ -31,13 +59,44 @@ export default function PdfInput(props: Props) {
                         workerInstance.onmessage = (event) => {
                             if (event.data.result) {
                                 const content = event.data.result
-                                setIsUploadingPdf(false)
-                                const { data, success } = z
+                                const { data: pages, success } = z
                                     .array(z.string())
                                     .safeParse(content)
                                 if (success) {
-                                    props.onPDFPagesChanges(data || [])
                                     setFileName(file.name)
+                                    getFileData(file)
+                                        .then((pdfDoc) => {
+                                            return Promise.all(
+                                                pages.map(
+                                                    async (page, index) => {
+                                                        const imageData =
+                                                            (await getPdfPageImageData(
+                                                                pdfDoc,
+                                                                index + 1
+                                                            ).catch((err) =>
+                                                                console.error(
+                                                                    err
+                                                                )
+                                                            )) || undefined
+                                                        const imageInBase64 =
+                                                            imageData
+                                                                ? imageBitmapToBase64(
+                                                                      imageData?.bitmap,
+                                                                      canvasRef.current
+                                                                  )
+                                                                : null
+                                                        return {
+                                                            imageInBase64,
+                                                            textContent: page,
+                                                        }
+                                                    }
+                                                )
+                                            )
+                                        })
+                                        .then((pages) => {
+                                            props.onPDFPagesChanges(pages || [])
+                                            setIsUploadingPdf(false)
+                                        })
                                 } else {
                                     throw new Error(
                                         "Error while parsing the pdf."

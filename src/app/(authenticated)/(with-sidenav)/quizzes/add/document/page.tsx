@@ -1,5 +1,6 @@
 "use client"
 
+import { useQuestionsStore as useViewOnlyQuizStore } from "@/app/(authenticated)/quizzes/[id]/store"
 import { POSSIBLE_QUESTIONS } from "@/app/api/quiz/generate-quiz/constants"
 import { ErrorDisplay } from "@/components/shared/error-display"
 import GeneralLoadingScreen from "@/components/shared/general-loading-screen"
@@ -11,15 +12,9 @@ import {
 } from "@/components/ui/collapsible"
 import { Input } from "@/components/ui/input"
 import SearchSelectMultiple from "@/components/ui/search-select-multiple"
-import {
-    Select,
-    SelectContent,
-    SelectItem,
-    SelectTrigger,
-    SelectValue,
-} from "@/components/ui/select"
 import { Textarea } from "@/components/ui/textarea"
 import { createQuiz } from "@/data-access/quizzes/create"
+import { useIsSmallScreen } from "@/hooks/is-small-screen"
 import { useCurrentUser } from "@/hooks/use-current-user"
 import { toastError, toastSuccess } from "@/lib/toasts"
 import { useSidenav } from "@/providers/sidenav-provider"
@@ -31,12 +26,9 @@ import { useRouter } from "nextjs-toploader/app"
 import { useEffect, useMemo, useState } from "react"
 import { Controller, useForm } from "react-hook-form"
 import { z } from "zod"
-import { useQuestionsStore as useViewOnlyQuizStore } from "@/app/(authenticated)/quizzes/[id]/store"
 import { default as useEditableQuizStore } from "../[id]/store"
 import { DifficultySelect } from "../_components/difficulty-select"
-import ImageUpload from "../_components/image-upload"
 import { PdfInputLoading } from "./_components/pdf-input-loading"
-import { useIsSmallScreen } from "@/hooks/is-small-screen"
 
 const POSSIBLE_QUESTIONS_TYPES = Object.keys(POSSIBLE_QUESTIONS)
 
@@ -62,7 +54,9 @@ export default function Document() {
     const sideNav = useSidenav()
     const queryClient = useQueryClient()
     const [imageUrl, setImageUrl] = useState<string | null>(null)
-    const [pdfPages, setPdfPages] = useState<string[]>([])
+    const [pdfPages, setPdfPages] = useState<
+        { textContent: string; imageInBase64: string | null }[]
+    >([])
     const [isUploadingImage, setIsUploadingImage] = useState(false)
     const [isLoading, setIsLoading] = useState(false)
     const user = useCurrentUser()

@@ -1,4 +1,4 @@
-import { premiumModel } from "@/lib/ai"
+import { cheapModel, premiumModel } from "@/lib/ai"
 import { streamText } from "ai"
 import { NextRequest, NextResponse } from "next/server"
 import { z } from "zod"
@@ -6,6 +6,7 @@ import { POSSIBLE_QUESTIONS } from "../constants"
 import { generateQuizPrompt } from "./utils"
 import { getUserInServerSide } from "@/data-access/users/authenticate-user-ssr"
 import { supabaseAdminServerSide } from "@/lib/supabase-server-side"
+import { extractImagesText } from "@/utils/image"
 
 const MAX_CHARS_PER_PDF = 300_000
 const LOW_MODEL_HIGH_COST_QUIZ = Number(
@@ -70,8 +71,20 @@ export async function POST(req: NextRequest) {
                 { status: 400 }
             )
         }
-        const formattedPdfPages = data.pdfPages
 
+        const pdfPages = await Promise.all(
+            data.pdfPages.map(async (page) => {
+                return {
+                    textContent: page.textContent,
+                    imageContent: page.imageInBase64
+                        ? (await extractImagesText({
+                              imagesBase64: [page.imageInBase64],
+                              aiModel: cheapModel,
+                          })) || ""
+                        : "",
+                }
+            })
+        )
         const prompt = generateQuizPrompt({
             name: data.name,
             language: quizLanguage,
@@ -79,7 +92,7 @@ export async function POST(req: NextRequest) {
             allowQuestions: (data.allowedQuestions as any) || "ALL",
             minQuestions,
             maxQuestions,
-            pdfPages: formattedPdfPages,
+            pdfPages: pdfPages,
         })
 
         const userBalance = (
@@ -152,7 +165,12 @@ const bodySchema = z.object({
         .min(1, "Name is required")
         .max(100, "Input exceeds maximum length"),
     quizId: z.number(),
-    pdfPages: z.array(z.string()),
+    pdfPages: z.array(
+        z.object({
+            textContent: z.string(),
+            imageInBase64: z.string().optional().nullable(),
+        })
+    ),
     language: z.string().nullable().optional(),
     difficulty: z.string().nullable().optional(),
     notes: z.string().nullable().optional(),

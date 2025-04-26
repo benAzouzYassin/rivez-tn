@@ -117,7 +117,7 @@ export function getSystemPrompt() {
       `
 }
 export function getUserPrompt(data: {
-    pdfPages: string[]
+    pdfPages: { textContent: string; imageContent: string }[]
     additionalInstructions?: string | null | undefined
     language?: string | null | undefined
 }) {
@@ -128,7 +128,12 @@ hello i am the user.
     }
 PDF pages are : 
 ${data.pdfPages
-    .map((page, index) => `#### Page ${index + 1}\n\n${page}`)
+    .map(
+        (page, index) =>
+            `#### Page ${index + 1}\n\n${page.textContent}\n${
+                page.imageContent
+            }`
+    )
     .join("\n\n")}
 
     ${

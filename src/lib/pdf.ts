@@ -1,6 +1,6 @@
 import { OPS, PDFDocumentProxy } from "pdfjs-dist"
 
-export async function getImageData(
+export async function getPdfPageImageData(
     file: PDFDocumentProxy,
     pageIndex: number,
     timeoutMs: number = 2000
