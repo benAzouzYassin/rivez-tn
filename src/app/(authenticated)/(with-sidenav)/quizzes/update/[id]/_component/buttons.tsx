@@ -11,13 +11,63 @@ import { shuffleArray } from "@/utils/array"
 import { useQueryClient } from "@tanstack/react-query"
 import { useParams } from "next/navigation"
 import { useRouter } from "nextjs-toploader/app"
-import { useState } from "react"
+import { useState, useMemo } from "react"
 import useUpdateQuizStore, {
     FillInTheBlankStoreContent,
     StateMatchingPairsOptions,
     StateMultipleChoiceOptions,
 } from "../store"
+import { getLanguage } from "@/utils/get-language"
+
 export default function Buttons() {
+    // Translation object
+    const translation = useMemo(
+        () => ({
+            en: {
+                cancel: "Cancel",
+                save: "Save changes",
+                saved: "Changes saved successfully.",
+                errorUpdate: "Error while updating some questions...",
+                errorDelete: "Error while deleting some questions...",
+                errorSave: "Error while saving some of the new questions...",
+                warningTitle: "Warning: Proceed with caution",
+                warningDesc:
+                    "You have left some options empty. Any empty option will be ignored.",
+                continue: "Continue",
+            },
+            fr: {
+                cancel: "Annuler",
+                save: "Enregistrer les modifications",
+                saved: "Modifications enregistrées avec succès.",
+                errorUpdate:
+                    "Erreur lors de la mise à jour de certaines questions...",
+                errorDelete:
+                    "Erreur lors de la suppression de certaines questions...",
+                errorSave:
+                    "Erreur lors de l'enregistrement de certaines nouvelles questions...",
+                warningTitle: "Avertissement : Procédez avec prudence",
+                warningDesc:
+                    "Vous avez laissé certaines options vides. Toute option vide sera ignorée.",
+                continue: "Continuer",
+            },
+            ar: {
+                cancel: "إلغاء",
+                save: "حفظ التغييرات",
+                saved: "تم حفظ التغييرات بنجاح.",
+                errorUpdate: "حدث خطأ أثناء تحديث بعض الأسئلة...",
+                errorDelete: "حدث خطأ أثناء حذف بعض الأسئلة...",
+                errorSave: "حدث خطأ أثناء حفظ بعض الأسئلة الجديدة...",
+                warningTitle: "تحذير: تابع بحذر",
+                warningDesc:
+                    "لقد تركت بعض الخيارات فارغة. سيتم تجاهل أي خيار فارغ.",
+                continue: "متابعة",
+            },
+        }),
+        []
+    )
+    const lang = getLanguage()
+    const t = translation[lang]
+
     const params = useParams()
     const quizId = parseInt(params["id"] as string)
     const reset = useUpdateQuizStore((s) => s.reset)
@@ -28,6 +78,7 @@ export default function Buttons() {
     const [isWarning, setIsWarning] = useState(false)
     const queryClient = useQueryClient()
     const { data: userData } = useCurrentUser()
+
     const handleSave = async () => {
         try {
             if (isNaN(quizId) === false && quizId) {
@@ -39,22 +90,18 @@ export default function Buttons() {
                 const isSavedNewQuestionsSuccess = await saveNewQuestions()
 
                 if (!isUpdatedOldSuccess) {
-                    toastError("Error while updating some questions...")
-                    throw new Error("Error while updating some questions...")
+                    toastError(t.errorUpdate)
+                    throw new Error(t.errorUpdate)
                 }
                 if (!isQuestionDeleteSuccess) {
-                    toastError("Error while deleting some questions...")
-                    throw new Error("Error while deleting some questions...")
+                    toastError(t.errorDelete)
+                    throw new Error(t.errorDelete)
                 }
                 if (!isSavedNewQuestionsSuccess) {
-                    toastError(
-                        "Error while saving some of the new questions..."
-                    )
-                    throw new Error(
-                        "Error while saving some of the new questions..."
-                    )
+                    toastError(t.errorSave)
+                    throw new Error(t.errorSave)
                 }
-                toastSuccess("Changes saved successfully.")
+                toastSuccess(t.saved)
                 queryClient.invalidateQueries({
                     queryKey: ["quizzes"],
                 })
@@ -312,7 +359,7 @@ export default function Buttons() {
                     className="text-base font-extrabold"
                     variant="red"
                 >
-                    Cancel
+                    {t.cancel}
                 </Button>
 
                 <Button
@@ -321,15 +368,15 @@ export default function Buttons() {
                     className="text-base font-extrabold"
                     variant="blue"
                 >
-                    Save changes
+                    {t.save}
                 </Button>
                 <WarningDialog
                     titleClassName="text-[#EF9C07]"
                     isOpen={isWarning}
                     onOpenChange={setIsWarning}
-                    description="You have left some options empty. Any empty will option be ignored."
-                    title="Warning: Proceed with caution"
-                    confirmText="Continue"
+                    description={t.warningDesc}
+                    title={t.warningTitle}
+                    confirmText={t.continue}
                     confirmBtnClassName="bg-amber-400 shadow-amber-400"
                     onConfirm={async () => {
                         handleSave()

@@ -15,6 +15,7 @@ export default function AllQuestionsPreviews() {
     const handleScrollToLeft = (e: WheelEvent) => {
         if (containerRef.current) {
             containerRef.current.scrollLeft += e.deltaY * 0.5
+            e.preventDefault()
         }
     }
     useEffect(() => {

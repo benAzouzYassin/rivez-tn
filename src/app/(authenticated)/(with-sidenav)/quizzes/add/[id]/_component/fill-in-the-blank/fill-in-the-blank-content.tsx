@@ -40,7 +40,10 @@ export default function FillInTheBlankContentComp() {
         return null
     }
     return (
-        <section className="w-full flex flex-col items-center min-h-56 mt-6  h-full  ">
+        <section
+            dir="ltr"
+            className="w-full flex flex-col items-center min-h-56 mt-6  h-full  "
+        >
             <div className="w-[1120px] flex flex-col items-center justify-center">
                 <QuestionText
                     text={selectedQuestion.questionText}

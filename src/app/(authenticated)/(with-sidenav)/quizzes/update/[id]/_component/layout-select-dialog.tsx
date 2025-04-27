@@ -6,12 +6,11 @@ import {
     DialogTrigger,
 } from "@/components/ui/dialog"
 import { cn } from "@/lib/ui-utils"
+import { getLanguage } from "@/utils/get-language"
 import { ReactNode, useState } from "react"
-import FillInTheBlank from "./layouts-icons/fill-in-the-blank"
 import MatchingPairs from "./layouts-icons/matching-pairs"
 import MultipleChoiceHorizontal from "./layouts-icons/multiple-choice-horizontal"
 import MultipleChoiceVertical from "./layouts-icons/multiple-choice-vertical"
-import { getLanguage } from "@/utils/get-language"
 
 type Props = {
     contentClassName?: string

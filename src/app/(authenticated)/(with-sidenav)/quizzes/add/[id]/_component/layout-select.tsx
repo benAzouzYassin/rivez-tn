@@ -1,16 +1,35 @@
-import { memo } from "react"
+import { memo, useMemo } from "react"
 import useQuizStore, { QuizQuestionType } from "../store"
 import LayoutSelectDialog from "./layout-select-dialog"
 import FillInTheBlank from "./layouts-icons/fill-in-the-blank"
 import MatchingPairs from "./layouts-icons/matching-pairs"
 import MultipleChoiceHorizontal from "./layouts-icons/multiple-choice-horizontal"
 import MultipleChoiceVertical from "./layouts-icons/multiple-choice-vertical"
+import { getLanguage } from "@/utils/get-language"
 
 interface Props {
     selectedQuestion: QuizQuestionType
 }
+
 function LayoutSelect(props: Props) {
     const updateQuestion = useQuizStore((s) => s.updateQuestion)
+
+    const translation = useMemo(
+        () => ({
+            en: {
+                "Display type : ": "Display type : ",
+            },
+            ar: {
+                "Display type : ": "نوع العرض : ",
+            },
+            fr: {
+                "Display type : ": "type d'affichage",
+            },
+        }),
+        []
+    )
+    const lang = getLanguage()
+    const t = translation[lang]
 
     return (
         <LayoutSelectDialog
@@ -122,31 +141,33 @@ function LayoutSelect(props: Props) {
                 }
             }}
             trigger={
-                <div className="flex items-center  ">
+                <div className="flex items-center rtl:-mt-5 rtl:-mr-12">
                     <p className="text-center text-lg font-bold md:block hidden">
-                        Layout :
+                        {t["Display type : "]}
                     </p>
                     {props.selectedQuestion.layout === "vertical" &&
                         props.selectedQuestion.imageType !== "none" &&
                         props.selectedQuestion.type === "MULTIPLE_CHOICE" && (
                             <MultipleChoiceVertical
-                                className=""
-                                textClassName="hidden"
+                                isIcon
+                                textClassName="hidden "
+                                className="px-2 w-[220px] pb-5"
                             />
                         )}
                     {props.selectedQuestion.imageType === "none" &&
                         props.selectedQuestion.type === "MULTIPLE_CHOICE" && (
                             <MultipleChoiceVertical
+                                isIcon
                                 textClassName="mt-3 h-2 w-[80%]"
                                 imageClassName="hidden"
                                 itemClassName="h-5 rounded  mt-2 "
-                                className="px-2 md:w-[220px] pb-5"
+                                className="px-2 w-[220px] pb-5"
                             />
                         )}
                     {props.selectedQuestion.layout === "horizontal" &&
                         props.selectedQuestion.imageType !== "none" &&
                         props.selectedQuestion.type === "MULTIPLE_CHOICE" && (
-                            <MultipleChoiceHorizontal className="" />
+                            <MultipleChoiceHorizontal isIcon />
                         )}
                     {props.selectedQuestion.type === "MATCHING_PAIRS" && (
                         <MatchingPairs />
@@ -163,4 +184,5 @@ function LayoutSelect(props: Props) {
         />
     )
 }
+
 export default memo(LayoutSelect)
