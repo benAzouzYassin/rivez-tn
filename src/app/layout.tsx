@@ -9,6 +9,7 @@ import { NuqsAdapter } from "nuqs/adapters/next/app"
 import { cookies } from "next/headers"
 import { headers } from "next/headers"
 import { getPreferredLanguage } from "@/utils/languages"
+import { ThemeProvider } from "@/providers/theme-provider"
 
 const nunito = Nunito({
     subsets: ["latin"],
@@ -67,9 +68,16 @@ export default async function RootLayout({
                     showAtBottom={false}
                 />
                 <QueryClientProvider>
-                    <SidenavProvider>
-                        <NuqsAdapter>{children}</NuqsAdapter>
-                    </SidenavProvider>
+                    <ThemeProvider
+                        attribute="class"
+                        defaultTheme="system"
+                        enableSystem
+                        disableTransitionOnChange
+                    >
+                        <SidenavProvider>
+                            <NuqsAdapter>{children}</NuqsAdapter>
+                        </SidenavProvider>
+                    </ThemeProvider>
                 </QueryClientProvider>
             </body>
         </html>

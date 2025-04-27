@@ -14,6 +14,7 @@ import { useRouter } from "nextjs-toploader/app"
 import { useMemo, useState } from "react"
 import { useForm } from "react-hook-form"
 import { z } from "zod"
+import { ThemeToggle } from "@/components/shared/theme-toggle" // Add this import
 
 export default function Page() {
     const queryClient = useQueryClient()
@@ -131,14 +132,15 @@ export default function Page() {
     }
 
     return (
-        <main className="flex min-h-[100vh] relative flex-col items-center justify-center">
+        <main className="flex min-h-[100vh] relative flex-col items-center justify-center bg-white dark:bg-neutral-900">
             <section>
-                <BackButton className="absolute top-8 left-2 md:left-16" />
+                <BackButton className="absolute top-8 left-2 md:left-16 dark:text-neutral-300" />
                 <div className="flex absolute gap-2 items-center justify-center top-8 right-3 md:right-16">
+                    <ThemeToggle /> {/* Add this for theme switching */}
                     <LanguageSelector defaultLang="en" />
                     <Button
                         onClick={() => router.push("/auth/login")}
-                        className="w-fit! px-7! uppercase font-bold text-[#1CB0F6] "
+                        className="w-fit! px-7! uppercase font-bold text-[#1CB0F6] dark:text-blue-400"
                         variant={"secondary"}
                     >
                         {t.login}
@@ -148,7 +150,7 @@ export default function Page() {
                     onSubmit={handleSubmit(onSubmit)}
                     className="flex flex-col w-[95vw] md:w-auto"
                 >
-                    <h1 className="text-2xl first-letter:capitalize mb-5 font-bold text-center text-[#3C3C3C]">
+                    <h1 className="text-2xl first-letter:capitalize mb-5 font-bold text-center text-[#3C3C3C] dark:text-neutral-200">
                         {t.title}
                     </h1>
 
@@ -163,7 +165,7 @@ export default function Page() {
                         <button
                             type="button"
                             onClick={() => setShowPassword(!showPassword)}
-                            className="absolute rtl:left-3 cursor-pointer    ltr:right-3 top-3 text-neutral-400 hover:text-neutral-500"
+                            className="absolute rtl:left-3 ltr:right-3 top-3 text-neutral-400 hover:text-neutral-500 dark:text-neutral-400 dark:hover:text-neutral-300 cursor-pointer"
                         >
                             {showPassword ? (
                                 <EyeOff className="h-6 w-6" />
@@ -186,7 +188,7 @@ export default function Page() {
                             onClick={() =>
                                 setShowConfirmPassword(!showConfirmPassword)
                             }
-                            className="absolute rtl:left-3 cursor-pointer    ltr:right-3 top-3 text-neutral-400 hover:text-neutral-500"
+                            className="absolute rtl:left-3 ltr:right-3 top-3 text-neutral-400 hover:text-neutral-500 dark:text-neutral-400 dark:hover:text-neutral-300 cursor-pointer"
                         >
                             {showConfirmPassword ? (
                                 <EyeOff className="h-6 w-6" />
@@ -198,7 +200,7 @@ export default function Page() {
 
                     <Button
                         type="submit"
-                        className="font-bold uppercase text-sm"
+                        className="font-bold uppercase text-sm mt-4 dark:hover:bg-blue-600"
                         variant={"blue"}
                         isLoading={isSubmitting || isResetting}
                     >
@@ -206,11 +208,11 @@ export default function Page() {
                     </Button>
                 </form>
                 <div className="flex items-center justify-center mt-5">
-                    <p className="text-[#AFAFAF] first-letter:capitalize text-sm max-w-[350px] text-center font-medium">
+                    <p className="text-[#AFAFAF] dark:text-neutral-400 first-letter:capitalize text-sm max-w-[350px] text-center font-medium">
                         {t.remember}{" "}
                         <button
                             onClick={() => router.push("/auth/login")}
-                            className="font-bold text-[#1CB0F6] cursor-pointer hover:underline underline-offset-2"
+                            className="font-bold text-[#1CB0F6] dark:text-blue-400 cursor-pointer hover:underline underline-offset-2"
                         >
                             {t.backToLogin}
                         </button>

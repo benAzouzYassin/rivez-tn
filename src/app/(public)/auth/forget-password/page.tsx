@@ -12,6 +12,7 @@ import { useRouter } from "nextjs-toploader/app"
 import { useMemo, useState } from "react"
 import { useForm } from "react-hook-form"
 import { z } from "zod"
+import { ThemeToggle } from "@/components/shared/theme-toggle" // Add this import
 
 export default function Page() {
     const router = useRouter()
@@ -118,12 +119,12 @@ export default function Page() {
 
     if (isSubmitted) {
         return (
-            <main className="flex min-h-[100vh] relative flex-col items-center justify-center p-4">
+            <main className="flex min-h-[100vh] relative flex-col items-center justify-center p-4 bg-white dark:bg-neutral-900">
                 <section className="text-center max-w-md">
-                    <h1 className="text-xl md:text-2xl font-bold text-[#3C3C3C] mb-4">
+                    <h1 className="text-xl md:text-2xl font-bold text-[#3C3C3C] dark:text-neutral-200 mb-4">
                         {t.checkEmail}
                     </h1>
-                    <p className="text-sm md:text-base text-[#3C3C3C] font-bold max-w-[400px] mx-auto">
+                    <p className="text-sm md:text-base text-[#3C3C3C] dark:text-neutral-300 font-bold max-w-[400px] mx-auto">
                         {t.checkMessage}
                     </p>
                     <Button
@@ -139,15 +140,16 @@ export default function Page() {
     }
 
     return (
-        <main className="flex min-h-[100vh] relative flex-col items-center justify-center p-4">
+        <main className="flex min-h-[100vh] relative flex-col items-center justify-center p-4 bg-white dark:bg-neutral-900">
             <section className="w-full max-w-md">
                 <div className="block">
-                    <BackButton className="absolute top-8 left-4 md:left-16" />
-                    <div className="flex absolute gap-2  items-center justify-center top-8 right-3 md:right-16">
+                    <BackButton className="absolute top-8 left-4 md:left-16 dark:text-neutral-300" />
+                    <div className="flex absolute gap-2 items-center justify-center top-8 right-3 md:right-16">
+                        <ThemeToggle /> {/* Add this for theme switching */}
                         <LanguageSelector defaultLang="en" />
                         <Button
                             onClick={() => router.push("/auth/login")}
-                            className="w-fit! px-7! uppercase font-bold text-[#1CB0F6] "
+                            className="w-fit! px-7! uppercase font-bold text-[#1CB0F6] dark:text-blue-400"
                             variant={"secondary"}
                         >
                             {t.login}
@@ -159,10 +161,10 @@ export default function Page() {
                     onSubmit={handleSubmit(onSubmit)}
                     className="flex flex-col gap-3 w-full"
                 >
-                    <h1 className="text-xl md:text-2xl font-bold text-center text-[#3C3C3C]">
+                    <h1 className="text-xl md:text-2xl font-bold text-center text-[#3C3C3C] dark:text-neutral-200">
                         {t.forgotPassword}
                     </h1>
-                    <p className="text-sm md:text-base text-[#3C3C3C] font-bold max-w-[400px] text-center mx-auto">
+                    <p className="text-sm md:text-base text-[#3C3C3C] dark:text-neutral-300 font-bold max-w-[400px] text-center mx-auto">
                         {t.instructions}
                     </p>
                     <Input

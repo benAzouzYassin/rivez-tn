@@ -13,7 +13,7 @@ const Input = React.forwardRef<
             <input
                 type={type}
                 className={cn(
-                    "rounded-xl transition-all duration-200",
+                    "rounded-xl dark:bg-neutral-800 dark:border-neutral-700 dark:text-neutral-200 transition-all duration-200",
                     "bg-[#F7F7F7]/50 font-medium border-2 p-3 h-12 border-[#E5E5E5]",
                     "placeholder:font-medium placeholder:text-[#AFAFAF]",
                     "placeholder:transition-all focus:placeholder:translate-x-1",

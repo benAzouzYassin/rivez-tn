@@ -20,6 +20,7 @@ import { useForm } from "react-hook-form"
 import { z } from "zod"
 import { getLanguage } from "@/utils/get-language"
 import { LanguageSelector } from "@/components/shared/language-selector"
+import { ThemeToggle } from "@/components/shared/theme-toggle" // <-- Add this import
 
 export default function Page() {
     const { isLoading: isFetchingCurrentUser, refetch: refetchUser } =
@@ -145,21 +146,22 @@ export default function Page() {
 
     if (isFetchingCurrentUser || isGoogleAuth || isPasswordAuth) {
         return (
-            <main className="flex min-h-[100vh] relative flex-col items-center justify-center">
+            <main className="flex min-h-[100vh] relative flex-col items-center justify-center bg-white dark:bg-neutral-900">
                 <AnimatedLoader />
             </main>
         )
     }
 
     return (
-        <main className="flex min-h-[100vh] relative flex-col items-center justify-center">
+        <main className="flex min-h-[100vh] relative flex-col items-center justify-center bg-white dark:bg-neutral-900">
             <section>
-                <BackButton className="absolute top-8 left-2 md:left-16" />
+                <BackButton className="absolute top-8 left-2 md:left-16 dark:text-neutral-300" />
                 <div className="absolute top-8 right-3 gap-2 md:right-16 flex items-center justify-center">
+                    <ThemeToggle /> {/* Add this for theme switching */}
                     <LanguageSelector defaultLang="en" />
                     <Button
                         onClick={() => router.push("/auth/register")}
-                        className=" w-fit! px-7! uppercase font-bold text-[#1CB0F6]  "
+                        className="w-fit! px-7! uppercase font-bold text-[#1CB0F6] dark:text-blue-400"
                         variant={"secondary"}
                     >
                         {t.register}
@@ -167,9 +169,9 @@ export default function Page() {
                 </div>
                 <form
                     onSubmit={handleSubmit(onSubmit)}
-                    className="flex flex-col px-2 max-w-[95vw]"
+                    className="flex flex-col px-2 max-w-[95vw] md:pt-0 pt-32"
                 >
-                    <h1 className="text-2xl first-letter:capitalize mb-5 font-bold text-center text-[#3C3C3C]">
+                    <h1 className="text-2xl first-letter:capitalize mb-5 font-bold text-center text-[#3C3C3C] dark:text-neutral-200">
                         {t.loginTitle}
                     </h1>
                     <Input
@@ -191,7 +193,7 @@ export default function Page() {
                             <div className="absolute rtl:left-3 ltr:right-3 top-[12px]">
                                 <Link
                                     href="/auth/forget-password"
-                                    className="font-bold hover:underline underline-offset-2 text-[#AFAFAF] text-sm"
+                                    className="font-bold hover:underline underline-offset-2 text-[#AFAFAF] dark:text-neutral-400 text-sm"
                                 >
                                     {t.forgot}
                                 </Link>
@@ -200,7 +202,7 @@ export default function Page() {
                     </div>
                     <Button
                         type="submit"
-                        className="font-bold uppercase text-sm"
+                        className="font-bold uppercase text-sm mt-4 dark:hover:bg-blue-600"
                         variant={"blue"}
                         isLoading={isSubmitting || isPasswordAuth}
                     >
@@ -208,9 +210,11 @@ export default function Page() {
                     </Button>
                 </form>
                 <div className="flex items-center mt-5 w-full">
-                    <hr className="rounded-full w-full bg-[#E5E5E5] h-1" />
-                    <p className="mx-2 font-bold text-[#AFAFAF]">{t.or}</p>
-                    <hr className="rounded-full w-full bg-[#E5E5E5] h-1" />
+                    <hr className="rounded-full w-full bg-[#E5E5E5] dark:bg-neutral-700 h-1" />
+                    <p className="mx-2 font-bold text-[#AFAFAF] dark:text-neutral-400">
+                        {t.or}
+                    </p>
+                    <hr className="rounded-full w-full bg-[#E5E5E5] dark:bg-neutral-700 h-1" />
                 </div>
                 <div className="px-2">
                     <Button
@@ -229,24 +233,24 @@ export default function Page() {
                             })
                         }}
                         type="button"
-                        className="font-bold w-full mt-3 text-[#4285F4] uppercase text-sm"
+                        className="font-bold w-full mt-3 text-[#4285F4] dark:text-blue-400 dark:bg-neutral-800 dark:hover:bg-neutral-700 uppercase text-sm"
                         variant={"secondary"}
                     >
                         <Google className="w-4! scale-105 h-4!" /> {t.google}
                     </Button>
                 </div>
                 <div className="flex items-center justify-center mt-5">
-                    <p className="text-[#AFAFAF] first-letter:capitalize text-sm max-w-[350px] text-center font-medium">
+                    <p className="text-[#AFAFAF] dark:text-neutral-400 first-letter:capitalize text-sm max-w-[350px] text-center font-medium">
                         {t.agreement}{" "}
                         <Link
-                            className="font-bold hover:underline underline-offset-2"
+                            className="font-bold hover:underline underline-offset-2 dark:text-neutral-300"
                             href=""
                         >
                             {t.terms}
                         </Link>{" "}
                         {t["and"]}{" "}
                         <Link
-                            className="font-bold hover:underline underline-offset-2"
+                            className="font-bold hover:underline underline-offset-2 dark:text-neutral-300"
                             href=""
                         >
                             {t.privacy}

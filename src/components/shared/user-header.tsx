@@ -23,6 +23,13 @@ import Cookies from "js-cookie"
 import { availableLanguages, getLanguage } from "@/utils/get-language"
 import { customToFixed } from "@/utils/numbers"
 import { useIsSmallScreen } from "@/hooks/is-small-screen"
+import {
+    Dialog,
+    DialogContent,
+    DialogHeader,
+    DialogTitle,
+} from "@/components/ui/dialog"
+import { ThemeToggle } from "./theme-toggle"
 
 export default function UserHeader() {
     const queryClient = useQueryClient()
@@ -90,7 +97,7 @@ export default function UserHeader() {
                 setIsUserSettingOpen(false)
                 router.push("/offers")
             },
-            className: "text-neutral-500",
+            className: "text-neutral-500 dark:text-neutral-300",
         },
         {
             icon: <LogOutIcon className="w-6 h-6 opacity-70" />,
@@ -99,13 +106,14 @@ export default function UserHeader() {
                 setIsUserSettingOpen(false)
                 handleLogout()
             },
-            className: "text-red-500 hover:text-red-500 hover:bg-red-100",
+            className:
+                "text-red-500 hover:text-red-500 hover:bg-red-100 dark:hover:bg-red-900 dark:text-red-400",
         },
     ]
 
     if (isLoading) {
         return (
-            <div className="h-[100vh] flex items-center absolute top-0 left-0 bg-white w-full z-50 justify-center">
+            <div className="h-[100vh] flex items-center absolute top-0 left-0 bg-white dark:bg-neutral-900 w-full z-50 justify-center">
                 <AnimatedLoader />
             </div>
         )
@@ -119,7 +127,7 @@ export default function UserHeader() {
     return (
         <header
             className={cn(
-                "w-full h-[10vh] z-10 fixed transition-all duration-300 bg-white",
+                "w-full h-[10vh] z-10 fixed transition-all duration-300 bg-white dark:bg-neutral-900",
                 {
                     " lg:pl-[300px]": isSidenavOpen && !isRTL,
                     " lg:pr-[300px]": isSidenavOpen && isRTL,
@@ -130,7 +138,7 @@ export default function UserHeader() {
         >
             <div
                 className={cn(
-                    "flex h-full border-b-2 items-center px-4 sm:px-8 lg:px-20",
+                    "flex h-full border-b-2 border-neutral-100 dark:border-neutral-800 items-center px-4 sm:px-8 lg:px-20",
                     {
                         "flex-row-reverse": isRTL,
                     }
@@ -142,11 +150,12 @@ export default function UserHeader() {
                         "lg:-ml-10 lg:mr-auto": isRTL,
                     })}
                 >
+                    <ThemeToggle />
                     <Popover
                         open={isUserSettingOpen}
                         onOpenChange={setIsUserSettingOpen}
                     >
-                        <PopoverTrigger className="cursor-pointer rtl:md:flex-row rtl:flex-row-reverse w-fit p-1 mt-2 rounded-2xl flex items-center gap-2 font-bold text-lg text-neutral-600 md:px-3 py-1 active:scale-95 hover:bg-neutral-100 transition-transform">
+                        <PopoverTrigger className="cursor-pointer rtl:md:flex-row rtl:flex-row-reverse w-fit p-1 mt-2 rounded-2xl flex items-center gap-2 font-bold text-lg text-neutral-600 dark:text-neutral-200 md:px-3 py-1 active:scale-95 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-transform">
                             <div
                                 className={cn("flex text-nowrap flex-col", {
                                     "items-end": isRTL,
@@ -155,7 +164,7 @@ export default function UserHeader() {
                             >
                                 <p
                                     className={cn(
-                                        "first-letter:uppercase md:text-base text-sm pr-px max-w-[200px] truncate w-fit mx-2",
+                                        "first-letter:uppercase md:text-base text-sm pr-px max-w-[200px] truncate w-fit mx-2 dark:text-neutral-200",
                                         {
                                             "pl-px pr-0": isRTL,
                                         }
@@ -166,7 +175,7 @@ export default function UserHeader() {
                                 </p>
                                 <div
                                     className={cn(
-                                        "md:text-sm text-xs w-full gap-2 justify-end flex text-neutral-500 text-left font-semibold",
+                                        "md:text-sm text-xs w-full gap-2 justify-end flex text-neutral-500 dark:text-neutral-400 text-left font-semibold",
                                         {
                                             "justify-start text-right": isRTL,
                                         }
@@ -176,7 +185,7 @@ export default function UserHeader() {
                                         asChild
                                         content={t.yourCreditBalance}
                                     >
-                                        <div className="flex w-fit items-center cursor-pointer gap-1 rounded-full text-sm md:mt-0 mt-1 md:text-lg bg-blue-100/70 border border-blue-200 pl-2 pr-3 py-[1px] scale-95 text-neutral-600/90 hover:bg-blue-100 transition-colors">
+                                        <div className="flex w-fit items-center cursor-pointer gap-1 rounded-full text-sm md:mt-0 mt-1 md:text-lg bg-blue-100/70 dark:bg-blue-900/40 border border-blue-200 dark:border-blue-900 pl-2 pr-3 py-[1px] scale-95 text-neutral-600/90 dark:text-blue-200 hover:bg-blue-100 dark:hover:bg-blue-900 transition-colors">
                                             <CreditIcon className="h-6 w-6 md:scale-125 opacity-80" />
                                             <span className="font-extrabold pr-1">
                                                 {customToFixed(
@@ -200,7 +209,7 @@ export default function UserHeader() {
                         <PopoverContent
                             align={isRTL ? "start" : "end"}
                             className={cn(
-                                "w-72 p-0 rounded-xl shadow-lg border border-neutral-200",
+                                "w-72 p-0 rounded-xl shadow-lg border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900",
                                 {
                                     "-translate-x-2": !isRTL,
                                     "translate-x-2": isRTL,
@@ -226,19 +235,13 @@ function UserProfile({ name, image }: UserProfileProps) {
         <div className="group relative rounded-full active:scale-95 transition-all">
             <Avatar className="h-[50px] opacity-90 w-[50px]">
                 <AvatarImage src={image} alt={name} />
-                <AvatarFallback className="bg-neutral-100 border text-neutral-400">
+                <AvatarFallback className="bg-neutral-100 dark:bg-neutral-800 border text-neutral-400 dark:text-neutral-500">
                     <User2 className="h-6 w-6" />
                 </AvatarFallback>
             </Avatar>
         </div>
     )
 }
-import {
-    Dialog,
-    DialogContent,
-    DialogHeader,
-    DialogTitle,
-} from "@/components/ui/dialog"
 
 function UserMenu({
     items,
@@ -282,8 +285,8 @@ function UserMenu({
             <div>
                 <button
                     className={cn(
-                        "flex group rtl:flex-row-reverse relative text-neutral-500 w-full cursor-pointer items-center gap-3 px-4 py-3 text-base font-bold",
-                        "transition-colors hover:bg-blue-100/70 hover:text-blue-400 last:border-b active:bg-blue-200/70"
+                        "flex group rtl:flex-row-reverse relative text-neutral-500 dark:text-neutral-300 w-full cursor-pointer items-center gap-3 px-4 py-3 text-base font-bold",
+                        "transition-colors hover:bg-blue-100/70 dark:hover:bg-blue-900/40 hover:text-blue-400 last:border-b active:bg-blue-200/70 dark:active:bg-blue-900/60"
                     )}
                     onClick={() => {
                         if (isSmallScreen) {
@@ -302,13 +305,13 @@ function UserMenu({
                             )}
                         >
                             <div className="w-64 mt-0 rounded-none border-none overflow-visible shadow-none bg-transparent p-0!">
-                                <div className="rounded-2xl -mt-1 overflow-hidden border-2 bg-white">
+                                <div className="rounded-2xl -mt-1 overflow-hidden border-2 bg-white dark:bg-neutral-900 border-neutral-200 dark:border-neutral-800">
                                     <div>
                                         {languages.map((lang) => (
                                             <div
                                                 key={lang.value}
                                                 className={cn(
-                                                    "flex items-center active:scale-95 transition-all h-12 border-t-2 px-6 w-full cursor-pointer hover:bg-blue-100/70",
+                                                    "flex items-center active:scale-95 transition-all h-12 border-t-2 border-neutral-100 dark:border-neutral-800 px-6 w-full cursor-pointer hover:bg-blue-100/70 dark:hover:bg-blue-900/40",
                                                     {
                                                         "flex-row-reverse justify-between":
                                                             isRTL,
@@ -325,7 +328,7 @@ function UserMenu({
                                                 />
                                                 <span
                                                     className={cn(
-                                                        "text-sm font-bold text-neutral-600 ml-1",
+                                                        "text-sm font-bold text-neutral-600 dark:text-neutral-200 ml-1",
                                                         {
                                                             "ml-0 mr-1": isRTL,
                                                         }
@@ -352,7 +355,7 @@ function UserMenu({
                         onClick={item.onClick}
                         className={cn(
                             "flex w-full cursor-pointer items-center gap-3 px-4 py-3 text-base font-bold",
-                            "transition-colors hover:bg-blue-100/70 hover:text-blue-400 last:border-b active:bg-blue-200/70",
+                            "transition-colors hover:bg-blue-100/70 dark:hover:bg-blue-900/40 hover:text-blue-400 last:border-b active:bg-blue-200/70 dark:active:bg-blue-900/60",
                             item.className,
                             { "flex-row-reverse": isRTL }
                         )}
@@ -371,20 +374,25 @@ function UserMenu({
                     onOpenChange={setIsLanguageDialogOpen}
                 >
                     <DialogContent
-                        className={cn("sm:max-w-md", { rtl: isRTL })}
+                        className={cn(
+                            "sm:max-w-md bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800",
+                            { rtl: isRTL }
+                        )}
                     >
                         <DialogHeader>
-                            <DialogTitle>{changeLanguageLabel}</DialogTitle>
+                            <DialogTitle className="dark:text-neutral-200">
+                                {changeLanguageLabel}
+                            </DialogTitle>
                         </DialogHeader>
                         <div className="max-h-[60vh] overflow-y-auto py-2">
                             {languages.map((lang) => (
                                 <div
                                     key={lang.value}
                                     className={cn(
-                                        "flex items-center p-3 w-full cursor-pointer hover:bg-blue-100/70 rounded-md",
+                                        "flex items-center p-3 w-full cursor-pointer hover:bg-blue-100/70 dark:hover:bg-blue-900/40 rounded-md",
                                         {
                                             "flex-row-reverse": isRTL,
-                                            "bg-blue-50":
+                                            "bg-blue-50 dark:bg-blue-900/20":
                                                 language.value === lang.value,
                                         }
                                     )}
@@ -396,9 +404,12 @@ function UserMenu({
                                         src={lang.flag}
                                     />
                                     <span
-                                        className={cn("font-medium", {
-                                            "ml-0 mr-3": isRTL,
-                                        })}
+                                        className={cn(
+                                            "font-medium dark:text-neutral-200",
+                                            {
+                                                "ml-0 mr-3": isRTL,
+                                            }
+                                        )}
                                     >
                                         {lang.label}
                                     </span>
