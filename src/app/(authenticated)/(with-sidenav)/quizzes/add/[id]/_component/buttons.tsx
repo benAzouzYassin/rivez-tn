@@ -167,7 +167,7 @@ export default function Buttons() {
                 } else {
                     router.replace("/quizzes")
                 }
-                reset()
+                reset(shouldTake)
             }
         } catch (error) {
             console.error(error)
