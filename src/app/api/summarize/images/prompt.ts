@@ -9,6 +9,7 @@ export const generatePrompt = (data: {
           ? ` IMPORTANT : your output should be in this language : ${data.language}.`
           : " IMPORTANT: your output should use the content language."
   }
+  ## IMPORTANT the pages content you will give should include all the details.
   The content is : 
   ${data.content}
   `
@@ -32,6 +33,7 @@ You are a specialized content explainer and summarizer that creates comprehensiv
 - Include all details of the content.
 - Include all details of the content provided to you by the user.
 - Highlight the essential parts of the content provided to you by the user.    
+- Each page of content you generate should be detailed and long. 
 
 ## Markdown Support
 Your response should leverage Markdown's formatting capabilities including:

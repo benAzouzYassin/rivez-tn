@@ -1,4 +1,4 @@
-import { normalModel, premiumModel } from "@/lib/ai"
+import { cheapModel, normalModel, premiumModel } from "@/lib/ai"
 import { streamText } from "ai"
 import { NextRequest, NextResponse } from "next/server"
 import { z } from "zod"
@@ -76,7 +76,7 @@ export async function POST(req: NextRequest) {
         }
         const imagesContent = await extractImagesText({
             imagesBase64: data.imagesBase64,
-            aiModel: normalModel,
+            aiModel: cheapModel,
             outputJson: false,
         })
         if (!imagesContent) {

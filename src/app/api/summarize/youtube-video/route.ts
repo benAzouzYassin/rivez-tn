@@ -88,7 +88,7 @@ export async function POST(req: NextRequest) {
             .eq("user_id", userId)
             .throwOnError()
 
-        await supabaseAdmin.from("document_summarizations").insert({
+        await supabaseAdmin.from("summarizations_logs").insert({
             pages_count: 1,
             user_id: userId,
         })
