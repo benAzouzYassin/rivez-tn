@@ -1,29 +1,32 @@
 "use client"
 
-import { useState, useMemo } from "react"
 import { ErrorDisplay } from "@/components/shared/error-display"
 import { Button } from "@/components/ui/button"
 import DashboardPagination from "@/components/ui/dashboard-pagination"
-import { readMindmaps, readSharedMindmaps } from "@/data-access/mindmaps/read"
+import { readSummaries } from "@/data-access/summarize/read"
 import { useCurrentUser } from "@/hooks/use-current-user"
 import { useIsAdmin } from "@/hooks/use-is-admin"
 import { cn } from "@/lib/ui-utils"
 import { useSidenav } from "@/providers/sidenav-provider"
 import { useQuery } from "@tanstack/react-query"
-import { BookOpen, Plus, Share2Icon } from "lucide-react"
-import { parseAsInteger, parseAsString, useQueryState } from "nuqs"
-import AddDialog from "./_components/add-dialog"
+import { PlusCircle } from "lucide-react"
+import {
+    parseAsBoolean,
+    parseAsInteger,
+    parseAsString,
+    useQueryState,
+} from "nuqs"
+import { useEffect, useState } from "react"
 import Item from "./_components/item"
 import ItemSkeleton from "./_components/item-skeleton"
 import Search from "./_components/search"
-import ShareDialog from "./_components/share-dialog"
-import AnimatedTabs from "@/components/shared/animated-tabs"
-import { getLanguage } from "@/utils/get-language"
+import Add from "../_components/add"
 
 export default function Page() {
-    const [activeTab, setActiveTab] = useState("personal")
-    const [isSharing, setIsSharing] = useState(false)
-    const [sharingId, setSharingId] = useState<number>()
+    const [isList, setIsList] = useQueryState(
+        "list",
+        parseAsBoolean.withDefault(false)
+    )
     const [isAdding, setIsAdding] = useState(false)
     const { isSidenavOpen } = useSidenav()
     const isAdmin = useIsAdmin()
@@ -41,36 +44,6 @@ export default function Page() {
         parseAsInteger.withDefault(1)
     )
 
-    const translation = useMemo(
-        () => ({
-            en: {
-                Mindmaps: "Mindmaps",
-                Shared: "Shared",
-                "My mindmaps": "My mindmaps",
-                "no items...": "no items...",
-                "Add mindmap": "Add mindmap",
-            },
-            fr: {
-                Mindmaps: "Cartes mentales",
-                Shared: "Partagés",
-                "My mindmaps": "Mes Cartes",
-                "no items...": "aucun élément...",
-                "Add mindmap": "Ajouter",
-            },
-            ar: {
-                Mindmaps: "الخرائط  الذهنية",
-                Shared: " المشتركة",
-                "My mindmaps": "خرائطي",
-                "no items...": "لا توجد عناصر...",
-                "Add mindmap": "إضافة",
-            },
-        }),
-        []
-    )
-
-    const lang = getLanguage()
-    const t = translation[lang]
-
     const {
         data: response,
         isError,
@@ -78,61 +51,56 @@ export default function Page() {
     } = useQuery({
         enabled: isAdmin !== null,
         queryKey: [
-            "mindmaps",
+            "summarizations",
             itemsPerPage,
             currentPage,
             searchValue,
             isAdmin,
             userData,
-            activeTab,
         ],
         queryFn: () => {
-            if (activeTab === "personal") {
-                return readMindmaps({
-                    isAdmin: !!isAdmin,
-                    userId: userData?.id || "",
-                    filters: {
-                        name: searchValue || undefined,
-                    },
-                    pagination: {
-                        itemsPerPage,
-                        currentPage,
-                    },
-                })
-            } else {
-                return readSharedMindmaps({
-                    isAdmin: !!isAdmin,
-                    userId: userData?.id || "",
-                    filters: {
-                        name: searchValue || undefined,
-                    },
-                    pagination: {
-                        itemsPerPage,
-                        currentPage,
-                    },
-                })
-            }
+            return readSummaries({
+                isAdmin: !!isAdmin,
+                userId: userData?.id || "",
+                filters: {
+                    name: searchValue || undefined,
+                },
+                pagination: {
+                    itemsPerPage,
+                    currentPage,
+                },
+            })
         },
     })
     const data = response?.data
 
-    const tabs = [
-        {
-            id: "shared",
-            label: t["Shared"],
-            icon: <Share2Icon size={18} />,
-            count: response?.count || 0,
-        },
-        {
-            id: "personal",
-            label: t["My mindmaps"],
-            icon: <BookOpen size={18} />,
-            count: 0,
-        },
-    ]
-
+    useEffect(() => {
+        if (isList) {
+            setIsList(false)
+            setIsAdding(false)
+        }
+    }, [isList , setIsList])
+    if (isAdding) {
+        return (
+            <Add
+                onBack={() => {
+                    setIsAdding(false)
+                }}
+            />
+        )
+    }
     if (isError) {
         return <ErrorDisplay />
+    }
+    if (!isFetching && !data?.length && !isError) {
+        return (
+            <Add
+                hideBack
+                onBack={() => {
+                    setIsAdding(false)
+                }}
+            />
+        )
     }
     return (
         <section className="flex isolate flex-col min-h-[50vh] md:px-10 px-3 py-10">
@@ -148,7 +116,7 @@ export default function Page() {
                 )}
             >
                 <h1 className="md:text-4xl text-3xl text-neutral-600  font-extrabold">
-                    {t["Mindmaps"]}
+                    Summaries
                 </h1>
                 <div className="flex md:flex-col-reverse sm:flex-row lg:flex-row  items-center gap-2">
                     <div className="mt-5 md:block hidden ">
@@ -159,7 +127,10 @@ export default function Page() {
                     </div>
 
                     <div className="md:scale-100 flex md:self-end sm:self-auto lg:self-auto md:pr-0 pr-4 scale-90 ">
-                        <AddDialog isOpen={isAdding} setIsOpen={setIsAdding} />
+                        <Button onClick={() => setIsAdding(true)}>
+                            {" "}
+                            <PlusCircle /> {"Add"}
+                        </Button>
                     </div>
                 </div>
             </div>
@@ -177,17 +148,6 @@ export default function Page() {
                 </div>
 
                 <div className="mb-4 ">
-                    {!isFetching && (
-                        <AnimatedTabs
-                            className="ml-auto mb-4"
-                            tabs={tabs}
-                            activeTab={activeTab}
-                            onTabChange={(tab) => {
-                                setActiveTab(tab)
-                                setCurrentPage(1)
-                            }}
-                        />
-                    )}
                     <div
                         className={cn(
                             "grid md:grid-cols-2 grid-cols-1   lg:grid-cols-3 min-[1700px]:grid-cols-4 rounded-2xl ml-auto px-2 py-4 md:py-2   gap-8 mb-2"
@@ -196,32 +156,17 @@ export default function Page() {
                         {!data?.length && !isFetching && (
                             <div className="flex w-full items-center justify-center gap-4 h-80 col-span-3 flex-col">
                                 <p className="text-5xl font-bold text-neutral-400">
-                                    {t["no items..."]}
+                                    {"no items..."}
                                 </p>
                                 <Button onClick={() => setIsAdding(true)}>
-                                    <Plus /> {t["Add mindmap"]}
+                                    <PlusCircle /> {"Add"}
                                 </Button>
                             </div>
                         )}
                         {data?.map((item) => {
                             return (
                                 <div key={item.id}>
-                                    <Item
-                                        isSharing={isSharing}
-                                        setIsSharing={(value) => {
-                                            setIsSharing(value)
-                                            setSharingId(item.id)
-                                        }}
-                                        item={item}
-                                    />
-                                    <ShareDialog
-                                        isOpen={
-                                            isSharing && item.id === sharingId
-                                        }
-                                        onOpenChange={setIsSharing}
-                                        id={item.id}
-                                        status={item.publishing_status}
-                                    />
+                                    <Item item={item} />
                                 </div>
                             )
                         })}
@@ -239,4 +184,4 @@ export default function Page() {
     )
 }
 
-export type ItemType = Awaited<ReturnType<typeof readMindmaps>>["data"][number]
+export type ItemType = Awaited<ReturnType<typeof readSummaries>>["data"][number]

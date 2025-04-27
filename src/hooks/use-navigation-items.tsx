@@ -43,7 +43,7 @@ export function useNavigationItems() {
         {
             name: t["Summarize"],
             icon: <Telescope className="!w-6 !h-6" />,
-            route: "/summarize",
+            route: "/summarize?list=true",
         },
         {
             name: t["Our Offers"],
