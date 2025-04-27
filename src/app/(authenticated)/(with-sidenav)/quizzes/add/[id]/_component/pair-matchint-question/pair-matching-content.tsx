@@ -29,7 +29,10 @@ export default function MatchingPairsContent() {
                     localId={selectedQuestion?.localId}
                 />
 
-                <div className="max-w-[1200px] min-w-[700px] justify-center items-center mt-20 gap-10 w-full flex">
+                <div
+                    dir="ltr"
+                    className="max-w-[1200px] min-w-[700px] justify-center items-center mt-20 gap-10 w-full flex"
+                >
                     <LeftSection leftOptions={content?.leftOptions} />
                     <RightSection
                         notSelectedLeftOptions={content?.leftOptions?.filter(

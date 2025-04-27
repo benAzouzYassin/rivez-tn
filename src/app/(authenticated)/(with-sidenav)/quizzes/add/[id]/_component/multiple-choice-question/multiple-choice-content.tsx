@@ -32,7 +32,10 @@ export default function MultipleChoiceContent() {
                         localId={selectedQuestion?.localId}
                     />
                 </div>
-                <div className={cn({ "flex ": layout === "horizontal" })}>
+                <div
+                    dir="ltr"
+                    className={cn({ "flex ": layout === "horizontal" })}
+                >
                     <div
                         className={cn(
                             "flex items-center justify-center w-full h-fit",

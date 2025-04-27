@@ -1,3 +1,5 @@
+"use client"
+
 import { Button } from "@/components/ui/button"
 import WarningDialog from "@/components/ui/warning-dialog"
 import { softDeleteQuizById } from "@/data-access/quizzes/delete"
@@ -8,13 +10,56 @@ import { shuffleArray } from "@/utils/array"
 import { useQueryClient } from "@tanstack/react-query"
 import { useParams } from "next/navigation"
 import { useRouter } from "nextjs-toploader/app"
-import { useState } from "react"
+import { useState, useMemo } from "react"
 import useQuizStore, {
     FillInTheBlankStoreContent,
     MatchingPairsOptions,
     MultipleChoiceOptions,
 } from "../store"
+import { getLanguage } from "@/utils/get-language"
+
 export default function Buttons() {
+    const translation = useMemo(
+        () => ({
+            en: {
+                removeQuiz: "Remove the quiz",
+                cancel: "Cancel",
+                saveQuiz: "Save Quiz",
+                saved: "Saved successfully.",
+                errorSaving: "Error while saving...",
+                warningTitle: "Warning: Proceed with caution",
+                warningDesc:
+                    "You have left some options empty. Any empty option will be ignored.",
+                continue: "Continue",
+            },
+            fr: {
+                removeQuiz: "Supprimer le quiz",
+                cancel: "Annuler",
+                saveQuiz: "Enregistrer le quiz",
+                saved: "Enregistré avec succès.",
+                errorSaving: "Erreur lors de l'enregistrement...",
+                warningTitle: "Avertissement : Procédez avec prudence",
+                warningDesc:
+                    "Vous avez laissé certaines options vides. Toute option vide sera ignorée.",
+                continue: "Continuer",
+            },
+            ar: {
+                removeQuiz: "حذف الاختبار",
+                cancel: "إلغاء",
+                saveQuiz: "حفظ الاختبار",
+                saved: "تم الحفظ بنجاح.",
+                errorSaving: "حدث خطأ أثناء الحفظ...",
+                warningTitle: "تحذير: تابع بحذر",
+                warningDesc:
+                    "لقد تركت بعض الخيارات فارغة. سيتم تجاهل أي خيار فارغ.",
+                continue: "متابعة",
+            },
+        }),
+        []
+    )
+    const lang = getLanguage()
+    const t = translation[lang]
+
     const { data: userData } = useCurrentUser()
     const isGenerating = useQuizStore((s) => s.isGeneratingQuizWithAi)
     const shadowQuestionsCount = useQuizStore((s) => s.shadowQuestionsCount)
@@ -112,7 +157,7 @@ export default function Buttons() {
                         })
                         .filter((q) => !!q)
                 )
-                toastSuccess("Saved successfully.")
+                toastSuccess(t.saved)
 
                 queryClient.invalidateQueries({
                     queryKey: ["quizzes"],
@@ -122,7 +167,7 @@ export default function Buttons() {
             }
         } catch (error) {
             console.error(error)
-            toastError("Error while saving...")
+            toastError(t.errorSaving)
         } finally {
             setIsSaving(false)
         }
@@ -171,12 +216,12 @@ export default function Buttons() {
         handleSave()
     }
     return (
-        <div className=" w-full z-50   fixed flex items-center justify-end right-0 top-24 ">
+        <div className=" w-full z-50  rtl:pl-5  fixed flex items-center justify-end right-0 top-24 ">
             <div className="flex z-50   items-center gap-2 bg-white p-2 rounded-2xl">
                 <WarningDialog
                     isOpen={isCanceling}
                     onOpenChange={setIsCanceling}
-                    confirmText="Remove the quiz"
+                    confirmText={t.removeQuiz}
                     onConfirm={async () => {
                         await softDeleteQuizById(quizId)
                         reset()
@@ -188,7 +233,7 @@ export default function Buttons() {
                         className="text-base font-extrabold"
                         variant="red"
                     >
-                        Cancel
+                        {t.cancel}
                     </Button>
                 </WarningDialog>
                 <Button
@@ -198,16 +243,16 @@ export default function Buttons() {
                     className="text-base font-extrabold"
                     variant={"blue"}
                 >
-                    Save Quiz
+                    {t.saveQuiz}
                 </Button>
 
                 <WarningDialog
                     titleClassName="text-[#EF9C07]"
                     isOpen={isWarning}
                     onOpenChange={setIsWarning}
-                    description="You have left some options empty. Any empty will option be ignored."
-                    title="Warning: Proceed with caution"
-                    confirmText="Continue"
+                    description={t.warningDesc}
+                    title={t.warningTitle}
+                    confirmText={t.continue}
                     confirmBtnClassName="bg-amber-400 shadow-amber-400"
                     onConfirm={async () => {
                         setIsWarning(false)

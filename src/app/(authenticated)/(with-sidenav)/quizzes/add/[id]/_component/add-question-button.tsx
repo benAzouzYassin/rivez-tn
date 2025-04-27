@@ -145,7 +145,7 @@ export default function AddQuestionButton(props: Props) {
                 <div className="flex items-center">
                     <button
                         className={cn(
-                            "h-full flex items-center justify-center min-w-32 hover:cursor-pointer hover:bg-neutral-50 active:scale-95 transition-all border-dashed border-neutral-300 border-2 rounded-lg",
+                            "h-full translate-y-1 min-h-[82px] flex items-center justify-center min-w-32 hover:cursor-pointer hover:bg-neutral-50 active:scale-95 transition-all border-dashed border-neutral-300 border-2 rounded-lg",
                             props.className
                         )}
                     >

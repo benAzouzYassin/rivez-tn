@@ -4,6 +4,8 @@ import { Loader2 } from "lucide-react"
 import useQuizStore from "../store"
 import AddQuestionButton from "./add-question-button"
 import QuestionPreview from "./question-preview"
+import { useEffect, useRef } from "react"
+import { wait } from "@/utils/wait"
 export default function AllQuestionsPreviews() {
     const { isSidenavOpen } = useSidenav()
     const questions = useQuizStore((state) => state.allQuestions)
@@ -12,17 +14,46 @@ export default function AllQuestionsPreviews() {
     )
     const shadowQuestions = useQuizStore((s) => s.shadowQuestionsCount)
 
+    const containerRef = useRef<HTMLDivElement>(null)
+    const handleScrollToLeft = (e: WheelEvent) => {
+        if (containerRef.current) {
+            containerRef.current.scrollLeft += e.deltaY * 0.5
+            e.preventDefault()
+        }
+    }
+    useEffect(() => {
+        const currentRef = containerRef.current
+        if (currentRef) {
+            currentRef.addEventListener("wheel", handleScrollToLeft)
+        }
+        return () => {
+            if (currentRef) {
+                currentRef.removeEventListener("wheel", handleScrollToLeft)
+            }
+        }
+    }, [containerRef])
+    const handleQuestionAdd = () => {
+        wait(100).then(() => {
+            if (containerRef.current) {
+                containerRef.current.scrollLeft += 500
+            }
+        })
+    }
     return (
         <footer
             className={cn(
-                "h-[140px]  bg-white pb-4 transition-all duration-300 fixed left-0 bottom-0 w-full",
+                "h-[120px] bg-white pb-2 transition-all duration-300 fixed left-0 bottom-0 w-full",
                 {
-                    "pl-[300px]": isSidenavOpen,
-                    "pl-[100px]": !isSidenavOpen,
+                    "ltr:pl-[300px] rtl:pr-[300px]": isSidenavOpen,
+                    "ltr:pl-[100px] rtl:pr-[100px]": !isSidenavOpen,
                 }
             )}
         >
-            <section className="pt-5 pb-3 h-full overflow-x-auto overflow-y-hidden flex gap-2 px-8 border-t-2">
+            <section
+                dir="ltr"
+                ref={containerRef}
+                className="pt-3 h-[115px] pb-4  overflow-x-auto overflow-y-hidden flex gap-2 px-8 border-t-2"
+            >
                 {questions.map((question) => (
                     <QuestionPreview
                         isSelected={question.localId == selectedQuestionId}
