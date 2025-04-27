@@ -10,17 +10,17 @@ import {
     DialogTrigger,
 } from "@/components/ui/dialog"
 import { lowPrice } from "@/constants/prices"
+import { useCurrentUser } from "@/hooks/use-current-user"
 import { cn } from "@/lib/ui-utils"
+import { getLanguage } from "@/utils/get-language"
 import { wait } from "@/utils/wait"
-import { ChevronLeft, Edit, Sparkles } from "lucide-react"
-import { ReactNode, useRef, useState, useMemo } from "react"
+import { ArrowLeft, Edit, Sparkles } from "lucide-react"
+import { ReactNode, useMemo, useRef, useState } from "react"
 import { Store } from "../store"
 import AddQuestionWithAiForm from "./add-question-with-ai-form"
 import MatchingPairs from "./layouts-icons/matching-pairs"
 import MultipleChoiceHorizontal from "./layouts-icons/multiple-choice-horizontal"
 import MultipleChoiceVertical from "./layouts-icons/multiple-choice-vertical"
-import { useCurrentUser } from "@/hooks/use-current-user"
-import { getLanguage } from "@/utils/get-language"
 
 type Props = {
     contentClassName?: string
@@ -165,11 +165,10 @@ export default function LayoutSelectDialog(props: Props) {
                     <div className="grid relative grid-cols-2 mx-auto py-3 gap-6 w-full max-w-2xl">
                         <Button
                             onClick={() => setTab("layout-select")}
-                            className="absolute -top-24 text-base"
+                            className="absolute -top-24 rtl:-left-14 text-base"
                             variant={"secondary"}
                         >
-                            <ChevronLeft className="!w-5 -mr-1 stroke-3 !h-5" />
-                            {t.back}
+                            <ArrowLeft className="!w-6 !h-6 text-neutral-400 stroke-[2.5]" />
                         </Button>
                         <Card
                             onClick={() => handleModeSelect("ai")}

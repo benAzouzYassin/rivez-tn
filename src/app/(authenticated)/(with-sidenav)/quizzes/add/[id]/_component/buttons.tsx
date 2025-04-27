@@ -73,7 +73,7 @@ export default function Buttons() {
     const [isWarning, setIsWarning] = useState(false)
     const queryClient = useQueryClient()
 
-    const handleSave = async () => {
+    const handleSave = async ({ shouldTake }: { shouldTake: boolean }) => {
         try {
             if (isNaN(quizId) === false && quizId) {
                 setIsSaving(true)
@@ -162,7 +162,11 @@ export default function Buttons() {
                 queryClient.invalidateQueries({
                     queryKey: ["quizzes"],
                 })
-                router.replace("/quizzes")
+                if (shouldTake) {
+                    router.replace(`/quizzes/${quizId}`)
+                } else {
+                    router.replace("/quizzes")
+                }
                 reset()
             }
         } catch (error) {
@@ -172,7 +176,7 @@ export default function Buttons() {
             setIsSaving(false)
         }
     }
-    const handleSubmit = () => {
+    const handleSubmit = ({ shouldTake }: { shouldTake: boolean }) => {
         const isAllOptionsFilled = questions.every((q) => {
             if (q.type === "MULTIPLE_CHOICE") {
                 const content = q.content as MultipleChoiceOptions | undefined
@@ -213,7 +217,7 @@ export default function Buttons() {
         if (!isAllOptionsFilled || !isQuestionsFilled) {
             return setIsWarning(true)
         }
-        handleSave()
+        handleSave({ shouldTake })
     }
     return (
         <div className=" w-full z-50  rtl:pl-5  fixed flex items-center justify-end right-0 top-24 ">
@@ -239,8 +243,18 @@ export default function Buttons() {
                 <Button
                     isLoading={isSaving}
                     disabled={isGenerating || shadowQuestionsCount > 2}
-                    onClick={handleSubmit}
+                    onClick={() => handleSubmit({ shouldTake: false })}
                     className="text-base font-extrabold"
+                    variant={"blue"}
+                >
+                    {t.saveQuiz}
+                </Button>
+                <Button
+                    id="save-and-take-quiz-button"
+                    isLoading={isSaving}
+                    disabled={isGenerating || shadowQuestionsCount > 2}
+                    onClick={() => handleSubmit({ shouldTake: true })}
+                    className="text-base hidden font-extrabold"
                     variant={"blue"}
                 >
                     {t.saveQuiz}
@@ -256,7 +270,7 @@ export default function Buttons() {
                     confirmBtnClassName="bg-amber-400 shadow-amber-400"
                     onConfirm={async () => {
                         setIsWarning(false)
-                        handleSave()
+                        handleSave({ shouldTake: false })
                         reset()
                         router.back()
                     }}

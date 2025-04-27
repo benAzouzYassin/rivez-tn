@@ -15,6 +15,7 @@ import { Controller, useForm } from "react-hook-form"
 import { z } from "zod"
 import { DifficultySelect } from "../_components/difficulty-select"
 import ImageUpload from "../_components/image-upload"
+import ConfirmationDialog from "../_components/confirmation-dialog"
 
 export default function Page() {
     const sideNav = useSidenav()
