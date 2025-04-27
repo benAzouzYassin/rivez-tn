@@ -27,7 +27,7 @@ export async function POST(req: NextRequest) {
             .throwOnError()
 
         const lastDocumentSummarization = await supabaseAdmin
-            .from("document_summarizations")
+            .from("summarizations_logs")
             .select("*")
             .order("created_at", {
                 ascending: false,
@@ -99,7 +99,7 @@ export async function POST(req: NextRequest) {
             })
             .throwOnError()
         supabaseAdmin
-            .from("document_summarizations")
+            .from("summarizations_logs")
             .update({
                 is_refunded: true,
             })

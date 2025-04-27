@@ -57,7 +57,7 @@ Steps of explaining document are :
 - Cover all content provided in the input document(s)
 - Generate at least the minimum number of pages requested
 - Highlight important keywords by making them bold
-- Minimum number of words per page should be 500 so each page should be detailed 
+- Minimum number of words per page should be 500 so each page should be detailed  
 
 ## Markdown Support
 Your response should leverage Markdown's formatting capabilities including:

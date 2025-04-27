@@ -34,38 +34,6 @@ export type Database = {
   }
   public: {
     Tables: {
-      document_summarizations: {
-        Row: {
-          created_at: string
-          id: number
-          is_refunded: boolean | null
-          pages_count: number | null
-          user_id: string | null
-        }
-        Insert: {
-          created_at?: string
-          id?: number
-          is_refunded?: boolean | null
-          pages_count?: number | null
-          user_id?: string | null
-        }
-        Update: {
-          created_at?: string
-          id?: number
-          is_refunded?: boolean | null
-          pages_count?: number | null
-          user_id?: string | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "document_summarizations_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: false
-            referencedRelation: "user_profiles"
-            referencedColumns: ["user_id"]
-          },
-        ]
-      }
       mindmap_node_explanation: {
         Row: {
           author_id: string | null
@@ -642,6 +610,73 @@ export type Database = {
           },
         ]
       }
+      summarizations: {
+        Row: {
+          content: Json | null
+          created_at: string
+          id: number
+          name: string | null
+          source: Database["public"]["Enums"]["summarization_source"] | null
+          user_id: string | null
+        }
+        Insert: {
+          content?: Json | null
+          created_at?: string
+          id?: number
+          name?: string | null
+          source?: Database["public"]["Enums"]["summarization_source"] | null
+          user_id?: string | null
+        }
+        Update: {
+          content?: Json | null
+          created_at?: string
+          id?: number
+          name?: string | null
+          source?: Database["public"]["Enums"]["summarization_source"] | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "summarizations_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["user_id"]
+          },
+        ]
+      }
+      summarizations_logs: {
+        Row: {
+          created_at: string
+          id: number
+          is_refunded: boolean | null
+          pages_count: number | null
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          id?: number
+          is_refunded?: boolean | null
+          pages_count?: number | null
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          id?: number
+          is_refunded?: boolean | null
+          pages_count?: number | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "document_summarizations_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["user_id"]
+          },
+        ]
+      }
       user_profiles: {
         Row: {
           avatar_url: string | null
@@ -740,6 +775,7 @@ export type Database = {
         | "DEBUG_CODE"
         | "CODE_COMPLETION"
         | "FILL_IN_THE_BLANK"
+      summarization_source: "youtube" | "pdf" | "image"
       user_role_types: "ADMIN" | "USER"
     }
     CompositeTypes: {

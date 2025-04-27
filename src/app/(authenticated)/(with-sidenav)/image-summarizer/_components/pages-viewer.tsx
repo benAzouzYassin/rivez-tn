@@ -187,6 +187,7 @@ export default function PagesViewer(props: Props) {
                         )}
                     >
                         <Button
+                            variant={"secondary"}
                             isLoading={isPrinting}
                             onClick={() => {
                                 setIsPrinting(true)
