@@ -9,11 +9,12 @@ import {
 } from "@/components/ui/select"
 import { Textarea } from "@/components/ui/textarea"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { ChevronLeft, SparklesIcon } from "lucide-react"
+import { ArrowLeft, ChevronLeft, SparklesIcon } from "lucide-react"
 import { useMemo } from "react"
 import { Controller, useForm } from "react-hook-form"
 import { z } from "zod"
 import { DifficultySelect } from "../../_components/difficulty-select"
+import { getLanguage } from "@/utils/get-language"
 
 const POSSIBLE_QUESTIONS_TYPES = Object.keys(POSSIBLE_QUESTIONS)
 
@@ -30,18 +31,81 @@ interface Props {
 }
 
 export default function AddQuestionWithAiForm(props: Props) {
+    // Translation object
+    const translation = useMemo(
+        () => ({
+            en: {
+                back: "Back",
+                subject: "Subject",
+                subjectPlaceholder: "Enter the main topic (Be detailed !)",
+                subjectRequired: "Main topic is required",
+                subjectTooLong: "Input exceeds maximum length",
+                difficulty: "Difficulty Level",
+                language: "Language",
+                selectLanguage: "Select language",
+                english: "English",
+                arabic: "Arabic",
+                french: "French",
+                comingSoon: "(coming soon)",
+                notes: "Additional Notes",
+                notesPlaceholder:
+                    "Add any additional instructions for the AI...",
+                generate: "Generate Question",
+            },
+            fr: {
+                back: "Retour",
+                subject: "Sujet",
+                subjectPlaceholder:
+                    "Entrez le sujet principal (Soyez précis !)",
+                subjectRequired: "Le sujet principal est requis",
+                subjectTooLong: "La saisie dépasse la longueur maximale",
+                difficulty: "Niveau de difficulté",
+                language: "Langue",
+                selectLanguage: "Sélectionnez la langue",
+                english: "Anglais",
+                arabic: "Arabe",
+                french: "Français",
+                comingSoon: "(bientôt disponible)",
+                notes: "Notes supplémentaires",
+                notesPlaceholder:
+                    "Ajoutez des instructions supplémentaires pour l'IA...",
+                generate: "Générer la question",
+            },
+            ar: {
+                back: "رجوع",
+                subject: "الموضوع",
+                subjectPlaceholder: "أدخل الموضوع الرئيسي (كن دقيقًا!)",
+                subjectRequired: "الموضوع الرئيسي مطلوب",
+                subjectTooLong: "النص يتجاوز الحد الأقصى للطول",
+                difficulty: "مستوى الصعوبة",
+                language: "اللغة",
+                selectLanguage: "اختر اللغة",
+                english: "الإنجليزية",
+                arabic: "العربية",
+                french: "الفرنسية",
+                comingSoon: "(قريبًا)",
+                notes: "ملاحظات إضافية",
+                notesPlaceholder: "أضف أي تعليمات إضافية للذكاء الاصطناعي...",
+                generate: "إنشاء سؤال",
+            },
+        }),
+        []
+    )
+    const lang = getLanguage()
+    const t = translation[lang]
+
     const formSchema = useMemo(
         () =>
             z.object({
                 mainTopic: z
                     .string()
-                    .min(1, "Main topic is required")
-                    .max(100, "Input exceeds maximum length"),
+                    .min(1, t.subjectRequired)
+                    .max(100, t.subjectTooLong),
                 language: z.string().nullable().optional(),
                 notes: z.string().nullable().optional(),
                 difficulty: z.string().nullable().optional(),
             }),
-        []
+        [t.subjectRequired, t.subjectTooLong]
     )
     const form = useForm<FormValues>({
         resolver: zodResolver(formSchema),
@@ -51,10 +115,10 @@ export default function AddQuestionWithAiForm(props: Props) {
         <section className="flex flex-col w-full md:-mt-5 mx-auto gap-4 max-w-[900px] bg-white  rounded-3xl  ">
             <Button
                 variant={"secondary"}
-                className="absolute top-8"
+                className="absolute left-4 top-14"
                 onClick={props.onBackClick}
             >
-                <ChevronLeft /> Back
+                <ArrowLeft className="!w-6 !h-6 text-neutral-400 stroke-[2.5]" />
             </Button>
             <div className="">
                 {/* Main Topic */}
@@ -63,12 +127,12 @@ export default function AddQuestionWithAiForm(props: Props) {
                         htmlFor="mainTopic"
                         className="block text-sm font-medium text-neutral-700 mb-1"
                     >
-                        Subject
+                        {t.subject}
                     </label>
                     <Textarea
                         id="mainTopic"
                         {...form.register("mainTopic")}
-                        placeholder="Enter the main topic (Be detailed !)"
+                        placeholder={t.subjectPlaceholder}
                         className="w-full -mb-2"
                         errorMessage={form.formState.errors.mainTopic?.message}
                     />
@@ -76,7 +140,7 @@ export default function AddQuestionWithAiForm(props: Props) {
                 {/* Difficulty */}
                 <div>
                     <label className="block text-sm font-medium text-neutral-700 mb-1">
-                        Difficulty Level
+                        {t.difficulty}
                     </label>
                     <Controller
                         control={form.control}
@@ -90,41 +154,6 @@ export default function AddQuestionWithAiForm(props: Props) {
                         )}
                     />
                 </div>
-                {/* Language Selection */}
-                <div>
-                    <label
-                        htmlFor="language"
-                        className="block text-sm font-medium text-neutral-700 mb-1"
-                    >
-                        Language
-                    </label>
-                    <Select
-                        defaultValue={form.getValues().language || undefined}
-                        onValueChange={(val) => form.setValue("language", val)}
-                    >
-                        <SelectTrigger className="data-[placeholder]:text-neutral-400 w-full">
-                            <SelectValue
-                                id="language"
-                                placeholder="Select language"
-                            />
-                        </SelectTrigger>
-                        <SelectContent>
-                            <SelectItem value="EN">English</SelectItem>
-                            <SelectItem disabled value="AR">
-                                Arabic{" "}
-                                <span className="text-sm italic text-neutral-500">
-                                    (coming soon)
-                                </span>
-                            </SelectItem>
-                            <SelectItem disabled value="FR">
-                                French{" "}
-                                <span className="text-sm italic text-neutral-500">
-                                    (coming soon)
-                                </span>
-                            </SelectItem>
-                        </SelectContent>
-                    </Select>
-                </div>
 
                 {/* Notes */}
                 <div>
@@ -132,12 +161,12 @@ export default function AddQuestionWithAiForm(props: Props) {
                         htmlFor="notes"
                         className="block text-sm font-medium text-neutral-700 mb-1"
                     >
-                        Additional Notes
+                        {t.notes}
                     </label>
                     <Textarea
                         id="notes"
                         {...form.register("notes")}
-                        placeholder="Add any additional instructions for the AI..."
+                        placeholder={t.notesPlaceholder}
                         className="w-full"
                         errorMessage={form.formState.errors.notes?.message}
                     />
@@ -151,9 +180,8 @@ export default function AddQuestionWithAiForm(props: Props) {
                     form.handleSubmit((data) => props.onSubmit(data))()
                 }}
                 className="font-extrabold uppercase mt-4 py-6 text-base w-full md:w-auto"
-                variant="blue"
             >
-                Generate Question
+                {t.generate}
                 <SparklesIcon className=" !w-6 !h-6" />
             </Button>
         </section>

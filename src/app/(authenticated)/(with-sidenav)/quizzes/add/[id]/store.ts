@@ -16,6 +16,7 @@ import { generateQuizQuestion } from "@/data-access/quizzes/generate-question"
 import { wait } from "@/utils/wait"
 
 interface State {
+    didGenerate: boolean
     allQuestions: QuizQuestionType[]
     selectedQuestionLocalId: string | null
     isGeneratingQuizWithAi: boolean
@@ -81,12 +82,13 @@ interface Actions {
         optionLocalId: string
     ) => void
     addMatchingPairsOption: (side: "left" | "right") => void
-    reset: () => void
+    reset: (didGenerate?: boolean) => void
 }
 
 export interface Store extends State, Actions {}
 
 const initialState: State = {
+    didGenerate: false,
     isAddingQuestionByAi: false,
     shadowQuestionsCount: 0,
     isGeneratingQuizWithAi: false,
@@ -178,6 +180,7 @@ const useQuizStore = create<Store>((set, get) => ({
                 allQuestions: [],
                 isGeneratingQuizWithAi: true,
                 selectedQuestionLocalId: null,
+                didGenerate: false,
             })
             generateQuiz(
                 method,
@@ -251,7 +254,9 @@ const useQuizStore = create<Store>((set, get) => ({
                 },
                 () => {
                     // This is the on finish callback
-                    const didGenerate = get().allQuestions.length > 1
+                    const didGenerate =
+                        get().allQuestions.length > 1 &&
+                        get().didGenerate === false
                     if (!didGenerate) {
                         set({
                             isGeneratingQuizWithAi: false,
@@ -513,7 +518,11 @@ const useQuizStore = create<Store>((set, get) => ({
     setSelectedQuestion: (selectedQuestionLocalId: string | null) =>
         set({ selectedQuestionLocalId }),
 
-    reset: () => set(initialState),
+    reset: (didGenerate?: boolean) =>
+        set({
+            ...initialState,
+            didGenerate: didGenerate || initialState.didGenerate,
+        }),
 }))
 
 export default useQuizStore
