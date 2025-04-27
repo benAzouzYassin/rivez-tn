@@ -51,3 +51,12 @@ export async function readSummaries(config: {
         })[]
     return { data: data, count: response.count as number }
 }
+export async function readSummaryById(params: { id: number }) {
+    const response = await supabase
+        .from("summarizations")
+        .select(`*`)
+        .eq("id", params.id)
+        .single()
+        .throwOnError()
+    return response.data
+}

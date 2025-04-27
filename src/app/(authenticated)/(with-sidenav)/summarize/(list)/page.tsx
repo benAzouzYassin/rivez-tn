@@ -9,7 +9,7 @@ import { useIsAdmin } from "@/hooks/use-is-admin"
 import { cn } from "@/lib/ui-utils"
 import { useSidenav } from "@/providers/sidenav-provider"
 import { useQuery } from "@tanstack/react-query"
-import { PlusCircle } from "lucide-react"
+import { Plus, PlusCircle } from "lucide-react"
 import {
     parseAsBoolean,
     parseAsInteger,
@@ -79,7 +79,7 @@ export default function Page() {
             setIsList(false)
             setIsAdding(false)
         }
-    }, [isList , setIsList])
+    }, [isList, setIsList])
     if (isAdding) {
         return (
             <Add
@@ -129,7 +129,7 @@ export default function Page() {
                     <div className="md:scale-100 flex md:self-end sm:self-auto lg:self-auto md:pr-0 pr-4 scale-90 ">
                         <Button onClick={() => setIsAdding(true)}>
                             {" "}
-                            <PlusCircle /> {"Add"}
+                            <Plus className="w-5 h-5 min-w-5 min-h-5" /> {"Add"}
                         </Button>
                     </div>
                 </div>
@@ -159,7 +159,8 @@ export default function Page() {
                                     {"no items..."}
                                 </p>
                                 <Button onClick={() => setIsAdding(true)}>
-                                    <PlusCircle /> {"Add"}
+                                    <Plus className="w-5 h-5 min-w-5 min-h-5" />{" "}
+                                    {"Add"}
                                 </Button>
                             </div>
                         )}

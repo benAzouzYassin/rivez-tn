@@ -2,6 +2,8 @@ import Markdown from "@/components/shared/markdown"
 import { Button } from "@/components/ui/button"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { cn } from "@/lib/ui-utils"
+import { getLanguage } from "@/utils/get-language"
+import { containsArabic } from "@/utils/is-arabic"
 import { wait } from "@/utils/wait"
 import {
     ChevronLeft,
@@ -9,12 +11,10 @@ import {
     DownloadIcon,
     HelpCircle,
 } from "lucide-react"
-import { useRef, useState, useMemo } from "react"
+import { useMemo, useRef, useState } from "react"
 import { useReactToPrint } from "react-to-print"
-import SideItem from "./side-item"
 import GenerateQuizDialog from "./generate-quiz-dialog"
-import { containsArabic } from "@/utils/is-arabic"
-import { getLanguage } from "@/utils/get-language"
+import SideItem from "./side-item"
 
 interface Props {
     files: {
@@ -22,7 +22,6 @@ interface Props {
         name: string
         markdownPages: string[]
     }[]
-    isStreaming: boolean
 }
 
 export default function PagesViewer(props: Props) {
@@ -64,9 +63,6 @@ export default function PagesViewer(props: Props) {
         (file) => file.id === activePage.fileId
     )
     const activeFile = props.files[activeFileIndex] || props.files[0]
-    const nextFile = props.files[activeFileIndex + 1] || undefined
-    const prevFile = props.files[activeFileIndex - 1] || undefined
-
     const isLastFile = activeFileIndex === props.files.length - 1
     const isLastPageOfFile =
         activePage.pageIndex === activeFile.markdownPages.length - 1
@@ -119,18 +115,6 @@ export default function PagesViewer(props: Props) {
         }
     }
 
-    function ShadowFileItem() {
-        return (
-            <div
-                className={cn(
-                    "h-16 mt-3    transition-all animate-pulse  cursor-not-allowed flex border border-neutral-200 text-lg  from-neutral-100 text-[#545454] hover:bg-neutral-100 font-extrabold rounded-xl shadow-none w-full justify-start px-4"
-                )}
-            >
-                <p className="my-auto ml-3 rounded-sm h-3 w-[90%] bg-neutral-200"></p>
-            </div>
-        )
-    }
-
     const markdownRef = useRef<HTMLDivElement>(null)
 
     const reactToPrintFn = useReactToPrint({
@@ -168,13 +152,6 @@ export default function PagesViewer(props: Props) {
                                 activePage={activePage}
                             />
                         ))}
-                        {props.isStreaming && (
-                            <>
-                                {Array.from({ length: 5 }).map((_, index) => (
-                                    <ShadowFileItem key={index} />
-                                ))}
-                            </>
-                        )}
                     </div>
                 </ScrollArea>
             </div>
@@ -218,7 +195,7 @@ export default function PagesViewer(props: Props) {
                     </div>
                     <div
                         ref={markdownRef}
-                        className="print:px-10 md:mt-0  md:pt-4 -mt-10  relative "
+                        className="print:px-10 md:mt-0 -mt-10 md:pt-4  relative "
                     >
                         {isPrinting ? (
                             props.files.map((file) =>

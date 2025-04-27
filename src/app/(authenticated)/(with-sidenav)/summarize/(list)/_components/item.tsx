@@ -53,14 +53,14 @@ export default function Item({ item }: Props) {
                 )}
             >
                 {item.source === "pdf" && (
-                    <FileTextIcon className="w-12 absolute top-20 -translate-x-1/2 left-1/2 h-12 text-neutral-300" />
+                    <FileTextIcon className="w-12 absolute top-20 -translate-x-1/2 left-1/2 h-12 text-blue-300" />
                 )}
                 {item.source === "image" && (
-                    <ImageIcon className="w-12 absolute top-20 -translate-x-1/2 left-1/2 h-12 text-neutral-300" />
+                    <ImageIcon className="w-12 absolute top-20 -translate-x-1/2 left-1/2 h-12 text-blue-300" />
                 )}
 
                 {item.source === "youtube" && (
-                    <VideoIcon className="w-12 absolute top-20 -translate-x-1/2 left-1/2 h-12 text-neutral-300" />
+                    <VideoIcon className="w-12 absolute top-20 -translate-x-1/2 left-1/2 h-12 text-blue-300" />
                 )}
             </div>
 

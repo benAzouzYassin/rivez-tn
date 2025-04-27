@@ -77,9 +77,11 @@ export default function PagesViewer(props: Props) {
     const isPreviousDisabled = isFirstFile && isFirstPageOfFile
 
     const handleNextPage = () => {
-        contentRef.current?.scrollTo({
-            top: 0,
-            behavior: "smooth",
+        wait(30).then(() => {
+            contentRef.current?.scrollTo({
+                top: 0,
+                behavior: "smooth",
+            })
         })
 
         if (isLastPageOfFile && !isLastFile) {
@@ -96,9 +98,11 @@ export default function PagesViewer(props: Props) {
     }
 
     const handlePreviousPage = () => {
-        contentRef.current?.scrollTo({
-            top: 0,
-            behavior: "smooth",
+        wait(30).then(() => {
+            contentRef.current?.scrollTo({
+                top: 0,
+                behavior: "smooth",
+            })
         })
 
         if (isFirstPageOfFile && !isFirstFile) {
@@ -152,7 +156,15 @@ export default function PagesViewer(props: Props) {
                             <SideItem
                                 key={file.id}
                                 file={file}
-                                setActivePage={setActivePage}
+                                setActivePage={(page) => {
+                                    setActivePage(page)
+                                    wait(30).then(() => {
+                                        contentRef.current?.scrollTo({
+                                            top: 0,
+                                            behavior: "smooth",
+                                        })
+                                    })
+                                }}
                                 activePage={activePage}
                             />
                         ))}
@@ -206,7 +218,7 @@ export default function PagesViewer(props: Props) {
                     </div>
                     <div
                         ref={markdownRef}
-                        className="print:px-10 md:mt-0 -mt-10  relative "
+                        className="print:px-10 md:mt-0  md:pt-4 -mt-10  relative "
                     >
                         {isPrinting ? (
                             props.files.map((file) =>
