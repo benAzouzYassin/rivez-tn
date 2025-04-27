@@ -1,14 +1,19 @@
 "use client"
 
 import { highPrice, lowPrice, mediumPrice } from "@/constants/prices"
-import { FileTextIcon, ImageIcon, Video } from "lucide-react"
+import { ArrowLeft, FileTextIcon, ImageIcon, Video } from "lucide-react"
 import { useMemo, useState } from "react"
-import Item from "./_components/item"
-import YoutubeLinkDialog from "./_components/youtube-link-dialog"
+import Item from "./item"
+import YoutubeLinkDialog from "./youtube-link-dialog"
 import { useIsSmallScreen } from "@/hooks/is-small-screen"
 import { getLanguage } from "@/utils/get-language"
+import { Button } from "@/components/ui/button"
 
-export default function Page() {
+interface Props {
+    onBack: () => void
+    hideBack?: boolean
+}
+export default function Add(props: Props) {
     const [isDialogOpen, setIsDialogOpen] = useState(false)
     const isSmallScreen = useIsSmallScreen()
 
@@ -106,6 +111,15 @@ export default function Page() {
 
     return (
         <main className="flex relative flex-col items-center w-full min-h-screen md:p-6 bg-white">
+            {!props.hideBack && (
+                <Button
+                    onClick={props.onBack}
+                    className="absolute left-6"
+                    variant={"secondary"}
+                >
+                    <ArrowLeft className="w-6 min-w-6 min-h-6 stroke-[2.5] text-neutral-500 h-6 " />
+                </Button>
+            )}{" "}
             <div className="max-w-3xl w-full text-center">
                 <h1 className="md:text-4xl text-3xl font-extrabold text-neutral-700  pt-6">
                     {t["Summarize something"]}
@@ -118,7 +132,6 @@ export default function Page() {
                     }
                 </p>
             </div>
-
             <section className="grid  md:px-0 px-3  grid-cols-1 sm:grid-cols-2 max-w-[850px] pb-10 gap-x-10 gap-y-7 mt-10 ">
                 {items
                     .filter((item) => !item.disabled)

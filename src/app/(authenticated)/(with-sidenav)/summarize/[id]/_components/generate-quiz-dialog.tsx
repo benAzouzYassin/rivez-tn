@@ -31,9 +31,9 @@ import { useRouter } from "nextjs-toploader/app"
 import { useEffect, useMemo, useState } from "react"
 import { Controller, useForm } from "react-hook-form"
 import { z } from "zod"
-import useQuizStore from "../../quizzes/add/[id]/store"
 import { DifficultySelect } from "./difficulty-select"
 import QuizImageUpload from "./quiz-image-upload"
+import useQuizStore from "@/app/(authenticated)/(with-sidenav)/quizzes/add/[id]/store"
 
 const POSSIBLE_QUESTIONS_TYPES = Object.keys(POSSIBLE_QUESTIONS)
 
