@@ -6,6 +6,7 @@ import { ImageIcon, X } from "lucide-react"
 import { memo, useState } from "react"
 import useQuizStore from "../../store"
 import CodeSnippets from "./code-snippet"
+
 interface Props {
     layout: string
     selectedQuestionId: string
@@ -13,6 +14,7 @@ interface Props {
     imageType: Database["public"]["Tables"]["quizzes_questions"]["Insert"]["image_type"]
     codeSnippets: MultipleChoiceContent["codeSnippets"] | null
 }
+
 function DialogImage({
     layout,
     selectedQuestionId,
@@ -64,9 +66,9 @@ function DialogImage({
                                 selectedQuestionId
                             )
                         }}
-                        className=" active:scale-95 transition-all bg-red-100 border-red-300 border rounded-full p-[2px] absolute top-3 cursor-pointer -left-2 z-10 "
+                        className="active:scale-95 transition-all bg-red-100 dark:bg-red-900 border-red-300 dark:border-red-700 border rounded-full p-[2px] absolute top-3 cursor-pointer -left-2 z-10"
                     >
-                        <X className="w-4 h-4 text-red-600/70 stroke-3" />
+                        <X className="w-4 h-4 text-red-600/70 dark:text-red-400/80 stroke-3" />
                     </button>
                 )}
                 <div
@@ -75,7 +77,7 @@ function DialogImage({
                     })}
                 >
                     <div
-                        className={cn("flex w-full  h-fit", {
+                        className={cn("flex w-full h-fit", {
                             "w-fit": layout === "horizontal",
                         })}
                     >
@@ -92,36 +94,34 @@ function DialogImage({
                                     setIsOpen(true)
                                 }}
                                 className={cn(
-                                    "!h-[350px]  overflow-x-hidden items-center justify-center   w-full min-h-[200px] hover:cursor-pointer relative border-2 border-dashed rounded-xl bg-white    border-blue-200 hover:bg-blue-50/50 group",
-                                    {
-                                        "!h-[450px]": layout === "horizontal",
-                                    }
+                                    "!h-[350px] overflow-x-hidden items-center justify-center w-full min-h-[200px] hover:cursor-pointer relative border-2 border-dashed rounded-xl bg-white dark:bg-neutral-900 border-blue-200 dark:border-blue-800/50 hover:bg-blue-50/50 dark:hover:bg-blue-900/40 group",
+                                    { "!h-[450px]": layout === "horizontal" }
                                 )}
                             >
                                 {!imageUrl && imageType !== "code-snippets" && (
-                                    <div className="flex   text-blue-500 h-full items-center justify-center flex-col">
-                                        <ImageIcon className="w-36 stroke-[1.5] h-36 mb-2 mx-auto text-neutral-300 group-active:scale-95 transition-transform" />
+                                    <div className="flex text-blue-500 h-full items-center justify-center flex-col">
+                                        <ImageIcon className="w-36 stroke-[1.5] h-36 mb-2 mx-auto text-neutral-300 dark:text-neutral-700 group-active:scale-95 transition-transform" />
                                     </div>
                                 )}
 
                                 {imageType === "code-snippets" &&
                                     !codeSnippets?.length && (
-                                        <div className="flex   text-blue-500 h-full items-center justify-center flex-col">
-                                            <ImageIcon className="w-36 stroke-[1.5] h-36 mb-2 mx-auto text-neutral-300 group-active:scale-95 transition-transform" />
+                                        <div className="flex text-blue-500 h-full items-center justify-center flex-col">
+                                            <ImageIcon className="w-36 stroke-[1.5] h-36 mb-2 mx-auto text-neutral-300 dark:text-neutral-700 group-active:scale-95 transition-transform" />
                                         </div>
                                     )}
 
                                 {!!imageUrl &&
                                     (imageType === "normal-image" ||
                                         imageType === null) && (
-                                        <div className="p-4 ">
+                                        <div className="p-4">
                                             <img
                                                 src={imageUrl}
                                                 alt="Preview"
                                                 className={cn(
-                                                    "rounded-lg overflow-hidden  h-[350px] w-full object-contain",
+                                                    "rounded-lg overflow-hidden h-[350px] w-full object-contain",
                                                     {
-                                                        "!h-[400px] ":
+                                                        "!h-[400px]":
                                                             layout ===
                                                             "horizontal",
                                                     }

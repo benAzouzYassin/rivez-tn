@@ -29,7 +29,7 @@ export default function Page() {
     }
 
     return (
-        <section className="min-h-[100vh] pb-[200px]">
+        <section className="min-h-[100vh] dark:bg-neutral-900  pb-[200px]">
             {isLoading && (
                 <GeneralLoadingScreen text={t["Loading quiz data"]} />
             )}

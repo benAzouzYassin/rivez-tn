@@ -113,7 +113,7 @@ export default function UserHeader() {
 
     if (isLoading) {
         return (
-            <div className="h-[100vh] flex items-center absolute top-0 left-0 bg-white dark:bg-neutral-900 w-full z-50 justify-center">
+            <div className="h-[100vh] dark:bg-neutral-900 flex items-center absolute top-0 left-0 bg-white  w-full z-50 justify-center">
                 <AnimatedLoader />
             </div>
         )

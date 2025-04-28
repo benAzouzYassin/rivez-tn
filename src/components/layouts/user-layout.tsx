@@ -16,10 +16,13 @@ export default function UserLayout({ children }: Props) {
             <UserHeader />
             <Sidenav items={normalUserItems} bottomItem={bottomItem} />
             <main
-                className={cn("transition-all pt-[10vh] duration-300", {
-                    "ltr:lg:pl-[300px] rtl:lg:pr-[300px]": isSidenavOpen,
-                    "ltr:lg:pl-[100px] rtl:lg:pr-[100px]": !isSidenavOpen,
-                })}
+                className={cn(
+                    "transition-all dark:bg-neutral-900 pt-[10vh] duration-300",
+                    {
+                        "ltr:lg:pl-[300px] rtl:lg:pr-[300px]": isSidenavOpen,
+                        "ltr:lg:pl-[100px] rtl:lg:pr-[100px]": !isSidenavOpen,
+                    }
+                )}
             >
                 {children}
             </main>

@@ -15,7 +15,7 @@ export default function LeftSection(props: Props) {
         return null
     }
     return (
-        <div className="flex  flex-col min-h-72 p-4 rounded-xl border-neutral-300 border gap-5 min-w-[300px] ">
+        <div className="flex flex-col min-h-72 p-4 rounded-xl border-neutral-300 dark:border-neutral-700 border gap-5 min-w-[300px] bg-white dark:bg-neutral-800 transition-colors">
             {props.leftOptions?.map((opt) => {
                 return (
                     <LeftOption
