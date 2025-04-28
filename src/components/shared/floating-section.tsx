@@ -24,21 +24,21 @@ export default function FloatingSection(props: Props) {
     const { data: userData } = useCurrentUser()
 
     return (
-        <section className="col-span-1  py-4 pr-0 md:pr-4 pl-0 md:pl-5">
+        <section className="col-span-1 py-4 pr-0 md:pr-4 pl-0 md:pl-5">
             <div className={cn({ "md:fixed md:top-30 md:pr-4": props.fixed })}>
-                <div className="border-neutral-200 flex flex-col    gap-4 border py-5 px-3 rounded-3xl">
+                <div className="border-neutral-200 dark:border-neutral-700 flex flex-col gap-4 border py-5 px-3 rounded-3xl bg-white dark:bg-neutral-900 transition-colors">
                     <div
                         onClick={() => {}}
-                        className="transition-all gap-3 md:gap-5 border-2 px-3 md:px-4 py-3 rounded-2xl justify-between"
+                        className="transition-all gap-3 md:gap-5 w-full  border-2 border-neutral-100 dark:border-neutral-700 px-3 md:px-4 py-3 rounded-2xl justify-between bg-neutral-50 dark:bg-neutral-800"
                     >
-                        <div className="flex flex-col sm:flex-row">
+                        <div className="flex flex-col  sm:flex-row">
                             <div className="grow">
-                                <p className="text-lg md:text-xl font-extrabold text-neutral-500">
+                                <p className="text-lg md:text-xl font-extrabold text-neutral-500 dark:text-neutral-200">
                                     {t["Get free credits"]}
                                 </p>
-                                <p className="mt-1 text-sm md:text-base font-semibold text-neutral-500">
+                                <p className="mt-1 text-sm md:text-base font-semibold text-neutral-500 dark:text-neutral-300">
                                     {t["Invite your friends to get"]}{" "}
-                                    <span className="text-blue-500 font-extrabold">
+                                    <span className="text-blue-500 dark:text-blue-400 font-extrabold">
                                         25 {t["free credit !"]}
                                     </span>{" "}
                                 </p>
@@ -50,7 +50,7 @@ export default function FloatingSection(props: Props) {
                         <ShareDialog>
                             <Button
                                 variant={"blue"}
-                                className="h-9 mt-3 mb-2 w-full font-extrabold rounded-xl px-3"
+                                className="h-9 mt-3 mb-2  !w-full  font-extrabold rounded-xl px-3"
                             >
                                 {t["Invite friend"]}
                             </Button>
@@ -59,10 +59,10 @@ export default function FloatingSection(props: Props) {
 
                     <Link
                         href={"#"}
-                        className="hover:bg-neutral-100 active:scale-95 transition-all flex gap-3 md:gap-5 border-2 px-3 md:px-4 items-center py-3 rounded-2xl justify-between"
+                        className="hover:bg-neutral-100 dark:hover:bg-neutral-800 active:scale-95 transition-all flex gap-3 md:gap-5 border-2 border-neutral-100 dark:border-neutral-700 px-3 md:px-4 items-center py-3 rounded-2xl justify-between bg-neutral-50 dark:bg-neutral-800"
                     >
                         <div className="grow">
-                            <p className="text-lg md:text-xl font-extrabold text-neutral-500">
+                            <p className="text-lg md:text-xl font-extrabold text-neutral-500 dark:text-neutral-200">
                                 {t["XP Points :"]}
                             </p>
                         </div>
@@ -220,113 +220,91 @@ export function ShareDialog({ children }: { children: ReactNode }) {
 
     return (
         <Dialog>
-            <DialogTrigger asChild>{children}</DialogTrigger>
+            <DialogTrigger className="w-full" asChild>
+                {children}
+            </DialogTrigger>
             <DialogContent
-                className={`w-[92vw] max-w-[700px] md:min-w-[700px] !rounded-xl ${
-                    isDark ? "bg-gray-900 border-gray-700" : "bg-white"
-                }`}
+                className={cn(
+                    "md:w-[92vw] md:max-w-[700px] md:min-w-[700px] !rounded-xl bg-white dark:bg-neutral-900 border border-gray-200 dark:border-neutral-700 transition-colors"
+                )}
             >
-                <DialogTitle
-                    className={`text-2xl md:text-3xl text-center font-bold ${
-                        isDark ? "text-gray-100" : "text-neutral-600"
-                    }`}
-                >
+                <DialogTitle className="text-2xl md:text-3xl text-center font-bold text-neutral-600 dark:text-neutral-100">
                     {t["Invite friends"]}
                 </DialogTitle>
-                <DialogDescription
-                    className={`text-sm ${
-                        isDark ? "text-gray-400" : "text-gray-500"
-                    }`}
-                ></DialogDescription>
-                {
-                    <>
-                        <div className="flex flex-col sm:flex-row sm:items-center mt-4 space-y-3 sm:space-y-0 sm:space-x-2">
-                            <div
-                                className={`flex-1 flex items-center border rounded-lg overflow-hidden ${
-                                    isDark
-                                        ? "border-gray-700 bg-gray-800"
-                                        : "border-gray-300 bg-gray-50"
-                                }`}
+                <DialogDescription className="text-sm text-gray-500 dark:text-gray-400"></DialogDescription>
+                <>
+                    <div className="flex flex-col sm:flex-row sm:items-center mt-4 space-y-3 sm:space-y-0 sm:space-x-2">
+                        <div className="flex-1 flex items-center border rounded-lg overflow-hidden border-gray-300 dark:border-neutral-700 bg-gray-50 dark:bg-neutral-800">
+                            <input
+                                className="w-full text-left rtl:font-medium p-2 sm:p-3 text-base sm:text-lg font-semibold bg-transparent outline-none flex-1 text-neutral-700 dark:text-neutral-200"
+                                value={shareLink}
+                                readOnly
+                            />
+                        </div>
+                        <TooltipWrapper asChild content={t["Copy link"]}>
+                            <button
+                                onClick={handleCopy}
+                                className="p-2 sm:p-3 h-10 sm:h-14 w-full sm:w-14 rounded-lg border-2 active:scale-90 cursor-pointer transition-all duration-300 flex items-center justify-center relative overflow-hidden border-blue-400/80 dark:border-blue-500/80 text-blue-600 dark:text-blue-400 hover:bg-blue-50 dark:hover:bg-neutral-800"
+                                disabled={copied}
                             >
-                                <input
-                                    className={`w-full text-left rtl:font-medium p-2 sm:p-3 text-base sm:text-lg font-semibold bg-transparent outline-none flex-1 ${
-                                        isDark
-                                            ? "text-gray-200"
-                                            : "text-neutral-700"
+                                <span
+                                    className={`absolute transform transition-all duration-300 ${
+                                        copied ? "scale-0" : "scale-100"
                                     }`}
-                                    value={shareLink}
-                                    readOnly
-                                />
-                            </div>
-                            <TooltipWrapper asChild content="Copy link">
-                                <button
-                                    onClick={handleCopy}
-                                    className={`p-2 sm:p-3 h-10 sm:h-14 w-full sm:w-14 rounded-lg border-2 active:scale-90 cursor-pointer transition-all duration-300 flex items-center justify-center relative overflow-hidden ${
-                                        isDark
-                                            ? "border-blue-500/80 text-blue-400 hover:bg-gray-800"
-                                            : "border-blue-400/80 text-blue-600 hover:bg-blue-50"
-                                    }`}
-                                    disabled={copied}
                                 >
-                                    <span
-                                        className={`absolute transform transition-all duration-300 ${
-                                            copied ? "scale-0" : "scale-100"
-                                        }`}
-                                    >
-                                        <Copy size={20} />
-                                    </span>
-                                    <span
-                                        className={`absolute transform transition-all duration-300 ${
-                                            copied ? "scale-100" : "scale-0"
-                                        }`}
-                                    >
-                                        <Check size={18} />
-                                    </span>
+                                    <Copy size={20} />
+                                </span>
+                                <span
+                                    className={`absolute transform transition-all duration-300 ${
+                                        copied ? "scale-100" : "scale-0"
+                                    }`}
+                                >
+                                    <Check size={18} />
+                                </span>
+                            </button>
+                        </TooltipWrapper>
+                    </div>
+
+                    <div className="mt-2 text-center">
+                        <div className="relative">
+                            <div className="absolute inset-0 flex items-center">
+                                <div className="w-full border-t border-gray-300 dark:border-neutral-700"></div>
+                            </div>
+                            <div className="relative flex justify-center">
+                                <span className="bg-white dark:bg-neutral-900 px-4 text-gray-500 dark:text-gray-400">
+                                    {t["or share directly"]}
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className="-mt-2 flex justify-center">
+                        <div className="flex gap-4 md:gap-8">
+                            <div className="cursor-pointer flex flex-col items-center">
+                                <button
+                                    onClick={shareToFacebook}
+                                    className="group p-2 md:p-3 scale-75 md:scale-80 cursor-pointer rounded-full bg-blue-50 dark:bg-blue-600 hover:bg-blue-100 dark:hover:bg-blue-800 transition-all duration-300"
+                                >
+                                    <FacebookIcon className="w-8 h-8 md:w-10 md:h-10 text-blue-500 dark:text-blue-200 group-hover:scale-110 transition-transform duration-300" />
                                 </button>
-                            </TooltipWrapper>
-                        </div>
-
-                        <div className="mt-2 text-center">
-                            <div className="relative">
-                                <div className="absolute inset-0 flex items-center">
-                                    <div className="w-full border-t border-gray-300"></div>
-                                </div>
-                                <div className="relative flex justify-center">
-                                    <span className="bg-white px-4 text-gray-500">
-                                        {t["or share directly"]}
-                                    </span>
-                                </div>
+                                <span className="mt-2 text-xs md:text-sm font-medium text-gray-600 dark:text-gray-300">
+                                    Facebook
+                                </span>
+                            </div>
+                            <div className="flex cursor-pointer flex-col items-center">
+                                <button
+                                    onClick={shareToWhatsApp}
+                                    className="group cursor-pointer p-2 md:p-3 scale-75 dark:scale-85 md:scale-100 dark:md:scale-90 rounded-full bg-green-50 dark:bg-green-900 hover:bg-green-100 dark:hover:bg-green-800 transition-all duration-300"
+                                >
+                                    <WhatsAppIcon className="w-8 h-8 md:w-10 md:h-10 text-green-500 group-hover:scale-110 transition-transform duration-300" />
+                                </button>
+                                <span className="mt-2 text-xs md:text-sm font-medium text-gray-600 dark:text-gray-300">
+                                    WhatsApp
+                                </span>
                             </div>
                         </div>
-
-                        <div className="-mt-2 flex justify-center">
-                            <div className="flex gap-4 md:gap-8">
-                                <div className="cursor-pointer flex flex-col items-center">
-                                    <button
-                                        onClick={shareToFacebook}
-                                        className="group p-2 md:p-3 scale-75 md:scale-80 cursor-pointer rounded-full bg-blue-50 hover:bg-blue-100 transition-all duration-300"
-                                    >
-                                        <FacebookIcon className="w-8 h-8 md:w-10 md:h-10 text-blue-500 group-hover:scale-110 transition-transform duration-300" />
-                                    </button>
-                                    <span className="mt-2 text-xs md:text-sm font-medium text-gray-600">
-                                        Facebook
-                                    </span>
-                                </div>
-                                <div className="flex cursor-pointer flex-col items-center">
-                                    <button
-                                        onClick={shareToWhatsApp}
-                                        className="group cursor-pointer p-2 md:p-3 scale-75 md:scale-100 rounded-full bg-green-50 hover:bg-green-100 transition-all duration-300"
-                                    >
-                                        <WhatsAppIcon className="w-8 h-8 md:w-10 md:h-10 text-green-500 group-hover:scale-110 transition-transform duration-300" />
-                                    </button>
-                                    <span className="mt-2 text-xs md:text-sm font-medium text-gray-600">
-                                        WhatsApp
-                                    </span>
-                                </div>
-                            </div>
-                        </div>
-                    </>
-                }
+                    </div>
+                </>
             </DialogContent>
         </Dialog>
     )
@@ -379,7 +357,7 @@ function FacebookIcon({ className }: { className?: string }) {
             viewBox="0 0 512 512"
         >
             <path
-                className="opacity-90 "
+                className="opacity-90 dark:fill-white "
                 fill="#0866FF"
                 d="M134.941,272.691h56.123v231.051c0,4.562,3.696,8.258,8.258,8.258h95.159  c4.562,0,8.258-3.696,8.258-8.258V273.78h64.519c4.195,0,7.725-3.148,8.204-7.315l9.799-85.061c0.269-2.34-0.472-4.684-2.038-6.44  c-1.567-1.757-3.81-2.763-6.164-2.763h-74.316V118.88c0-16.073,8.654-24.224,25.726-24.224c2.433,0,48.59,0,48.59,0  c4.562,0,8.258-3.698,8.258-8.258V8.319c0-4.562-3.696-8.258-8.258-8.258h-66.965C309.622,0.038,308.573,0,307.027,0  c-11.619,0-52.006,2.281-83.909,31.63c-35.348,32.524-30.434,71.465-29.26,78.217v62.352h-58.918c-4.562,0-8.258,3.696-8.258,8.258  v83.975C126.683,268.993,130.379,272.691,134.941,272.691z"
             />

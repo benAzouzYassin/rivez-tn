@@ -29,7 +29,7 @@ import {
     DialogHeader,
     DialogTitle,
 } from "@/components/ui/dialog"
-import { ThemeToggle } from "./theme-toggle"
+import { ThemeMenuItem } from "./theme-menu-item"
 
 export default function UserHeader() {
     const queryClient = useQueryClient()
@@ -150,7 +150,6 @@ export default function UserHeader() {
                         "lg:-ml-10 lg:mr-auto": isRTL,
                     })}
                 >
-                    <ThemeToggle />
                     <Popover
                         open={isUserSettingOpen}
                         onOpenChange={setIsUserSettingOpen}
@@ -209,7 +208,7 @@ export default function UserHeader() {
                         <PopoverContent
                             align={isRTL ? "start" : "end"}
                             className={cn(
-                                "w-72 p-0 rounded-xl shadow-lg border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900",
+                                "w-72 p-0 rounded-xl shadow-lg  border  border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900",
                                 {
                                     "-translate-x-2": !isRTL,
                                     "translate-x-2": isRTL,
@@ -242,8 +241,7 @@ function UserProfile({ name, image }: UserProfileProps) {
         </div>
     )
 }
-
-function UserMenu({
+export function UserMenu({
     items,
     close,
     isRTL,
@@ -285,8 +283,8 @@ function UserMenu({
             <div>
                 <button
                     className={cn(
-                        "flex group rtl:flex-row-reverse relative text-neutral-500 dark:text-neutral-300 w-full cursor-pointer items-center gap-3 px-4 py-3 text-base font-bold",
-                        "transition-colors hover:bg-blue-100/70 dark:hover:bg-blue-900/40 hover:text-blue-400 last:border-b active:bg-blue-200/70 dark:active:bg-blue-900/60"
+                        "flex group rtl:flex-row-reverse relative dark:text-neutral-300 text-neutral-500 w-full cursor-pointer items-center gap-3 px-4 py-3 text-base font-bold",
+                        "transition-colors dark:hover:bg-blue-900/40 hover:bg-blue-100/70 hover:text-blue-400  active:bg-blue-200/70"
                     )}
                     onClick={() => {
                         if (isSmallScreen) {
@@ -348,6 +346,11 @@ function UserMenu({
                         {changeLanguageLabel}
                     </span>
                 </button>
+                <ThemeMenuItem
+                    isRTL={isRTL}
+                    asDialog={isSmallScreen}
+                    close={close}
+                />
 
                 {items.map((item, index) => (
                     <button
@@ -355,7 +358,7 @@ function UserMenu({
                         onClick={item.onClick}
                         className={cn(
                             "flex w-full cursor-pointer items-center gap-3 px-4 py-3 text-base font-bold",
-                            "transition-colors hover:bg-blue-100/70 dark:hover:bg-blue-900/40 hover:text-blue-400 last:border-b active:bg-blue-200/70 dark:active:bg-blue-900/60",
+                            "transition-colors hover:bg-blue-100/70 dark:hover:bg-blue-900/40 hover:text-blue-400  active:bg-blue-200/70",
                             item.className,
                             { "flex-row-reverse": isRTL }
                         )}
@@ -405,10 +408,8 @@ function UserMenu({
                                     />
                                     <span
                                         className={cn(
-                                            "font-medium dark:text-neutral-200",
-                                            {
-                                                "ml-0 mr-3": isRTL,
-                                            }
+                                            "font-medium text-neutral-700 dark:text-neutral-200",
+                                            { "ml-0 mr-3": isRTL }
                                         )}
                                     >
                                         {lang.label}

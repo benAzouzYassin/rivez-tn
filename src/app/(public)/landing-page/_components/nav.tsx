@@ -55,7 +55,7 @@ export default function Nav({ translation, defaultLang }: Props) {
                 className={cn(
                     "flex md:flex-row flex-row-reverse z-50 bg-none bg-white dark:bg-neutral-900 justify-between items-center px-4 sm:px-8 border-b-2 border-b-transparent md:px-12 lg:px-20 h-16 sm:h-20",
                     {
-                        "fixed w-full bg-white dark:bg-neutral-900 z-[999] shadow-white dark:shadow-neutral-950 border-b-neutral-200 dark:border-b-neutral-800":
+                        "fixed w-full bg-white dark:bg-neutral-900 z-50 shadow-white dark:shadow-neutral-950 border-b-neutral-200 dark:border-b-neutral-800":
                             isScrolled,
                     }
                 )}

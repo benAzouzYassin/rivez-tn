@@ -99,7 +99,7 @@ function Content({ translation, shouldSaveLang, currentLang }: Props) {
                 </div>
                 <div className="h-10"></div>
                 <svg
-                    className="w-full absolute left-0 rtl:right-0 rtl:left-auto xl:block hidden z-50 max-w-[2200px] bottom-0 min-[1200px]:-bottom-28 min-[2200px]:hidden min-[1600px]:-bottom-32 min-[1800px]:-bottom-48"
+                    className="w-full absolute left-0 rtl:right-0 rtl:left-auto xl:block hidden z-40 max-w-[2200px] bottom-0 min-[1200px]:-bottom-28 min-[2200px]:hidden min-[1600px]:-bottom-32 min-[1800px]:-bottom-48"
                     viewBox="0 0 900 140"
                     fill="none"
                     xmlns="http://www.w3.org/2000/svg"
@@ -114,7 +114,7 @@ function Content({ translation, shouldSaveLang, currentLang }: Props) {
             {/* other sections */}
             <section className="mx-auto px-2 sm:px-20 pb-10 border-[#1d8effe7] dark:border-blue-800 bg-[#FFF] dark:bg-neutral-900 overflow-hidden relative w-full">
                 <svg
-                    className="max-w-[2700px] w-screen md:block hidden absolute left-0 rtl:right-0 rtl:left-auto rotate-180 top-0 min-[1200px]:-top-36 min-[1600px]:-top-32 min-[1800px]:-top-48 z-50"
+                    className="max-w-[2700px] w-screen md:block hidden absolute left-0 rtl:right-0 rtl:left-auto rotate-180 top-0 min-[1200px]:-top-36 min-[1600px]:-top-32 min-[1800px]:-top-48 z-40"
                     viewBox="0 0 900 140"
                     fill="none"
                     xmlns="http://www.w3.org/2000/svg"

@@ -58,8 +58,8 @@ export function LanguageSelector(props: Props) {
                     )}
                 </Button>
             </PopoverTrigger>
-            <PopoverContent className="w-64 rtl:-translate-x-2 mt-0 rounded-none border-none overflow-visible shadow-none !bg-transparent p-0!">
-                <div className="rounded-2xl mt-1 overflow-hidden border-2 dark:border-neutral-700 bg-white dark:bg-neutral-800">
+            <PopoverContent className="w-64  rtl:-translate-x-2 mt-0 rounded-none border-none overflow-visible shadow-none !bg-transparent p-0!">
+                <div className="rounded-2xl mt-1 overflow-hidden border-2 z-50 dark:border-neutral-700 bg-white dark:bg-neutral-800">
                     <div className="">
                         {languages.map((lang) => (
                             <button
