@@ -80,9 +80,9 @@ export default function ReportQuiz({
                     Report
                 </Button>
             </DialogTrigger>
-            <DialogContent className="max-w-md rounded-3xl! p-8">
+            <DialogContent className="max-w-md rounded-3xl! p-8 bg-white dark:bg-neutral-900 transition-colors">
                 <DialogHeader>
-                    <DialogTitle className="text-xl font-bold">
+                    <DialogTitle className="text-xl font-bold text-neutral-800 dark:text-neutral-100">
                         Report an Issue
                     </DialogTitle>
                 </DialogHeader>
@@ -101,7 +101,7 @@ export default function ReportQuiz({
                             />
                             <label
                                 htmlFor={option.id}
-                                className="text-base font-medium leading-none cursor-pointer"
+                                className="text-base font-medium leading-none cursor-pointer text-neutral-800 dark:text-neutral-100"
                             >
                                 <span className="font-bold">
                                     {option.boldText}
@@ -118,7 +118,7 @@ export default function ReportQuiz({
                             onChange={(e) =>
                                 setAdditionalComments(e.target.value)
                             }
-                            className="min-h-[100px]"
+                            className="min-h-[100px] bg-neutral-100 dark:bg-neutral-800 text-neutral-800 dark:text-neutral-100 placeholder:text-neutral-400 dark:placeholder:text-neutral-500"
                         />
                     </div>
                     <Button

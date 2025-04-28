@@ -104,7 +104,7 @@ export default function ShareQuizDialog(props: Props) {
     }
     return (
         <Dialog open={props.isOpen} onOpenChange={props.onOpenChange}>
-            <DialogContent className="sm:max-w-[700px] w-full max-w-[95vw] !rounded-xl p-4 sm:p-6 dark:bg-neutral-900 dark:border-neutral-700">
+            <DialogContent className="sm:max-w-[700px] w-full  !pb-10  !rounded-xl p-4 sm:p-6 dark:bg-neutral-900 dark:border-neutral-700">
                 <DialogTitle className="text-xl sm:text-2xl md:text-3xl text-neutral-600 dark:text-neutral-100 text-center font-bold">
                     {t["Share Quiz"]}
                 </DialogTitle>

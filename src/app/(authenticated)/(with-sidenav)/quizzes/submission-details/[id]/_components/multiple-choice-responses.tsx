@@ -24,17 +24,16 @@ export default function MultipleChoiceResponses(props: Props) {
                 return (
                     <div
                         key={index}
-                        className="p-4 bg-white border border-neutral-200 rounded-xl shadow-sm hover:shadow-md transition-all duration-200 group"
+                        className="p-4 bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-700 rounded-xl shadow-sm hover:shadow-md dark:shadow-none transition-all duration-200 group"
                     >
                         <div className="flex items-center gap-4">
-                            <span className="text-neutral-700 text-lg font-bold group-hover:text-neutral-900">
+                            <span className="text-neutral-700 dark:text-neutral-200 text-lg font-bold group-hover:text-neutral-900 dark:group-hover:text-neutral-100">
                                 {response}{" "}
                             </span>
                             <Badge
-                                className="rounded-full ml-auto"
+                                className="rounded-full text-nowrap ml-auto"
                                 variant={isCorrect ? "green" : "red"}
                             >
-                                {" "}
                                 {isCorrect ? "Correct" : "Not correct"}
                             </Badge>
                         </div>

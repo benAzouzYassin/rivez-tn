@@ -31,27 +31,31 @@ export default function MatchingPairsResponses(props: Props) {
                 )
                 return (
                     <div key={index} className="flex items-center gap-4">
-                        <div className="flex-1 p-4 bg-gradient-to-r from-blue-50 to-blue-100/50 rounded-xl border border-blue-200  transition-all duration-200">
-                            <span className="text-blue-500 font-bold">
+                        <div className="flex-1 p-4 bg-gradient-to-r from-blue-50 to-blue-100/50 dark:from-blue-900/40 dark:to-blue-900/10 rounded-xl border border-blue-200 dark:border-blue-800 transition-all duration-200">
+                            <span className="text-blue-500 dark:text-blue-300 font-bold">
                                 {pair[0]}
                             </span>
                         </div>
                         <div className="flex items-center justify-center">
-                            <ArrowRight className="w-6 h-6 text-neutral-400" />
+                            <ArrowRight className="w-6 h-6 text-neutral-400 dark:text-neutral-500" />
                         </div>
                         <div
                             className={cn(
-                                "flex-1 p-4 bg-gradient-to-r  from-green-50 to-green-100/80 rounded-xl border border-green-200 transition-all duration-200",
+                                "flex-1 p-4 bg-gradient-to-r from-green-50 to-green-100/80 dark:from-green-900/40 dark:to-green-900/10 rounded-xl border border-green-200 dark:border-green-800 transition-all duration-200",
                                 {
-                                    "from-red-50 to-red-100/80 rounded-xl border border-red-200 ":
+                                    "from-red-50 to-red-100/80 dark:from-red-900/40 dark:to-red-900/10 border border-red-200 dark:border-red-800":
                                         !isCorrect,
                                 }
                             )}
                         >
                             <span
-                                className={cn("text-green-600 font-bold", {
-                                    "text-red-600": !isCorrect,
-                                })}
+                                className={cn(
+                                    "text-green-600 dark:text-green-300 font-bold",
+                                    {
+                                        "text-red-600 dark:text-red-300":
+                                            !isCorrect,
+                                    }
+                                )}
                             >
                                 {pair[1]}
                             </span>

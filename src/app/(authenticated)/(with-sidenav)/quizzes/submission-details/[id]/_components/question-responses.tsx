@@ -56,40 +56,38 @@ const QuestionResponses = ({
                 className="px-3"
                 onClick={() => setIsOpen(true)}
             >
-                <Eye className="!w-6 text-neutral-400 !h-6 " />
+                <Eye className="!w-6 text-neutral-400 dark:text-neutral-500 !h-6" />
             </Button>
 
             <Dialog open={isOpen} onOpenChange={setIsOpen}>
                 <DialogTrigger asChild></DialogTrigger>
                 <DialogContent
                     dir={isRtl ? "rtl" : "ltr"}
-                    className="max-w-2xl"
+                    className=" md:min-w-[800px]  bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-700"
                 >
-                    <div className="px-2">
-                        <DialogTitle className="text-2xl font-semibold text-neutral-800 mb-6"></DialogTitle>
-                        <DialogDescription className="mt-4">
-                            {" "}
-                        </DialogDescription>
+                    <div className="px-2 overflow-y-auto pb-6 md:pb-0">
+                        <DialogTitle className="text-2xl font-semibold text-neutral-800 dark:text-neutral-100 mb-6"></DialogTitle>
+                        <DialogDescription className="mt-4"></DialogDescription>
                         <div className="space-y-8">
-                            <div className="bg-neutral-50 p-6 rounded-xl border border-neutral-200">
-                                <p className="text-xl text-neutral-800 font-extrabold">
+                            <div className="bg-neutral-50 dark:bg-neutral-800 p-6 rounded-xl border border-neutral-200 dark:border-neutral-700">
+                                <p className="text-xl text-neutral-800 dark:text-neutral-100 font-extrabold">
                                     {question}
                                 </p>
                             </div>
                             {!!questionImage && (
-                                <div className="h-[250px] overflow-hidden  rounded-xl relative mx-auto border w-[450px]">
+                                <div className="h-[250px] overflow-hidden rounded-xl relative mx-auto border w-[450px] border-neutral-200 dark:border-neutral-700 bg-neutral-100 dark:bg-neutral-800">
                                     <img
                                         alt=""
                                         src={questionImage}
-                                        className="absolute top-0 left-0  w-full h-full object-cover object-center"
+                                        className="absolute top-0 left-0 w-full h-full object-cover object-center"
                                     />
                                 </div>
                             )}
                             <div>
-                                <h3 className="text-sm font-extrabold uppercase tracking-wider  text-neutral-500 mb-2">
+                                <h3 className="text-sm font-extrabold uppercase tracking-wider text-neutral-500 dark:text-neutral-400 mb-2">
                                     User Answers
                                 </h3>
-                                <div className="bg-neutral-50 p-6 rounded-xl border border-neutral-200">
+                                <div className="bg-neutral-50 dark:bg-neutral-800 p-6 rounded-xl border border-neutral-200 dark:border-neutral-700">
                                     {questionType === "MULTIPLE_CHOICE" && (
                                         <MultipleChoiceResponses
                                             correctAnswers={correctAnswers}
