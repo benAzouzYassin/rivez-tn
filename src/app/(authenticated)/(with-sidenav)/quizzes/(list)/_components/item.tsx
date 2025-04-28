@@ -9,6 +9,7 @@ import { ItemType } from "../page"
 import MoreButton from "./more-button"
 import ShareQuizDialog from "./share-quiz-dialog"
 import { translation } from "../translation"
+import { useTheme } from "next-themes"
 
 interface Props {
     item: ItemType
@@ -16,6 +17,8 @@ interface Props {
 }
 
 export default function Item({ item, disableMoreBtn }: Props) {
+    const { theme } = useTheme()
+    const isDark = theme === "dark"
     const lang = getLanguage()
     const t = translation[lang]
     const [isUpdateDialogOpen, setIsUpdateDialogOpen] = useState(false)
@@ -63,10 +66,7 @@ export default function Item({ item, disableMoreBtn }: Props) {
                     style={{
                         background: item.image
                             ? undefined
-                            : typeof window !== "undefined" &&
-                              document.documentElement.classList.contains(
-                                  "dark"
-                              )
+                            : isDark
                             ? darkBackground
                             : background,
                     }}
