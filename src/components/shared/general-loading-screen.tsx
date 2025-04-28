@@ -79,7 +79,7 @@ export default function GeneralLoadingScreen(props: Props) {
     }
     return (
         <motion.main
-            className="min-h-[70vh] flex items-center justify-center bg-white"
+            className="min-h-[70vh] flex items-center justify-center bg-white dark:bg-neutral-900 transition-colors"
             initial="hidden"
             animate="visible"
             variants={containerVariants}
@@ -149,7 +149,7 @@ export default function GeneralLoadingScreen(props: Props) {
                                         </linearGradient>
                                     </defs>
                                 </svg>
-                                <div className="absolute text-3xl font-extrabold text-neutral-500 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
+                                <div className="absolute text-3xl font-extrabold text-neutral-500 dark:text-neutral-300 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
                                     {Math.round(progress)}%{" "}
                                 </div>
                             </div>
@@ -199,25 +199,25 @@ function LoadingBlob(props: { text: string }) {
 
     return (
         <motion.main
-            className="min-h-[70vh] flex items-center justify-center  bg-white"
+            className="min-h-[70vh] flex items-center justify-center bg-white dark:bg-neutral-900 transition-colors"
             initial="hidden"
             animate="visible"
             variants={containerVariants}
         >
             <motion.div
-                className="flex flex-col -translate-y-20  items-center justify-center"
+                className="flex flex-col -translate-y-20 items-center justify-center"
                 variants={containerVariants}
             >
                 {props.text !== null && (
                     <motion.h2
-                        className="text-5xl pb-1 flex  items-end font-black text-transparent bg-clip-text bg-gradient-to-r from-neutral-600 to-neutral-800"
+                        className="text-5xl pb-1 flex items-end font-black text-transparent bg-clip-text bg-gradient-to-r from-neutral-600 to-neutral-800 dark:from-neutral-200 dark:to-neutral-400"
                         variants={circleVariants}
                     >
                         {props.text || "Loading "}{" "}
                         <div className="flex items-center gap-1 -translate-y-2 ml-1">
-                            <div className="w-3 h-3 bg-neutral-700 rounded-full"></div>
-                            <div className="w-3 h-3 bg-neutral-700 rounded-full"></div>
-                            <div className="w-3 h-3 bg-neutral-700 rounded-full"></div>
+                            <div className="w-3 h-3 bg-neutral-700 dark:bg-neutral-200 rounded-full"></div>
+                            <div className="w-3 h-3 bg-neutral-700 dark:bg-neutral-200 rounded-full"></div>
+                            <div className="w-3 h-3 bg-neutral-700 dark:bg-neutral-200 rounded-full"></div>
                         </div>
                     </motion.h2>
                 )}
@@ -226,7 +226,7 @@ function LoadingBlob(props: { text: string }) {
                     variants={containerVariants}
                 >
                     <motion.div
-                        className=" relative  w-screen  flex items-center justify-center gap-2"
+                        className="relative w-screen flex items-center justify-center gap-2"
                         variants={containerVariants}
                         initial="hidden"
                         animate="visible"
@@ -243,16 +243,16 @@ function LoadingBlob(props: { text: string }) {
                         >
                             {/* Pulsing circles with neutral colors */}
                             <motion.div
-                                className="absolute left-1/2 -translate-x-1/2 -translatye top-0 w-24 h-24 bg-gradient-to-r from-blue-300 to-blue-300 rounded-full blur-sm"
+                                className="absolute left-1/2 -translate-x-1/2 top-0 w-24 h-24 bg-gradient-to-r from-blue-300 to-blue-300 dark:from-blue-900 dark:to-blue-900 rounded-full blur-sm"
                                 variants={pulseVariants}
                             />
                             <motion.div
-                                className="absolute left-1/2 -translate-x-1/2 top-0 w-24 h-24 bg-gradient-to-r from-blue-300 to-blue-400 rounded-full blur-sm"
+                                className="absolute left-1/2 -translate-x-1/2 top-0 w-24 h-24 bg-gradient-to-r from-blue-300 to-blue-400 dark:from-blue-900 dark:to-blue-800 rounded-full blur-sm"
                                 variants={pulseVariants}
                                 style={{ animationDelay: "0.3s" }}
                             />
                             <motion.div
-                                className="absolute left-1/2 -translate-x-1/2 top-0 w-24 h-24 bg-gradient-to-r from-blue-400 to-blue-500 rounded-full blur-sm"
+                                className="absolute left-1/2 -translate-x-1/2 top-0 w-24 h-24 bg-gradient-to-r from-blue-400 to-blue-500 dark:from-blue-800 dark:to-blue-700 rounded-full blur-sm"
                                 variants={pulseVariants}
                                 style={{ animationDelay: "0.6s" }}
                             />

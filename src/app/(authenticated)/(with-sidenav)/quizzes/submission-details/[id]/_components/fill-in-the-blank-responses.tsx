@@ -87,7 +87,7 @@ export default function FillInTheBlankResponses(props: Props) {
 
                             return (
                                 <span
-                                    className="text-xl font-bold text-neutral-600"
+                                    className="text-xl font-bold text-neutral-600 dark:text-neutral-200"
                                     key={`segment-${paragraphIndex}-${segmentIndex}`}
                                 >
                                     <span className="h-5 !w-0 inline-flex opacity-0">
@@ -140,9 +140,10 @@ function BlankField({
     return (
         <span
             className={cn(
-                "h-14 border-b-4 mx-2 border-neutral-300 rounded-md mt-auto min-w-24 inline-flex",
+                "h-14 border-b-4 mx-2 border-neutral-300 dark:border-neutral-700 rounded-md mt-auto min-w-24 inline-flex",
                 {
-                    "border-white -translate-y-2": !!children,
+                    "border-white dark:border-neutral-900 -translate-y-2":
+                        !!children,
                 }
             )}
         >

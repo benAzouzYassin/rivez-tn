@@ -50,28 +50,36 @@ export default function UnsupportedScreen() {
     const t = translation[lang]
 
     return (
-        <div className="flex px-1 items-center justify-center min-h-screen ">
-            <Card className="w-full max-w-[550px] border-none shadow-none -mt-20">
+        <div className="flex px-1 items-center justify-center min-h-screen bg-white dark:bg-neutral-900 transition-colors">
+            <Card className="w-full max-w-[550px] border-none shadow-none -mt-20 bg-white dark:bg-neutral-900 transition-colors">
                 <CardHeader className="flex flex-col items-center space-y-2 pb-2">
                     <Info className="h-16 w-16 text-blue-400/90" />
-                    <h1 className="text-2xl text-neutral-700 font-bold text-center">
+                    <h1 className="text-2xl text-neutral-700 dark:text-neutral-100 font-bold text-center">
                         {t.title}
                     </h1>
                 </CardHeader>
                 <CardContent className="text-center font-medium space-y-4 pt-4">
-                    <p className="text-neutral-600 font-semibold">{t.sorry}</p>
+                    <p className="text-neutral-600 dark:text-neutral-300 font-semibold">
+                        {t.sorry}
+                    </p>
 
-                    <div className="bg-blue-100/70 border border-blue-200 p-4 rounded-lg">
-                        <p className="text-blue-500/70 font-bold">{t.advice}</p>
+                    <div className="bg-blue-100/70 dark:bg-blue-900/40 border border-blue-200 dark:border-blue-800 p-4 rounded-lg">
+                        <p className="text-blue-500/70 dark:text-blue-300 font-bold">
+                            {t.advice}
+                        </p>
                     </div>
 
                     <div className="flex justify-center items-center space-x-3 py-4">
                         <Smartphone className="h-10 w-10 text-red-400" />
-                        <div className="text-neutral-400 font-bold">➔</div>
+                        <div className="text-neutral-400 dark:text-neutral-500 font-bold">
+                            ➔
+                        </div>
                         <Monitor className="h-12 w-12 text-green-500/80" />
                     </div>
 
-                    <p className="text-sm text-neutral-500">{t.working}</p>
+                    <p className="text-sm text-neutral-500 dark:text-neutral-400">
+                        {t.working}
+                    </p>
                 </CardContent>
                 <div className="flex flex-col px-3 pb-6">
                     <Button onClick={router.back} className="text-sm w-full">

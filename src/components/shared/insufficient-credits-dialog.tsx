@@ -135,18 +135,18 @@ export default function InsufficientCreditsDialog(props: Props) {
 
     return (
         <Dialog open={props.isOpen} onOpenChange={props.onOpenChange}>
-            <DialogContent className="md:max-w-[800px] md:min-w-[800px] w-[800px] flex flex-col items-center">
-                <DialogTitle className="text-center h-fit text-3xl md:text-4xl pt-5 md:pt-2 text-neutral-600 font-bold"></DialogTitle>
+            <DialogContent className="md:max-w-[800px] md:min-w-[800px] w-[800px] flex flex-col items-center bg-white dark:bg-neutral-900 transition-colors">
+                <DialogTitle className="text-center h-fit text-3xl md:text-4xl pt-5 md:pt-2 text-neutral-600 dark:text-neutral-200 font-bold"></DialogTitle>
 
                 {tab === "default" && (
                     <div className="flex flex-col items-center gap-6 -mt-2 pb-8 md:min-w-[400px]">
                         <Icon />
 
                         <div className="text-center space-y-3">
-                            <p className="md:text-2xl text-xl text-neutral-700 font-bold">
+                            <p className="md:text-2xl text-xl text-neutral-700 dark:text-neutral-100 font-bold">
                                 {t["You've run out of credits!"]}
                             </p>
-                            <p className="text-neutral-600">
+                            <p className="text-neutral-600 dark:text-neutral-300">
                                 {
                                     t[
                                         "Purchase more credits to continue using our services"
@@ -155,36 +155,36 @@ export default function InsufficientCreditsDialog(props: Props) {
                             </p>
                         </div>
                         <Button
-                            className="w-full "
+                            className="w-full"
                             onClick={() => {
                                 setTab("payment")
                             }}
                         >
                             {t["More Credits"]}
                         </Button>
-                        <div className="flex items-center  w-full">
-                            <hr className="rounded-full w-full bg-[#E5E5E5] h-1" />
-                            <p className="mx-2 font-bold text-[#AFAFAF]">
+                        <div className="flex items-center w-full">
+                            <hr className="rounded-full w-full bg-[#E5E5E5] dark:bg-neutral-700 h-1" />
+                            <p className="mx-2 font-bold text-[#AFAFAF] dark:text-neutral-400">
                                 {t.OR}
                             </p>
-                            <hr className="rounded-full w-full bg-[#E5E5E5] h-1" />
+                            <hr className="rounded-full w-full bg-[#E5E5E5] dark:bg-neutral-700 h-1" />
                         </div>
                     </div>
                 )}
                 {tab === "payment" && (
-                    <div className=" w-full">
+                    <div className="w-full">
                         <Button
                             onClick={() => {
                                 setTab("default")
                             }}
-                            className="absolute font-bold text-neutral-500 top-2 left-2 md:top-4 md:left-4 "
+                            className="absolute font-bold text-neutral-500 dark:text-neutral-300 top-2 left-2 md:top-4 md:left-4"
                             variant={"secondary"}
                         >
                             <ChevronLeft className="!w-5 !h-5 -mr-1 stroke-[2.5]" />{" "}
                             {t.Back}
                         </Button>
                         <div className="mt-10"></div>
-                        <label className="font-bold  text-neutral-700 ml-1 text-lg">
+                        <label className="font-bold text-neutral-700 dark:text-neutral-100 ml-1 text-lg">
                             {t.Amount}{" "}
                         </label>
                         <Select
@@ -208,12 +208,13 @@ export default function InsufficientCreditsDialog(props: Props) {
                                     )}
                                 </div>
                             </SelectTrigger>
-                            <SelectContent>
+                            <SelectContent className="bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-700">
                                 {options.map((item) => {
                                     return (
                                         <SelectItem
                                             key={item}
                                             value={String(item)}
+                                            className="text-neutral-700 dark:text-neutral-100"
                                         >
                                             {CREDITS_FOR_10_DINARS *
                                                 (Number(item) / 10)}{" "}
@@ -225,7 +226,7 @@ export default function InsufficientCreditsDialog(props: Props) {
                         </Select>
 
                         <div className="md:grid md:gap-x-8 gap-y-3 flex flex-col md:gap-y-5 md:grid-cols-2 mt-2">
-                            <div className="col-span-2 text-center font-bold text-neutral-700 text-2xl">
+                            <div className="col-span-2 text-center font-bold text-neutral-700 dark:text-neutral-100 text-2xl">
                                 {t["Payment Methods"]}
                             </div>
                             <Button
@@ -234,12 +235,12 @@ export default function InsufficientCreditsDialog(props: Props) {
                                     setLoadingButton("online")
                                     handleOnlinePayment()
                                 }}
-                                className="h-44 hover:bg-white w-full hover:scale-105  flex flex-col rounded-3xl text-xl "
+                                className="h-44 hover:bg-white dark:hover:bg-neutral-800 w-full hover:scale-105 flex flex-col rounded-3xl text-xl"
                                 variant={"secondary"}
                             >
                                 <div className="flex items-center gap-10">
                                     <img
-                                        className="h-12 "
+                                        className="h-12"
                                         alt=""
                                         src="/icons/master-card.png"
                                     />
@@ -255,21 +256,21 @@ export default function InsufficientCreditsDialog(props: Props) {
                             </Button>
                             <Button
                                 isLoading={loadingButton == "e-dinar"}
-                                className="h-44 hover:bg-white w-full hover:scale-105  rounded-3xl overflow-hidden text-xl flex flex-col "
+                                className="h-44 hover:bg-white dark:hover:bg-neutral-800 w-full hover:scale-105 rounded-3xl overflow-hidden text-xl flex flex-col"
                                 variant={"secondary"}
                                 onClick={() => {
                                     setLoadingButton("e-dinar")
                                     handleOnlinePayment()
                                 }}
                             >
-                                <div className=" ">
+                                <div className="">
                                     <img
-                                        className="h-32 -mt-20 translate-y-5 w-full  rounded-xl "
+                                        className="h-32 -mt-20 translate-y-5 w-full rounded-xl"
                                         alt=""
                                         src="/icons/edinar.png"
                                     />
                                 </div>
-                                <p className="z-50  text-2xl font-bold">
+                                <p className="z-50 text-2xl font-bold">
                                     {t["E-Dinar"]}
                                 </p>
                             </Button>
@@ -278,7 +279,7 @@ export default function InsufficientCreditsDialog(props: Props) {
                                 className="flex h-44"
                             >
                                 <Button
-                                    className="h-44 w-full hover:bg-white hover:scale-105  flex flex-col rounded-3xl text-xl "
+                                    className="h-44 w-full hover:bg-white dark:hover:bg-neutral-800 hover:scale-105 flex flex-col rounded-3xl text-xl"
                                     variant={"secondary"}
                                 >
                                     <img
@@ -292,12 +293,12 @@ export default function InsufficientCreditsDialog(props: Props) {
                                 </Button>
                             </Link>
                             <Button
-                                className="h-44 w-full bg-neutral-200 hover:bg-white hover:scale-105  flex flex-col rounded-3xl text-xl "
+                                className="h-44 w-full bg-neutral-200 dark:bg-neutral-800 hover:bg-white dark:hover:bg-neutral-700 hover:scale-105 flex flex-col rounded-3xl text-xl"
                                 variant={"secondary"}
                                 disabled
                             >
                                 <img
-                                    className="h-12 scale-180 -translate-y-1 rounded-xl "
+                                    className="h-12 scale-180 -translate-y-1 rounded-xl"
                                     alt=""
                                     src="/icons/tunisian-post.png"
                                 />
@@ -310,9 +311,12 @@ export default function InsufficientCreditsDialog(props: Props) {
                 )}
                 <div>
                     <div
-                        className={cn("text-center mt-4 ", {
-                            "-mt-9": tab === "default",
-                        })}
+                        className={cn(
+                            "text-center mt-4 text-neutral-700 dark:text-neutral-200",
+                            {
+                                "-mt-9": tab === "default",
+                            }
+                        )}
                     >
                         {t["Contact our support team :"]}
                     </div>
@@ -324,10 +328,10 @@ export default function InsufficientCreditsDialog(props: Props) {
                             }
                         >
                             <Button
-                                className="text-lg h-16 w-full "
+                                className="text-lg h-16 w-full"
                                 variant={"secondary"}
                             >
-                                <WhatsAppIcon className=" !w-10 !h-10" />{" "}
+                                <WhatsAppIcon className="!w-10 !h-10" />{" "}
                                 {t.Whatsapp}
                             </Button>
                         </Link>
@@ -336,16 +340,16 @@ export default function InsufficientCreditsDialog(props: Props) {
                             href={"https://www.messenger.com/t/100016410070680"}
                         >
                             <Button
-                                className="text-lg w-full h-16 "
+                                className="text-lg w-full h-16"
                                 variant={"secondary"}
                             >
-                                <FacebookIcon className=" !w-10 scale-90 border rounded-full p-1 !h-10" />{" "}
+                                <FacebookIcon className="!w-10 scale-90 border rounded-full p-1 !h-10" />{" "}
                                 {t.Facebook}
                             </Button>
                         </Link>
                     </div>
                 </div>
-                <DialogDescription className="text-center text-sm text-neutral-500"></DialogDescription>
+                <DialogDescription className="text-center text-sm text-neutral-500 dark:text-neutral-400"></DialogDescription>
             </DialogContent>
         </Dialog>
     )

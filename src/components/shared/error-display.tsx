@@ -86,7 +86,7 @@ export const ErrorDisplay: React.FC<ErrorDisplayProps> = ({
 
     return (
         <motion.section
-            className="h-fit md:pt-20 pb-4 flex flex-col items-center justify-center bg-white"
+            className="h-fit md:pt-20 pb-4 flex flex-col items-center justify-center bg-white dark:bg-neutral-900 transition-colors"
             initial="hidden"
             animate="visible"
             variants={containerVariants}
@@ -98,14 +98,14 @@ export const ErrorDisplay: React.FC<ErrorDisplayProps> = ({
 
             {/* Error Message */}
             <motion.h1
-                className="text-5xl font-black text-red-500 md:mt-6 text-center"
+                className="text-5xl font-black text-red-500 dark:text-red-400 md:mt-6 text-center"
                 variants={itemVariants}
             >
                 {message || t["defaultMessage"]}
             </motion.h1>
 
             <motion.p
-                className="text-neutral-500 mt-4 font-medium text-center max-w-[600px] text-lg"
+                className="text-neutral-500 dark:text-neutral-300 mt-4 font-medium text-center max-w-[600px] text-lg"
                 variants={itemVariants}
             >
                 {t["description"]}{" "}
@@ -119,7 +119,7 @@ export const ErrorDisplay: React.FC<ErrorDisplayProps> = ({
                 >
                     <Button
                         onClick={router.back}
-                        className="w-full col-span-3 text-xl h-14 bg-neutral-800 border-neutral-500 shadow-neutral-500"
+                        className="w-full col-span-3 text-xl h-14 bg-neutral-800 dark:bg-neutral-700 border-neutral-500 dark:border-neutral-400 shadow-neutral-500 dark:shadow-neutral-800"
                     >
                         {t["goBack"]}
                     </Button>
@@ -128,6 +128,7 @@ export const ErrorDisplay: React.FC<ErrorDisplayProps> = ({
         </motion.section>
     )
 }
+
 function Icon(props: { className?: string }) {
     return (
         <svg
