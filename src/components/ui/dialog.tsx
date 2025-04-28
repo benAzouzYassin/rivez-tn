@@ -35,10 +35,10 @@ const DialogTrigger = React.forwardRef<
     const isSmallScreen = useIsSmallScreen()
 
     if (isSmallScreen) {
-        return <DrawerTrigger ref={ref} {...props} />
+        return <DrawerTrigger ref={ref} asChild={asChild} {...props} />
     }
 
-    return <DialogPrimitive.Trigger ref={ref} {...props} />
+    return <DialogPrimitive.Trigger ref={ref} asChild={asChild} {...props} />
 })
 DialogTrigger.displayName = "DialogTrigger"
 

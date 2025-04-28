@@ -94,6 +94,40 @@
   scrollbar-color: #bebebe #ffffff;
 }
 
+.dark ::-webkit-scrollbar {
+  background: #171717;
+}
+
+.dark ::-webkit-scrollbar-thumb {
+  background: #404040;
+}
+
+.dark ::-webkit-scrollbar-thumb:hover {
+  background: #525252;
+}
+
+.dark {
+  scrollbar-color: #404040 #171717;
+  scrollbar-width: thin;
+}
+
+.dark .virtuoso-scroll::-webkit-scrollbar {
+  background: #171717;
+}
+
+.dark .virtuoso-scroll::-webkit-scrollbar-thumb {
+  background: #404040;
+}
+
+.dark .virtuoso-scroll::-webkit-scrollbar-thumb:hover {
+  background: #525252;
+}
+
+.dark .virtuoso-scroll {
+  scrollbar-color: #404040 #171717;
+  scrollbar-width: thin;
+}
+
 .correct-answer {
   animation: sparkle-success 0.7s ease-in-out;
   transform-origin: center;

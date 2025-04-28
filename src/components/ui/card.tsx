@@ -1,18 +1,18 @@
 import * as React from "react"
-
 import { cn } from "@/lib/ui-utils"
 
 const Card = React.forwardRef<
     HTMLDivElement | HTMLButtonElement,
-    | React.HTMLAttributes<HTMLDivElement | HTMLButtonElement> & {
-          asButton?: boolean
-      }
+    React.HTMLAttributes<HTMLDivElement | HTMLButtonElement> & {
+        asButton?: boolean
+    }
 >(({ className, asButton, ...props }, ref) =>
     asButton ? (
         <button
             ref={ref as any}
             className={cn(
-                "rounded-3xl overflow-hidden border-2 shadow-neutral-200 border-neutral-200 shadow-[0px_4px_0px_0px] bg-white text-neutral-950  dark:border-neutral-800 dark:bg-neutral-950 dark:text-neutral-50",
+                "rounded-2xl overflow-hidden border-2 bg-white border-[#E5E5E5] text-neutral-700 shadow-[0px_4px_0px_0px] shadow-[#E5E5E5]",
+                "dark:bg-neutral-800 dark:border-neutral-700 dark:text-neutral-200 dark:shadow-neutral-700",
                 className
             )}
             {...props}
@@ -21,7 +21,8 @@ const Card = React.forwardRef<
         <div
             ref={ref as any}
             className={cn(
-                "rounded-3xl overflow-hidden border-2 shadow-neutral-200 border-neutral-200 shadow-[0px_4px_0px_0px] bg-white text-neutral-950  dark:border-neutral-800 dark:bg-neutral-950 dark:text-neutral-50",
+                "rounded-2xl overflow-hidden border-2 bg-white border-[#E5E5E5] text-neutral-700 shadow-[0px_4px_0px_0px] shadow-[#E5E5E5]",
+                "dark:bg-neutral-800 dark:border-neutral-700 dark:text-neutral-200 dark:shadow-neutral-700",
                 className
             )}
             {...props}

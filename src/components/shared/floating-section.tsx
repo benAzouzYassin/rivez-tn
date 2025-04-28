@@ -182,7 +182,6 @@ function FreeCredits(props: Props) {
 export function ShareDialog({ children }: { children: ReactNode }) {
     const currentUser = useCurrentUser()
     const [copied, setCopied] = useState(false)
-    const isDark = false
     const lang = getLanguage()
     const t = translations[lang]
 
