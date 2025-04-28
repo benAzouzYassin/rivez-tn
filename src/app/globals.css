@@ -13,6 +13,7 @@
   }
 }
 
+
 @layer base {
   :root {
     --radius: 0.5rem;
@@ -42,7 +43,7 @@
     --chart-5: 27 87% 67%;
   }
 
-  .d .dark {
+  .dark {
     --background: 222 13% 10%;
     --foreground: 220 14% 96%;
     --card: 222 10% 15%;
@@ -67,6 +68,7 @@
     --chart-3: 30 80% 55%;
     --chart-4: 280 65% 60%;
     --chart-2: 340 75% 55%;
+
   }
 }
 

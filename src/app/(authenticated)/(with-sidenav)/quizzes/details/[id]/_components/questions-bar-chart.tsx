@@ -11,26 +11,36 @@ import { readQuizQuestionsDetails } from "@/data-access/quizzes/read"
 import { getLanguage } from "@/utils/get-language"
 import { useQuery } from "@tanstack/react-query"
 import { Loader2 } from "lucide-react"
+import { useTheme } from "next-themes"
 import { useParams } from "next/navigation"
 import { useMemo } from "react"
 import { Bar, BarChart, CartesianGrid, XAxis, YAxis } from "recharts"
 
-const chartConfig = {
-    correct: {
-        label: "Correct",
-        color: "#22c55e",
-    },
-    wrong: {
-        label: "Wrong",
-        color: "#ef4444",
-    },
-    skipped: {
-        label: "Skipped",
-        color: "#A1A1A1",
-    },
-} satisfies ChartConfig
-
 export function QuestionsBarChart() {
+    const { theme } = useTheme()
+    const isDark = theme === "dark"
+
+    const chartConfig = useMemo(
+        () => ({
+            correct: {
+                label: "Correct",
+                color: isDark ? "#2fb564" : "#22c55e",
+            },
+            wrong: {
+                label: "Wrong",
+                color: isDark ? "#ce3b40" : "#ef4444",
+            },
+            skipped: {
+                label: "Skipped",
+                color: isDark ? "#777777" : "#A1A1A1",
+            },
+        }),
+        [isDark]
+    ) satisfies ChartConfig
+
+    const gridColor = isDark ? "#777777" : "#e5e7eb"
+    const axisColor = isDark ? "#d4d4d8" : "#a3a3a3"
+
     const translation = useMemo(
         () => ({
             en: {
@@ -64,7 +74,7 @@ export function QuestionsBarChart() {
     const chartData = data?.map((q) => {
         return {
             question: q.question,
-            correct: q.correct || 0.03, //if the value is 0 we make 0.03 so the chart does not feel empty
+            correct: q.correct || 0.03,
             wrong: q.wrong || 0.03,
             skipped: q.skipped || 0.03,
         }
@@ -72,19 +82,34 @@ export function QuestionsBarChart() {
     const isDataNotEnough = chartData?.every(
         (item) => item.correct < 1 && item.wrong < 1 && item.skipped < 1
     )
+
     return (
-        <Card className=" mt-10 pb-2 pt-5  w-full">
-            <h2 className="text-2xl  px-5 font-extrabold  text-black/80">
+        <Card
+            className={`mt-10 pb-2 pt-5 w-full ${
+                isDark
+                    ? "bg-neutral-900 border-neutral-700"
+                    : "bg-white border-neutral-200"
+            } transition-colors`}
+        >
+            <h2
+                className={`text-2xl px-5 font-extrabold ${
+                    isDark ? "text-white/90" : "text-black/80"
+                }`}
+            >
                 {t["the last 100 submission data :"]}
             </h2>
 
             {isLoading ? (
                 <div className="h-80 flex items-center justify-center">
-                    <Loader2 className="text-neutral-400 duration-300 w-10 h-10 animate-spin" />
+                    <Loader2
+                        className={`duration-300 w-10 h-10 animate-spin ${
+                            isDark ? "text-neutral-500" : "text-neutral-400"
+                        }`}
+                    />
                 </div>
             ) : (
                 <ChartContainer
-                    className="h-full max-h-80 mt-5  w-full"
+                    className="h-full max-h-80 mt-5 w-full"
                     config={chartConfig}
                 >
                     <BarChart
@@ -102,7 +127,11 @@ export function QuestionsBarChart() {
                         accessibilityLayer
                         className="h-full w-full"
                     >
-                        <CartesianGrid vertical={false} />
+                        <CartesianGrid
+                            vertical={false}
+                            stroke={gridColor}
+                            strokeDasharray="3 3"
+                        />
                         <XAxis
                             dataKey="question"
                             tickLine={false}
@@ -115,6 +144,7 @@ export function QuestionsBarChart() {
                             axisLine={false}
                             tickMargin={10}
                             tickFormatter={(value) => `${value}`}
+                            stroke={axisColor}
                         />
                         <ChartTooltip
                             cursor={false}
@@ -123,19 +153,19 @@ export function QuestionsBarChart() {
                         <Bar
                             barSize={50}
                             dataKey="correct"
-                            fill="var(--color-correct)"
+                            fill={chartConfig.correct.color}
                             radius={4}
                         />
                         <Bar
                             barSize={50}
                             dataKey="wrong"
-                            fill="var(--color-wrong)"
+                            fill={chartConfig.wrong.color}
                             radius={4}
                         />
                         <Bar
                             barSize={50}
                             dataKey="skipped"
-                            fill="var(--color-skipped)"
+                            fill={chartConfig.skipped.color}
                             radius={4}
                         />
                     </BarChart>

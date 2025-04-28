@@ -15,7 +15,11 @@ const buttonVariants = cva(
                 secondary:
                     "bg-white dark:bg-neutral-800 hover:bg-neutral-100 dark:hover:bg-neutral-700 h-[46px] shadow-[0px_4px_0px_0px] shadow-[#E5E5E5] dark:shadow-neutral-700 rounded-2xl text-neutral-700 dark:text-neutral-200 border-2 dark:border-neutral-700 transition-all active:shadow-transparent active:translate-y-1",
                 default:
-                    "bg-neutral-800 dark:bg-neutral-650 text-white/95 hover:bg-neutral-700 dark:hover:bg-neutral-600 h-[46px] shadow-[0px_4px_0px_0px] shadow-neutral-500 dark:shadow-neutral-800 rounded-2xl border-2 transition-all active:shadow-transparent active:translate-y-1 border-neutral-500 dark:border-neutral-700",
+                    "bg-neutral-800 dark:bg-neutral-800 text-white/95 dark:text-neutral-100 " +
+                    "hover:bg-neutral-700 dark:hover:bg-neutral-700 " +
+                    "h-[46px] shadow-[0px_4px_0px_0px] shadow-neutral-500 dark:shadow-neutral-500/60 " +
+                    "rounded-2xl border-2 border-neutral-500 dark:border-neutral-700 " +
+                    "transition-all active:shadow-transparent active:translate-y-1",
                 destructive:
                     "bg-red-500 dark:bg-red-500 text-neutral-50 shadow-xs hover:bg-red-500/90 dark:hover:bg-red-400",
                 outline:

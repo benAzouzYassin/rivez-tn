@@ -68,7 +68,12 @@ export function DataTable<TData, TValue>({
     )
 
     return (
-        <div className="rounded-2xl overflow-hidden border">
+        <div
+            className={cn(
+                "rounded-2xl overflow-hidden border border-neutral-200 bg-white transition-colors",
+                "dark:bg-neutral-900 dark:border-neutral-700"
+            )}
+        >
             <Table>
                 <TableHeader>
                     {table.getHeaderGroups().map((headerGroup) => (
@@ -76,7 +81,10 @@ export function DataTable<TData, TValue>({
                             {headerGroup.headers.map((header) => (
                                 <TableHead
                                     key={header.id}
-                                    className="bg-blue-50 h-16 text-center text-lg text-neutral-800 font-bold"
+                                    className={cn(
+                                        "bg-blue-50 h-16 text-center text-lg text-neutral-800 font-bold  transition-colors",
+                                        "dark:bg-neutral-800  dark:text-blue-200"
+                                    )}
                                 >
                                     {header.isPlaceholder
                                         ? null
@@ -102,13 +110,21 @@ export function DataTable<TData, TValue>({
                                     }
                                     className={cn(
                                         "hover:bg-blue-50/50 transition-colors",
+                                        "dark:hover:bg-neutral-800/80",
                                         {
-                                            "!bg-white": row.getIsSelected(),
+                                            "!bg-white dark:!bg-neutral-900":
+                                                row.getIsSelected(),
                                         }
                                     )}
                                 >
                                     {row.getVisibleCells().map((cell) => (
-                                        <TableCell key={cell.id}>
+                                        <TableCell
+                                            key={cell.id}
+                                            className={cn(
+                                                "transition-colors",
+                                                "text-neutral-800 dark:text-neutral-200"
+                                            )}
+                                        >
                                             {flexRender(
                                                 cell.column.columnDef.cell,
                                                 cell.getContext()
@@ -121,7 +137,10 @@ export function DataTable<TData, TValue>({
                             <TableRow>
                                 <TableCell
                                     colSpan={columns.length}
-                                    className="h-24 text-center"
+                                    className={cn(
+                                        "h-24 text-center text-neutral-500 font-semibold transition-colors",
+                                        "dark:text-neutral-400"
+                                    )}
                                 >
                                     {t["NoResults"]}
                                 </TableCell>

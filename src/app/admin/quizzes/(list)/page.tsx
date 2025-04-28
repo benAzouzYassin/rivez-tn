@@ -62,29 +62,54 @@ export default function Page() {
         return <ErrorDisplay />
     }
     return (
-        <section className="flex flex-col min-h-[50vh] px-10 py-10">
+        <section
+            className="
+                flex flex-col min-h-[50vh] px-10 py-10
+                bg-white dark:bg-neutral-900
+                transition-colors
+            "
+        >
             <div className="flex items-center gap-3">
-                <h1 className="text-[2.5rem] font-bold">Quizzes List</h1>
-                <div className="text-lg font-extrabold opacity-80 py-1 px-5  rounded-full bg-blue-50 text-blue-600 border-2 border-blue-400">
+                <h1 className="text-[2.5rem] font-bold text-neutral-900 dark:text-neutral-100 transition-colors">
+                    Quizzes List
+                </h1>
+                <div
+                    className="
+                        text-lg font-extrabold opacity-80 py-1 px-5 rounded-full
+                        bg-blue-50 text-blue-600 border-2 border-blue-400
+                        dark:bg-blue-900/30 dark:text-blue-200 dark:border-blue-700
+                        transition-colors
+                    "
+                >
                     {response?.count || 0} Quiz
                 </div>
             </div>
-            <section className=" flex justify-between mt-5 mb-3 min-h-10">
+            <section className="flex justify-between mt-5 mb-3 min-h-10">
                 <Search
                     searchValue={searchValue}
                     onSearchChange={setSearchValue}
                 />
-                <div className="flex  gap-3">
+                <div className="flex gap-3">
                     <Button
                         disabled
                         variant={"secondary"}
-                        className="text-base  !cursor-not-allowed text-sky-700 border-blue-300 shadow-blue-300"
+                        className="
+                            text-base !cursor-not-allowed
+                            text-sky-700 border-blue-300 shadow-blue-300
+                            dark:text-sky-300 dark:border-blue-700 dark:shadow-blue-900/40
+                            transition-colors
+                        "
                     >
                         <Filter />
                         Filters (soon...)
                     </Button>
                     <Button
-                        className="text-base "
+                        className="
+                            text-base
+                            bg-blue-600 text-white
+                            dark:bg-blue-700 dark:text-blue-100
+                            transition-colors
+                        "
                         variant={"blue"}
                         onClick={() => {
                             router.push("/quizzes/add")
@@ -95,11 +120,20 @@ export default function Page() {
                     </Button>
                 </div>
             </section>
-            <DataTable
-                isLoading={isFetching}
-                columns={columns}
-                data={data || []}
-            />
+            <div
+                className="
+                    bg-white dark:bg-neutral-800
+                    border border-neutral-200 dark:border-neutral-700
+                    rounded-xl shadow
+                    transition-colors
+                "
+            >
+                <DataTable
+                    isLoading={isFetching}
+                    columns={columns}
+                    data={data || []}
+                />
+            </div>
             <DashboardPagination
                 currentPage={currentPage}
                 itemsCount={response?.count || 0}

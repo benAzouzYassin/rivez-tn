@@ -145,13 +145,13 @@ export function FileInput({
                     "transition-all duration-200 ease-in-out",
                     "flex items-center justify-center",
                     isDragActive
-                        ? "border-blue-500 bg-blue-50"
-                        : "border-neutral-300 hover:bg-[#F7F7F7] bg-[#F7F7F7]/50",
+                        ? "border-blue-500 bg-blue-50 dark:bg-blue-900/30"
+                        : "border-neutral-300 dark:border-neutral-700 hover:bg-[#F7F7F7] dark:hover:bg-neutral-800 bg-[#F7F7F7]/50 dark:bg-neutral-900/40",
                     disabled && "opacity-50 cursor-not-allowed",
                     preview ? "p-4" : "p-4 md:p-8",
                     containerClassName,
                     {
-                        "hover:bg-white": isLoading,
+                        "hover:bg-white dark:hover:bg-neutral-800": isLoading,
                     }
                 )}
             >
@@ -160,7 +160,7 @@ export function FileInput({
                 {isLoading ? (
                     <div className="relative hover:cursor-not-allowed w-full h-full">
                         <div className="flex flex-col w-full h-full items-center justify-center">
-                            <Loader2 className="w-7 h-7 animate-spin duration-[animation-duration:350ms] text-blue-400" />
+                            <Loader2 className="w-7 h-7 animate-spin duration-[animation-duration:350ms] text-blue-400 dark:text-blue-300" />
                             {displayCancelBtn && (
                                 <Button
                                     onClick={onCancel}
@@ -189,8 +189,8 @@ export function FileInput({
                         )}
                         {previewAsDocument && (
                             <div className="flex flex-col items-center justify-center h-full">
-                                <FileTextIcon className="w-12 h-12 md:w-16 md:h-16 text-red-400 mb-2" />
-                                <p className="text-sm md:text-base text-neutral-700 text-center font-semibold max-w-[250px] truncate px-4  break-all">
+                                <FileTextIcon className="w-12 h-12 md:w-16 md:h-16 text-red-400 dark:text-red-300 mb-2" />
+                                <p className="text-sm md:text-base text-neutral-700 dark:text-neutral-200 text-center font-semibold max-w-[250px] truncate px-4 break-all">
                                     {fileName}
                                 </p>
                             </div>
@@ -204,7 +204,7 @@ export function FileInput({
                                 className={cn(
                                     "absolute -top-2 -right-2 p-1",
                                     "bg-red-500 rounded-full text-white",
-                                    "hover:bg-red-600 transition-colors",
+                                    "hover:bg-red-600 dark:hover:bg-red-700 transition-colors",
                                     { "-top-10": previewAsDocument }
                                 )}
                             >
@@ -218,19 +218,19 @@ export function FileInput({
                             renderEmptyContent()
                         ) : (
                             <>
-                                <Upload className="w-8 h-8 md:w-10 md:h-10 mb-2 mx-auto text-neutral-400" />
-                                <p className="text-sm md:text-base text-neutral-600 mb-1 md:mb-2">
+                                <Upload className="w-8 h-8 md:w-10 md:h-10 mb-2 mx-auto text-neutral-400 dark:text-neutral-500" />
+                                <p className="text-sm md:text-base text-neutral-600 dark:text-neutral-200 mb-1 md:mb-2">
                                     {isDragActive
                                         ? t["Drop the file here"]
                                         : t["Drag & drop a file here"]}
                                 </p>
-                                <p className="text-xs md:text-sm text-neutral-500">
+                                <p className="text-xs md:text-sm text-neutral-500 dark:text-neutral-400">
                                     {t["or click to select a file"]}
                                 </p>
-                                <p className="text-xs text-neutral-400 mt-1 md:mt-2">
+                                <p className="text-xs text-neutral-400 dark:text-neutral-500 mt-1 md:mt-2">
                                     {t["Accepted file types"]}
                                 </p>
-                                <p className="text-xs text-neutral-400">
+                                <p className="text-xs text-neutral-400 dark:text-neutral-500">
                                     {t["up to 10MB"]}
                                 </p>
                             </>

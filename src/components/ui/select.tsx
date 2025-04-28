@@ -95,11 +95,8 @@ const SelectContent = React.forwardRef<
                 "relative z-50 min-w-[200px] overflow-hidden rounded-xl border shadow-md",
                 "data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0",
                 position === "popper" &&
-                    "data-[side=bottom]:translate-y-1 data-[side=left]:-translate-x-1 data-[side=right]:translate-x-1 data-[side=top]:-translate-y-1",
-                // Light mode styles
+                    "data-[side=bottom]:translate-y-1 dark:bg-gray-800 dark:text-gray-200 dark:border-gray-700 data-[side=left]:-translate-x-1 data-[side=right]:translate-x-1 data-[side=top]:-translate-y-1",
                 { "bg-white text-neutral-950 border-neutral-200": !isDarkMode },
-                // Dark mode styles
-                { "bg-gray-800 text-gray-200 border-gray-700": isDarkMode },
                 className
             )}
             position={position}
@@ -131,14 +128,10 @@ const SelectItem = React.forwardRef<
             "relative flex rtl:flex-row-reverse h-10 w-full active:scale-[97%] rounded-sm px-2 py-2 hover:cursor-pointer select-none items-center shadow-[0px_1px_0px] transition-all pl-4 text-base font-medium outline-none",
             // Light mode styles
             {
-                "shadow-neutral-200 hover:bg-sky-200/70 focus:bg-sky-200/70 focus:text-neutral-900":
+                "shadow-neutral-200 dark:shadow-gray-700 dark:hover:bg-blue-800/40 dark:focus:bg-blue-800/40 dark:focus:text-gray-100 hover:bg-sky-200/70 focus:bg-sky-200/70 focus:text-neutral-900":
                     !isDarkMode,
             },
             // Dark mode styles
-            {
-                "shadow-gray-700 hover:bg-blue-800/40 focus:bg-blue-800/40 focus:text-gray-100":
-                    isDarkMode,
-            },
             { "opacity-50": props.disabled },
             className
         )}

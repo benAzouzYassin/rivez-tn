@@ -10,6 +10,33 @@ import {
 import { cn } from "@/lib/ui-utils"
 import { getLanguage } from "@/utils/get-language"
 
+const translation = {
+    en: {
+        Showing: "Showing",
+        items: "items",
+        from: "from",
+        to: "to",
+        of: "of",
+        "Items per page": "Items per page",
+    },
+    ar: {
+        Showing: "يتم عرض",
+        items: "عناصر",
+        from: "من",
+        to: "إلى",
+        of: "من جملة",
+        "Items per page": "لعناصر في كل صفحة",
+    },
+    fr: {
+        Showing: "Affichage",
+        items: "éléments",
+        from: "de",
+        to: "à",
+        of: "de",
+        "Items per page": "Éléments par page",
+    },
+}
+
 type Props = {
     itemsCount: number
     currentPage: number
@@ -92,23 +119,24 @@ export default function DashboardPagination({
             )}
         >
             <div className="flex items-center gap-4">
-                <div className="text-sm flex items-center text-neutral-600">
+                <div className="text-sm flex items-center text-neutral-600 dark:text-neutral-300">
                     {t["Showing"]}
                     <Select
                         value={currentItemsPerPage.toString()}
                         onValueChange={handleItemsPerPageChange}
                     >
-                        <SelectTrigger className=" h-8 rounded-lg  px-1 mx-2 !w-fit translate-y-2 text-xs">
+                        <SelectTrigger className="h-8 rounded-lg px-1 mx-2 !w-fit translate-y-2 text-xs bg-white dark:bg-neutral-800 dark:border-neutral-700 dark:text-neutral-200">
                             <SelectValue
                                 className="flex flex-row rtl:flex-row-reverse"
                                 placeholder={t["Items per page"]}
                             />
                         </SelectTrigger>
-                        <SelectContent>
+                        <SelectContent className="bg-white rtl:-translate-x-1/2 dark:bg-neutral-800 dark:text-neutral-200">
                             {[5, 9, 10, 12, 20, 50, 100].map((option) => (
                                 <SelectItem
                                     key={option}
                                     value={option.toString()}
+                                    className="dark:text-neutral-200"
                                 >
                                     <span className="ltr:hidden">
                                         {t["items"]}
@@ -134,7 +162,7 @@ export default function DashboardPagination({
                             return (
                                 <span
                                     key={`ellipsis-${index}`}
-                                    className="px-2 text-neutral-500 transition-opacity duration-300"
+                                    className="px-2 text-neutral-500 dark:text-neutral-400 transition-opacity duration-300"
                                 >
                                     {page}
                                 </span>
@@ -150,9 +178,9 @@ export default function DashboardPagination({
                                         : "secondary"
                                 }
                                 className={cn(
-                                    "min-w-12 p-0 transition-all text-sm  text-black",
+                                    "min-w-12 p-0 transition-all text-sm text-black dark:text-neutral-200",
                                     {
-                                        "text-white h-[44px]  bg-neutral-700":
+                                        "text-white dark:text-white h-[44px] bg-neutral-700 dark:bg-neutral-600":
                                             page === currentPage,
                                     }
                                 )}
@@ -172,30 +200,4 @@ export default function DashboardPagination({
             )}
         </div>
     )
-}
-const translation = {
-    en: {
-        Showing: "Showing",
-        items: "items",
-        from: "from",
-        to: "to",
-        of: "of",
-        "Items per page": "Items per page",
-    },
-    ar: {
-        Showing: "يتم عرض",
-        items: "عناصر",
-        from: "من",
-        to: "إلى",
-        of: "من جملة",
-        "Items per page": "لعناصر في كل صفحة",
-    },
-    fr: {
-        Showing: "Affichage",
-        items: "éléments",
-        from: "de",
-        to: "à",
-        of: "de",
-        "Items per page": "Éléments par page",
-    },
 }

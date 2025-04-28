@@ -32,18 +32,19 @@ export default function Page() {
         return <ErrorDisplay />
     }
     return (
-        <main className="p-4 md:p-10">
+        <main className="p-4 md:p-10 bg-white dark:bg-neutral-900 transition-colors min-h-screen">
             <div className="flex flex-col sm:flex-row w-full items-center gap-4">
                 <div
                     className={cn(
                         "min-h-16 h-16 sm:min-h-20 sm:h-20 relative w-24 sm:w-32 sm:min-w-32 rounded-xl",
                         {
-                            "bg-zinc-200/70": !data?.quizData?.image,
+                            "bg-zinc-200/70 dark:bg-neutral-800/70":
+                                !data?.quizData?.image,
                         }
                     )}
                 >
                     {!!data?.quizData?.image && (
-                        <div className="overflow-hidden border rounded-xl h-full w-full">
+                        <div className="overflow-hidden border rounded-xl h-full w-full border-neutral-200 dark:border-neutral-700">
                             <img
                                 alt=""
                                 src={data?.quizData.image}
@@ -53,83 +54,83 @@ export default function Page() {
                     )}
                 </div>
                 <div className="text-center sm:text-left">
-                    <h1 className="text-2xl sm:text-3xl first-letter:uppercase text-neutral-700 font-extrabold">
+                    <h1 className="text-2xl sm:text-3xl first-letter:uppercase text-neutral-700 dark:text-neutral-200 font-extrabold">
                         {data?.quizData?.name}
                     </h1>
-                    <p className="text-sm sm:text-base font-bold text-neutral-500">
+                    <p className="text-sm sm:text-base font-bold text-neutral-500 dark:text-neutral-400">
                         {data?.quizData.category?.name}
                     </p>
                 </div>
             </div>
             <section className="grid gap-4 mt-6 md:mt-10 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
-                <Card className="p-4 md:p-6 h-auto md:h-44 shadow-black/60 border-black/60">
+                <Card className="p-4 md:p-6 h-auto md:h-44 shadow-black/60 border-black/60 dark:bg-neutral-800 dark:border-neutral-700 dark:shadow-black/40">
                     <div className="flex justify-between items-start mb-2">
-                        <span className="text-neutral-400 font-bold">
+                        <span className="text-neutral-400 dark:text-neutral-300 font-bold">
                             {t["Average Time"]}
                         </span>
-                        <Clock className="w-5 h-5 md:w-6 md:h-6 stroke-3 text-neutral-400" />
+                        <Clock className="w-5 h-5 md:w-6 md:h-6 stroke-3 text-neutral-400 dark:text-neutral-300" />
                     </div>
                     <div className="space-y-1">
-                        <div className="text-2xl md:text-3xl mt-2 md:mt-3 text-black/70 font-extrabold">
+                        <div className="text-2xl md:text-3xl mt-2 md:mt-3 text-black/70 dark:text-white/80 font-extrabold">
                             {data?.avgTimeSpent.toFixed(1)} {t["minute"]}
                         </div>
-                        <div className="text-xs md:text-sm font-bold text-neutral-400">
+                        <div className="text-xs md:text-sm font-bold text-neutral-400 dark:text-neutral-400">
                             {t["The average seconds per submission"]}
                         </div>
                     </div>
                 </Card>
 
-                <Card className="p-4 md:p-6 shadow-green-400 border-green-400">
+                <Card className="p-4 md:p-6 shadow-green-400 border-green-400 dark:bg-neutral-800 dark:border-green-700 dark:shadow-green-900/40">
                     <div className="flex justify-between items-start mb-2">
-                        <span className="font-bold text-neutral-400">
+                        <span className="font-bold text-neutral-400 dark:text-neutral-300">
                             {t["Success Rate"]}
                         </span>
-                        <Check className="w-5 h-5 md:w-6 md:h-6 stroke-3 text-neutral-400" />
+                        <Check className="w-5 h-5 md:w-6 md:h-6 stroke-3 text-neutral-400 dark:text-neutral-300" />
                     </div>
                     <div className="space-y-1">
-                        <div className="text-2xl md:text-3xl mt-2 md:mt-3 text-green-600/70 font-extrabold">
+                        <div className="text-2xl md:text-3xl mt-2 md:mt-3 text-green-600/70 dark:text-green-400 font-extrabold">
                             {((data?.avgCorrect || 0) * 100).toFixed(1)} %
                             <span className="text-lg md:text-xl -translate-y-1 inline-flex"></span>
                         </div>
-                        <div className="text-xs md:text-sm font-bold text-neutral-400">
+                        <div className="text-xs md:text-sm font-bold text-neutral-400 dark:text-neutral-400">
                             {((data?.avgCorrect || 0) * 100).toFixed(1)} %{" "}
                             {t[" of questions are answered correctly"]}
                         </div>
                     </div>
                 </Card>
 
-                <Card className="p-4 md:p-6 shadow-red-300 border-red-300">
+                <Card className="p-4 md:p-6 shadow-red-300 border-red-300 dark:bg-neutral-800 dark:border-red-700 dark:shadow-red-900/40">
                     <div className="flex justify-between items-start mb-2">
-                        <span className="text-neutral-400 font-bold">
+                        <span className="text-neutral-400 dark:text-neutral-300 font-bold">
                             {t["Failure Rate"]}
                         </span>
-                        <X className="w-5 h-5 md:w-6 md:h-6 stroke-3 text-neutral-400" />
+                        <X className="w-5 h-5 md:w-6 md:h-6 stroke-3 text-neutral-400 dark:text-neutral-300" />
                     </div>
                     <div className="space-y-1">
-                        <div className="text-2xl md:text-3xl mt-2 md:mt-3 text-red-500/80 font-extrabold">
+                        <div className="text-2xl md:text-3xl mt-2 md:mt-3 text-red-500/80 dark:text-red-400 font-extrabold">
                             {((data?.avgFailed || 0) * 100).toFixed(1)} %
                             <span className="text-lg md:text-xl -translate-y-1 inline-flex"></span>
                         </div>
-                        <div className="text-xs md:text-sm font-bold text-neutral-400">
+                        <div className="text-xs md:text-sm font-bold text-neutral-400 dark:text-neutral-400">
                             {((data?.avgFailed || 0) * 100).toFixed(1)} %{" "}
                             {t[" questions are answered wrongly"]}
                         </div>
                     </div>
                 </Card>
 
-                <Card className="p-4 md:p-6 shadow-neutral-300 border-neutral-300">
+                <Card className="p-4 md:p-6 shadow-neutral-300 border-neutral-300 dark:bg-neutral-800 dark:border-neutral-700 dark:shadow-neutral-900/40">
                     <div className="flex justify-between items-start mb-2">
-                        <span className="text-neutral-400 font-bold">
+                        <span className="text-neutral-400 dark:text-neutral-300 font-bold">
                             {t["Skip Rate"]}
                         </span>
-                        <SkipForward className="w-5 h-5 md:w-6 md:h-6 stroke-3 text-neutral-400" />
+                        <SkipForward className="w-5 h-5 md:w-6 md:h-6 stroke-3 text-neutral-400 dark:text-neutral-300" />
                     </div>
                     <div className="space-y-1">
-                        <div className="text-2xl md:text-3xl mt-2 md:mt-3 font-extrabold text-neutral-500">
+                        <div className="text-2xl md:text-3xl mt-2 md:mt-3 font-extrabold text-neutral-500 dark:text-neutral-300">
                             {((data?.avgSkipped || 0) * 100).toFixed(0)} %
                             <span className="text-lg md:text-xl -translate-y-1 inline-flex"></span>
                         </div>
-                        <div className="text-xs md:text-sm font-bold text-neutral-400">
+                        <div className="text-xs md:text-sm font-bold text-neutral-400 dark:text-neutral-400">
                             {((data?.avgSkipped || 0) * 100).toFixed(0)} %
                             {t[" questions are skipped"]}
                         </div>
@@ -138,7 +139,7 @@ export default function Page() {
             </section>
 
             <div className="mt-6 md:mt-10">
-                <h2 className="text-xl md:text-2xl mb-3 md:mb-4 text-black/80 font-extrabold">
+                <h2 className="text-xl md:text-2xl mb-3 md:mb-4 text-black/80 dark:text-white/90 font-extrabold">
                     {t["Quiz submissions :"]}{" "}
                 </h2>
                 <Submissions />

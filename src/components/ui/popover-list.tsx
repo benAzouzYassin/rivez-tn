@@ -37,7 +37,9 @@ export default function PopoverList(props: Props) {
                 <PopoverContent
                     onClick={(e) => e.stopPropagation()}
                     className={cn(
-                        "min-w-[240px]  rounded-xl overflow-hidden border !w-(--radix-popover-trigger-width) p-0",
+                        "min-w-[240px] rounded-xl overflow-hidden border !w-(--radix-popover-trigger-width) p-0",
+                        "bg-white border-neutral-200 shadow-lg",
+                        "dark:bg-neutral-800 dark:border-neutral-700 dark:shadow-neutral-900",
                         props.contentClassName
                     )}
                     align="center"
@@ -59,9 +61,11 @@ export default function PopoverList(props: Props) {
                                     onClick={(e) => e.stopPropagation()}
                                     key={i}
                                     className={cn(
-                                        "h-10 shadow-[0px_1px_0px] opacity-70 font-bold flex items-center shadow-neutral-200  rounded-none pl-4 text-sm active:scale-95 hover:cursor-pointer",
+                                        "h-10 shadow-[0px_1px_0px] opacity-70 font-bold flex items-center shadow-neutral-200 rounded-none pl-4 text-sm active:scale-95 hover:cursor-pointer",
+                                        "bg-white text-neutral-900",
+                                        "dark:bg-neutral-800 dark:text-neutral-100 dark:shadow-neutral-700",
                                         {
-                                            "data-[selected=true]:bg-red-200/70 !text-red-600":
+                                            "data-[selected=true]:bg-red-200/70 !text-red-600 dark:data-[selected=true]:bg-red-900/70 dark:!text-red-400":
                                                 item.isDanger,
                                         },
                                         item.className

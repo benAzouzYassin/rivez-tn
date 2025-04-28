@@ -102,24 +102,23 @@ export default function ShareQuizDialog(props: Props) {
             "_blank"
         )
     }
-
     return (
         <Dialog open={props.isOpen} onOpenChange={props.onOpenChange}>
-            <DialogContent className="sm:max-w-[700px] w-full max-w-[95vw] !rounded-xl p-4 sm:p-6">
-                <DialogTitle className="text-xl sm:text-2xl md:text-3xl text-neutral-600 text-center font-bold">
+            <DialogContent className="sm:max-w-[700px] w-full max-w-[95vw] !rounded-xl p-4 sm:p-6 dark:bg-neutral-900 dark:border-neutral-700">
+                <DialogTitle className="text-xl sm:text-2xl md:text-3xl text-neutral-600 dark:text-neutral-100 text-center font-bold">
                     {t["Share Quiz"]}
                 </DialogTitle>
-                <DialogDescription className="text-sm text-gray-500">
+                <DialogDescription className="text-sm text-gray-500 dark:text-neutral-400 md:mt-0 mt-5">
                     {t["Share this quiz with others."]}
                 </DialogDescription>
                 {isLoading && <ShareDialogSkeleton />}
                 {isError && <ErrorDisplay hideButton />}
                 {!isLoading && !isError && (
                     <>
-                        <div className="flex flex-col sm:flex-row items-center mt-4 space-y-3 sm:space-y-0 sm:space-x-2">
-                            <div className="flex-1 w-full flex items-center border border-gray-300 rounded-lg overflow-hidden bg-gray-50">
+                        <div className="flex flex-col sm:flex-row items-center md:-mt-2 mt-1 space-y-3 sm:space-y-0 sm:space-x-2">
+                            <div className="flex-1 w-full flex items-center border border-gray-300 dark:border-neutral-700 rounded-lg overflow-hidden bg-gray-50 dark:bg-neutral-800">
                                 <input
-                                    className="w-full p-2 sm:p-3 text-base sm:text-lg font-semibold text-neutral-700 bg-transparent outline-none flex-1 truncate"
+                                    className="w-full p-2 sm:p-3 text-base sm:text-lg font-semibold text-neutral-700 dark:text-neutral-200 bg-transparent outline-none flex-1 truncate"
                                     value={quizLink}
                                     readOnly
                                 />
@@ -127,7 +126,7 @@ export default function ShareQuizDialog(props: Props) {
                             <TooltipWrapper asChild content={t["Copy link"]}>
                                 <button
                                     onClick={handleCopy}
-                                    className="p-2 sm:p-3 h-12 sm:h-14 w-full md:w-14 rounded-lg border-2 border-blue-400/80 active:scale-90 text-blue-600 cursor-pointer hover:bg-blue-50 transition-all duration-300 flex items-center justify-center relative overflow-hidden"
+                                    className="p-2 sm:p-3 h-12 sm:h-14 w-full md:w-14 rounded-lg border-2 border-blue-400/80 active:scale-90 text-blue-600 dark:text-blue-300 cursor-pointer hover:bg-blue-50 dark:hover:bg-blue-900/40 transition-all duration-300 flex items-center justify-center relative overflow-hidden"
                                     disabled={copied}
                                 >
                                     <span
@@ -153,22 +152,22 @@ export default function ShareQuizDialog(props: Props) {
                                 <div className="cursor-pointer flex flex-col items-center">
                                     <button
                                         onClick={shareToFacebook}
-                                        className="group p-2 sm:p-3 scale-75 sm:scale-80 cursor-pointer rounded-full bg-blue-50 hover:bg-blue-100 transition-all duration-300"
+                                        className="group p-2 sm:p-3 scale-75 sm:scale-80 cursor-pointer rounded-full bg-blue-50 dark:bg-blue-900/40 hover:bg-blue-100 dark:hover:bg-blue-900/60 transition-all duration-300"
                                     >
                                         <FacebookIcon className="w-8 sm:w-10 h-8 sm:h-10 text-blue-500 group-hover:scale-110 transition-transform duration-300" />
                                     </button>
-                                    <span className="mt-1 sm:mt-2 text-xs sm:text-sm font-medium text-gray-600">
+                                    <span className="mt-1 sm:mt-2 text-xs sm:text-sm font-medium text-gray-600 dark:text-neutral-300">
                                         {t["Facebook"]}
                                     </span>
                                 </div>
                                 <div className="flex cursor-pointer flex-col items-center">
                                     <button
                                         onClick={shareToWhatsApp}
-                                        className="group p-2 sm:p-3 cursor-pointer rounded-full bg-green-50 hover:bg-green-100 transition-all duration-300"
+                                        className="group p-2 sm:p-3 cursor-pointer rounded-full bg-green-50 dark:bg-green-900/40 hover:bg-green-100 dark:hover:bg-green-900/60 transition-all duration-300"
                                     >
                                         <WhatsAppIcon className="w-8 sm:w-10 h-8 sm:h-10 text-green-500 group-hover:scale-110 transition-transform duration-300" />
                                     </button>
-                                    <span className="mt-1 sm:mt-2 text-xs sm:text-sm font-medium text-gray-600">
+                                    <span className="mt-1 sm:mt-2 text-xs sm:text-sm font-medium text-gray-600 dark:text-neutral-300">
                                         {t["WhatsApp"]}
                                     </span>
                                 </div>
