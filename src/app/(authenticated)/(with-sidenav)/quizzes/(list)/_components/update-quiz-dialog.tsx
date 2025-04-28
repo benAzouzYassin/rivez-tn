@@ -112,17 +112,17 @@ export default function UpdateQuizDialog(props: Props) {
 
     return (
         <Dialog open={props.isOpen} onOpenChange={props.onOpenChange}>
-            <DialogContent className="sm:max-w-[45vw] sm:min-w-[500px] max-h-[97vh] overflow-y-auto py-10">
+            <DialogContent className="sm:max-w-[45vw] sm:min-w-[500px]  md:max-h-[97vh] md:overflow-y-auto py-10">
                 <DialogTitle className="text-2xl font-bold text-center text-[#3C3C3C]">
                     {t["Update Quiz"]}
                 </DialogTitle>
                 <DialogDescription></DialogDescription>
                 {isLoading ? (
-                    <div className="w-full h-[70vh] flex items-center justify-center">
+                    <div className="w-full md:h-[70vh] flex items-center justify-center">
                         <Loader2 className="w-10 h-10 animate-spin duration-[animation-duration:350ms] text-blue-400" />
                     </div>
                 ) : (
-                    <section className="flex relative flex-col gap-4">
+                    <section className="flex  min-h-full overflow-y-auto relative flex-col gap-4">
                         {isAdmin && (
                             <div className="w-fit flex items-center justify-start h-10">
                                 <p className="text-nowrap mr-2 text-lg font-semibold">
@@ -137,7 +137,7 @@ export default function UpdateQuizDialog(props: Props) {
                         <Input
                             {...register("name")}
                             placeholder={t["Quiz Name"]}
-                            className="w-full"
+                            className="w-full md:mt-0 mt-5"
                             errorMessage={errors.name?.message}
                         />
                         <Textarea
@@ -149,7 +149,7 @@ export default function UpdateQuizDialog(props: Props) {
                             displayCancelBtn
                             isLoading={isUploadingImage}
                             onLoadingChange={setIsUploadingImage}
-                            className="-mt-3 max-w-[85vw]"
+                            className="-mt-3 md:max-w-[85vw]"
                             imageUrl={imageUrl}
                             onImageUrlChange={setImageUrl}
                         />
@@ -158,11 +158,12 @@ export default function UpdateQuizDialog(props: Props) {
                             disabled={isUploadingImage}
                             type="button"
                             onClick={handleSubmit(onSubmit)}
-                            className="font-extrabold uppercase text-sm"
+                            className="font-extrabold min-h-13 uppercase text-sm"
                             variant="blue"
                         >
                             {t["Save changes"]}
                         </Button>
+                        <div className="h-10 md:h-5 "></div>
                     </section>
                 )}
             </DialogContent>

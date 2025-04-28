@@ -49,11 +49,10 @@ export function NavButton({
                         }
                     }}
                     className={cn(
-                        "py-7 text-base    bg-white text-[#545454] hover:bg-neutral-100 border-white font-extrabold rounded-xl shadow-none w-full justify-start",
+                        "py-7 text-base bg-white dark:bg-neutral-900 text-[#545454] dark:text-neutral-200 hover:bg-neutral-100 dark:hover:bg-neutral-800 border-white dark:border-neutral-900 font-extrabold rounded-xl shadow-none w-full justify-start transition-all rtl:flex-row-reverse",
                         additionalClasses,
-                        "transition-all rtl:flex-row-reverse",
                         {
-                            "bg-[#D3EEFA]/50 text-[#27b3ef]  hover:bg-[#cdeffd]/80 border-[#8cd9f9]/70 border-2":
+                            "bg-[#D3EEFA]/50 dark:bg-blue-900/40 text-[#27b3ef] dark:text-blue-300 hover:bg-[#cdeffd]/80 dark:hover:bg-blue-900/60 border-[#8cd9f9]/70 dark:border-blue-700/70 border-2":
                                 isSelected,
                         }
                     )}
@@ -67,7 +66,7 @@ export function NavButton({
                     duration={0}
                     content={item.name}
                     contentClassName={cn(
-                        "  translate-y-12 rounded-lg  font-bold text-neutral-600/90 text-sm  w-[110px] text-center rtl:translate-x-[-90px] ltr:translate-x-[90px]",
+                        "translate-y-12 rounded-lg font-bold text-neutral-600/90 dark:text-neutral-200 text-sm w-[110px] text-center rtl:translate-x-[-90px] ltr:translate-x-[90px] bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 shadow-lg dark:shadow-black/30",
                         { "opacity-0 ": isNameVisible }
                     )}
                     asChild
@@ -81,11 +80,10 @@ export function NavButton({
                             }
                         }}
                         className={cn(
-                            "py-7 text-base  bg-white   text-[#545454] hover:bg-neutral-100 border-white font-extrabold rounded-xl shadow-none w-full justify-start",
+                            "py-7 text-base bg-white dark:bg-neutral-900 text-[#545454] dark:text-neutral-200 hover:bg-neutral-100 dark:hover:bg-neutral-800 border-white dark:border-neutral-900 font-extrabold rounded-xl shadow-none w-full justify-start transition-all",
                             additionalClasses,
-                            "transition-all",
                             {
-                                "bg-[#D3EEFA]/50 text-[#27b3ef] hover:bg-[#cdeffd]/80 border-[#8cd9f9]/70 border-2":
+                                "bg-[#D3EEFA]/50 dark:bg-blue-900/40 text-[#27b3ef] dark:text-blue-300 hover:bg-[#cdeffd]/80 dark:hover:bg-blue-900/60 border-[#8cd9f9]/70 dark:border-blue-700 border-2":
                                     isSelected,
                             }
                         )}

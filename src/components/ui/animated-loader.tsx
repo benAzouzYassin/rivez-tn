@@ -7,7 +7,7 @@ export default function AnimatedLoader(props: Props) {
     return (
         <svg
             className={cn(
-                "w-10 h-10 text-neutral-200 fill-blue-600 duration-700 animate-spin ",
+                "w-10 h-10 text-neutral-700 fill-blue-400 duration-700 animate-spin dark:text-neutral-800 dark:fill-blue-500",
                 props.className
             )}
             xmlns="http://www.w3.org/2000/svg"
@@ -23,9 +23,21 @@ export default function AnimatedLoader(props: Props) {
                     gradientTransform="translate(7.43 169.83)"
                     gradientUnits="userSpaceOnUse"
                 >
-                    <stop offset="0" stopColor="#86f3e8" />
-                    <stop offset=".5" stopColor="#3abff8" />
-                    <stop offset="1" stopColor="#004735" />
+                    <stop
+                        offset="0"
+                        stopColor="#64dfd2"
+                        className="dark:text-blue-900"
+                    />
+                    <stop
+                        offset=".5"
+                        stopColor="#3abff8"
+                        className="dark:text-blue-500"
+                    />
+                    <stop
+                        offset="1"
+                        stopColor="#004735"
+                        className="dark:text-blue-900"
+                    />
                 </linearGradient>
                 <linearGradient
                     id="b"
@@ -36,9 +48,21 @@ export default function AnimatedLoader(props: Props) {
                     gradientTransform="translate(7.43 169.83)"
                     gradientUnits="userSpaceOnUse"
                 >
-                    <stop offset="0" stopColor="#ff96ab" />
-                    <stop offset=".5" stopColor="#f471b5" />
-                    <stop offset="1" stopColor="#6b1000" />
+                    <stop
+                        offset="0"
+                        stopColor="#e87d91"
+                        className="dark:text-pink-900"
+                    />
+                    <stop
+                        offset=".5"
+                        stopColor="#d459a0"
+                        className="dark:text-pink-600"
+                    />
+                    <stop
+                        offset="1"
+                        stopColor="#4d0b00"
+                        className="dark:text-pink-900"
+                    />
                 </linearGradient>
                 <linearGradient
                     id="c"
@@ -49,16 +73,21 @@ export default function AnimatedLoader(props: Props) {
                     gradientTransform="translate(7.43 169.83)"
                     gradientUnits="userSpaceOnUse"
                 >
-                    <stop offset="0" stopColor="#ffd184" />
-                    <stop offset="0" stopColor="#fed080" />
-                    <stop offset=".06" stopColor="#fccc5e" />
-                    <stop offset=".13" stopColor="#fac841" />
-                    <stop offset=".2" stopColor="#f9c529" />
-                    <stop offset=".28" stopColor="#f8c316" />
-                    <stop offset=".38" stopColor="#f7c209" />
-                    <stop offset=".5" stopColor="#f7c102" />
-                    <stop offset=".76" stopColor="#f7c100" />
-                    <stop offset="1" stopColor="#673300" />
+                    <stop
+                        offset="0"
+                        stopColor="#e6b86e"
+                        className="dark:text-amber-700"
+                    />
+                    <stop
+                        offset=".5"
+                        stopColor="#e0ae00"
+                        className="dark:text-amber-500"
+                    />
+                    <stop
+                        offset="1"
+                        stopColor="#4d2500"
+                        className="dark:text-amber-900"
+                    />
                 </linearGradient>
             </defs>
             <path
@@ -71,19 +100,23 @@ export default function AnimatedLoader(props: Props) {
             />
             <path
                 fill="#0b81aa"
+                className="dark:fill-blue-800"
                 d="M73.58 58.37C95.92 47.79 93.66 9.83 93.66 9.83 78.84 9.04 64.57 8.6 51.07 8.65c-3.92 8.91 7.58 12.5 14 14.71 14.3 5.3 13.29 17.32 1.89 25.86-9.71 8.85-8.51 15.99 1.36 23.2 4.74 5.74 2.38 15.02-3.25 19.88-11.61 9.81-28.54 5-42.14 9.15-.18 4.17-.04 6.88-.04 6.88 26.65 1.42 51.63 1.78 73.26 0 0 0 .73-37.18-22.57-49.98Z"
                 opacity=".2"
             />
             <path
                 fill="#fff"
+                className="dark:fill-neutral-300"
                 d="M30.06 81.79c-1.95 15.64 28.53-6.36 19.17-14.94-8.9-5.75-17.09 7.53-19.17 14.94Z"
             />
             <path
                 fill="url(#c)"
                 d="M18.72 4.01C37.52.21 64.86.67 94.02 2.05c7.07 1.21 2.77 11.05 2.4 15.75-.43 1.8-1.97 3.12-3.82 3.22-28.94 1.49-55.84 3.03-72.12-.48-4.42-.76-7.7-16.12-1.77-16.51Zm-3.08 99.32c-.57 3.71-3.99 12.9 2.43 13.98 17.53 2.09 50.63.81 83.46-.41 2.76-.1 4.78-2.7 4.12-5.38-1.84-4.54-1.6-12.96-7.53-13.75-28.5 1.53-72.25-3.73-82.49 5.56Z"
             />
-            <g fill="#fd8e00">
+            <g>
                 <path
+                    fill="#fd8e00"
+                    className="dark:fill-amber-700"
                     d="M101.53 116.9c8.14-1.34 2.01-11.35.76-16.1-11.11 14.61-41.48 11.69-58.27 11.07-9.92-1.06-20.56-3.21-29.74 1.77 6.15 10.06 59.66 2.62 87.24 3.26ZM20.48 20.53c16.28 3.51 43.18 1.98 72.12.48 6.07-1.1 4.42-10.04 5.35-14.68-.55-6.95-10.33-3.71-14.98-4.76 5.82 30.3-48.65 8.09-63.23 18.69.24.1.48.21.74.27Z"
                     opacity=".3"
                 />

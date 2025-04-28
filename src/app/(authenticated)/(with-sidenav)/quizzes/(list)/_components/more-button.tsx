@@ -66,36 +66,53 @@ export default function MoreButton(props: Props) {
         return (
             <>
                 <PopoverList
-                    contentClassName="-translate-x-4  "
+                    contentClassName="-translate-x-4"
                     items={[
                         {
-                            icon: <Edit className="w-5 h-5" />,
+                            icon: (
+                                <Edit className="w-5 h-5 dark:text-neutral-100" />
+                            ),
                             label: t["Update questions"],
+                            className:
+                                "focus:bg-neutral-100 dark:focus:bg-neutral-500 dark:hover:bg-neutral-500 dark:text-neutral-100",
                             onClick: () =>
                                 router.push(`/quizzes/update/${props.itemId}`),
                         },
                         {
-                            icon: <Edit2 className="w-5 h-5" />,
+                            icon: (
+                                <Edit2 className="w-5 h-5 dark:text-neutral-100" />
+                            ),
                             label: t["Update information"],
+                            className:
+                                "focus:bg-neutral-100 dark:focus:bg-neutral-500 dark:hover:bg-neutral-500 dark:text-neutral-100",
                             onClick: () => props.setIsUpdateDialogOpen(true),
                         },
                         {
-                            icon: <Info className="w-5 h-5" />,
+                            icon: (
+                                <Info className="w-5 h-5 dark:text-neutral-100" />
+                            ),
                             label: t["Details"],
+                            className:
+                                "focus:bg-neutral-100 dark:focus:bg-neutral-500 dark:hover:bg-neutral-500 dark:text-neutral-100",
                             onClick: () =>
                                 router.push(`/quizzes/details/${props.itemId}`),
                         },
-
                         {
-                            icon: <Share2Icon className="w-5 h-5" />,
+                            icon: (
+                                <Share2Icon className="w-5 h-5 dark:text-neutral-100" />
+                            ),
                             label: t["Share"],
-                            className: "focus:bg-red-200",
+                            className:
+                                "focus:bg-red-200 dark:focus:bg-neutral-500 dark:hover:bg-neutral-500 dark:text-neutral-100",
                             onClick: handleShare,
                         },
                         {
-                            icon: <Trash2 className="w-5 h-5" />,
+                            icon: (
+                                <Trash2 className="w-5 h-5 dark:text-red-400" />
+                            ),
                             label: t["Delete"],
-                            className: "focus:bg-red-200",
+                            className:
+                                "focus:bg-red-200 dark:hover:bg-red-900 dark:text-red-400",
                             isDanger: true,
                             onClick: handleDelete,
                         },
@@ -105,10 +122,11 @@ export default function MoreButton(props: Props) {
                         role="button"
                         className={cn(
                             "h-8 border-2 bg-white hover:bg-neutral-50 flex items-center justify-center rounded-lg w-8 p-0 hover:cursor-pointer active:scale-95",
+                            "dark:bg-neutral-700 dark:border-neutral-600 dark:text-neutral-100 dark:hover:bg-neutral-500",
                             props.className
                         )}
                     >
-                        <MoreVerticalIcon className="!h-6 text-neutral-600 !w-6" />
+                        <MoreVerticalIcon className="!h-6 !w-6 text-neutral-600 dark:text-neutral-100" />
                     </button>
                 </PopoverList>
                 <UpdateQuizDialog

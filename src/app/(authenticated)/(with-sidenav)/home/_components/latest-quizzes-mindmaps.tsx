@@ -31,7 +31,6 @@ export default function LatestQuizzesMindmaps() {
             },
             {
                 enabled: !!currentUser?.id,
-
                 queryKey: ["mindmaps", currentUser?.id],
                 queryFn: () => readLastNMindmaps(3, currentUser?.id as string),
             },
@@ -74,8 +73,8 @@ export default function LatestQuizzesMindmaps() {
         return <LatestQuizzesMindmapsSekelton />
     }
     return (
-        <div className=" mb-10  mx-auto md:px-10 px-6 -mt-2 max-w-[1500px]">
-            <h2 className="text-3xl font-extrabold text-blue-700/70 mb-4">
+        <div className="mb-10 mx-auto md:px-10 px-6 -mt-2 max-w-[1500px]">
+            <h2 className="text-3xl font-extrabold text-blue-700/70 dark:text-blue-300 mb-4 transition-colors">
                 {t["Last quizzes and mindmaps :"]}{" "}
             </h2>
 
@@ -99,23 +98,23 @@ export default function LatestQuizzesMindmaps() {
                                             router.push(`/mind-maps/${item.id}`)
                                         }
                                     }}
-                                    className="h-auto   min-h-48 hover:bg-blue-50 transition-all active:translate-y-1 active:shadow-transparent cursor-pointer hover:border-blue-300 hover:shadow-blue-300"
+                                    className="h-auto min-h-48 cursor-pointer hover:bg-blue-50 dark:hover:bg-blue-950 transition-all active:translate-y-1 active:shadow-transparent hover:border-blue-300 dark:hover:border-blue-400 hover:shadow-blue-300 dark:hover:shadow-blue-900 bg-white dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700"
                                 >
                                     <div className="p-4 sm:p-6 flex flex-col sm:rtl:flex-row-reverse sm:flex-row">
                                         {item.image ? (
                                             <img
                                                 alt={`${item.title} thumbnail`}
                                                 src={item.image}
-                                                className="w-full sm:w-44 border object-center object-cover bg-neutral-200 rounded-2xl h-32 sm:mr-6 mb-4 sm:mb-0"
+                                                className="w-full sm:w-44 border object-center object-cover bg-neutral-200 dark:bg-neutral-800 rounded-2xl h-34 sm:mr-6 mb-4 sm:mb-0"
                                             />
                                         ) : (
-                                            <div className="w-full sm:w-44 bg-neutral-200 rounded-2xl h-32 sm:mr-6 mb-4 sm:mb-0"></div>
+                                            <div className="w-full sm:w-44 bg-neutral-200 dark:bg-neutral-700 rounded-2xl h-34 sm:mr-6 mb-4 sm:mb-0"></div>
                                         )}
                                         <div className="flex-1">
-                                            <h3 className="text-xl  sm:text-2xl text-neutral-700 font-extrabold line-clamp-2">
+                                            <h3 className="text-xl sm:text-2xl text-neutral-700 dark:text-neutral-100 font-extrabold line-clamp-2 transition-colors">
                                                 {item.title}
                                             </h3>
-                                            <p className="text-gray-500 font-medium mt-2 line-clamp-2 sm:line-clamp-3">
+                                            <p className="text-gray-500 dark:text-gray-300 font-medium mt-2 line-clamp-2 sm:line-clamp-3 transition-colors">
                                                 {item.description}
                                             </p>
 
@@ -135,12 +134,12 @@ export default function LatestQuizzesMindmaps() {
                     ))}
                 </CarouselContent>
                 <CarouselPrevious
-                    iconClassName="!w-6   stroke-3  !text-blue-400 !h-6"
-                    className="-left-6 w-10  h-10  !border-blue-200 !bg-white"
+                    iconClassName="!w-6 stroke-3 !text-blue-400 !h-6"
+                    className="-left-6 w-10 h-10 !border-blue-200 dark:!border-blue-900 !bg-white dark:!bg-neutral-800 transition-colors"
                 />
                 <CarouselNext
-                    iconClassName="!w-6   stroke-3  !text-blue-400 !h-6"
-                    className="-right-6 w-10  h-10 !border-blue-200  !bg-white"
+                    iconClassName="!w-6 stroke-3 !text-blue-400 !h-6"
+                    className="-right-6 w-10 h-10 !border-blue-200 dark:!border-blue-900 !bg-white dark:!bg-neutral-800 transition-colors"
                 />
             </Carousel>
         </div>
@@ -149,8 +148,8 @@ export default function LatestQuizzesMindmaps() {
 
 export function LatestQuizzesMindmapsSekelton() {
     return (
-        <div className=" mb-10 mx-auto md:px-10 px-6 -mt-2  max-w-[1500px]">
-            <h2 className="text-3xl font-extrabold text-blue-700/70 mb-4">
+        <div className="mb-10 mx-auto md:px-10 px-6 -mt-2 max-w-[1500px]">
+            <h2 className="text-3xl font-extrabold text-blue-700/70 dark:text-blue-300 mb-4 transition-colors">
                 Last quizzes and mindmaps :{" "}
             </h2>
 
@@ -161,14 +160,14 @@ export function LatestQuizzesMindmapsSekelton() {
                             key={index}
                             className="md:basis-1/2 active:cursor-grabbing cursor-grab"
                         >
-                            <Card className="h-48 ">
+                            <Card className="h-48 bg-white dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 transition-colors">
                                 <CardContent className="p-6 flex space-x-6">
-                                    <Skeleton className="w-44 h-32 rounded-md" />
+                                    <Skeleton className="w-44 h-32 rounded-md bg-neutral-200 dark:bg-neutral-800" />
                                     <div className="flex-1 space-y-2">
-                                        <Skeleton className="h-6 w-[80%]" />
-                                        <Skeleton className="h-4 mt-2 w-[60%]" />
+                                        <Skeleton className="h-6 w-[80%] bg-neutral-200 dark:bg-neutral-800" />
+                                        <Skeleton className="h-4 mt-2 w-[60%] bg-neutral-200 dark:bg-neutral-800" />
                                         <div className="flex gap-2 mt-6">
-                                            <Skeleton className="h-6 w-16 rounded-full" />
+                                            <Skeleton className="h-6 w-16 rounded-full bg-neutral-200 dark:bg-neutral-800" />
                                         </div>
                                     </div>
                                 </CardContent>
@@ -177,12 +176,12 @@ export function LatestQuizzesMindmapsSekelton() {
                     ))}
                 </CarouselContent>
                 <CarouselPrevious
-                    iconClassName="!w-6   stroke-3  !text-blue-400 !h-6"
-                    className="-left-6 w-10  h-10  !border-blue-200 !bg-white"
+                    iconClassName="!w-6 stroke-3 !text-blue-400 !h-6"
+                    className="-left-6 w-10 h-10 !border-blue-200 dark:!border-blue-900 !bg-white dark:!bg-neutral-800 transition-colors"
                 />
                 <CarouselNext
-                    iconClassName="!w-6   stroke-3  !text-blue-400 !h-6"
-                    className="-right-6 w-10  h-10 !border-blue-200  !bg-white"
+                    iconClassName="!w-6 stroke-3 !text-blue-400 !h-6"
+                    className="-right-6 w-10 h-10 !border-blue-200 dark:!border-blue-900 !bg-white dark:!bg-neutral-800 transition-colors"
                 />
             </Carousel>
         </div>

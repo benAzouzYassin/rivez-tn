@@ -61,7 +61,7 @@ export default function MoreButton(props: Props) {
                     role="button"
                     className="h-8 border-2 bg-white hover:bg-neutral-50 flex items-center justify-center rounded-lg w-8 p-0 hover:cursor-pointer active:scale-95"
                 >
-                    <MoreVerticalIcon className="!h-6 text-neutral-600 !w-6" />
+                    <MoreVerticalIcon className="!h-6 !w-6 text-neutral-600 dark:text-neutral-100" />
                 </button>
             </PopoverList>
             <WarningDialog

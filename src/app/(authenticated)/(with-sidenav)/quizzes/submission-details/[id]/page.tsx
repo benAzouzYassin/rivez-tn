@@ -167,7 +167,7 @@ export default function Page() {
                         <Clock className="w-6 h-6 stroke-3 text-neutral-400" />
                     </div>
                     <div className="space-y-1">
-                        <div className="text-3xl mt-3 text-black/70 font-extrabold">
+                        <div className="text-3xl mt-3 dark:text-white text-black/70 font-extrabold">
                             {data?.seconds_spent?.toFixed(1)}s
                         </div>
                         <div className="text-sm font-bold text-neutral-400">
@@ -244,7 +244,7 @@ export default function Page() {
                         <SkipForward className="w-6 h-6 stroke-3 text-neutral-400" />
                     </div>
                     <div className="space-y-1">
-                        <div className="text-3xl mt-3 font-extrabold text-neutral-500">
+                        <div className="text-3xl mt-3 font-extrabold dark:text-neutral-200 text-neutral-500">
                             {skippedQuestions}{" "}
                             <span className="text-xl -translate-y-1 inline-flex">
                                 {t["Questions"]}

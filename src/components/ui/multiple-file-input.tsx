@@ -216,13 +216,13 @@ export function MultipleFileInput({
                     "transition-all duration-200 ease-in-out",
                     "flex items-center justify-center",
                     isDragActive
-                        ? "border-blue-500 bg-blue-50"
-                        : "border-neutral-300 hover:bg-[#F7F7F7] bg-[#F7F7F7]/50",
+                        ? "border-blue-500 bg-blue-50 dark:bg-blue-900/30"
+                        : "border-neutral-300 dark:border-neutral-700 hover:bg-[#F7F7F7] dark:hover:bg-neutral-800 bg-[#F7F7F7]/50 dark:bg-neutral-900/40",
                     disabled && "opacity-50  cursor-not-allowed",
                     localPreviewUrls.length > 0 ? "p-4" : "p-8",
                     containerClassName,
                     {
-                        "hover:bg-white": isLoading,
+                        "hover:bg-white dark:hover:bg-neutral-800": isLoading,
                     }
                 )}
             >
@@ -231,7 +231,7 @@ export function MultipleFileInput({
                 {isLoading ? (
                     <div className="relative hover:cursor-not-allowed min-w-[350px] w-full h-full flex items-center justify-center">
                         <div className="flex flex-col items-center justify-center">
-                            <Loader2 className="w-7 h-7 animate-spin duration-[animation-duration:350ms] text-blue-400" />
+                            <Loader2 className="w-7 h-7 animate-spin duration-[animation-duration:350ms] text-blue-400 dark:text-blue-300" />
                             {displayCancelBtn && (
                                 <Button
                                     onClick={onCancel}
@@ -250,24 +250,24 @@ export function MultipleFileInput({
                             renderEmptyContent()
                         ) : (
                             <>
-                                <Upload className="w-10 h-10 mb-2 mx-auto text-neutral-400" />
-                                <p className="text-neutral-600 mb-2">
+                                <Upload className="w-10 h-10 mb-2 mx-auto text-neutral-400 dark:text-neutral-500" />
+                                <p className="text-neutral-600 dark:text-neutral-200 mb-2">
                                     {isDragActive
                                         ? "Drop the files here"
                                         : "Drag & drop files here"}
                                 </p>
-                                <p className="text-sm text-neutral-500">
+                                <p className="text-sm text-neutral-500 dark:text-neutral-400">
                                     or click to select files
                                 </p>
-                                <p className="text-xs text-neutral-400 mt-2">
+                                <p className="text-xs text-neutral-400 dark:text-neutral-500 mt-2">
                                     Images (PNG, JPG, GIF) or Documents (PDF,
                                     DOC, DOCX, XLS, XLSX)
                                 </p>
-                                <p className="text-xs text-neutral-400">
+                                <p className="text-xs text-neutral-400 dark:text-neutral-500">
                                     up to 10MB per file
                                 </p>
                                 {maxFiles && (
-                                    <p className="text-xs text-neutral-400">
+                                    <p className="text-xs text-neutral-400 dark:text-neutral-500">
                                         Maximum {maxFiles} files
                                     </p>
                                 )}
@@ -277,7 +277,7 @@ export function MultipleFileInput({
                 )}
             </div>
             <div
-                className={cn(" overflow-y-auto pt-2 w-full ", {
+                className={cn("overflow-y-auto pt-2 w-full", {
                     "min-h-20": localPreviewUrls.length,
                 })}
             >
@@ -285,14 +285,14 @@ export function MultipleFileInput({
                     {localPreviewUrls.map((previewUrl, index) => (
                         <div
                             key={index}
-                            className="relative w-20 border-2 rounded-lg h-20"
+                            className="relative w-20 border-2 rounded-lg h-20 dark:border-neutral-700 dark:bg-neutral-800"
                         >
                             {previewUrl.startsWith("data:image") && (
                                 <ImageWithPreview
                                     src={previewUrl}
                                     alt={`Preview ${index}`}
                                     className={cn(
-                                        "rounded-lg  top-0 left-0 h-full  absolute w-full object-cover object-center",
+                                        "rounded-lg top-0 left-0 h-full absolute w-full object-cover object-center",
                                         imageClassName
                                     )}
                                     style={
@@ -304,9 +304,9 @@ export function MultipleFileInput({
                             )}
                             {previewUrl.startsWith("data:image") === false && (
                                 <div className="flex flex-col items-center relative justify-center">
-                                    <div className=" absolute flex-col mt-2 ml-1 flex items-center justify-center top-0 left-0">
-                                        <FileTextIcon className="w-8 h-8 text-red-400 mb-1" />
-                                        <p className=" text-neutral-700 text-center font-semibold text-xs max-w-[70px] truncate ">
+                                    <div className="absolute flex-col mt-2 ml-1 flex items-center justify-center top-0 left-0">
+                                        <FileTextIcon className="w-8 h-8 text-red-400 dark:text-red-300 mb-1" />
+                                        <p className="text-neutral-700 dark:text-neutral-200 text-center font-semibold text-xs max-w-[70px] truncate">
                                             {localFileNames[index]}
                                         </p>
                                     </div>
@@ -319,9 +319,9 @@ export function MultipleFileInput({
                                         removeFile(index)
                                     }}
                                     className={cn(
-                                        "absolute -top-2  w-4 h-4 -right-2 flex items-center justify-center ",
+                                        "absolute -top-2 w-4 h-4 -right-2 flex items-center justify-center",
                                         "bg-red-500 rounded-full text-white",
-                                        "hover:bg-red-600 transition-colors"
+                                        "hover:bg-red-600 dark:hover:bg-red-700 transition-colors"
                                     )}
                                 >
                                     <X className="h-3 w-3" />
