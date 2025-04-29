@@ -77,15 +77,19 @@ export default function ImagesInput(props: Props) {
             allowDocument={false}
             renderEmptyContent={() => (
                 <>
-                    <ImageIcon className="w-10 h-10 mb-2 mx-auto text-indigo-400" />
-                    <p className="text-neutral-600 mb-2">{t.dragDrop}</p>
-                    <p className="text-sm text-neutral-500">
+                    <ImageIcon className="w-10 h-10 mb-2 mx-auto text-indigo-400 dark:text-indigo-300" />
+                    <p className="text-neutral-600 dark:text-neutral-200 mb-2">
+                        {t.dragDrop}
+                    </p>
+                    <p className="text-sm text-neutral-500 dark:text-neutral-400">
                         {t.clickToSelect}
                     </p>
-                    <p className="text-xs text-neutral-400 mt-2">
+                    <p className="text-xs text-neutral-400 dark:text-neutral-500 mt-2">
                         {t.allowedTypes}
                     </p>
-                    <p className="text-xs text-neutral-400">{t.maxSize}</p>
+                    <p className="text-xs text-neutral-400 dark:text-neutral-500">
+                        {t.maxSize}
+                    </p>
                 </>
             )}
         />

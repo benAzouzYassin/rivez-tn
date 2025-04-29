@@ -113,7 +113,7 @@ export default function UserHeader() {
 
     if (isLoading) {
         return (
-            <div className="h-[100vh] dark:bg-neutral-900 flex items-center absolute top-0 left-0 bg-white  w-full z-50 justify-center">
+            <div className="h-[100vh] flex items-center absolute top-0 left-0 bg-white dark:bg-neutral-900 w-full z-50 justify-center">
                 <AnimatedLoader />
             </div>
         )
@@ -378,7 +378,7 @@ export function UserMenu({
                 >
                     <DialogContent
                         className={cn(
-                            "sm:max-w-md bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800",
+                            "xl:max-w-md bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800",
                             { rtl: isRTL }
                         )}
                     >

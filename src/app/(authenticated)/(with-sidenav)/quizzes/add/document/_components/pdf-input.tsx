@@ -80,6 +80,7 @@ export default function PdfInput(props: Props) {
 
     return (
         <FileInput
+            className="dark:bg-neutral-800"
             fileName={fileName}
             isLoading={isUploadingPdf}
             onChange={async (file) => {
@@ -158,15 +159,19 @@ export default function PdfInput(props: Props) {
             allowImage={false}
             renderEmptyContent={() => (
                 <>
-                    <FileTextIcon className="w-10 h-10 mb-2 mx-auto text-red-400" />
-                    <p className="text-neutral-600 mb-2">{t.dragDrop}</p>
-                    <p className="text-sm text-neutral-500">
+                    <FileTextIcon className="w-10 h-10 mb-2 mx-auto text-red-400 dark:text-red-500/80" />
+                    <p className="text-neutral-600 dark:text-neutral-200 mb-2">
+                        {t.dragDrop}
+                    </p>
+                    <p className="text-sm text-neutral-500 dark:text-neutral-300">
                         {t.clickToSelect}
                     </p>
-                    <p className="text-xs text-neutral-400 mt-2">
+                    <p className="text-xs text-neutral-400 dark:text-neutral-400 mt-2">
                         {t.allowedTypes}
                     </p>
-                    <p className="text-xs text-neutral-400">{t.maxSize}</p>
+                    <p className="text-xs text-neutral-400 dark:text-neutral-500">
+                        {t.maxSize}
+                    </p>
                 </>
             )}
         />

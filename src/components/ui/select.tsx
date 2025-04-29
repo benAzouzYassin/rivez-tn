@@ -27,7 +27,7 @@ const SelectTrigger = React.forwardRef<
                 "placeholder:font-medium",
                 "placeholder:transition-all focus:placeholder:translate-x-1",
                 "focus:outline-none focus:ring-1 focus:ring-offset-0",
-                "dark:focus:border-blue-600/30 dark:focus:ring-blue-800/50 dark:bg-neutral-800 dark:placeholder:text-neutral-500 dark:border-neutral-700 dark:text-neutral-200 dark:hover:bg-neutral-700",
+                "dark:focus:border-blue-600/30 dark:focus:ring-blue-800/50 dark:bg-neutral-800 dark:placeholder:text-neutral-500 dark:border-neutral-700 dark:text-white dark:hover:bg-neutral-700",
                 "focus:border-blue-300 focus:ring-blue-200/50 placeholder:text-[#AFAFAF] bg-[#F7F7F7]/50 border-[#E5E5E5] hover:bg-blue-50",
                 {
                     "border-red-400 dark:border-red-500 dark:focus:border-red-500 dark:focus:ring-red-800/50 focus:border-red-400 focus:ring-red-200/50":
@@ -78,7 +78,7 @@ const SelectContent = React.forwardRef<
                 "relative z-50 min-w-[200px] overflow-hidden rounded-xl border shadow-md",
                 "data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0",
                 position === "popper" &&
-                    "data-[side=bottom]:translate-y-1 dark:bg-neutral-800 dark:text-neutral-200 dark:border-neutral-700 data-[side=left]:-translate-x-1 data-[side=right]:translate-x-1 data-[side=top]:-translate-y-1",
+                    "data-[side=bottom]:translate-y-1 dark:bg-neutral-800 dark:text-white dark:border-neutral-700 data-[side=left]:-translate-x-1 data-[side=right]:translate-x-1 data-[side=top]:-translate-y-1",
                 { "bg-white text-neutral-950 border-neutral-200": !isDarkMode },
                 className
             )}
@@ -109,12 +109,8 @@ const SelectItem = React.forwardRef<
         ref={ref}
         className={cn(
             "relative flex rtl:flex-row-reverse h-10 w-full active:scale-[97%] rounded-sm px-2 py-2 hover:cursor-pointer select-none items-center shadow-[0px_1px_0px] transition-all pl-4 text-base font-medium outline-none",
-            // Light mode styles
-            {
-                "shadow-neutral-200 dark:shadow-neutral-700 dark:hover:bg-blue-800/40 dark:focus:bg-blue-800/40 dark:focus:text-neutral-100 hover:bg-sky-200/70 focus:bg-sky-200/70 focus:text-neutral-900":
-                    !isDarkMode,
-            },
-            // Dark mode styles
+            "shadow-neutral-200 dark:shadow-neutral-700 dark:hover:bg-blue-800/40 dark:focus:bg-sky-900/40 dark:focus:text-neutral-100 hover:bg-sky-200/70 focus:bg-sky-200/70 focus:text-neutral-900",
+
             { "opacity-50": props.disabled },
             className
         )}

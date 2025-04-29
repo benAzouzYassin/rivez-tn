@@ -18,7 +18,7 @@ import { BookOpen, ChevronRight, Plus, Share2Icon, ZapIcon } from "lucide-react"
 import Link from "next/link"
 import { useRouter } from "nextjs-toploader/app"
 import { parseAsInteger, parseAsString, useQueryState } from "nuqs"
-import { useState } from "react"
+import { useMemo, useState } from "react"
 import Item from "./_components/item"
 import ItemSkeleton from "./_components/item-skeleton"
 import Search from "./_components/search"
@@ -26,6 +26,47 @@ import { getLanguage } from "@/utils/get-language"
 import { translation } from "./translation"
 
 export default function Page() {
+    const translation = useMemo(
+        () => ({
+            en: {
+                Quizzes: "Quizzes",
+                "Shared Quizzes": "Shared Quizzes",
+                "My Quizzes": "My Quizzes",
+                "Add Quiz": "Add Quiz",
+                Dashboard: "Dashboard",
+                "You have no quizzes yet": "You have no quizzes yet",
+                "Generate your quiz": "Generate your quiz",
+                "No popular quizzes yet": "No popular quizzes yet",
+                "Add new quiz": "Add new quiz",
+                "Search quizzes": "Search quizzes...",
+            },
+            fr: {
+                Quizzes: "Quiz",
+                "Shared Quizzes": "Quiz partagés",
+                "My Quizzes": "Mes quiz",
+                "Add Quiz": "Ajouter un quiz",
+                Dashboard: "Tableau de bord",
+                "You have no quizzes yet": "Vous n'avez pas encore de quiz",
+                "Generate your quiz": "Générez votre quiz",
+                "No popular quizzes yet": "Aucun quiz populaire pour le moment",
+                "Add new quiz": "Ajouter un nouveau quiz",
+                "Search quizzes": "Rechercher des quiz...",
+            },
+            ar: {
+                Quizzes: "الاختبارات",
+                "Shared Quizzes": "الاختبارات المشتركة",
+                "My Quizzes": "اختباراتي",
+                "Add Quiz": "إضافة اختبار",
+                Dashboard: "لوحة التحكم",
+                "You have no quizzes yet": "ليس لديك أي اختبارات بعد",
+                "Generate your quiz": "أنشئ اختبارك",
+                "No popular quizzes yet": "لا توجد اختبارات شائعة بعد",
+                "Add new quiz": "أضف اختبارًا جديدًا",
+                "Search quizzes": "ابحث في الاختبارات...",
+            },
+        }),
+        []
+    )
     const lang = getLanguage()
     const t = translation[lang]
     const { isSidenavOpen } = useSidenav()
@@ -158,7 +199,7 @@ export default function Page() {
                                 variant={"secondary"}
                                 className="w-fit text-base h-[3.2rem] text-blue-500 border-blue-400 shadow-blue-400 dark:text-blue-300 dark:border-blue-700 dark:shadow-blue-900/40 transition-colors"
                             >
-                                Dashboard{" "}
+                                {t["Dashboard"]}{" "}
                                 <ChevronRight className="stroke-3 !w-5 !h-5" />
                             </Button>
                         </Link>
@@ -219,28 +260,28 @@ export default function Page() {
 
                 {activeTab === "personal" && !data?.length && !isFetching && (
                     <EmptyDisplay
-                        title="You have no quizzes yet"
+                        title={t["You have no quizzes yet"]}
                         icon={
                             <BookOpen
                                 size={50}
                                 className="text-indigo-500 dark:text-indigo-300"
                             />
                         }
-                        buttonText="Generate your quiz"
+                        buttonText={t["Generate your quiz"]}
                         description=""
                         onClick={() => router.push("/quizzes/add")}
                     />
                 )}
                 {activeTab === "popular" && !data?.length && !isFetching && (
                     <EmptyDisplay
-                        title="No popular quizzes yet"
+                        title={t["No popular quizzes yet"]}
                         icon={
                             <ZapIcon
                                 size={50}
                                 className="text-indigo-500 dark:text-indigo-300"
                             />
                         }
-                        buttonText="Add new quiz"
+                        buttonText={t["Add new quiz"]}
                         description=""
                         onClick={() => router.push("/quizzes/add")}
                     />
