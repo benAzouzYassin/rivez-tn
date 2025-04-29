@@ -378,7 +378,7 @@ export function UserMenu({
                 >
                     <DialogContent
                         className={cn(
-                            "sm:max-w-md bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800",
+                            "xl:max-w-md bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800",
                             { rtl: isRTL }
                         )}
                     >

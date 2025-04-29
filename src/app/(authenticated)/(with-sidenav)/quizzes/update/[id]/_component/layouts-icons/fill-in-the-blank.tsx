@@ -15,13 +15,13 @@ export default function FillInTheBlank(props: {
         >
             <div
                 className={cn(
-                    "border ml-4 p-2 w-48 rounded-xl",
+                    "border border-neutral-200 dark:border-neutral-700 ml-4 p-2 w-48 rounded-xl",
                     props.className
                 )}
             >
                 <div
                     className={cn(
-                        "bg-neutral-200 h-2 rounded-md w-3/4 mx-auto mt-4",
+                        "bg-neutral-200 dark:bg-neutral-800 h-2 rounded-md w-3/4 mx-auto mt-4",
                         props.questionTextClassName
                     )}
                 ></div>
@@ -36,53 +36,53 @@ export default function FillInTheBlank(props: {
                 >
                     <div
                         className={cn(
-                            "bg-neutral-200 h-5  rounded w-full col-span-3"
+                            "bg-neutral-200 dark:bg-neutral-800 h-5 rounded w-full col-span-3"
                         )}
                     ></div>
                     <div
                         className={cn(
-                            "bg-neutral-200 h-5  rounded w-full col-span-2"
+                            "bg-neutral-200 dark:bg-neutral-800 h-5 rounded w-full col-span-2"
                         )}
                     ></div>
                     <div
                         className={cn(
-                            "bg-neutral-200 h-5  rounded w-full col-span-3"
+                            "bg-neutral-200 dark:bg-neutral-800 h-5 rounded w-full col-span-3"
                         )}
                     ></div>
                 </div>
                 <div
                     className={
-                        "grid   pb-2 mt-4 grid-cols-12 gap-y-[12px] gap-x-2"
+                        "grid pb-2 mt-4 grid-cols-12 gap-y-[12px] gap-x-2"
                     }
                 >
                     <div
                         className={cn(
-                            "bg-neutral-200 h-2  rounded w-full col-span-10"
+                            "bg-neutral-200 dark:bg-neutral-800 h-2 rounded w-full col-span-10"
                         )}
                     ></div>
                     <div
                         className={cn(
-                            "bg-neutral-200 h-2  rounded w-full col-span-2"
+                            "bg-neutral-200 dark:bg-neutral-800 h-2 rounded w-full col-span-2"
                         )}
                     ></div>
                     <div
                         className={cn(
-                            "bg-neutral-200 h-2  rounded w-full col-span-3"
+                            "bg-neutral-200 dark:bg-neutral-800 h-2 rounded w-full col-span-3"
                         )}
                     ></div>
                     <div
                         className={cn(
-                            "bg-neutral-200 h-2  rounded w-full col-span-8"
+                            "bg-neutral-200 dark:bg-neutral-800 h-2 rounded w-full col-span-8"
                         )}
                     ></div>
                     <div
                         className={cn(
-                            "bg-neutral-200 h-2  rounded w-full col-span-5"
+                            "bg-neutral-200 dark:bg-neutral-800 h-2 rounded w-full col-span-5"
                         )}
                     ></div>
                     <div
                         className={cn(
-                            "bg-neutral-200 h-2  rounded w-full col-span-7"
+                            "bg-neutral-200 dark:bg-neutral-800 h-2 rounded w-full col-span-7"
                         )}
                     ></div>
                 </div>

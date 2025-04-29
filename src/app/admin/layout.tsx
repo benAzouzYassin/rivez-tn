@@ -26,7 +26,7 @@ export default function Layout({
 
     if (allowedToEnter === null) {
         return (
-            <main className=" flex min-h-[100vh] items-center justify-center">
+            <main className=" dark:bg-neutral-900 flex min-h-[100vh] items-center justify-center">
                 <AnimatedLoader className="text-neutral-200 fill-blue-600" />
             </main>
         )

@@ -28,7 +28,12 @@ function MultipleChoiceOption(props: Props) {
     return (
         <div
             className={cn(
-                "bg-white hover:bg-neutral-50 min-h-20 flex items-center pl-6 shadow-[0px_4px_0px_0px] shadow-[#E5E5E5] rounded-2xl text-neutral-700 border-2 transition-colors",
+                "bg-white dark:bg-neutral-900",
+                "hover:bg-neutral-50 dark:hover:bg-neutral-800",
+                "text-neutral-700 dark:text-neutral-200",
+                "border-2 border-neutral-200 dark:border-neutral-700",
+                "shadow-[0px_4px_0px_0px] shadow-[#E5E5E5] dark:shadow-[0px_4px_0px_0px] dark:shadow-[#23272f]",
+                "min-h-20 flex items-center pl-6 rounded-2xl transition-colors",
                 "relative group transform transition-all duration-300 ease-in-out",
                 {
                     "opacity-0 scale-95 -translate-y-2": isDeleting,
@@ -47,7 +52,7 @@ function MultipleChoiceOption(props: Props) {
                 questionLocalId={props.questionLocalId}
                 optionLocalId={props.optionLocalId}
             />
-            <div className="absolute top-0 right-0 h-full w-[15%] flex items-center justify-center border-l">
+            <div className="absolute top-0 right-0 h-full w-[15%] flex items-center justify-center border-l dark:border-neutral-700">
                 <CorrectToggleButton
                     isCorrect={props.isCorrect}
                     onChange={props.changeIsCorrect}

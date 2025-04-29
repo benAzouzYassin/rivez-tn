@@ -349,8 +349,8 @@ export default function Buttons() {
         await handleSave()
     }
     return (
-        <div className="flex z-50 items-center justify-end h-10 fixed rtl:-right-5 right-10 top-24 w-full bg-none gap-2">
-            <div className="bg-white p-2 flex items-center justify-center gap-2 rounded-2xl">
+        <div className="flex z-50 items-center justify-end h-10 fixed bg-transparent rtl:-right-5 right-10 top-24 w-full bg-none gap-2">
+            <div className="bg-white dark:bg-neutral-900 p-2 flex items-center justify-center gap-2 rounded-2xl  shadow-none">
                 <Button
                     onClick={() => {
                         reset()

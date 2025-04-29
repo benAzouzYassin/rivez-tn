@@ -16,7 +16,6 @@ import { getLanguage } from "@/utils/get-language"
 export default function Page() {
     const isSmallScreen = useIsSmallScreen()
 
-    // Translation object
     const translation = useMemo(
         () => ({
             en: {
@@ -93,7 +92,9 @@ export default function Page() {
                 disabled: isSmallScreen,
                 value: "document",
                 text: t["From Document PDF"],
-                icon: <FileTextIcon className="!w-7 !h-7 text-indigo-500" />,
+                icon: (
+                    <FileTextIcon className="!w-7 !h-7 dark:text-indigo-300 text-indigo-500" />
+                ),
                 description:
                     t[
                         "Upload PDF files to generate questions from your own materials."
@@ -104,7 +105,9 @@ export default function Page() {
                 disabled: false,
                 value: "image",
                 text: t["From Images"],
-                icon: <ImageIcon className="!w-7 text-indigo-500 !h-7" />,
+                icon: (
+                    <ImageIcon className="!w-7 dark:text-indigo-300 text-indigo-500 !h-7" />
+                ),
                 description:
                     t[
                         "Upload images containing text, diagrams, or visual information to create visual quizzes."
@@ -115,7 +118,9 @@ export default function Page() {
                 disabled: false,
                 value: "youtube",
                 text: t["YouTube Video"],
-                icon: <Video className="!w-7 text-indigo-500 !h-7" />,
+                icon: (
+                    <Video className="!w-7 text-indigo-500  dark:text-indigo-300 !h-7" />
+                ),
                 description:
                     t[
                         "Transform any YouTube video into a comprehensive quiz by providing a URL."
@@ -126,7 +131,9 @@ export default function Page() {
                 value: "subject",
                 text: t["From subject"],
                 price: mediumPrice,
-                icon: <LetterTextIcon className="!w-7 text-indigo-500 !h-7" />,
+                icon: (
+                    <LetterTextIcon className="!w-7 text-indigo-500  dark:text-indigo-300 !h-7" />
+                ),
                 description:
                     t[
                         "Create a custom quiz from any topic or subject area you specify."
@@ -137,7 +144,9 @@ export default function Page() {
                 disabled: isSmallScreen,
                 value: "custom-quiz",
                 text: t["Custom quiz"],
-                icon: <Edit className="!w-7 text-indigo-500 !h-7" />,
+                icon: (
+                    <Edit className="!w-7 text-indigo-500  dark:text-indigo-300 !h-7" />
+                ),
                 description:
                     t[
                         "Write your own questions and answers for complete control over quiz content."
@@ -147,12 +156,12 @@ export default function Page() {
     }, [isSmallScreen, t])
 
     return (
-        <main className="flex relative flex-col items-center w-full min-h-screen p-6 bg-white">
+        <main className="flex relative flex-col items-center w-full min-h-screen p-6 bg-white dark:bg-neutral-900 transition-colors">
             <div className="max-w-3xl w-full text-center">
-                <h1 className="text-4xl font-extrabold text-neutral-700 pt-6">
+                <h1 className="text-4xl font-extrabold text-neutral-700 dark:text-neutral-50 pt-6">
                     {t["Generate Quiz"]}
                 </h1>
-                <p className="text-lg text-gray-600 mt-2">
+                <p className="text-lg text-gray-600 dark:text-neutral-300 mt-2">
                     {
                         t[
                             "Choose a method to create your quiz quickly and easily."
@@ -161,7 +170,7 @@ export default function Page() {
                 </p>
             </div>
 
-            <section className="grid grid-cols-1 sm:grid-cols-2 max-w-[1100px] gap-x-4 gap-y-5 mt-12 ">
+            <section className="grid grid-cols-1 sm:grid-cols-2 max-w-[1100px] gap-x-4 gap-y-5 mt-12">
                 {items
                     .filter((item) => !item.disabled)
                     .map((item) => (

@@ -51,6 +51,7 @@ export default function ImageUpload(props: Props) {
                     "w-full min-h-[250px] overflow-y-auto border-blue-400/50 hover:cursor-pointer relative border-2 border-dashed rounded-xl",
                     "transition-all duration-200 ease-in-out",
                     "flex items-center justify-center",
+                    "bg-white dark:bg-neutral-900 border-blue-400/50 dark:border-blue-900/40",
                     props.className
                 )}
             >
@@ -62,7 +63,7 @@ export default function ImageUpload(props: Props) {
                             deleteFile(props.imageUrl!)
                             props.onImageUrlChange(null)
                         }}
-                        className="absolute hover:bg-red-100 z-10 h-7 px-[3px] rounded-full top-2 right-2"
+                        className="absolute hover:bg-red-100 dark:hover:bg-red-900/30 z-10 h-7 px-[3px] rounded-full top-2 right-2"
                     >
                         <XIcon className="!w-5 !h-5 stroke-[2.7]" />
                     </Button>
@@ -74,23 +75,23 @@ export default function ImageUpload(props: Props) {
                             className="h-full w-full object-contain"
                             src={props.imageUrl}
                         />
-                        <div className="absolute bottom-2 left-1/2 -translate-x-1/2 bg-white/80 rounded px-3 py-1 text-xs font-semibold text-neutral-700 shadow">
+                        <div className="absolute bottom-2 left-1/2 -translate-x-1/2 bg-white/80 dark:bg-neutral-900/80 rounded px-3 py-1 text-xs font-semibold text-neutral-700 dark:text-neutral-200 shadow">
                             {t["This is the cover image"]}
                         </div>
                     </div>
                 ) : (
                     <button
                         onClick={() => setIsOpen(true)}
-                        className="bg-neutral-50/70 rounded-xl hover:bg-neutral-100 absolute top-0 cursor-pointer left-0 w-full h-full"
+                        className="bg-neutral-50/70 dark:bg-neutral-800/60 rounded-xl hover:bg-neutral-100 dark:hover:bg-neutral-800 absolute top-0 cursor-pointer left-0 w-full h-full"
                     >
-                        <Upload className="w-10 h-10 mb-2 mx-auto text-neutral-400" />
-                        <p className="text-base font-semibold text-neutral-500">
+                        <Upload className="w-10 h-10 mb-2 mx-auto text-neutral-400 dark:text-neutral-500" />
+                        <p className="text-base font-semibold text-neutral-500 dark:text-neutral-300">
                             {t["Drag or click to upload quiz image."]}
                         </p>
-                        <p className="text-xs text-neutral-400 mt-0">
+                        <p className="text-xs text-neutral-400 dark:text-neutral-500 mt-0">
                             {t["Images (PNG, JPG, GIF)"]}
                         </p>
-                        <p className="text-xs text-neutral-400">
+                        <p className="text-xs text-neutral-400 dark:text-neutral-500">
                             {t["up to 10MB"]}
                         </p>
                     </button>

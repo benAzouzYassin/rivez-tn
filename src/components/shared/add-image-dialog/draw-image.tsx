@@ -19,7 +19,8 @@ import { exportToCanvas } from "@excalidraw/excalidraw"
 import { ExcalidrawInitialDataState } from "@excalidraw/excalidraw/types/types"
 import { Loader2 } from "lucide-react"
 import dynamic from "next/dynamic"
-import { useEffect, useState } from "react"
+import { useState, useMemo } from "react"
+import { getLanguage } from "@/utils/get-language"
 
 const ExcalidrawPrimitive = dynamic(
     async () => (await import("@excalidraw/excalidraw")).Excalidraw,
@@ -36,11 +37,48 @@ const ExcalidrawPrimitive = dynamic(
 type Props = {
     onSave: (url: string) => void
 }
+
 export default function Excalidraw(props: Props) {
     const [canvasUrl, setCanvasUrl] = useState<string>("")
     const [excalidrawAPI, setExcalidrawAPI] = useState<any>(null)
     const [isModalOpen, setIsModalOpen] = useState<boolean>(false)
     const [isSubmitting, setIsSubmitting] = useState<boolean>(false)
+
+    // --- TRANSLATION OBJECT ---
+    const translation = useMemo(
+        () => ({
+            en: {
+                "Save Drawing": "Save Drawing",
+                "Save image": "Save image",
+                "Something went wrong.": "Something went wrong.",
+                "Image is too large.": "Image is too large.",
+                "Uploading your image...": "Uploading your image...",
+                "Uploaded your image successfully.":
+                    "Uploaded your image successfully.",
+            },
+            fr: {
+                "Save Drawing": "Enregistrer le dessin",
+                "Save image": "Enregistrer l'image",
+                "Something went wrong.": "Une erreur s'est produite.",
+                "Image is too large.": "L'image est trop volumineuse.",
+                "Uploading your image...": "Téléchargement de votre image...",
+                "Uploaded your image successfully.":
+                    "Votre image a été téléchargée avec succès.",
+            },
+            ar: {
+                "Save Drawing": "حفظ الرسم",
+                "Save image": "حفظ الصورة",
+                "Something went wrong.": "حدث خطأ ما.",
+                "Image is too large.": "الصورة كبيرة جدًا.",
+                "Uploading your image...": "جارٍ رفع الصورة...",
+                "Uploaded your image successfully.": "تم رفع الصورة بنجاح.",
+            },
+        }),
+        []
+    )
+
+    const lang = getLanguage()
+    const t = translation[lang]
 
     const initialData: ExcalidrawInitialDataState = {
         appState: {
@@ -76,7 +114,7 @@ export default function Excalidraw(props: Props) {
             setIsModalOpen(true)
         } catch (error) {
             console.error("Error exporting canvas:", error)
-            toastError("Something went wrong.")
+            toastError(t["Something went wrong."])
         }
     }
 
@@ -88,23 +126,22 @@ export default function Excalidraw(props: Props) {
             const response = await fetch(canvasUrl)
             const blob = await response.blob()
             if (blob.size > maxFileSize) {
-                toastError("Image is too large.")
+                toastError(t["Image is too large."])
                 return
             }
-            toastLoading("Uploading your image...")
+            toastLoading(t["Uploading your image..."])
             const url = await uploadFile(blob)
             props.onSave(url)
             dismissToasts("loading")
-            toastSuccess("Uploaded your image successfully.")
+            toastSuccess(t["Uploaded your image successfully."])
             setIsModalOpen(false)
         } catch (error) {
             dismissToasts("loading")
-            toastError("Something went wrong.")
+            toastError(t["Something went wrong."])
         } finally {
             setIsSubmitting(false)
         }
     }
-
     return (
         <div className="relative flex flex-col -mt-5 pb-5 items-center justify-center overflow-hidden">
             <div className="w-[1050px] border rounded-2xl overflow-hidden relative h-[550px] mx-auto">
@@ -112,6 +149,7 @@ export default function Excalidraw(props: Props) {
                     excalidrawAPI={(api) => {
                         setExcalidrawAPI(api)
                     }}
+                    langCode={lang === "ar" ? "ar-SA" : undefined}
                     autoFocus
                     initialData={initialData}
                     theme="dark"
@@ -131,7 +169,7 @@ export default function Excalidraw(props: Props) {
                 className="w-3/4 mx-auto h-12 font-extrabold text-base mt-4"
                 onClick={handleExport}
             >
-                Save Drawing
+                {t["Save Drawing"]}
             </Button>
             <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
                 <DialogContent className="sm:max-w-[800px]">
@@ -151,7 +189,7 @@ export default function Excalidraw(props: Props) {
                         />
                     </div>
                     <Button isLoading={isSubmitting} onClick={handleSubmit}>
-                        Save image
+                        {t["Save image"]}
                     </Button>
                 </DialogContent>
             </Dialog>

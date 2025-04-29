@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react"
-export const useIsSmallScreen = (breakpoint = 768): boolean => {
+export const useIsSmallScreen = (breakpoint = 1050): boolean => {
     const [isSmallScreen, setIsSmallScreen] = useState<boolean>(() => {
         if (typeof window === "undefined") return false
         return window.innerWidth < breakpoint

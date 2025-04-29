@@ -44,29 +44,39 @@ export default function QuizType({
                     router.push(`/quizzes/add/${value}`)
                 }}
                 variant={"secondary"}
-                className="!p-3 h-56 md:last:col-span-2  flex  last:justify-center justify-center    disabled:opacity-80 disabled:bg-neutral-200/70 w-full max-h-fit text-start rounded-3xl  hover:border-blue-300 hover:bg-blue-100/70 hover:shadow-blue-300 transition-all  "
+                className="
+                    !p-3 h-64 md:last:col-span-2 flex last:justify-center justify-center
+                    disabled:opacity-80
+                    disabled:bg-neutral-200/70 dark:disabled:bg-neutral-800/70
+                    w-full  text-start rounded-3xl
+                    hover:border-blue-300 hover:bg-blue-100/70 hover:shadow-blue-300
+                    dark:hover:border-blue-400 dark:hover:bg-blue-900/30 dark:hover:shadow-blue-400
+                    bg-white dark:bg-neutral-800
+                    border border-neutral-200 dark:border-neutral-700
+                    transition-all
+                "
             >
-                <div className=" items-start gap-4">
-                    <div className="flex flex-col  pb-4 items-center gap-2  ">
-                        <div className=" min-h-10 min-w-10 flex items-center justify-center p-2 border-2  rounded-xl">
+                <div className="items-start gap-4">
+                    <div className="flex flex-col pb-4 items-center gap-2">
+                        <div className="min-h-10  min-w-10 flex items-center justify-center p-2 border-2 border-neutral-200 dark:border-neutral-700 rounded-xl bg-white dark:bg-neutral-800">
                             {icon}
                         </div>
-                        <div className="text-xl  text-neutral-600  font-extrabold">
+                        <div className="text-xl text-neutral-600 dark:text-white font-extrabold">
                             {text}{" "}
                             <Badge
                                 variant={"blue"}
-                                className=" py-0 px-2 font-bold inline-flex gap-[3px] ml-1 !text-lg"
+                                className="py-0 px-2 font-bold inline-flex gap-[3px] ml-1 !text-lg"
                             >
                                 {price} <CreditIcon className="!w-5 !h-5" />
                             </Badge>
                             {disabled && (
-                                <span className="text-base italic text-neutral-600">
+                                <span className="text-base italic text-neutral-600 dark:text-neutral-400">
                                     (soon..)
                                 </span>
                             )}
                         </div>
                     </div>
-                    <p className="    text-medium text-base md:px-8  text-center  text-wrap text-neutral-500">
+                    <p className="text-medium text-base md:px-8 text-center text-wrap text-neutral-500 dark:text-neutral-300">
                         {description}
                     </p>
                 </div>

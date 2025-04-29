@@ -15,7 +15,6 @@ interface Props {
     errorMessage?: string
 }
 export function DifficultySelect(props: Props) {
-    // Translation object
     const translation = useMemo(
         () => ({
             en: {
@@ -56,19 +55,29 @@ export function DifficultySelect(props: Props) {
         >
             <SelectTrigger
                 errorMessage={props.errorMessage}
-                className={props.className}
+                className={[
+                    "bg-white dark:bg-neutral-800",
+                    "text-neutral-700 dark:text-neutral-200",
+                    "border border-neutral-200 dark:border-neutral-700",
+                    "hover:bg-neutral-100 dark:hover:bg-neutral-700",
+                    props.className,
+                ].join(" ")}
             >
                 {props.selected ? (
                     t[props.selected]
                 ) : (
-                    <span className="text-neutral-400/80">
+                    <span className="text-neutral-400/80 dark:text-neutral-400">
                         {t["Difficulty"]}
                     </span>
                 )}
             </SelectTrigger>
-            <SelectContent>
+            <SelectContent className="bg-white dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700">
                 {possibleValues.map((item) => (
-                    <SelectItem value={item} key={item}>
+                    <SelectItem
+                        value={item}
+                        key={item}
+                        className="text-neutral-700 dark:text-neutral-200 hover:bg-neutral-100 dark:hover:bg-neutral-700"
+                    >
                         {t[item]}
                     </SelectItem>
                 ))}

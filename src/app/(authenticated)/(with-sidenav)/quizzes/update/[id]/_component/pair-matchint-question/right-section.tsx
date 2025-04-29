@@ -7,6 +7,7 @@ type Props = {
     notSelectedLeftOptions: StateMatchingPairsOptions["leftOptions"] | undefined
     leftOptions: StateMatchingPairsOptions["leftOptions"] | undefined
 }
+
 export default function RightSection(props: Props) {
     const selectedQuestionId = useUpdateQuizStore(
         (s) => s.selectedQuestionLocalId
@@ -17,7 +18,14 @@ export default function RightSection(props: Props) {
         return null
     }
     return (
-        <div className=" gap-5 flex flex-col min-w-[600px] p-4 rounded-xl border-neutral-300 border min-h-72">
+        <div
+            className="
+                gap-5 flex flex-col min-w-[600px] p-4 rounded-xl
+                border border-neutral-300 dark:border-neutral-700
+                bg-white dark:bg-neutral-800
+                min-h-72
+            "
+        >
             {props.rightOptions?.map((opt) => {
                 return (
                     <RightOption

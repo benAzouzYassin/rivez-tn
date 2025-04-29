@@ -12,81 +12,76 @@ export default function MatchingPairs(props: {
         >
             <div
                 className={cn(
-                    "border ml-4 p-2 w-40 rounded-xl",
+                    "border border-neutral-200 dark:border-neutral-700 ml-4 p-2 w-40 rounded-xl",
                     props.className
                 )}
             >
                 <div className="flex gap-4">
-                    {" "}
                     <div
                         className={cn(
-                            "bg-white h-4 rounded-md w-1/3",
+                            "bg-white dark:bg-neutral-700 h-4 rounded-md w-1/3",
                             props.itemClassName
                         )}
                     ></div>
                     <div
                         className={cn(
-                            "bg-neutral-200 h-4 rounded-md w-2/3",
-                            props.itemClassName
-                        )}
-                    ></div>
-                </div>
-                <div className="flex gap-4 mt-2">
-                    {" "}
-                    <div
-                        className={cn(
-                            "bg-neutral-200 h-4 rounded-md w-1/3",
-                            props.itemClassName
-                        )}
-                    ></div>
-                    <div
-                        className={cn(
-                            "bg-neutral-200 h-4 rounded-md w-2/3",
+                            "bg-neutral-200 dark:bg-neutral-700 h-4 rounded-md w-2/3",
                             props.itemClassName
                         )}
                     ></div>
                 </div>
                 <div className="flex gap-4 mt-2">
-                    {" "}
                     <div
                         className={cn(
-                            "bg-neutral-200 h-4 rounded-md w-1/3",
+                            "bg-neutral-200 dark:bg-neutral-700 h-4 rounded-md w-1/3",
                             props.itemClassName
                         )}
                     ></div>
                     <div
                         className={cn(
-                            "bg-neutral-200 h-4 rounded-md w-2/3",
-                            props.itemClassName
-                        )}
-                    ></div>
-                </div>
-                <div className="flex gap-4 mt-2">
-                    {" "}
-                    <div
-                        className={cn(
-                            "bg-neutral-200 h-4 rounded-md w-1/3",
-                            props.itemClassName
-                        )}
-                    ></div>
-                    <div
-                        className={cn(
-                            "bg-neutral-200 h-4 rounded-md w-2/3",
+                            "bg-neutral-200 dark:bg-neutral-700 h-4 rounded-md w-2/3",
                             props.itemClassName
                         )}
                     ></div>
                 </div>
                 <div className="flex gap-4 mt-2">
-                    {" "}
                     <div
                         className={cn(
-                            "bg-white h-4 rounded-md w-1/3",
+                            "bg-neutral-200 dark:bg-neutral-700 h-4 rounded-md w-1/3",
                             props.itemClassName
                         )}
                     ></div>
                     <div
                         className={cn(
-                            "bg-neutral-200 h-4 rounded-md w-2/3",
+                            "bg-neutral-200 dark:bg-neutral-700 h-4 rounded-md w-2/3",
+                            props.itemClassName
+                        )}
+                    ></div>
+                </div>
+                <div className="flex gap-4 mt-2">
+                    <div
+                        className={cn(
+                            "bg-neutral-200 dark:bg-neutral-700 h-4 rounded-md w-1/3",
+                            props.itemClassName
+                        )}
+                    ></div>
+                    <div
+                        className={cn(
+                            "bg-neutral-200 dark:bg-neutral-700 h-4 rounded-md w-2/3",
+                            props.itemClassName
+                        )}
+                    ></div>
+                </div>
+                <div className="flex gap-4 mt-2">
+                    <div
+                        className={cn(
+                            "bg-white dark:bg-neutral-700 h-4 rounded-md w-1/3",
+                            props.itemClassName
+                        )}
+                    ></div>
+                    <div
+                        className={cn(
+                            "bg-neutral-200 dark:bg-neutral-700 h-4 rounded-md w-2/3",
                             props.itemClassName
                         )}
                     ></div>

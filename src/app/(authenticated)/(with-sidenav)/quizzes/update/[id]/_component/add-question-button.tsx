@@ -133,11 +133,11 @@ function AddQuestionButton(props: Props) {
                 <div className="flex items-center">
                     <button
                         className={cn(
-                            "h-full flex items-center justify-center min-w-32 hover:cursor-pointer hover:bg-neutral-50 active:scale-95 transition-all border-dashed border-neutral-300 border-2 rounded-lg",
+                            "h-full min-h-[75px] flex items-center justify-center min-w-32 hover:cursor-pointer bg-white dark:bg-neutral-800 hover:bg-neutral-50 dark:hover:bg-neutral-700 active:scale-95 transition-all border-dashed border-neutral-300 dark:border-neutral-700 border-2 rounded-lg translate-y-1",
                             props.className
                         )}
                     >
-                        <Plus className="w-16 h-16 text-neutral-300 stroke-1" />
+                        <Plus className="w-16 h-16 text-neutral-300 dark:text-neutral-500 stroke-1" />
                     </button>
                 </div>
             }

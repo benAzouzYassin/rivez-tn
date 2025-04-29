@@ -7,12 +7,38 @@ import {
 } from "@/components/ui/command"
 import { Popover, PopoverAnchor, PopoverContent } from "@/components/ui/popover"
 import { wait } from "@/utils/wait"
-import { useEffect, useRef, useState } from "react"
+import { useEffect, useRef, useState, useMemo } from "react"
 import { Button } from "./button"
 import { Input } from "./input"
 import { Badge } from "./badge"
+import { getLanguage } from "@/utils/get-language"
 
 export default function SearchSelect<OptionData>(props: Props<OptionData>) {
+    const lang = props.lang || getLanguage?.() || "en"
+    const t = useMemo(
+        () => ({
+            en: {
+                search: "Search",
+                loading: "Loading...",
+                add: "Add",
+                noItems: "No items found",
+            },
+            fr: {
+                search: "Rechercher",
+                loading: "Chargement...",
+                add: "Ajouter",
+                noItems: "Aucun élément trouvé",
+            },
+            ar: {
+                search: "بحث",
+                loading: "جار التحميل...",
+                add: "إضافة",
+                noItems: "لم يتم العثور على عناصر",
+            },
+        }),
+        []
+    )[lang]
+
     const [visibleItems, setVisibleItems] = useState(props.items)
     const [inputValue, setInputValue] = useState("")
 
@@ -26,7 +52,7 @@ export default function SearchSelect<OptionData>(props: Props<OptionData>) {
     return (
         <>
             <Command
-                className="h-fit overflow-hidden"
+                className="h-fit overflow-hidden dark:!bg-transparent"
                 autoFocus={false}
                 shouldFilter={false}
             >
@@ -39,7 +65,7 @@ export default function SearchSelect<OptionData>(props: Props<OptionData>) {
                             value={inputValue}
                             autoFocus={false}
                             autoComplete="off"
-                            placeholder={props.placeholder || "Search"}
+                            placeholder={props.placeholder || t.search}
                             onChange={(e) => {
                                 const value = e.target.value || ""
                                 setInputValue(value)
@@ -71,11 +97,13 @@ export default function SearchSelect<OptionData>(props: Props<OptionData>) {
                             }}
                         />
                     </PopoverAnchor>
-                    <PopoverContent className="min-w-[250px] h-[200px] rounded-xl  overflow-hidden border !w-(--radix-popover-trigger-width) p-0">
+                    <PopoverContent className="min-w-[250px] h-[200px] rounded-xl overflow-hidden border !w-(--radix-popover-trigger-width) p-0 bg-white dark:bg-neutral-800 border-neutral-200 dark:border-neutral-700 shadow-md dark:shadow-neutral-700">
                         <CommandList>
                             {props.isLoading ? (
                                 <CommandEmpty className="h-full flex items-center justify-center">
-                                    <p className="font-medium">Loading...</p>
+                                    <p className="font-medium text-neutral-600 dark:text-neutral-200">
+                                        {t.loading}
+                                    </p>
                                 </CommandEmpty>
                             ) : (
                                 <>
@@ -90,14 +118,14 @@ export default function SearchSelect<OptionData>(props: Props<OptionData>) {
                                                 variant={"secondary"}
                                                 className="font-extrabold absolute top-1/2 active:-translate-y-[40%] -translate-y-1/2 min-w-1/2 mt-auto"
                                             >
-                                                Add{" "}
+                                                {t.add}{" "}
                                                 <span className="font-bold underline underline-offset-2">
                                                     {inputValue}
                                                 </span>
                                             </Button>
                                         ) : (
-                                            <p className="font-medium absolute top-[40%] -translate-y-1/5">
-                                                No items found
+                                            <p className="font-medium absolute top-[40%] -translate-y-1/5 text-neutral-500 dark:text-neutral-400">
+                                                {t.noItems}
                                             </p>
                                         )}
                                     </CommandEmpty>
@@ -108,7 +136,7 @@ export default function SearchSelect<OptionData>(props: Props<OptionData>) {
                                                 onMouseDown={(e) =>
                                                     e.preventDefault()
                                                 }
-                                                className={`h-10 shadow-[0px_1px_0px] shadow-neutral-200 font-medium rounded-none pl-4 text-base active:scale-95 hover:cursor-pointer `}
+                                                className={`h-10 shadow-[0px_1px_0px] shadow-neutral-200 dark:shadow-neutral-700 font-medium rounded-none pl-4 text-base active:scale-95 hover:cursor-pointer hover:bg-neutral-100 dark:hover:bg-neutral-700 text-neutral-700 dark:text-neutral-200`}
                                                 onSelect={() => {
                                                     setInputValue("")
                                                     if (
@@ -176,4 +204,5 @@ interface Props<OptionData> {
     errorMessage?: string
     inputClassName?: string
     allowMultiple?: boolean
+    lang?: "en" | "fr" | "ar"
 }

@@ -36,7 +36,7 @@ function RightOption(props: Props) {
     return (
         <div
             className={cn(
-                "bg-white hover:bg-neutral-50 min-h-20 px-4 flex items-center pl-6 shadow-[0px_4px_0px_0px] shadow-[#E5E5E5] rounded-2xl text-neutral-700 border-2 transition-colors",
+                "bg-white dark:bg-neutral-800 hover:bg-neutral-50 dark:hover:bg-neutral-700 min-h-20 px-4 flex items-center pl-6 shadow-[0px_4px_0px_0px] shadow-[#E5E5E5] dark:shadow-none rounded-2xl text-neutral-700 dark:text-neutral-200 border-2 border-neutral-200 dark:border-neutral-700 transition-colors",
                 "relative group transform transition-all duration-300 ease-in-out",
                 {
                     "opacity-0 scale-95 -translate-y-2": isDeleting,
@@ -44,7 +44,7 @@ function RightOption(props: Props) {
                 }
             )}
         >
-            <div className="flex w-full  justify-between items-center ">
+            <div className="flex w-full justify-between items-center">
                 <DeleteOption
                     onClick={() => {
                         wait(250).then(() => {
@@ -54,7 +54,7 @@ function RightOption(props: Props) {
                     }}
                 />
                 <OptionText
-                    className=" grow pr-3"
+                    className="grow pr-3"
                     text={props?.text || ""}
                     onChange={(value) => {
                         updateOption({
@@ -64,7 +64,7 @@ function RightOption(props: Props) {
                         })
                     }}
                 />
-                <div className="relative group ">
+                <div className="relative group">
                     {props.selectedLeftOption && (
                         <button
                             onClick={() => {
@@ -74,10 +74,13 @@ function RightOption(props: Props) {
                                     leftOptionLocalId: null,
                                 })
                             }}
-                            className="absolute rounded-full opacity-0 group-hover:opacity-100 top-1 bg-white cursor-pointer active:scale-90 transition-all -right-2"
+                            className="absolute rounded-full opacity-0 group-hover:opacity-100 top-1 bg-white dark:bg-transparent cursor-pointer active:scale-90 transition-all -right-2"
                         >
-                            <Badge className="  p-px " variant={"red"}>
-                                <X className="h-4 scale-90 stroke-3 w-4" />
+                            <Badge
+                                className="p-0 dark:shadow-none  dark:bg-[#4e2527] dark:hover:bg-red-950"
+                                variant={"red"}
+                            >
+                                <X className="h-4 scale-90  stroke-3 w-4" />
                             </Badge>
                         </button>
                     )}
@@ -91,7 +94,7 @@ function RightOption(props: Props) {
                             })
                         }}
                     >
-                        <SelectTrigger className="justify-end mt-3  ">
+                        <SelectTrigger className="justify-end  mt-3">
                             <SelectValue placeholder="Select answer" />
                         </SelectTrigger>
                         <SelectContent align="center">
