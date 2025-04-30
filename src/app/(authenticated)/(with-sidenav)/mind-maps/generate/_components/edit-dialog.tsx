@@ -102,7 +102,12 @@ export default function EditMindmapDialog(props: Props) {
                     null
                 )
                 if (nodes.length) {
-                    props.setNodes(nodes)
+                    props.setNodes(
+                        nodes.map((node) => ({
+                            ...node,
+                            data: { ...node.data, enableDelete: true },
+                        }))
+                    )
                 }
                 if (edges.length) props.setEdges(edges)
             } catch {}

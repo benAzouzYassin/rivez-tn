@@ -22,7 +22,24 @@ interface CustomNodeProps {
 
 function CustomNode({ data }: CustomNodeProps) {
     const [open, setOpen] = useState(false)
-    const { getNode, deleteElements } = useReactFlow()
+    const { getNode, getNodes, getEdges, deleteElements } = useReactFlow()
+
+    const getAllDescendantNodeIds = (nodeId: string): string[] => {
+        const edges = getEdges()
+        const nodes = getNodes()
+        const children = edges
+            .filter((edge) => edge.source === nodeId)
+            .map((edge) => edge.target)
+        let allDescendants: string[] = []
+        for (const childId of children) {
+            allDescendants.push(childId)
+            allDescendants = [
+                ...allDescendants,
+                ...getAllDescendantNodeIds(childId),
+            ]
+        }
+        return allDescendants
+    }
 
     const getAllParentsTitles = (
         result: string[],
@@ -73,11 +90,14 @@ function CustomNode({ data }: CustomNodeProps) {
                     <button
                         onClick={(e) => {
                             e.stopPropagation()
-
+                            const descendantIds = getAllDescendantNodeIds(
+                                data.id
+                            )
+                            const nodesToDelete = [data.id, ...descendantIds]
+                                .map((id) => getNode(id))
+                                .filter(Boolean)
                             deleteElements({
-                                nodes: getNode(data.id)
-                                    ? [getNode(data.id) as any]
-                                    : [],
+                                nodes: nodesToDelete as any[],
                             })
                         }}
                         className="absolute group-hover:opacity-100 opacity-0  w-fit p-1 rounded-full border bg-red-100 border-red-400/50 text-red-400 -top-2 -right-2"
