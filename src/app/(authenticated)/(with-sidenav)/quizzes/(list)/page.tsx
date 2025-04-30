@@ -24,6 +24,7 @@ import ItemSkeleton from "./_components/item-skeleton"
 import Search from "./_components/search"
 import { getLanguage } from "@/utils/get-language"
 import { translation } from "./translation"
+import { useTheme } from "next-themes"
 
 export default function Page() {
     const translation = useMemo(
@@ -67,6 +68,8 @@ export default function Page() {
         }),
         []
     )
+    const { theme } = useTheme()
+    const isDark = theme === "dark"
     const lang = getLanguage()
     const t = translation[lang]
     const { isSidenavOpen } = useSidenav()
@@ -188,7 +191,10 @@ export default function Page() {
                         />
                     </div>
                     <Link href={"/quizzes/add"}>
-                        <Button className="text-base h-[3.2rem]  text-white  transition-colors">
+                        <Button
+                            variant={isDark ? "blue" : "default"}
+                            className="text-base h-[3.2rem]  text-white  transition-colors"
+                        >
                             <Plus className="-mr-1 !w-5 stroke-2 !h-5" />{" "}
                             {t["Add Quiz"]}
                         </Button>
@@ -213,7 +219,10 @@ export default function Page() {
                         {t["Quizzes"]}
                     </h1>
                     <Link href={"/quizzes/add"} className="md:hidden ml-auto">
-                        <Button className="text-base h-[3rem] -mt-4 text-white  transition-colors">
+                        <Button
+                            variant={isDark ? "blue" : "default"}
+                            className="text-base h-[3rem] -mt-4 text-white  transition-colors"
+                        >
                             <Plus className="-mr-1 !w-5 stroke-2 !h-5" />{" "}
                             {t["Add Quiz"]}
                         </Button>

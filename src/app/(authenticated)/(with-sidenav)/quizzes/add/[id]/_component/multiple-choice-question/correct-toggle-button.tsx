@@ -12,10 +12,10 @@ function CorrectToggleButton({ isCorrect, onChange }: Props) {
         <button
             onClick={() => onChange(isCorrect !== true)}
             className={cn(
-                "w-10 h-10 hover:cursor-pointer rounded-full border border-black/10 bg-gray-100",
+                "w-10 h-10 hover:cursor-pointer rounded-full border border-black/10 dark:border-white/10 bg-gray-100 dark:bg-neutral-800",
                 {
-                    "bg-green-100": isCorrect === true,
-                    "bg-red-100": isCorrect === false,
+                    "bg-green-100 dark:bg-green-900/70": isCorrect === true,
+                    "bg-red-100 dark:bg-red-900/50": isCorrect === false,
                 }
             )}
         >

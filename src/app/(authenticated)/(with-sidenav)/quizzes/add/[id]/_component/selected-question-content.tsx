@@ -28,9 +28,7 @@ export default function SelectedQuestionContent() {
     const getOptionsForHint = () => {}
 
     if (isBeingGenerated) {
-        return (
-            <GeneralLoadingScreen enableBlob text="Generating your question" />
-        )
+        return <GeneralLoadingScreen text="Generating your question" />
     }
     if (!selectedQuestion) {
         return (

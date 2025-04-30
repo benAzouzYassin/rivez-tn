@@ -52,7 +52,6 @@ export default function LayoutSelectDialog(props: Props) {
                 imageTop: "Image on the top, options on bottom",
                 termsLeft: "Terms on left, definitions on right",
                 noImage: "Options without an image.",
-                // fillBlank: "Fill in the blank.",
             },
             fr: {
                 selectLayout: "Sélectionnez une disposition de question",
@@ -68,7 +67,6 @@ export default function LayoutSelectDialog(props: Props) {
                 imageTop: "Image en haut, options en bas",
                 termsLeft: "Termes à gauche, définitions à droite",
                 noImage: "Options sans image.",
-                // fillBlank: "Texte à trou.",
             },
             ar: {
                 selectLayout: "اختر نوع السؤال",
@@ -82,7 +80,6 @@ export default function LayoutSelectDialog(props: Props) {
                 imageTop: "صورة في الأعلى، الخيارات في الأسفل",
                 termsLeft: "المصطلحات على اليسار، التعريفات على اليمين",
                 noImage: "خيارات بدون صورة.",
-                // fillBlank: "املأ الفراغ.",
             },
         }),
         []
@@ -125,17 +122,17 @@ export default function LayoutSelectDialog(props: Props) {
             <DialogTrigger asChild>{props.trigger}</DialogTrigger>
             <DialogContent
                 className={cn(
-                    "rounded-xl pb-6 !min-w-[900px] overflow-hidden border w-[900px] max-w-[900px]",
+                    "rounded-xl pb-6 !min-w-[900px] overflow-hidden border w-[900px] max-w-[900px] dark:bg-neutral-900 dark:border-neutral-800",
                     props.contentClassName,
                     {
                         "w-fit": tab === "mode-select",
                     }
                 )}
             >
-                <div className="p-4 bg-muted">
+                <div className="p-4 ">
                     <DialogTitle
                         className={cn(
-                            "text-center pb-3 text-neutral-500 font-extrabold text-3xl",
+                            "text-center pb-3 text-neutral-500 dark:text-neutral-100   font-extrabold text-3xl",
                             { "opacity-0": tab === "ai-form" }
                         )}
                     >
@@ -165,21 +162,21 @@ export default function LayoutSelectDialog(props: Props) {
                     <div className="grid relative grid-cols-2 mx-auto py-3 gap-6 w-full max-w-2xl">
                         <Button
                             onClick={() => setTab("layout-select")}
-                            className="absolute -top-24 rtl:-left-14 text-base"
+                            className="absolute -top-24 rtl:-left-14  text-base"
                             variant={"secondary"}
                         >
-                            <ArrowLeft className="!w-6 !h-6 text-neutral-400 stroke-[2.5]" />
+                            <ArrowLeft className="!w-6 !h-6 text-neutral-400 dark:text-neutral-300 stroke-[2.5]" />
                         </Button>
                         <Card
                             onClick={() => handleModeSelect("ai")}
                             asButton
-                            className="cursor-pointer active:translate-y-1 active:shadow-none hover:bg-neutral-100 border-3 transition-all group overflow-hidden relative"
+                            className="cursor-pointer active:translate-y-1 active:shadow-none hover:bg-neutral-100 dark:hover:bg-neutral-700/50 border-3 dark:border-neutral-700 transition-all group overflow-hidden relative "
                         >
                             <CardContent className="flex flex-col items-center justify-center p-6 h-56">
-                                <div className="bg-blue-100 rounded-full p-3 mb-4">
-                                    <Sparkles className="h-6 w-6 text-blue-600 group-hover:scale-110 transition-transform" />
+                                <div className="bg-blue-100 dark:bg-blue-900 rounded-full p-3 mb-4">
+                                    <Sparkles className="h-6 w-6 text-blue-600 dark:text-blue-300 group-hover:scale-110 transition-transform" />
                                 </div>
-                                <div className="text-2xl font-bold text-blue-500 mb-2">
+                                <div className="text-2xl font-bold text-blue-500 dark:text-blue-300 mb-2">
                                     {t.useAi}
                                     <Badge
                                         variant={"blue"}
@@ -189,7 +186,7 @@ export default function LayoutSelectDialog(props: Props) {
                                         <CreditIcon className="!w-5 !h-5" />
                                     </Badge>
                                 </div>
-                                <p className="text-base text-neutral-500 font-medium text-center mb-3">
+                                <p className="text-base text-neutral-500 dark:text-neutral-300 font-medium text-center mb-3">
                                     {t.useAiDesc}
                                 </p>
                             </CardContent>
@@ -198,16 +195,16 @@ export default function LayoutSelectDialog(props: Props) {
                         <Card
                             onClick={() => handleModeSelect("custom")}
                             asButton
-                            className="cursor-pointer active:translate-y-1 active:shadow-none border-3 hover:bg-neutral-100 transition-all group overflow-hidden relative"
+                            className="cursor-pointer active:translate-y-1 active:shadow-none border-3 dark:border-neutral-700 hover:bg-neutral-100 dark:hover:bg-neutral-700/50 transition-all group overflow-hidden relative"
                         >
                             <CardContent className="flex flex-col items-center justify-center p-6 h-56">
-                                <div className="bg-gray-100 rounded-full p-3 mb-4">
-                                    <Edit className="h-6 w-6 text-neutral-600 group-hover:scale-110 transition-transform" />
+                                <div className="bg-gray-100 dark:bg-neutral-700 rounded-full p-3 mb-4">
+                                    <Edit className="h-6 w-6 text-neutral-600 dark:text-neutral-200 group-hover:scale-110 transition-transform" />
                                 </div>
-                                <p className="text-2xl font-bold text-neutral-700 mb-2">
+                                <p className="text-2xl font-bold text-neutral-700 dark:text-neutral-200 mb-2">
                                     {t.custom}
                                 </p>
-                                <p className="text-base text-neutral-500 font-medium text-center mb-3">
+                                <p className="text-base text-neutral-500 dark:text-neutral-300 font-medium text-center mb-3">
                                     {t.customDesc}
                                 </p>
                             </CardContent>
@@ -219,7 +216,7 @@ export default function LayoutSelectDialog(props: Props) {
                         <div className="p-0">
                             <div className="p-0 grid gap-y-5 grid-cols-2">
                                 <div className="fle flex-col items-center justify-center">
-                                    <h3 className="text-base font-bold text-neutral-500 text-center">
+                                    <h3 className="text-base font-bold text-neutral-500 dark:text-neutral-300 text-center">
                                         {t.imageLeft}
                                     </h3>
                                     <div
@@ -245,7 +242,7 @@ export default function LayoutSelectDialog(props: Props) {
                                         )
                                     }}
                                 >
-                                    <h3 className="text-base font-bold text-neutral-500 text-center">
+                                    <h3 className="text-base font-bold text-neutral-500 dark:text-neutral-300 text-center">
                                         {t.imageTop}
                                     </h3>
                                     <MultipleChoiceVertical
@@ -261,7 +258,7 @@ export default function LayoutSelectDialog(props: Props) {
                                         handleLayoutSelect("matching-pairs")
                                     }}
                                 >
-                                    <h3 className="text-base font-bold text-neutral-500 text-center">
+                                    <h3 className="text-base font-bold text-neutral-500 dark:text-neutral-300 text-center">
                                         {t.termsLeft}
                                     </h3>
 
@@ -278,7 +275,7 @@ export default function LayoutSelectDialog(props: Props) {
                                         )
                                     }}
                                 >
-                                    <h3 className="text-base font-bold text-neutral-500 text-center">
+                                    <h3 className="text-base font-bold text-neutral-500 dark:text-neutral-300 text-center">
                                         {t.noImage}
                                     </h3>
                                     <MultipleChoiceVertical
@@ -288,21 +285,6 @@ export default function LayoutSelectDialog(props: Props) {
                                         className="!w-[310px] h-[210px]"
                                     />
                                 </div>
-                                {/* <div
-                                    className="flex flex-col items-center justify-center"
-                                    onClick={() => {
-                                        handleLayoutSelect("fill-in-the-blank")
-                                    }}
-                                >
-                                    <h3 className="text-base font-bold text-neutral-500 text-center">
-                                        {t.fillBlank}
-                                    </h3>
-                                    <FillInTheBlank
-                                        isMinimized={false}
-                                        questionTextClassName="mb-7 mt-8"
-                                        className="!w-[310px] h-[210px]"
-                                    />
-                                </div> */}
                             </div>
                         </div>
                     </>

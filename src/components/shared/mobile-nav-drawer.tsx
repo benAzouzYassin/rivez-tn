@@ -35,7 +35,8 @@ export default function MobileNavDrawer() {
                     </DrawerTitle>
                     <DrawerDescription className="text-lg font-medium"></DrawerDescription>
                 </DrawerHeader>
-                <div className="flex overflow-y-auto  mt-4 flex-col items-center justify-center gap-3 p-6">
+                <div className="flex overflow-y-auto   flex-col items-center justify-center gap-3 p-6">
+                    <div className="h-1 w-full"></div>
                     {normalUserItems.map((item) => (
                         <div
                             className="w-full"

@@ -14,7 +14,7 @@ function OptionText(props: Props) {
             value={props?.text || ""}
             placeholder={"........"}
             className={cn(
-                "font-extrabold focus-within:outline-none text-xl",
+                "font-extrabold dark:text-neutral-100 focus-within:outline-none text-xl",
                 props.className
             )}
         />

@@ -12,7 +12,7 @@ export function QuestionText(props: Props) {
     const t = translation[lang]
     const updateQuestion = useQuizStore((s) => s.updateQuestion)
     return (
-        <div className=" w-fit">
+        <div className="w-fit">
             <input
                 value={props.text}
                 onChange={(e) => {
@@ -23,11 +23,11 @@ export function QuestionText(props: Props) {
                 }}
                 placeholder={t["Write your question..."]}
                 className={cn(
-                    "font-extrabold min-w-[800px] placeholder:opacity-50 text-neutral-800 focus-within:outline-none text-3xl",
+                    "font-extrabold min-w-[800px] placeholder:opacity-50 text-neutral-800 dark:text-neutral-100   dark:bg-neutral-900 focus-within:outline-none text-3xl",
                     props.className
                 )}
             />
-            <hr className="h-1 mt-1 w-full min-w-96 rounded-md bg-neutral-300" />
+            <hr className="h-1 mt-1 w-full min-w-96 rounded-md bg-neutral-300 dark:bg-neutral-700" />
         </div>
     )
 }
