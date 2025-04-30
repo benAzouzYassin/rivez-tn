@@ -200,7 +200,12 @@ export default function Page() {
                 setIsLoading(false)
                 setIsStreaming(false)
                 setNodes((prev) =>
-                    prev.filter((node) => node.data.isLoading !== true)
+                    prev
+                        .filter((node) => node.data.isLoading !== true)
+                        .map((node) => ({
+                            ...node,
+                            data: { ...node.data, enableDelete: true },
+                        }))
                 )
                 if (!didGenerate) {
                     setIsError(true)

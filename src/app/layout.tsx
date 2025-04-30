@@ -69,6 +69,7 @@ export default async function RootLayout({
                 />
                 <QueryClientProvider>
                     <ThemeProvider
+                        storageKey="theme"
                         attribute="class"
                         defaultTheme="system"
                         enableSystem

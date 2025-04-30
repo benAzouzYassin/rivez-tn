@@ -7,7 +7,7 @@ export default function AnimatedLoader(props: Props) {
     return (
         <svg
             className={cn(
-                "w-10 h-10 text-neutral-700 fill-blue-400 duration-700 animate-spin dark:text-neutral-800 dark:fill-blue-500",
+                "w-10 h-10 duration-700 animate-spin dark:text-neutral-800 dark:fill-blue-500",
                 props.className
             )}
             xmlns="http://www.w3.org/2000/svg"
@@ -25,17 +25,17 @@ export default function AnimatedLoader(props: Props) {
                 >
                     <stop
                         offset="0"
-                        stopColor="#64dfd2"
+                        stopColor="#7be3d6"
                         className="dark:text-blue-900"
                     />
                     <stop
                         offset=".5"
-                        stopColor="#3abff8"
+                        stopColor="#53c8e6"
                         className="dark:text-blue-500"
                     />
                     <stop
                         offset="1"
-                        stopColor="#004735"
+                        stopColor="#15614a"
                         className="dark:text-blue-900"
                     />
                 </linearGradient>
@@ -50,17 +50,17 @@ export default function AnimatedLoader(props: Props) {
                 >
                     <stop
                         offset="0"
-                        stopColor="#e87d91"
+                        stopColor="#f08b9e"
                         className="dark:text-pink-900"
                     />
                     <stop
                         offset=".5"
-                        stopColor="#d459a0"
+                        stopColor="#e06bb0"
                         className="dark:text-pink-600"
                     />
                     <stop
                         offset="1"
-                        stopColor="#4d0b00"
+                        stopColor="#6a1800"
                         className="dark:text-pink-900"
                     />
                 </linearGradient>
@@ -75,17 +75,17 @@ export default function AnimatedLoader(props: Props) {
                 >
                     <stop
                         offset="0"
-                        stopColor="#e6b86e"
+                        stopColor="#f2c16a"
                         className="dark:text-amber-700"
                     />
                     <stop
                         offset=".5"
-                        stopColor="#e0ae00"
+                        stopColor="#f0c200"
                         className="dark:text-amber-500"
                     />
                     <stop
                         offset="1"
-                        stopColor="#4d2500"
+                        stopColor="#6a3a00"
                         className="dark:text-amber-900"
                     />
                 </linearGradient>
@@ -99,7 +99,7 @@ export default function AnimatedLoader(props: Props) {
                 d="M62.69 63.83h.11c-3.9-1.36-3.23-5.32-.48-6.6h-.03c5.47-.63 21-17.51 14.72-18.97-9.48.21-40.23-3.27-38.32 3.15 2.41 4.17 8.3 13 15.99 15.58h-.07c2.7 1.86 3.68 4.74.27 7h.03c-18.22 3.41-23.99 19.34-25.15 38.85 21.49.62 41.78.24 59.97-1.9 0 0-4.55-33.47-27.03-37.11Z"
             />
             <path
-                fill="#0b81aa"
+                fill="#1693c5"
                 className="dark:fill-blue-800"
                 d="M73.58 58.37C95.92 47.79 93.66 9.83 93.66 9.83 78.84 9.04 64.57 8.6 51.07 8.65c-3.92 8.91 7.58 12.5 14 14.71 14.3 5.3 13.29 17.32 1.89 25.86-9.71 8.85-8.51 15.99 1.36 23.2 4.74 5.74 2.38 15.02-3.25 19.88-11.61 9.81-28.54 5-42.14 9.15-.18 4.17-.04 6.88-.04 6.88 26.65 1.42 51.63 1.78 73.26 0 0 0 .73-37.18-22.57-49.98Z"
                 opacity=".2"
@@ -115,7 +115,7 @@ export default function AnimatedLoader(props: Props) {
             />
             <g>
                 <path
-                    fill="#fd8e00"
+                    fill="#f7b24a"
                     className="dark:fill-amber-700"
                     d="M101.53 116.9c8.14-1.34 2.01-11.35.76-16.1-11.11 14.61-41.48 11.69-58.27 11.07-9.92-1.06-20.56-3.21-29.74 1.77 6.15 10.06 59.66 2.62 87.24 3.26ZM20.48 20.53c16.28 3.51 43.18 1.98 72.12.48 6.07-1.1 4.42-10.04 5.35-14.68-.55-6.95-10.33-3.71-14.98-4.76 5.82 30.3-48.65 8.09-63.23 18.69.24.1.48.21.74.27Z"
                     opacity=".3"
