@@ -4,7 +4,8 @@ export function convertItemsToNodes(
     items: Item[],
     parentId: string | null,
     depth: number = 0,
-    horizontalIndex: number = 0
+    horizontalIndex: number = 0,
+    opts: { isDark: boolean }
 ): [Node[], Edge[], number] {
     const edges = [] as Edge[]
     const nodes = [] as Node[]
@@ -68,7 +69,8 @@ export function convertItemsToNodes(
                 item.subItems,
                 itemId,
                 depth + 1,
-                currentIndex
+                currentIndex,
+                opts
             )
             nodes.push(...subNodes)
             edges.push(...subEdges)
@@ -80,8 +82,8 @@ export function convertItemsToNodes(
     return [nodes, edges, currentIndex]
 }
 
-function getNodeColor(depth: number, index: number) {
-    const possibleColors = [
+function getNodeColor(depth: number, index: number, isDark?: boolean) {
+    const lightColors = [
         "#FFD6A7",
         "#FFF085",
         "#B9F8CF",
@@ -105,7 +107,27 @@ function getNodeColor(depth: number, index: number) {
         "#B8D7F6",
         "#D1A1FF",
     ]
-
+    const darkColors = [
+        "#FF9800",
+        "#FFD600",
+        "#00E676",
+        "#00B8D9",
+        "#5E35B1",
+        "#7C4DFF",
+        "#F50057",
+        "#FF1744",
+        "#1DE9B6",
+        "#FFFFFF",
+        "#FF4081",
+        "#651FFF",
+        "#FF6F00",
+        "#D84315",
+        "#2979FF",
+        "#3D5AFE",
+        "#FF3D00",
+        "#D500F9",
+    ]
+    const possibleColors = isDark ? darkColors : lightColors
     const patternIndex = (depth * 31 + index * 17) % possibleColors.length
     return possibleColors[patternIndex]
 }

@@ -1,4 +1,5 @@
 import { cn } from "@/lib/ui-utils"
+import { useTheme } from "next-themes"
 
 export default function ProgressBar({
     percentage,
@@ -9,20 +10,22 @@ export default function ProgressBar({
     percentage: number
     filledClassName?: string
 }) {
+    const { theme } = useTheme()
+    const isDark = theme === "dark"
     const getBarColor = (percentage: number): string => {
         if (percentage <= 33) {
-            return "#3B82F6" // Blue for low progress
+            return "#3B82F6"
         } else if (percentage <= 66) {
-            return "#44CC44" // Green for medium progress
+            return "#44CC44"
         } else {
-            return "#FFC800" // Yellow for high progress
+            return "#FFC800"
         }
     }
 
     return (
         <div
             className={cn(
-                "relative bg-[#E5E5E5] w-full rounded-full",
+                "relative w-full rounded-full bg-[#E5E5E5] dark:bg-neutral-700/50 transition-colors",
                 className
             )}
         >
@@ -36,7 +39,7 @@ export default function ProgressBar({
                     filledClassName
                 )}
             >
-                <div className="from-white/25 to-white/20 bg-linear-to-r h-1 absolute top-1 left-2 rounded-full w-[90%]" />
+                <div className="from-white/25 to-white/20 bg-linear-to-r h-1 absolute top-1 left-[8%] rounded-full w-[88%]" />
             </div>
         </div>
     )

@@ -11,6 +11,7 @@ import { motion } from "framer-motion"
 import { useRouter } from "nextjs-toploader/app"
 import { useMemo } from "react"
 import { getLanguage } from "@/utils/get-language"
+import { useTheme } from "next-themes"
 
 type Props = {
     secondsSpent: number
@@ -19,6 +20,8 @@ type Props = {
 }
 
 export default function ResultPage(props: Props) {
+    const { theme } = useTheme()
+    const isDark = theme === "dark"
     const queryClient = useQueryClient()
     const router = useRouter()
 
@@ -124,7 +127,7 @@ export default function ResultPage(props: Props) {
     }
     return (
         <motion.section
-            className="h-fit px-4 py-6 md:py-8 lg:py-10"
+            className="h-fit px-4 py-6 md:py-8 lg:py-10 bg-white dark:bg-neutral-900 transition-colors"
             initial="hidden"
             animate="visible"
             variants={containerVariants}
@@ -145,13 +148,13 @@ export default function ResultPage(props: Props) {
                     <SuccessIcon className="w-32 h-32 sm:w-40 sm:h-40 md:w-52 md:h-52 lg:w-64 lg:h-64 mt-0" />
                 </motion.div>
                 <motion.p
-                    className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl text-center uppercase font-black text-neutral-800 mt-2 md:mt-3"
+                    className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl text-center uppercase font-black text-neutral-800 dark:text-neutral-100 mt-2 md:mt-3 transition-colors"
                     variants={itemVariants}
                 >
                     {t["Quiz Over"]}
                 </motion.p>
                 <motion.p
-                    className="text-neutral-500 mt-3 md:mt-5 font-semibold text-center max-w-[600px] text-sm sm:text-base md:text-lg"
+                    className="text-neutral-500 dark:text-neutral-300 mt-3 md:mt-5 font-semibold text-center max-w-[600px] text-sm sm:text-base md:text-lg transition-colors"
                     variants={itemVariants}
                 >
                     {t["GG Message"]}
@@ -159,14 +162,14 @@ export default function ResultPage(props: Props) {
             </motion.div>
 
             <motion.div
-                className="grid max-w-[800px]  mt-6 sm:mt-8 md:mt-10 gap-4 sm:gap-6 md:gap-8 lg:gap-10 mx-auto grid-cols-2 sm:grid-cols-3"
+                className="grid max-w-[800px] mt-6 sm:mt-8 md:mt-10 gap-4 sm:gap-6 md:gap-8 lg:gap-10 mx-auto grid-cols-2 sm:grid-cols-3"
                 variants={containerVariants}
             >
                 {stats.map((stat, index) => (
                     <motion.div
                         key={stat.label}
                         className={cn(
-                            "h-28   sm:h-32 md:h-36 lg:h-44 border-2 border-neutral-200 flex items-center justify-center flex-col rounded-xl md:rounded-2xl",
+                            "h-28 sm:h-32 md:h-36 lg:h-44 border-2 border-neutral-200 dark:border-neutral-700 bg-white dark:bg-neutral-800 flex items-center justify-center flex-col rounded-xl md:rounded-2xl transition-colors",
                             {
                                 "sm:col-span-1 col-span-2": index === 0,
                             }
@@ -180,7 +183,7 @@ export default function ResultPage(props: Props) {
                         <div className="flex items-center gap-1 justify-center">
                             <stat.Icon className={stat.iconClass} />
                             <motion.span
-                                className="text-xl sm:text-2xl md:text-3xl lg:text-[2.4rem] ml-1 font-black text-neutral-700"
+                                className="text-xl sm:text-2xl md:text-3xl lg:text-[2.4rem] ml-1 font-black text-neutral-700 dark:text-neutral-100 transition-colors"
                                 initial={{ opacity: 0 }}
                                 animate={{ opacity: 1 }}
                                 transition={{ delay: 0.5 + index * 0.2 }}
@@ -188,14 +191,14 @@ export default function ResultPage(props: Props) {
                                 {stat.value}
                             </motion.span>
                         </div>
-                        <p className="text-neutral-500/60 mt-1 sm:mt-2 md:mt-3 text-sm sm:text-lg md:text-xl lg:text-2xl font-extrabold">
+                        <p className="text-neutral-500/60 dark:text-neutral-400 mt-1 sm:mt-2 md:mt-3 text-sm sm:text-lg md:text-xl lg:text-2xl font-extrabold transition-colors">
                             {stat.label}
                         </p>
                     </motion.div>
                 ))}
                 <Button
                     onClick={handleBackBtn}
-                    variant={"green"}
+                    variant={isDark ? "blue" : "green"}
                     className="w-full col-span-2 sm:col-span-3 text-base sm:text-lg md:text-xl h-12 md:h-14 bg-neutral-800 border-neutral-500 shadow-neutral-500 mt-2 sm:mt-0"
                 >
                     {t["Back to home"]}

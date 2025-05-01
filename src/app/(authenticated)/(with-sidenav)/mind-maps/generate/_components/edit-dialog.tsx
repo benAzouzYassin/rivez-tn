@@ -37,6 +37,7 @@ import { useRefetchUser } from "@/hooks/use-refetch-user"
 import { Badge } from "@/components/ui/badge"
 import { lowPrice } from "@/constants/prices"
 import CreditIcon from "@/components/icons/credit-icon"
+import { useTheme } from "next-themes"
 
 interface Props {
     setNodes: (nodes: Node[]) => void
@@ -48,6 +49,8 @@ interface Props {
     contentType: string | null
 }
 export default function EditMindmapDialog(props: Props) {
+    const { theme } = useTheme()
+    const isDark = theme === "dark"
     const refetchUser = useRefetchUser()
     const [editInstructions, setEditInstructions] = useState("")
     const [language, setLanguage] = useQueryState("language")
@@ -99,7 +102,12 @@ export default function EditMindmapDialog(props: Props) {
                             enableDelete: true,
                         }
                     }),
-                    null
+                    null,
+                    undefined,
+                    undefined,
+                    {
+                        isDark,
+                    }
                 )
                 if (nodes.length) {
                     props.setNodes(
@@ -192,7 +200,12 @@ export default function EditMindmapDialog(props: Props) {
                     enableDelete: true,
                 }
             }),
-            null
+            null,
+            undefined,
+            undefined,
+            {
+                isDark,
+            }
         )
         props.setNodes(nodes)
         props.setEdges(edges)
@@ -283,6 +296,7 @@ export default function EditMindmapDialog(props: Props) {
                             Cancel
                         </Button>
                         <Button
+                            variant={isDark ? "blue" : "default"}
                             type="submit"
                             className="gap-1"
                             disabled={!editInstructions.trim()}

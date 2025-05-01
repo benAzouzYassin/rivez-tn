@@ -40,7 +40,6 @@ export default function HintsSheet(props: Props) {
     const [isGenerating, setIsGenerating] = useState(false)
     const [generatedContent, setGeneratedContent] = useState("")
     const isStreaming = useRef<boolean>(false)
-    const isArabicQuestion = containsArabic(props.questionText)
     const translation = useMemo(
         () => ({
             en: {
@@ -134,12 +133,20 @@ export default function HintsSheet(props: Props) {
         refetch,
         t,
     ])
+    const isRtl = containsArabic(props.questionText)
 
     return (
         <Sheet open={isOpen} onOpenChange={setIsOpen}>
             <SheetTrigger asChild>
                 <button
-                    className="h-10 text-center hidden bg-white hover:bg-blue-50 cursor-pointer active:scale-95 transition-all text-blue-600/80 font-bold text-lg md:flex items-center justify-center fixed ltr:rounded-l-xl rtl:rounded-r-xl border-blue-500/70 top-44 ltr:border-r-0 rtl:left-0 ltr:right-0 w-20 gap-px border-2"
+                    dir={isRtl ? "rtl" : "ltr"}
+                    className={cn(
+                        "h-10 text-center hidden bg-white hover:bg-blue-50 cursor-pointer active:scale-95 transition-all text-blue-600/80 font-bold text-lg md:flex items-center justify-center fixed ltr:rounded-l-xl  border-blue-500/70 top-44   ltr:border-r-0 rtl:left-0 ltr:right-0 w-20 gap-px border-2",
+                        "dark:bg-neutral-900 dark:hover:bg-neutral-800 dark:text-blue-300 dark:border-blue-400/40 dark:shadow dark:shadow-blue-900/10",
+                        {
+                            "rtl:rounded-r-xl": isRtl,
+                        }
+                    )}
                     aria-label={t.Hint}
                 >
                     <Lightbulb className="w-6 h-6" />
@@ -147,9 +154,11 @@ export default function HintsSheet(props: Props) {
                 </button>
             </SheetTrigger>
             <SheetContent
-                side={isArabicQuestion ? "left" : "right"}
+                dir={isRtl ? "rtl" : "ltr"}
+                side={isRtl ? "left" : "right"}
                 className={cn(
-                    "transition-all overflow-hidden px-2 py-0 w-96 min-w-[75vw]"
+                    "transition-all overflow-hidden px-2 py-0 w-96 min-w-[75vw] bg-white text-neutral-900 dark:border-white/10",
+                    "dark:bg-neutral-900 dark:text-neutral-100"
                 )}
             >
                 {isError ? (

@@ -13,6 +13,7 @@ import MatchingPairsLeft from "./matching-pairs-left"
 import MatchingPairsRight from "./matching-pairs-right"
 import WrongAnswerBanner from "./wrong-answer-banner"
 import HintsSheet from "./hints-sheet"
+import { containsArabic } from "@/utils/is-arabic"
 
 type Props = {
     question: { content: MatchingPairsContent } & QuestionType
@@ -174,24 +175,47 @@ export default function MatchingPairsQuestion(props: Props) {
         setIncorrectSelections([])
     }
 
+    const isRtl = containsArabic(props.question.question)
     return (
         <>
-            <div className="flex flex-col relative h-fit items-center justify-center pb-56 md:pb-0">
+            <div
+                dir={isRtl ? "rtl" : "ltr"}
+                className={`
+                    flex flex-col relative h-fit items-center justify-center pb-56 md:pb-0
+                    bg-white transition-colors
+                    dark:bg-neutral-900
+                `}
+            >
                 <HintsSheet
                     questionContent={JSON.stringify(props.question.content)}
                     questionText={props.question.question}
                     questionId={props.question.id}
                 />
                 <div>
-                    <p className="max-w-[1200px] md:mx-auto mb-1 text-2xl md:text-3xl md:px-0 pl-3 pr-1  font-extrabold top-0 text-neutral-700 text-left w-full left-0">
+                    <p
+                        className={`
+                        max-w-[1200px] md:mx-auto mb-1 text-2xl md:text-3xl md:px-0 pl-3 pr-1 font-extrabold top-0 text-neutral-700 text-left w-full left-0
+                        dark:text-neutral-100
+                    `}
+                    >
                         {props.question?.question || "Match the items :"}
                     </p>
-                    <p className="text-base pl-3  md:hidden mt-2 underline underline-offset-4 text-neutral-500 mb-4  border-neutral-200 flex items-center gap-2 font-semibold">
-                        <span className="">
+                    <p
+                        className={`
+                        text-base pl-3 md:hidden mt-2 underline underline-offset-4 text-neutral-500 mb-4 border-neutral-200 flex items-center gap-2 font-semibold
+                        dark:text-neutral-400 dark:border-neutral-700
+                    `}
+                    >
+                        <span>
                             Each item from{" "}
-                            <span className="text-blue-600">Group A</span> have
-                            a corresponding from{" "}
-                            <span className="text-purple-600">Group B</span>.
+                            <span className="text-blue-600 dark:text-blue-400">
+                                Group A
+                            </span>{" "}
+                            have a corresponding from{" "}
+                            <span className="text-purple-600 dark:text-purple-400">
+                                Group B
+                            </span>
+                            .
                         </span>
                     </p>
                     <div className="relative">
@@ -203,9 +227,11 @@ export default function MatchingPairsQuestion(props: Props) {
                                 animate="animate"
                                 exit="exit"
                                 transition={{ duration: 0.4 }}
-                                className="max-w-[1200px] md:min-w-[700px] justify-center items-center md:mt-20 md:px-0 px-3  gap-10 w-full md:flex"
+                                className={`
+                                    max-w-[1200px] md:min-w-[700px] justify-center items-center md:mt-20 md:px-0 px-3 gap-10 w-full md:flex
+                                `}
                             >
-                                <p className=" md:hidden mt-2 py-5 text-2xl font-bold text-neutral-600 text-center ">
+                                <p className="md:hidden mt-2 py-5 text-2xl font-bold text-neutral-600 text-center dark:text-neutral-300">
                                     Group A :{" "}
                                 </p>
                                 <MatchingPairsLeft
@@ -248,7 +274,7 @@ export default function MatchingPairsQuestion(props: Props) {
                                     }}
                                     options={leftSection}
                                 />
-                                <p className=" mt-10 md:hidden py-5 text-2xl font-bold text-neutral-600 text-center border-t-2">
+                                <p className="mt-10 md:hidden py-5 text-2xl font-bold text-neutral-600 text-center border-t-2 dark:text-neutral-300 dark:border-neutral-700">
                                     Group B :{" "}
                                 </p>
 

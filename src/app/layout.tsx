@@ -49,7 +49,7 @@ export default async function RootLayout({
             <body
                 className={`${
                     lang === "ar" ? notoSansArabic.className : nunito.className
-                } overflow-y-auto overflow-x-hidden antialiased  min-w-screen`}
+                } overflow-y-auto dark:!bg-neutral-900 overflow-x-hidden antialiased  min-w-screen`}
             >
                 <Toaster />
                 <NextTopLoader

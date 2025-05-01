@@ -79,24 +79,27 @@ export default function Page() {
             {!isFinished && questions.length > 0 && (
                 <header
                     dir="ltr"
-                    className="w-full fixed top-0 z-50  flex items-center border-b h-24 md:px-20  bg-white/95 backdrop-blur-sm supports-backdrop-filter:bg-white/60"
+                    className="w-full fixed top-0 z-50 flex items-center border-b h-24 md:px-20 bg-white/95 dark:!bg-neutral-950/10 backdrop-blur-sm supports-backdrop-filter:bg-white/60 dark:supports-backdrop-filter:bg-neutral-900/60 border-neutral-200 dark:border-neutral-800 transition-colors"
                 >
                     <BackButton className="md:ml-auto ml-2 mr-2 opacity-50" />
                     <ProgressBar
-                        className="md:w-[65%] w-[80%] "
+                        className="md:w-[65%] w-[80%]"
                         percentage={percentage}
                     />
                     <div className="mr-auto"></div>
                 </header>
             )}
             <main
-                className={cn("relative mt-32 min-h-[100vh]", {
-                    "overflow-x-hidden mt-0": isFinished,
-                })}
+                className={cn(
+                    "relative mt-32 dark:bg-neutral-900 min-h-[100vh]",
+                    {
+                        "overflow-x-hidden mt-0": isFinished,
+                    }
+                )}
             >
                 {isLoadingQuestions ||
                     (isLoading && (
-                        <div className=" h-[100vh] flex items-center justify-center">
+                        <div className=" h-[100vh] dark:bg-neutral-900 flex items-center justify-center">
                             <AnimatedLoader />
                         </div>
                     ))}

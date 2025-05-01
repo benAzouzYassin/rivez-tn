@@ -28,10 +28,10 @@ export default function ConfirmationBanner(props: Props) {
         <div
             className={cn(
                 "border-2 overflow-hidden opacity-0 h-0 ease-in flex py-5 px-2 md:px-20 translate-y-10 transition-all border-neutral-200/80 bg-white fixed w-full bottom-0",
+                "dark:bg-neutral-900 dark:border-neutral-700 dark:border-b-transparent dark:border-x-transparent transition-colors",
                 { "h-[100px] opacity-100 translate-y-0": props.isOpen }
             )}
         >
-            {" "}
             <div className="ml-auto relative">
                 <Button
                     onClick={() => {
@@ -45,7 +45,8 @@ export default function ConfirmationBanner(props: Props) {
                     }}
                     disabled={!props.isOpen}
                     className={cn(
-                        "h-12 px-7 opacity-0 translate-y-20 text-neutral-500 font-extrabold! my-auto",
+                        "h-12 px-7 opacity-0 translate-y-20 text-neutral-500 font-extrabold! my-auto transition-colors",
+                        "dark:text-neutral-300",
                         {
                             "opacity-100 -translate-y-0":
                                 props.actionType === "skip",
@@ -61,7 +62,7 @@ export default function ConfirmationBanner(props: Props) {
                     }}
                     disabled={!props.isOpen}
                     className={cn(
-                        "h-12 translate-y-20 absolute right-0 opacity-100 px-12 text-base font-extrabold! my-auto",
+                        "h-12 translate-y-20 absolute  right-0 opacity-100 px-12 text-base font-extrabold! my-auto transition-colors",
                         {
                             "translate-y-0 opacity-100":
                                 props.actionType === "confirm",

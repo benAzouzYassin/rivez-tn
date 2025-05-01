@@ -14,6 +14,7 @@ import ConfirmationBanner from "./confirmation-banner"
 import CorrectAnswerBanner from "./correct-answer-banner"
 import HintsSheet from "./hints-sheet"
 import WrongAnswerBanner from "./wrong-answer-banner"
+import { containsArabic } from "@/utils/is-arabic"
 
 type Props = {
     question: { content: MultipleChoiceContent } & QuestionType
@@ -108,11 +109,14 @@ export default function MultipleAnswerQuestion(props: Props) {
             setIsWrongBannerOpen(true)
         }
     }
+    const isRtl = containsArabic(props.question.question)
+
     return (
         <>
             <div
+                dir={isRtl ? "rtl" : "ltr"}
                 className={cn(
-                    "flex flex-col relative h-fit items-center justify-center pb-44"
+                    "flex flex-col relative h-fit items-center justify-center pb-44 bg-white dark:bg-neutral-900 transition-colors"
                 )}
             >
                 <HintsSheet
@@ -128,7 +132,7 @@ export default function MultipleAnswerQuestion(props: Props) {
                 >
                     <p
                         className={cn(
-                            " max-w-[1000px] md:mx-auto text-center  items-center justify-center w-full mt-1  flex pt-0 pb-5 text-lg sm:text-3xl lg:text-4xl font-extrabold top-0 text-neutral-700 px-2  ",
+                            "max-w-[1000px] md:mx-auto text-center items-center justify-center w-full mt-1 flex pt-0 pb-5 text-lg sm:text-3xl lg:text-4xl font-extrabold top-0 text-neutral-700 dark:text-neutral-100 px-2",
                             {
                                 "max-w-[1250px] mt-5":
                                     props.question.layout === "horizontal",
@@ -139,19 +143,18 @@ export default function MultipleAnswerQuestion(props: Props) {
                     </p>
                     <div
                         className={cn(
-                            "relative w-full md:mt-6 flex-col flex xl:px-0 px-4 ",
-
+                            "relative w-full md:mt-6 flex-col flex xl:px-0 px-4",
                             {
-                                " xl:flex-row md:mt-6 max-w-[1300px] ":
+                                "xl:flex-row md:mt-6 max-w-[1300px]":
                                     props.question.layout === "horizontal",
                             }
                         )}
                     >
                         <div
                             className={cn(
-                                "md:h-[400px] w-[95vw] rounded-xl mb-4 md:mb-0 xl:min-w-[700px] overflow-hidden  h-[250px] flex items-center justify-center relative  md:mx-auto  border bg-neutral-50 xl:w-[800px] ",
+                                "md:h-[400px] w-[95vw] rounded-xl mb-4 md:mb-0 xl:min-w-[700px] overflow-hidden h-[250px] flex items-center justify-center relative md:mx-auto border dark:border-neutral-700 bg-neutral-50 dark:bg-neutral-800 xl:w-[800px] transition-colors",
                                 {
-                                    "xl:w-[700px] w-full xl:mb-0  xl:mr-10  sm:max-w-[80vw]  h-[250px] xl:h-[500px] ":
+                                    "xl:w-[700px] w-full xl:mb-0 xl:mr-10 sm:max-w-[80vw] h-[250px] xl:h-[500px]":
                                         props.question.layout === "horizontal",
                                     hidden:
                                         props.question.image_type === "none",
@@ -167,8 +170,7 @@ export default function MultipleAnswerQuestion(props: Props) {
                             )}
                             {imageType === "normal-image" && (
                                 <>
-                                    {" "}
-                                    <ImageIcon className="w-32 text-neutral-300 h-32" />
+                                    <ImageIcon className="w-32 text-neutral-300 dark:text-neutral-700 h-32" />
                                     {!!props.question.image && (
                                         <img
                                             className={cn(
@@ -179,12 +181,12 @@ export default function MultipleAnswerQuestion(props: Props) {
                                         />
                                     )}
                                 </>
-                            )}{" "}
+                            )}
                         </div>
                         <div
                             key={questionIndex}
                             className={cn(
-                                "max-w-[1000px] xl:px-4 lg:px-0  mx-auto md:mt-10 mt-2 gap-5 w-full grid xl:grid-cols-2",
+                                "max-w-[1000px] xl:px-4 lg:px-0 mx-auto md:mt-10 mt-2 gap-5 w-full grid xl:grid-cols-2",
                                 {
                                     "flex xl:w-[700px] w-full xl:mr-0 flex-col xl:ml-auto":
                                         props.question.layout === "horizontal",
@@ -205,19 +207,19 @@ export default function MultipleAnswerQuestion(props: Props) {
                                             handleOptionClick(opt, isSelected)
                                         }
                                         className={cn(
-                                            "min-h-[85px]  min-w-[95vw] md:min-w-fit text-lg overflow-auto small-scroll-bar hover:bg-sky-100 text-wrap hover:shadow-sky-300/50 hover:border-sky-300/45 text-neutral-700 font-bold max-h-48",
+                                            "min-h-[85px] min-w-[95vw] md:min-w-fit text-lg overflow-auto small-scroll-bar hover:bg-sky-100 dark:hover:bg-white/20 text-wrap hover:shadow-sky-300/50 hover:border-sky-300/45 text-neutral-700 dark:text-neutral-100 font-bold max-h-48 dark:bg-neutral-800 bg-white border dark:border-neutral-700 transition-colors",
                                             {
-                                                "hover:bg-red-200/50 bg-red-200/50 text-red-500 font-extrabold hover:shadow-red-300 shadow-red-300 hover:border-red-300 border-red-300":
+                                                "hover:bg-red-200/50 bg-red-200/50 text-red-500 font-extrabold hover:shadow-red-300 shadow-red-300 hover:border-red-300 border-red-300 dark:hover:bg-red-900/40 dark:bg-red-900/20 dark:text-white dark:shadow-red-500/50 dark:border-red-500/50":
                                                     !isCorrect &&
                                                     (isWrongBannerOpen ||
                                                         isCorrectBannerOpen) &&
                                                     isSelected,
-                                                "hover:bg-[#D2FFCC] bg-[#D2FFCC] text-[#58A700] font-extrabold hover:shadow-[#58CC02]/50 shadow-[#58CC02]/50 hover:border-[#58CC02]/40 border-[#58CC02]/40":
+                                                "hover:bg-[#D2FFCC] bg-[#D2FFCC] text-[#58A700] font-extrabold hover:shadow-[#58CC02]/50 shadow-[#58CC02]/50 hover:border-[#58CC02]/40 border-[#58CC02]/40 dark:hover:bg-green-900/40 dark:bg-green-900/20 dark:text-green-300 dark:shadow-green-900 dark:border-green-900":
                                                     isCorrect &&
                                                     (isWrongBannerOpen ||
                                                         isCorrectBannerOpen) &&
                                                     isSelected,
-                                                "hover:bg-sky-200/50 bg-sky-200/50 text-sky-500 font-extrabold hover:shadow-sky-300 shadow-sky-300 hover:border-sky-300 border-sky-300":
+                                                "hover:bg-sky-200/50 bg-sky-200/50 text-sky-500 font-extrabold hover:shadow-sky-300 shadow-sky-300 hover:border-sky-300 border-sky-300 dark:hover:bg-sky-900/50 dark:bg-sky-900/50 dark:text-sky-300 dark:shadow-sky-900 dark:border-sky-900":
                                                     isSelected &&
                                                     !isWrongBannerOpen &&
                                                     !isCorrectBannerOpen,
@@ -225,8 +227,7 @@ export default function MultipleAnswerQuestion(props: Props) {
                                         )}
                                         variant="secondary"
                                     >
-                                        <p className="max-w-[80%] md:text-base text-sm text-wrap h-fit ">
-                                            {" "}
+                                        <p className="max-w-[80%] md:text-base text-sm text-wrap h-fit">
                                             {opt}
                                         </p>
                                     </Button>

@@ -37,6 +37,7 @@ import InsufficientCreditsDialog from "@/components/shared/insufficient-credits-
 import { useIsSmallScreen } from "@/hooks/is-small-screen"
 import { getLanguage } from "@/utils/get-language"
 import { customToFixed } from "@/utils/numbers"
+import { useTheme } from "next-themes"
 
 const PdfInput = dynamic(() => import("./pdf-input"), {
     loading: () => <FileInputLoading />,
@@ -102,7 +103,7 @@ export default function AddDialog(props: Props) {
                     "You do not have enough credits to perform this action.",
             },
             fr: {
-                "Add Mindmap": "Ajouter une carte mentale",
+                "Add Mindmap": "Ajouter",
                 "Generate a Mind Map": "Générer une carte mentale",
                 "Text Input": "Saisie de texte",
                 "Upload PDF": "Télécharger un PDF",
@@ -132,7 +133,7 @@ export default function AddDialog(props: Props) {
                     "Vous n'avez pas assez de crédits pour effectuer cette action.",
             },
             ar: {
-                "Add Mindmap": "إضافة خريطة ذهنية",
+                "Add Mindmap": "إضافة ",
                 "Generate a Mind Map": "إنشاء خريطة ذهنية",
                 "Text Input": "إدخال نص",
                 "Upload PDF": "رفع ملف PDF",
@@ -167,6 +168,8 @@ export default function AddDialog(props: Props) {
 
     const lang = getLanguage()
     const t = translation[lang]
+    const { theme } = useTheme()
+    const isDark = theme === "dark"
 
     const items = [
         {
@@ -174,7 +177,9 @@ export default function AddDialog(props: Props) {
             disabled: false,
             value: "subject",
             text: t["Text Input"],
-            icon: <LetterTextIcon className="w-7 text-indigo-500 h-7" />,
+            icon: (
+                <LetterTextIcon className="w-7 text-indigo-500 dark:text-neutral-300/90 h-7" />
+            ),
             description:
                 t["Create a mind map from any topic or subject you specify."],
         },
@@ -183,7 +188,9 @@ export default function AddDialog(props: Props) {
             disabled: isSmallScreen,
             value: "document",
             text: t["Upload PDF"],
-            icon: <FileTextIcon className="w-7 h-7 text-indigo-500" />,
+            icon: (
+                <FileTextIcon className="w-7 h-7 text-indigo-500 dark:text-neutral-300/90" />
+            ),
             description:
                 t["Upload a PDF file to generate questions from its content."],
         },
@@ -192,7 +199,9 @@ export default function AddDialog(props: Props) {
             disabled: false,
             value: "youtube",
             text: t["YouTube Video"],
-            icon: <Video className="w-7 text-indigo-500 h-7" />,
+            icon: (
+                <Video className="w-7 text-indigo-500 dark:text-neutral-300/90 h-7" />
+            ),
             description:
                 t[
                     "Convert a YouTube video into a mind map by entering its URL."
@@ -203,7 +212,9 @@ export default function AddDialog(props: Props) {
             disabled: false,
             value: "image",
             text: t["Extract from Images"],
-            icon: <ImageIcon className="w-7 text-indigo-500 h-7" />,
+            icon: (
+                <ImageIcon className="w-7 text-indigo-500 dark:text-neutral-300/90 h-7" />
+            ),
             description:
                 t["Upload images with text to generate visual mind maps."],
         },
@@ -265,24 +276,27 @@ export default function AddDialog(props: Props) {
                 open={props.isOpen}
             >
                 <DialogTrigger asChild>
-                    <Button className="text-base md:w-fit w-full h-[3.2rem]">
+                    <Button
+                        variant={isDark ? "blue" : "default"}
+                        className="text-base md:w-fit w-full h-[3.2rem]"
+                    >
                         <Plus className="-mr-1 !w-5 stroke-2 !h-5" />{" "}
                         {t["Add Mindmap"]}
                     </Button>
                 </DialogTrigger>
                 <DialogContent
                     className={cn(
-                        "sm:min-w-[1000px] md:w-[1000px] md:max-w-[1000px]",
+                        "sm:min-w-[1000px] md:w-[1000px] md:max-w-[1000px] bg-white dark:bg-neutral-900 transition-colors",
                         {
                             "w-[1000px]": currentTab === null,
                         }
                     )}
                 >
                     <DialogHeader>
-                        <DialogTitle className="md:text-4xl text-2xl mt-20 md:mt-2 text-center font-bold text-neutral-500">
+                        <DialogTitle className="md:text-4xl text-2xl mt-20 md:mt-2 text-center font-bold text-neutral-500 dark:text-neutral-200">
                             {t["Generate a Mind Map"]}
                         </DialogTitle>
-                        <DialogDescription className="text-neutral-600"></DialogDescription>
+                        <DialogDescription className="text-neutral-600 dark:text-neutral-400"></DialogDescription>
                     </DialogHeader>
 
                     {!currentTab && (
@@ -304,30 +318,30 @@ export default function AddDialog(props: Props) {
                                             handleCardClick(item.value)
                                         }}
                                         className={cn(
-                                            "p-4 flex h-28 hover:bg-neutral-100 cursor-pointer transition-all active:shadow-none active:translate-y-2 items-center gap-4 rounded-2xl ",
+                                            "p-4 flex h-28 hover:bg-neutral-100 dark:hover:bg-neutral-800 cursor-pointer transition-all active:shadow-none active:translate-y-2 items-center gap-4 rounded-2xl bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-700",
                                             {
-                                                "bg-neutral-200 active:translate-y-0 hover:bg-neutral-200 cursor-not-allowed":
+                                                "bg-neutral-200 dark:bg-neutral-800 active:translate-y-0 hover:bg-neutral-200 dark:hover:bg-neutral-800 cursor-not-allowed border border-neutral-300 dark:border-neutral-700":
                                                     item.disabled,
                                             }
                                         )}
                                     >
-                                        <span className="bg-blue-100 flex items-center p-2 rounded-xl w-fit">
+                                        <span className="bg-blue-100  dark:bg-blue-700/50 flex items-center p-2 rounded-xl w-fit">
                                             {item.icon}
                                         </span>
                                         <div>
                                             <div className="flex items-center ">
-                                                <h3 className="text-xl text-neutral-700 font-bold pt-1">
+                                                <h3 className="text-xl text-neutral-700 dark:text-neutral-100 font-bold pt-1">
                                                     {item.text}
                                                 </h3>
                                                 <Badge
                                                     variant={"blue"}
-                                                    className=" py-0 scale-80 px-2 font-bold inline-flex gap-[3px] ml-1 !text-lg"
+                                                    className="py-0 scale-80 px-2 font-bold inline-flex gap-[3px] ml-1 !text-lg"
                                                 >
                                                     {item.price}{" "}
                                                     <CreditIcon className="!w-5 !h-5" />
                                                 </Badge>
                                             </div>
-                                            <p className="text-sm font-medium text-neutral-500">
+                                            <p className="text-sm font-medium text-neutral-500 dark:text-neutral-400">
                                                 {item.description}
                                             </p>
                                         </div>
@@ -339,7 +353,7 @@ export default function AddDialog(props: Props) {
                         <Button
                             onClick={() => setCurrentTab(null)}
                             variant={"secondary"}
-                            className="absolute gap-1 rtl:right-3 ltr:left-3 text-base font-bold text-neutral-500 top-5 rounded-xl"
+                            className="absolute gap-1 rtl:right-3 ltr:left-3 text-base font-bold text-neutral-500 dark:text-neutral-300 top-5 rounded-xl"
                         >
                             <ChevronLeft className="min-w-6 min-h-6" />
                             {t["Back"]}
@@ -350,6 +364,7 @@ export default function AddDialog(props: Props) {
                             <PdfInput onPDFPagesChanges={setPdfPages} />
 
                             <Button
+                                variant={isDark ? "blue" : "default"}
                                 type="submit"
                                 className="text-lg mt-5 h-[52px] w-full"
                                 isLoading={isSubmitting}
@@ -363,6 +378,7 @@ export default function AddDialog(props: Props) {
                         <form onSubmit={handleSubmit} className="mt-6">
                             <ImageInput onChange={setImagesInBase64} />
                             <Button
+                                variant={isDark ? "blue" : "default"}
                                 type="submit"
                                 className="text-lg mt-5 h-[52px] w-full"
                                 isLoading={isSubmitting}
@@ -377,7 +393,7 @@ export default function AddDialog(props: Props) {
                             <div>
                                 <label
                                     htmlFor="text"
-                                    className="font-medium text-neutral-600"
+                                    className="font-medium text-neutral-600 dark:text-neutral-300"
                                 >
                                     {t["Topic or Subject"]}
                                     <span className="text-red-400 text-xl font-semibold">
@@ -386,7 +402,7 @@ export default function AddDialog(props: Props) {
                                 </label>
                                 <Textarea
                                     errorMessage=""
-                                    className="h-28"
+                                    className="h-28 bg-white dark:bg-neutral-900 text-neutral-900 dark:text-neutral-100 border border-neutral-200 dark:border-neutral-700"
                                     id="text"
                                     value={topic}
                                     onChange={(e) => setTopic(e.target.value)}
@@ -402,12 +418,12 @@ export default function AddDialog(props: Props) {
                             <div>
                                 <label
                                     htmlFor="requirement"
-                                    className="font-medium text-neutral-600"
+                                    className="font-medium text-neutral-600 dark:text-neutral-300"
                                 >
                                     {t["Additional Instructions"]}
                                 </label>
                                 <Textarea
-                                    className="h-24"
+                                    className="h-24 bg-white dark:bg-neutral-900 text-neutral-900 dark:text-neutral-100 border border-neutral-200 dark:border-neutral-700"
                                     id="requirement"
                                     value={instructions}
                                     onChange={(e) =>
@@ -421,6 +437,7 @@ export default function AddDialog(props: Props) {
                                 />
                             </div>
                             <Button
+                                variant={isDark ? "blue" : "default"}
                                 type="submit"
                                 className="text-lg h-[52px] w-full"
                                 isLoading={isSubmitting}
@@ -435,7 +452,7 @@ export default function AddDialog(props: Props) {
                             <div>
                                 <label
                                     htmlFor="text"
-                                    className="font-medium text-neutral-600"
+                                    className="font-medium text-neutral-600 dark:text-neutral-300"
                                 >
                                     {t["Youtube url"]}
                                     <span className="text-red-400 text-xl font-semibold">
@@ -444,7 +461,7 @@ export default function AddDialog(props: Props) {
                                 </label>
                                 <Input
                                     errorMessage=""
-                                    className="w-full"
+                                    className="w-full bg-white dark:bg-neutral-900 text-neutral-900 dark:text-neutral-100 border border-neutral-200 dark:border-neutral-700"
                                     id="text"
                                     value={youtubeUrl}
                                     onChange={(e) =>
@@ -461,6 +478,7 @@ export default function AddDialog(props: Props) {
                             <div className="-mt-1"></div>
 
                             <Button
+                                variant={isDark ? "blue" : "default"}
                                 type="submit"
                                 className="text-lg h-[52px] w-full"
                                 isLoading={isSubmitting}
