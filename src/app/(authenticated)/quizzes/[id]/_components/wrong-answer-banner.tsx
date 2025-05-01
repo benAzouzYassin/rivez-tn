@@ -30,6 +30,7 @@ export default function WrongAnswerBanner(props: Props) {
             dir="ltr"
             className={cn(
                 "border overflow-hidden opacity-0 h-0 translate-y-10 ease-in flex flex-col md:flex-row py-3 md:py-5 px-4 md:px-20 transition-all border-red-200 bg-[#FFE5E5] fixed w-full bottom-0",
+                "dark:bg-[#2a1313] dark:border-t-red-900 dark:border-x-transparent dark:border-b-transparent transition-colors",
                 {
                     "h-auto md:h-[140px] opacity-100 translate-y-0":
                         props.isOpen,
@@ -37,18 +38,36 @@ export default function WrongAnswerBanner(props: Props) {
             )}
         >
             <div className="flex items-center">
-                <div className="h-16 w-16 md:h-[90px] md:w-[90px] flex items-center justify-center bg-white border border-[#FF4B4B]/20 rounded-full">
-                    <X className="stroke-5 ml-1 h-8 w-8 md:h-14 md:w-14 stroke-[#FF4B4B]/80" />
+                <div
+                    className={cn(
+                        "h-16 w-16 md:h-[90px] md:w-[90px] flex items-center justify-center bg-white border border-[#FF4B4B]/20 rounded-full",
+                        "dark:bg-[#3a1a1a] dark:border-red-900 "
+                    )}
+                >
+                    <X
+                        className={cn(
+                            "stroke-5 ml-1 h-8 w-8 md:h-14 md:w-14 stroke-[#FF4B4B]/80",
+                            "dark:stroke-red-400"
+                        )}
+                    />
                 </div>
                 <div>
-                    <p className="text-lg md:text-xl ml-4 font-bold text-[#FF4B4B]">
+                    <p
+                        className={cn(
+                            "text-lg md:text-xl ml-4 font-bold text-[#FF4B4B]",
+                            "dark:text-red-400"
+                        )}
+                    >
                         {t["Wrong answer!"]}
                     </p>
                     <ReportQuiz
                         quizId={""}
                         quizType="question-answer"
                         disabled={!props.isOpen}
-                        className="text-sm md:text-base active:scale-95 opacity-90 font-semibold flex items-center gap-1 w-fit mt-2 text-[#FF4B4B]"
+                        className={cn(
+                            "text-sm md:text-base active:scale-95 opacity-90 font-semibold flex items-center gap-1 w-fit mt-2 text-[#FF4B4B]",
+                            "dark:text-red-300"
+                        )}
                     />
                 </div>
             </div>
@@ -69,13 +88,6 @@ export default function WrongAnswerBanner(props: Props) {
                 >
                     {t["Continue"]}
                 </Button>
-                {/* <Button
-                disabled={!props.isOpen}
-                className="w-full md:w-auto md:ml-auto h-10 md:h-12 px-5 md:px-7 text-base md:text-lg font-bold my-auto"
-                variant={"blue"}
-            >
-                Why ?
-            </Button> */}
             </div>
         </div>
     )

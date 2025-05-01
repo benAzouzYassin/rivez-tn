@@ -31,7 +31,10 @@ export default function CorrectAnswerBanner(props: Props) {
         <div
             dir="ltr"
             className={cn(
+                // Light mode
                 "border overflow-hidden opacity-0 translate-y-10 h-0 ease-in flex flex-col md:flex-row py-3 md:py-5 px-4 md:px-20 transition-all border-green-200 bg-[#D2FFCC] fixed w-full bottom-0",
+                // Dark mode
+                "dark:bg-[#1a2a1a] dark:border-green-900 transition-colors dark:border-x-transparent dark:border-b-transparent",
                 {
                     "h-auto md:h-[140px] translate-y-0 opacity-100":
                         props.isOpen,
@@ -39,18 +42,38 @@ export default function CorrectAnswerBanner(props: Props) {
             )}
         >
             <div className="flex pb-2 md:pb-0 items-center">
-                <div className="h-16 w-16 md:h-[90px] md:w-[90px] flex items-center justify-center bg-white border border-[#47cd35]/20 rounded-full">
-                    <Check className="stroke-5 ml-1 h-8 w-8 md:h-14 md:w-14 stroke-[#58A700]/80" />
+                <div
+                    className={cn(
+                        // Light mode
+                        "h-16 w-16 md:h-[90px] md:w-[90px] flex items-center justify-center bg-white border border-[#47cd35]/20 rounded-full",
+                        // Dark mode
+                        "dark:bg-[#223322] dark:border-green-900"
+                    )}
+                >
+                    <Check
+                        className={cn(
+                            "stroke-5 ml-1 h-8 w-8 md:h-14 md:w-14 stroke-[#58A700]/80",
+                            "dark:stroke-green-400"
+                        )}
+                    />
                 </div>
                 <div>
-                    <p className="text-lg md:text-xl ml-4 font-bold text-[#58A700]">
+                    <p
+                        className={cn(
+                            "text-lg md:text-xl ml-4 font-bold text-[#58A700]",
+                            "dark:text-green-400"
+                        )}
+                    >
                         {t["Correct answer!"]}
                     </p>
                     <ReportQuiz
                         quizId=""
                         quizType="question-answer"
                         disabled={!props.isOpen}
-                        className="text-sm md:text-base active:scale-95 opacity-90 font-semibold flex items-center gap-1 w-fit mt-2 text-[#58A700]"
+                        className={cn(
+                            "text-sm md:text-base active:scale-95 opacity-90 font-semibold flex items-center gap-1 w-fit mt-2 text-[#58A700]",
+                            "dark:text-green-300"
+                        )}
                     />
                 </div>
             </div>

@@ -51,8 +51,11 @@ import { useRefetchUser } from "@/hooks/use-refetch-user"
 import { mindmapsContentDb } from "../_utils/indexed-db"
 import GeneralLoadingScreen from "@/components/shared/general-loading-screen"
 import { getLanguage } from "@/utils/get-language"
+import { useTheme } from "next-themes"
 
 export default function Page() {
+    const { theme } = useTheme()
+    const isDark = theme === "dark"
     const queryClient = useQueryClient()
     const refetchUser = useRefetchUser()
     const router = useRouter()
@@ -185,7 +188,12 @@ export default function Page() {
                                 enableDelete: true,
                             }
                         }),
-                        null
+                        null,
+                        undefined,
+                        undefined,
+                        {
+                            isDark,
+                        }
                     )
                     if (nodes.length) {
                         setIsLoading(false)
@@ -362,6 +370,7 @@ export default function Page() {
         imagesInBase64Id,
         youtubeUrl,
         t,
+        isDark,
     ])
 
     const { data: userData } = useCurrentUser()
@@ -407,14 +416,14 @@ export default function Page() {
         <section>
             <div
                 className={cn(
-                    "h-[90vh]  border border-gray-300 relative isolate",
+                    "h-[90vh] border border-gray-300 dark:border-neutral-700 relative isolate bg-white dark:bg-neutral-900 transition-colors",
                     {
                         "lg:w-[calc(100vw-306px)] w-screen": isSidenavOpen,
                         "lg:w-[calc(100vw-100px)] w-screen": !isSidenavOpen,
                     }
                 )}
             >
-                <div className="w-full h-20 p-3 gap-2 border-b absolute bg-white z-10 flex items-center justify-end top-0">
+                <div className="w-full h-20 p-3 gap-2 border-b border-gray-200 dark:border-neutral-700 absolute bg-white dark:bg-neutral-900 z-10 flex items-center justify-end top-0 transition-colors">
                     <EditMindmapDialog
                         setAiResult={setAiResult}
                         isOpen={isEditing}
@@ -442,12 +451,13 @@ export default function Page() {
                         disabled={isLoading || isStreaming}
                         onClick={() => setIsEditing(true)}
                         className="font-bold md:flex hidden"
-                        variant={"blue"}
+                        variant={isDark ? "default" : "blue"}
                     >
                         <EditIcon />
                         {t.Modify}
                     </Button>
                     <Button
+                        variant={isDark ? "blue" : "default"}
                         disabled={isLoading || isStreaming}
                         isLoading={isSaving}
                         onClick={handleSave}
@@ -480,19 +490,22 @@ export default function Page() {
                     fitView
                 >
                     {isLoading && (
-                        <div className=" absolute w-56 bg-white z-50 max-w-[80vw] max-h-[80vh] text-blue-400 top-[50%] left-1/2 -translate-x-1/2 -translate-y-1/2  ">
+                        <div className=" absolute w-56 bg-white dark:bg-neutral-900 z-50 max-w-[80vw] max-h-[80vh] text-blue-400 top-[50%] left-1/2 -translate-x-1/2 -translate-y-1/2  transition-colors">
                             <GeneralLoadingScreen text="" />
                         </div>
                     )}
-                    <Controls className="rounded-lg md:!block !hidden -translate-y-4 border border-gray-200" />
+                    <Controls className="rounded-lg dark:!hidden md:!block !hidden -translate-y-4 border border-gray-200  dark:!border-neutral-700 bg-white dark:!bg-neutral-800 transition-colors" />
                     <Panel
-                        className="bg-transparent md:scale-100 scale-50"
+                        className="bg-transparent  md:scale-100 scale-50"
                         position="bottom-right"
                     >
-                        <div className="rounded-lg shadow-lg overflow-hidden border border-gray-200">
+                        <div className="rounded-lg shadow-lg overflow-hidden border border-gray-200 dark:border-neutral-700 bg-white dark:bg-neutral-800 transition-colors">
                             <MiniMap
-                                className="!bg-white/90 -translate-y-4 dark:!bg-gray-800/90"
-                                style={{ height: 110, width: 170 }}
+                                className="!bg-white/90 -translate-y-4 dark:!bg-neutral-800/90"
+                                style={{
+                                    height: 110,
+                                    width: 170,
+                                }}
                                 pannable
                                 nodeBorderRadius={2}
                                 nodeStrokeWidth={2}
@@ -518,6 +531,7 @@ export default function Page() {
                         variant={BackgroundVariant.Cross}
                         gap={12}
                         size={1}
+                        color={isDark ? "#0f0f0f" : "#f0f0f0"}
                     />
                     <ImageUploader
                         shouldUpload={shouldUploadImage}

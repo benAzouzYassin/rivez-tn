@@ -6,6 +6,7 @@ import AddQuestionButton from "./add-question-button"
 import QuestionPreview from "./question-preview"
 import { useEffect, useRef } from "react"
 import { wait } from "@/utils/wait"
+
 export default function AllQuestionsPreviews() {
     const { isSidenavOpen } = useSidenav()
     const questions = useQuizStore((state) => state.allQuestions)
@@ -42,7 +43,7 @@ export default function AllQuestionsPreviews() {
     return (
         <footer
             className={cn(
-                "h-[120px] bg-white pb-2 transition-all duration-300 fixed left-0 bottom-0 w-full",
+                "h-[110px] bg-white dark:bg-neutral-900   transition-all duration-300 fixed left-0 bottom-0 w-full",
                 {
                     "ltr:pl-[300px] rtl:pr-[300px]": isSidenavOpen,
                     "ltr:pl-[100px] rtl:pr-[100px]": !isSidenavOpen,
@@ -52,7 +53,7 @@ export default function AllQuestionsPreviews() {
             <section
                 dir="ltr"
                 ref={containerRef}
-                className="pt-3 h-[115px] pb-4  overflow-x-auto overflow-y-hidden flex gap-2 px-8 border-t-2"
+                className="pt-3 h-[105px] p overflow-x-auto overflow-y-hidden flex gap-2 px-8 border-t-2 border-neutral-200 dark:border-neutral-700"
             >
                 {questions.map((question) => (
                     <QuestionPreview
@@ -66,10 +67,10 @@ export default function AllQuestionsPreviews() {
                     <div
                         key={i}
                         className={cn(
-                            "relative group min-w-[140px] w-[140px] h-[87px]  flex items-center justify-center transform transition-all duration-300 ease-in-out border rounded-xl border-neutral-300 bg-neutral-50 shadow-sm"
+                            "relative group min-w-[140px] w-[140px] h-[77px] flex items-center justify-center transform transition-all duration-300 ease-in-out border rounded-xl border-neutral-300 dark:border-neutral-700 bg-neutral-50 dark:bg-neutral-800 shadow-sm"
                         )}
                     >
-                        <Loader2 className="w-5 h-5 animate-spin text-neutral-400/70 duration-500" />
+                        <Loader2 className="w-5 h-5 animate-spin text-neutral-400/70 dark:text-neutral-500 duration-500" />
                     </div>
                 ))}
                 <AddQuestionButton />

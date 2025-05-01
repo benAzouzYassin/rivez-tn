@@ -26,7 +26,7 @@ export default function Sidenav(props: Props) {
     return (
         <nav
             className={cn(
-                "h-full lg:block hidden z-10 group border-r-2 hover:border-r-[#8aa8fb] rtl:border-r-0 rtl:border-l-2 rtl:hover:border-l-[#8aa8fb] pt-10 fixed top-0 inset-start-0 rtl:pl-2 transition-all duration-300 bg-white dark:bg-neutral-900 border-neutral-200 dark:border-neutral-800 ",
+                "h-full lg:block hidden z-10 group border-r-2 hover:border-r-[#8aa8fb] rtl:border-r-0 rtl:border-l-2 dark:hover:border-r-sky-700/50 rtl:hover:border-l-[#8aa8fb] pt-10 fixed top-0 inset-start-0 rtl:pl-2 transition-all duration-300 bg-white dark:bg-neutral-900 border-neutral-200  dark:border-neutral-800 ",
                 {
                     "w-[300px]": isSidenavOpen,
                     "w-[100px]": !isSidenavOpen,
@@ -73,7 +73,7 @@ export default function Sidenav(props: Props) {
                 <NavButton
                     item={props.bottomItem}
                     isNameVisible={isSidenavOpen}
-                    additionalClasses="mt-1 py-7 pl-6 rtl:pl-8 rtl:pr-6 hover:bg-blue-400/90 dark:hover:bg-blue-500/80 rounded-xl border-b-4 border-blue-400/70 dark:border-blue-500/70 bg-blue-400/80 dark:bg-blue-500/80 text-white gap-2 !text-lg transition-colors"
+                    additionalClasses="mt-1 py-7 pl-6 rtl:pl-8 rtl:pr-6 hover:bg-blue-400/90 dark:hover:bg-sky-500/80 rounded-xl border-b-4 border-blue-400/70  bg-blue-400/80 dark:bg-sky-500/60 text-white gap-2 !text-lg transition-colors"
                 />
             </div>
         </nav>

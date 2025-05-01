@@ -19,6 +19,7 @@ import Search from "./_components/search"
 import ShareDialog from "./_components/share-dialog"
 import AnimatedTabs from "@/components/shared/animated-tabs"
 import { getLanguage } from "@/utils/get-language"
+import { useTheme } from "next-themes"
 
 export default function Page() {
     const [activeTab, setActiveTab] = useState("personal")
@@ -67,7 +68,8 @@ export default function Page() {
         }),
         []
     )
-
+    const { theme } = useTheme()
+    const isDark = theme === "dark"
     const lang = getLanguage()
     const t = translation[lang]
 
@@ -135,10 +137,10 @@ export default function Page() {
         return <ErrorDisplay />
     }
     return (
-        <section className="flex isolate flex-col min-h-[50vh] md:px-10 px-3 py-10">
+        <section className="flex isolate flex-col min-h-[50vh] md:px-10 px-3 py-10 bg-white dark:bg-neutral-900 transition-colors">
             <div
                 className={cn(
-                    "flex w-full fixed pb-4 md:pb-2 z-40  bg-white border-t top-[10vh] pt-4  justify-between items-center lg:max-w-screen sm:max-w-screen md:max-w-[90vw]",
+                    "flex w-full fixed pb-4 md:pb-2 z-40 bg-white dark:bg-neutral-900 border-t border-gray-200 dark:border-neutral-700 top-[10vh] pt-4 justify-between items-center lg:max-w-screen sm:max-w-screen md:max-w-[90vw] transition-colors",
                     {
                         "ltr:lg:left-[300px] rtl:md:right-[300px]  lg:w-[calc(100vw-306px)] lg:px-8  ":
                             isSidenavOpen,
@@ -147,7 +149,7 @@ export default function Page() {
                     }
                 )}
             >
-                <h1 className="md:text-4xl text-3xl text-neutral-600  font-extrabold">
+                <h1 className="md:text-4xl text-3xl text-neutral-600 dark:text-neutral-100 font-extrabold">
                     {t["Mindmaps"]}
                 </h1>
                 <div className="flex md:flex-col-reverse sm:flex-row lg:flex-row  items-center gap-2">
@@ -164,10 +166,10 @@ export default function Page() {
                 </div>
             </div>
 
-            <div className="w-full  min-h-screen md:mt-28 lg:mt-18 mt-8  ">
+            <div className="w-full min-h-screen md:mt-28 lg:mt-18 mt-8">
                 <div
                     className={cn(
-                        "grid  rounded-2xl md:grid-cols-2 grid-cols-1  xl:grid-cols-3  min-[1700px]:grid-cols-4 ml-auto px-2 py-2   gap-8 mb-2"
+                        "grid rounded-2xl md:grid-cols-2 grid-cols-1 xl:grid-cols-3 min-[1700px]:grid-cols-4 ml-auto px-2 py-2 gap-8 mb-2"
                     )}
                 >
                     {isFetching &&
@@ -176,7 +178,7 @@ export default function Page() {
                         ))}
                 </div>
 
-                <div className="mb-4 ">
+                <div className="mb-4">
                     {!isFetching && (
                         <AnimatedTabs
                             className="ml-auto mb-4"
@@ -190,15 +192,19 @@ export default function Page() {
                     )}
                     <div
                         className={cn(
-                            "grid md:grid-cols-2 grid-cols-1   lg:grid-cols-3 min-[1700px]:grid-cols-4 rounded-2xl ml-auto px-2 py-4 md:py-2   gap-8 mb-2"
+                            "grid md:grid-cols-2 grid-cols-1 lg:grid-cols-3 min-[1700px]:grid-cols-4 rounded-2xl ml-auto px-2 py-4 md:py-2 gap-8 mb-2"
                         )}
                     >
                         {!data?.length && !isFetching && (
                             <div className="flex w-full items-center justify-center gap-4 h-80 col-span-3 flex-col">
-                                <p className="text-5xl font-bold text-neutral-400">
+                                <p className="text-5xl font-bold text-neutral-400 dark:text-neutral-600">
                                     {t["no items..."]}
                                 </p>
-                                <Button onClick={() => setIsAdding(true)}>
+                                <Button
+                                    variant={isDark ? "blue" : "default"}
+                                    className="bg-blue-600  text-white dark:text-white"
+                                    onClick={() => setIsAdding(true)}
+                                >
                                     <Plus /> {t["Add mindmap"]}
                                 </Button>
                             </div>

@@ -19,7 +19,7 @@ export default function MatchingPairs(props: {
                 <div className="flex gap-4">
                     <div
                         className={cn(
-                            "bg-white dark:bg-neutral-700 h-4 rounded-md w-1/3",
+                            "bg-white dark:bg-neutral-900 h-4 rounded-md w-1/3",
                             props.itemClassName
                         )}
                     ></div>
@@ -75,7 +75,7 @@ export default function MatchingPairs(props: {
                 <div className="flex gap-4 mt-2">
                     <div
                         className={cn(
-                            "bg-white dark:bg-neutral-700 h-4 rounded-md w-1/3",
+                            "bg-white dark:bg-neutral-900 h-4 rounded-md w-1/3",
                             props.itemClassName
                         )}
                     ></div>

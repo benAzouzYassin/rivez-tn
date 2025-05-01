@@ -2,7 +2,7 @@
 import { ErrorDisplay } from "@/components/shared/error-display"
 import GeneralLoadingScreen from "@/components/shared/general-loading-screen"
 import { useSearchParams } from "next/navigation"
-import { useEffect, useRef, useState } from "react"
+import { useEffect, useMemo, useRef, useState } from "react"
 import AllQuestionsPreviews from "./_component/all-questions-preview"
 import SelectedQuestionContent from "./_component/selected-question-content"
 import useQuizStore from "./store"
@@ -11,6 +11,7 @@ import { wait } from "@/utils/wait"
 import { useIsSmallScreen } from "@/hooks/is-small-screen"
 import UnsupportedScreen from "@/components/shared/unsuported-screen"
 import QuizStartDialog from "../_components/quiz-start-dialog"
+import { getLanguage } from "@/utils/get-language"
 
 export default function Page() {
     const isSmallScreen = useIsSmallScreen()
@@ -32,11 +33,13 @@ export default function Page() {
     }, [isGeneratingWithAi, resetState])
 
     useEffect(() => {
+        const lang = getLanguage()
+        const t = translation[lang]
         if (shadowQuestionsCount > 0) {
             if (didCloseConfirmationDialog.current === false) {
                 setIsConfirming(true)
             }
-            toastLoading("Generating you quiz.")
+            toastLoading(t["Generating your quiz."])
         } else {
             wait(100).then(() => {
                 dismissToasts("loading")
@@ -94,4 +97,15 @@ export default function Page() {
             )}
         </section>
     )
+}
+const translation = {
+    en: {
+        "Generating your quiz.": "Generating your quiz.",
+    },
+    fr: {
+        "Generating your quiz.": "Génération de votre quiz.",
+    },
+    ar: {
+        "Generating your quiz.": "يتم إنشاء الاختبار الخاص بك.",
+    },
 }

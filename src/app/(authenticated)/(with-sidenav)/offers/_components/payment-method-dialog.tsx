@@ -232,9 +232,9 @@ export default function PaymentMethodDialog(props: Props) {
                             </Button>
                         </Link>
                         <Button
+                            disabled
                             className="h-44 w-full bg-neutral-200 hover:bg-white hover:scale-105 flex flex-col rounded-3xl text-xl"
                             variant={"secondary"}
-                            disabled
                         >
                             <img
                                 className="h-12 scale-180 -translate-y-1 rounded-xl"

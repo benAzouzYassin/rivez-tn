@@ -29,12 +29,15 @@ import GenerateQuizDialog from "./_components/generate-quiz-dialog"
 import { attachSharedMindmapToUser } from "@/data-access/mindmaps/share"
 import { useCurrentUser } from "@/hooks/use-current-user"
 import { getLanguage } from "@/utils/get-language"
+import { useTheme } from "next-themes"
 
 const nodeTypes = {
     customNode: CustomNode,
 }
 
 export default function Page() {
+    const { theme } = useTheme()
+    const isDark = theme === "dark"
     const { data: currentUser } = useCurrentUser()
     const searchParams = useSearchParams()
     const isSharing = searchParams.get("share") === "true"
@@ -110,8 +113,8 @@ export default function Page() {
     if (!id) return <ErrorDisplay />
     if (isFetching || isLoading) {
         return (
-            <div className="h-[92vh] flex items-center justify-center">
-                <Loader2 className="w-8 h-8 stroke-[2.5] stroke-blue-400 animate-spin duration-300" />
+            <div className="h-[92vh] flex items-center justify-center bg-white dark:bg-neutral-900 transition-colors">
+                <Loader2 className="w-8 h-8 stroke-[2.5] stroke-blue-400 dark:stroke-blue-300 animate-spin duration-300" />
                 <span className="sr-only">{t["Loading"]}</span>
             </div>
         )
@@ -119,7 +122,7 @@ export default function Page() {
     return (
         <div
             className={cn(
-                "h-[92vh]  -mt-4 md:-mt-2 border border-gray-300 relative",
+                "h-[92vh] -mt-4 md:-mt-2 border border-gray-300 dark:border-neutral-700 bg-white dark:bg-neutral-900 transition-colors relative",
                 {
                     "lg:w-[calc(100vw-306px)] w-screen": isSidenavOpen,
                     "lg:w-[calc(100vw-100px)] w-screen": !isSidenavOpen,
@@ -141,7 +144,7 @@ export default function Page() {
                         onOpenChange={setIsMindmapsDialogOpen}
                     />
                 </>
-            )}{" "}
+            )}
             <ReactFlow
                 nodeTypes={nodeTypes}
                 nodes={nodes}
@@ -151,14 +154,14 @@ export default function Page() {
                 onConnect={onConnect}
                 fitView
             >
-                <Controls className="rounded-lg md:!block !hidden -translate-y-4 border border-gray-200" />
+                <Controls className="rounded-lg md:!block !hidden -translate-y-4 border border-gray-200 dark:border-neutral-700 bg-white dark:bg-neutral-800 transition-colors" />
                 <Panel
                     position="bottom-right"
                     className="bg-transparent md:scale-100 scale-50"
                 >
-                    <div className="rounded-lg shadow-lg overflow-hidden border border-gray-200">
+                    <div className="rounded-lg shadow-lg overflow-hidden border border-gray-200 dark:border-neutral-700 bg-white dark:bg-neutral-800 transition-colors">
                         <MiniMap
-                            className="!bg-white/90 -translate-y-4 dark:!bg-gray-800/90"
+                            className="!bg-white/90 -translate-y-4 dark:!bg-neutral-800/90"
                             style={{ height: 110, width: 170 }}
                             pannable
                             nodeBorderRadius={2}
@@ -185,6 +188,7 @@ export default function Page() {
                     variant={BackgroundVariant.Cross}
                     gap={12}
                     size={1}
+                    color={isDark ? "#0f0f0f" : "#f0f0f0"}
                 />
             </ReactFlow>
         </div>

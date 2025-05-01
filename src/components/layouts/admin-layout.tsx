@@ -54,6 +54,7 @@ export default function AdminLayout({ children }: Props) {
                 }}
             />
             <main
+                dir="ltr"
                 className={cn(
                     "transition-all pt-20 min-h-[100vh] duration-300",
                     {

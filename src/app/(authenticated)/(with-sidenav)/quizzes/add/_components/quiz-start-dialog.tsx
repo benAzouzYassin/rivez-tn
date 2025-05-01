@@ -10,6 +10,7 @@ import {
 } from "@/components/ui/dialog"
 import { useMemo } from "react"
 import { getLanguage } from "@/utils/get-language"
+import { useTheme } from "next-themes"
 
 type Props = {
     isOpen: boolean
@@ -54,7 +55,8 @@ export default function QuizStartDialog({
     )
     const lang = getLanguage()
     const t = translation[lang]
-
+    const { theme } = useTheme()
+    const isDark = theme === "dark"
     return (
         <Dialog open={isOpen}>
             <DialogContent className="md:min-w-[400px] !rounded-2xl">
@@ -78,6 +80,7 @@ export default function QuizStartDialog({
                         {t.edit}
                     </Button>
                     <Button
+                        variant={isDark ? "blue" : "default"}
                         isLoading={isLoading}
                         onClick={() => {
                             onTake()

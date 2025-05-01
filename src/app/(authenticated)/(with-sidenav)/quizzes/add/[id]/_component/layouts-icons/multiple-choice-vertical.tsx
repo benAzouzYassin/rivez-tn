@@ -16,51 +16,49 @@ export default function MultipleChoiceVertical(props: {
         >
             <div
                 className={cn(
-                    "border ml-4  p-2 w-40 rounded-xl",
+                    "border ml-4 p-2 w-40 rounded-xl bg-white dark:bg-neutral-900 border-neutral-200 dark:border-neutral-700",
                     props.className
                 )}
             >
                 <div
                     className={cn(
-                        "bg-neutral-200 h-2 rounded-md w-3/4 mx-auto mt-4",
+                        "bg-neutral-200 dark:bg-neutral-800 h-2 rounded-md w-3/4 mx-auto mt-4",
                         props.textClassName
                     )}
                 ></div>
                 <div
                     className={cn(
-                        "bg-neutral-200 h-12 rounded-md w-full",
+                        "bg-neutral-200 dark:bg-neutral-800 h-12 rounded-md w-full",
                         props.imageClassName
                     )}
-                >
-                    {" "}
-                </div>
+                ></div>
                 <div
                     className={cn(
-                        "grid mt-2 rtl:pr-4  grid-cols-2 gap-y-[6px] gap-x-2",
+                        "grid mt-2 rtl:pr-4 grid-cols-2 gap-y-[6px] gap-x-2",
                         { "rtl:pr-0 ": props.isIcon }
                     )}
                 >
                     <div
                         className={cn(
-                            "bg-neutral-200 h-4 rounded-md w-full",
+                            "bg-neutral-200 dark:bg-neutral-700 h-4 rounded-md w-full",
                             props.itemClassName
                         )}
                     ></div>
                     <div
                         className={cn(
-                            "bg-neutral-200 h-4 rounded-md w-full",
+                            "bg-neutral-200 dark:bg-neutral-700 h-4 rounded-md w-full",
                             props.itemClassName
                         )}
                     ></div>
                     <div
                         className={cn(
-                            "bg-neutral-200 h-4 rounded-md w-full",
+                            "bg-neutral-200 dark:bg-neutral-700 h-4 rounded-md w-full",
                             props.itemClassName
                         )}
                     ></div>
                     <div
                         className={cn(
-                            "bg-neutral-200 h-4 rounded-md w-full",
+                            "bg-neutral-200 dark:bg-neutral-700 h-4 rounded-md w-full",
                             props.itemClassName
                         )}
                     ></div>

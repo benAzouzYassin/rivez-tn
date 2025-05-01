@@ -220,8 +220,8 @@ export default function Buttons() {
         handleSave({ shouldTake })
     }
     return (
-        <div className=" w-full z-50  rtl:pl-5  fixed flex items-center justify-end right-0 top-24 ">
-            <div className="flex z-50   items-center gap-2 bg-white p-2 rounded-2xl">
+        <div className="w-full z-50 rtl:pl-5 fixed flex items-center justify-end right-0 top-24">
+            <div className="flex z-50 items-center gap-2 bg-white dark:bg-neutral-900 p-2 rounded-2xl">
                 <WarningDialog
                     isOpen={isCanceling}
                     onOpenChange={setIsCanceling}

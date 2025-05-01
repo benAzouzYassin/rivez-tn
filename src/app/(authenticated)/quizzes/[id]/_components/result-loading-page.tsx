@@ -52,7 +52,7 @@ export default function ResultLoadingPage() {
 
     return (
         <motion.main
-            className="min-h-[70vh] flex items-center justify-center bg-white px-4"
+            className="min-h-[70vh] flex items-center justify-center bg-white dark:bg-neutral-900 transition-colors px-4"
             initial="hidden"
             animate="visible"
             variants={containerVariants}
@@ -62,14 +62,16 @@ export default function ResultLoadingPage() {
                 variants={containerVariants}
             >
                 <motion.h2
-                    className="text-3xl md:text-4xl lg:text-5xl pb-1 flex flex-wrap justify-center items-end font-black text-transparent bg-clip-text bg-gradient-to-r from-neutral-600 to-neutral-800"
+                    className="text-3xl md:text-4xl lg:text-5xl pb-1 flex flex-wrap justify-center items-end font-black text-transparent bg-clip-text bg-gradient-to-r from-neutral-600 to-neutral-800 dark:from-neutral-200 dark:to-neutral-400 transition-colors"
                     variants={circleVariants}
                 >
-                    <span>{t["Processing answers"]}</span>
+                    <span className="dark:text-neutral-100 text-neutral-900 transition-colors">
+                        {t["Processing answers"]}
+                    </span>
                     <div className="flex items-center gap-1 -translate-y-1 md:-translate-y-2 ml-1">
-                        <div className="w-2 h-2 md:w-3 md:h-3 bg-neutral-700 rounded-full"></div>
-                        <div className="w-2 h-2 md:w-3 md:h-3 bg-neutral-700 rounded-full"></div>
-                        <div className="w-2 h-2 md:w-3 md:h-3 bg-neutral-700 rounded-full"></div>
+                        <div className="w-2 h-2 md:w-3 md:h-3 bg-neutral-700 dark:bg-neutral-200 rounded-full transition-colors"></div>
+                        <div className="w-2 h-2 md:w-3 md:h-3 bg-neutral-700 dark:bg-neutral-300 rounded-full transition-colors"></div>
+                        <div className="w-2 h-2 md:w-3 md:h-3 bg-neutral-700 dark:bg-neutral-400 rounded-full transition-colors"></div>
                     </div>
                 </motion.h2>
                 <motion.div
@@ -92,18 +94,18 @@ export default function ResultLoadingPage() {
                                 damping: 20,
                             }}
                         >
-                            {/* Pulsing circles with neutral colors */}
+                            {/* Pulsing circles with blue colors */}
                             <motion.div
-                                className="absolute left-1/2 -translate-x-1/2 top-0 w-20 h-20 md:w-24 md:h-24 bg-gradient-to-r from-blue-300 to-blue-300 rounded-full blur-sm"
+                                className="absolute left-1/2 -translate-x-1/2 top-0 w-20 h-20 md:w-24 md:h-24 bg-gradient-to-r from-blue-300 to-blue-300 dark:from-blue-900 dark:to-blue-900 rounded-full blur-sm transition-colors"
                                 variants={pulseVariants}
                             />
                             <motion.div
-                                className="absolute left-1/2 -translate-x-1/2 top-0 w-20 h-20 md:w-24 md:h-24 bg-gradient-to-r from-blue-300 to-blue-400 rounded-full blur-sm"
+                                className="absolute left-1/2 -translate-x-1/2 top-0 w-20 h-20 md:w-24 md:h-24 bg-gradient-to-r from-blue-300 to-blue-400 dark:from-blue-800 dark:to-blue-900 rounded-full blur-sm transition-colors"
                                 variants={pulseVariants}
                                 style={{ animationDelay: "0.3s" }}
                             />
                             <motion.div
-                                className="absolute left-1/2 -translate-x-1/2 top-0 w-20 h-20 md:w-24 md:h-24 bg-gradient-to-r from-blue-400 to-blue-500 rounded-full blur-sm"
+                                className="absolute left-1/2 -translate-x-1/2 top-0 w-20 h-20 md:w-24 md:h-24 bg-gradient-to-r from-blue-400 to-blue-500 dark:from-blue-700 dark:to-blue-800 rounded-full blur-sm transition-colors"
                                 variants={pulseVariants}
                                 style={{ animationDelay: "0.6s" }}
                             />
