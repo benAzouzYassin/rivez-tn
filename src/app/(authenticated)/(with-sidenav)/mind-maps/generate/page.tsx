@@ -494,7 +494,7 @@ export default function Page() {
                             <GeneralLoadingScreen text="" />
                         </div>
                     )}
-                    <Controls className="rounded-lg dark:!hidden md:!block !hidden -translate-y-4 border border-gray-200  dark:!border-neutral-700 bg-white dark:!bg-neutral-800 transition-colors" />
+                    <Controls className="!rounded-lg  dark:!text-black  md:!block !hidden -translate-y-4 border border-gray-200  dark:!border-neutral-700 bg-white dark:!bg-neutral-800 transition-colors" />
                     <Panel
                         className="bg-transparent  md:scale-100 scale-50"
                         position="bottom-right"

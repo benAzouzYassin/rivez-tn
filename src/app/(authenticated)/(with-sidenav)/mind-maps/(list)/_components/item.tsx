@@ -87,7 +87,7 @@ export default function Item({ item, isSharing, setIsSharing }: Props) {
                             <div className="text-sm font-medium">
                                 <h2
                                     className={cn(
-                                        "text-2xl max-w-[95%]  pb-1 line-clamp-1 first-letter:uppercase text-neutral-600 font-extrabold",
+                                        "text-2xl max-w-[95%]  dark:text-white/95 pb-1 line-clamp-1 first-letter:uppercase text-neutral-600 font-extrabold",
                                         {
                                             "rtl:text-right": isRtl,
                                         }

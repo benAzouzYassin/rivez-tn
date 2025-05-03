@@ -81,23 +81,30 @@ export default function MoreButton(props: Props) {
         return (
             <>
                 <PopoverList
-                    contentClassName="-translate-x-4 "
+                    contentClassName="-translate-x-4"
                     items={[
                         {
-                            icon: <Info className="w-5 h-5" />,
+                            icon: (
+                                <Info className="w-5 h-5 text-neutral-600 dark:text-neutral-100" />
+                            ),
                             label: t["Details"],
                             onClick: () =>
                                 router.push(`/mind-maps/${props.itemId}`),
                         },
                         {
-                            icon: <Share2 className="w-5 h-5" />,
+                            icon: (
+                                <Share2 className="w-5 h-5 text-neutral-600 dark:text-neutral-100" />
+                            ),
                             label: t["Share link"],
                             onClick: handleShare,
                         },
                         {
-                            icon: <Trash2 className="w-5 h-5" />,
+                            icon: (
+                                <Trash2 className="w-5 h-5 text-red-600 dark:text-red-400" />
+                            ),
                             label: t["Delete"],
-                            className: "focus:bg-red-200",
+                            className:
+                                "focus:bg-red-200 dark:focus:bg-red-900/40",
                             isDanger: true,
                             onClick: handleDelete,
                         },
@@ -108,6 +115,7 @@ export default function MoreButton(props: Props) {
                         onClick={(e) => e.stopPropagation()}
                         className={cn(
                             "h-8 border-2 bg-white hover:bg-neutral-100 flex items-center justify-center rounded-lg w-8 p-0 hover:cursor-pointer active:scale-95",
+                            "dark:bg-neutral-800 dark:hover:bg-neutral-700 dark:border-neutral-700",
                             props.className
                         )}
                     >

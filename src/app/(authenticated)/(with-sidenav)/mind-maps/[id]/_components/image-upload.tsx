@@ -46,9 +46,11 @@ export default function ImageUpload(props: Props) {
         <>
             <div
                 className={cn(
-                    "w-full min-h-[250px] overflow-y-auto border-blue-400/50  hover:cursor-pointer relative border-2 border-dashed rounded-xl",
+                    "w-full min-h-[250px] overflow-y-auto border-blue-400/50 hover:cursor-pointer relative border-2 border-dashed rounded-xl",
                     "transition-all duration-200 ease-in-out",
                     "flex items-center justify-center",
+                    "bg-white dark:bg-neutral-900", // Card background
+                    "border-blue-400/50 dark:border-blue-400/30", // Border color
                     props.className
                 )}
             >
@@ -60,33 +62,32 @@ export default function ImageUpload(props: Props) {
                             deleteFile(props.imageUrl!)
                             props.onImageUrlChange(null)
                         }}
-                        className="absolute hover:bg-red-100 z-10  h-7 px-[3px]  rounded-full top-2 right-2"
+                        className="absolute hover:bg-red-100 dark:hover:bg-red-900/40 z-10 h-7 px-[3px] rounded-full top-2 right-2"
                     >
-                        <XIcon className="!w-5 !h-5 stroke-[2.7]" />
+                        <XIcon className="!w-5 !h-5 stroke-[2.7] text-red-600 dark:text-red-400" />
                     </Button>
                 )}
                 {props.imageUrl ? (
-                    <div className=" absolute top-0  p-2 left-0 w-full h-full ">
+                    <div className="absolute top-0 p-2 left-0 w-full h-full">
                         <img
                             alt=""
-                            className=" h-full   w-full object-contain"
+                            className="h-full w-full object-contain"
                             src={props.imageUrl}
                         />
                     </div>
                 ) : (
                     <button
                         onClick={() => setIsOpen(true)}
-                        className="bg-neutral-50/70 rounded-xl hover:bg-neutral-100 absolute top-0 cursor-pointer left-0 w-full h-full"
+                        className="bg-neutral-50/70 dark:bg-neutral-800/70 rounded-xl hover:bg-neutral-100 dark:hover:bg-neutral-800 absolute top-0 cursor-pointer left-0 w-full h-full flex flex-col items-center justify-center"
                     >
-                        <Upload className="w-10 h-10 mb-2 mx-auto text-neutral-400" />
-                        <p className="text-base font-semibold text-neutral-500">
+                        <Upload className="w-10 h-10 mb-2 mx-auto text-neutral-400 dark:text-neutral-500" />
+                        <p className="text-base font-semibold text-neutral-500 dark:text-neutral-300">
                             {t.dragOrClick}
                         </p>
-
-                        <p className="text-xs text-neutral-400 mt-0">
+                        <p className="text-xs text-neutral-400 dark:text-neutral-500 mt-0">
                             {t.formats}
                         </p>
-                        <p className="text-xs text-neutral-400">
+                        <p className="text-xs text-neutral-400 dark:text-neutral-500">
                             {t.sizeLimit}
                         </p>
                     </button>
