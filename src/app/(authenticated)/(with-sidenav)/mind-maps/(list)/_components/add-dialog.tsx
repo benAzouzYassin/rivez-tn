@@ -286,13 +286,13 @@ export default function AddDialog(props: Props) {
                 </DialogTrigger>
                 <DialogContent
                     className={cn(
-                        "sm:min-w-[1000px] md:w-[1000px] md:max-w-[1000px] bg-white dark:bg-neutral-900 transition-colors",
+                        "sm:min-w-[1000px]  md:w-[1000px] md:max-w-[1000px] overflow-y-auto bg-white dark:bg-neutral-900 transition-colors",
                         {
                             "w-[1000px]": currentTab === null,
                         }
                     )}
                 >
-                    <DialogHeader>
+                    <DialogHeader className="md:block hidden">
                         <DialogTitle className="md:text-4xl text-2xl mt-20 md:mt-2 text-center font-bold text-neutral-500 dark:text-neutral-200">
                             {t["Generate a Mind Map"]}
                         </DialogTitle>
@@ -300,7 +300,7 @@ export default function AddDialog(props: Props) {
                     </DialogHeader>
 
                     {!currentTab && (
-                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-5 md:mt-6">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 max-w-[90vw] gap-x-4 gap-y-5 md:mt-6">
                             {items
                                 .filter((item) => !item.disabled)
                                 .map((item) => (
@@ -318,7 +318,7 @@ export default function AddDialog(props: Props) {
                                             handleCardClick(item.value)
                                         }}
                                         className={cn(
-                                            "p-4 flex h-28 hover:bg-neutral-100 dark:hover:bg-neutral-800 cursor-pointer transition-all active:shadow-none active:translate-y-2 items-center gap-4 rounded-2xl bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-700",
+                                            "p-4 flex h-28 hover:bg-neutral-100 dark:hover:bg-neutral-800/60 cursor-pointer transition-all active:shadow-none active:translate-y-2 items-center gap-4 rounded-2xl bg-white  border border-neutral-200 dark:border-neutral-700",
                                             {
                                                 "bg-neutral-200 dark:bg-neutral-800 active:translate-y-0 hover:bg-neutral-200 dark:hover:bg-neutral-800 cursor-not-allowed border border-neutral-300 dark:border-neutral-700":
                                                     item.disabled,

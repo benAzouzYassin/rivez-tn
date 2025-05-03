@@ -26,18 +26,18 @@ export default function Page() {
     }, [reset, shouldReset])
 
     return (
-        <section className=" relative items-center  min-h-[89vh] bg-neutral-50">
+        <section className=" dark:bg-neutral-900 relative items-center  min-h-[89vh] bg-neutral-50">
             {!files.length && (
                 <Button
                     onClick={router.back}
-                    className="absolute font-bold text-neutral-500 top-2 left-2 md:top-4 md:left-4 px-6  "
+                    className="absolute font-bold  text-neutral-500 top-2 left-2 md:top-4 md:left-4 px-6  "
                     variant={"secondary"}
                 >
                     <ArrowLeft className="!w-5 !h-5 scale-125 -mr-1 stroke-[2.5]" />{" "}
                 </Button>
             )}
             {files.length ? (
-                <div className="px-6 bg-white ">
+                <div className="px-6 bg-white dark:bg-neutral-900">
                     <PagesSelection />
                 </div>
             ) : (

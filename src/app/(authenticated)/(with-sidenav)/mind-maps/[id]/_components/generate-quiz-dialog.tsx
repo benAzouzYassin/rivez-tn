@@ -1,6 +1,8 @@
 "use client"
 
 import { POSSIBLE_QUESTIONS } from "@/app/api/quiz/generate-quiz/constants"
+import CreditIcon from "@/components/icons/credit-icon"
+import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import {
     Collapsible,
@@ -15,18 +17,13 @@ import {
 } from "@/components/ui/dialog"
 import { Input } from "@/components/ui/input"
 import SearchSelectMultiple from "@/components/ui/search-select-multiple"
-import {
-    Select,
-    SelectContent,
-    SelectItem,
-    SelectTrigger,
-    SelectValue,
-} from "@/components/ui/select"
 import { Textarea } from "@/components/ui/textarea"
+import { mediumPrice } from "@/constants/prices"
 import { createQuiz } from "@/data-access/quizzes/create"
 import { useCurrentUser } from "@/hooks/use-current-user"
 import { toastError } from "@/lib/toasts"
 import { useSidenav } from "@/providers/sidenav-provider"
+import { getLanguage } from "@/utils/get-language"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useQueryClient } from "@tanstack/react-query"
 import { ChevronDown, Sparkles } from "lucide-react"
@@ -34,13 +31,9 @@ import { useRouter } from "nextjs-toploader/app"
 import { useEffect, useMemo, useState } from "react"
 import { Controller, useForm } from "react-hook-form"
 import { z } from "zod"
+import useQuizStore from "../../../quizzes/add/[id]/store"
 import { DifficultySelect } from "./difficulty-select"
 import ImageUpload from "./image-upload"
-import useQuizStore from "../../../quizzes/add/[id]/store"
-import { Badge } from "@/components/ui/badge"
-import CreditIcon from "@/components/icons/credit-icon"
-import { mediumPrice } from "@/constants/prices"
-import { getLanguage } from "@/utils/get-language"
 
 const POSSIBLE_QUESTIONS_TYPES = Object.keys(POSSIBLE_QUESTIONS)
 
@@ -261,7 +254,7 @@ export default function GenerateQuizDialog(props: Props) {
                         />
                     </div>
                     <Collapsible className="group ">
-                        <CollapsibleTrigger className="w-full data-[state=open]:font-bold  data-[state=open]:text-neutral-500 data-[state=open]:bg-blue-300/80 data-[state=open]:border-transparent   mb-4 hover:bg-neutral-100 flex justify-between items-center rounded-xl transition-all duration-200 bg-[#F7F7F7]/50 font-medium border-2 p-3 h-12 border-[#E5E5E5] text-[#AFAFAF] cursor-pointer">
+                        <CollapsibleTrigger className="w-full data-[state=open]:font-bold  data-[state=open]:text-neutral-500 data-[state=open]:bg-blue-300/80 dark:data-[state=open]:bg-blue-300/80 data-[state=open]:border-transparent   mb-4 hover:bg-neutral-100 flex justify-between items-center rounded-xl transition-all duration-200 bg-[#F7F7F7]/50 dark:bg-neutral-800 dark:border-neutral-700 font-medium border-2 p-3 h-12  border-[#E5E5E5] text-[#AFAFAF] cursor-pointer">
                             <span className="underline underline-offset-4">
                                 {t.advancedOptions}
                             </span>

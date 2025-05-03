@@ -140,7 +140,7 @@ export default function Page() {
         <section className="flex isolate flex-col min-h-[50vh] md:px-10 px-3 py-10 bg-white dark:bg-neutral-900 transition-colors">
             <div
                 className={cn(
-                    "flex w-full fixed pb-4 md:pb-2 z-40 bg-white dark:bg-neutral-900 border-t border-gray-200 dark:border-neutral-700 top-[10vh] pt-4 justify-between items-center lg:max-w-screen sm:max-w-screen md:max-w-[90vw] transition-colors",
+                    "flex w-full max-w-[95vw] fixed pb-4 md:pb-2 z-40 bg-white dark:bg-neutral-900 border-t border-gray-200 dark:border-neutral-700 top-[10vh] pt-4 justify-between items-center lg:max-w-screen sm:max-w-screen md:max-w-[90vw] transition-colors",
                     {
                         "ltr:lg:left-[300px] rtl:md:right-[300px]  lg:w-[calc(100vw-306px)] lg:px-8  ":
                             isSidenavOpen,

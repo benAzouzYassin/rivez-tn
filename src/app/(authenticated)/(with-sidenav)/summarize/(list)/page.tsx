@@ -9,18 +9,20 @@ import { useIsAdmin } from "@/hooks/use-is-admin"
 import { cn } from "@/lib/ui-utils"
 import { useSidenav } from "@/providers/sidenav-provider"
 import { useQuery } from "@tanstack/react-query"
-import { Plus, PlusCircle } from "lucide-react"
+import { Plus } from "lucide-react"
 import {
     parseAsBoolean,
     parseAsInteger,
     parseAsString,
     useQueryState,
 } from "nuqs"
-import { useEffect, useState } from "react"
+import { useEffect, useMemo, useState } from "react"
 import Item from "./_components/item"
 import ItemSkeleton from "./_components/item-skeleton"
 import Search from "./_components/search"
 import Add from "../_components/add"
+import { useTheme } from "next-themes"
+import { getLanguage } from "@/utils/get-language"
 
 export default function Page() {
     const [isList, setIsList] = useQueryState(
@@ -43,6 +45,31 @@ export default function Page() {
         "page",
         parseAsInteger.withDefault(1)
     )
+
+    const translation = useMemo(
+        () => ({
+            en: {
+                Summaries: "Summaries",
+                "no items...": "no items...",
+                Add: "Add",
+            },
+            fr: {
+                Summaries: "Résumés",
+                "no items...": "aucun élément...",
+                Add: "Ajouter",
+            },
+            ar: {
+                Summaries: "الملخصات",
+                "no items...": "لا توجد عناصر...",
+                Add: "إضافة",
+            },
+        }),
+        []
+    )
+    const { theme } = useTheme()
+    const isDark = theme === "dark"
+    const lang = getLanguage()
+    const t = translation[lang]
 
     const {
         data: response,
@@ -103,10 +130,18 @@ export default function Page() {
         )
     }
     return (
-        <section className="flex isolate flex-col min-h-[50vh] md:px-10 px-3 py-10">
+        <section
+            className={cn(
+                "flex isolate flex-col min-h-[50vh] md:px-10 px-3 py-10 transition-colors",
+                isDark ? "bg-neutral-900" : "bg-white"
+            )}
+        >
             <div
                 className={cn(
-                    "flex w-full fixed pb-4 md:pb-2 z-40  bg-white border-t top-[10vh] pt-4  justify-between items-center lg:max-w-screen sm:max-w-screen md:max-w-[90vw]",
+                    "flex w-full fixed pb-4 md:pb-2 z-40 border-t top-[10vh] pt-4 justify-between items-center lg:max-w-screen sm:max-w-screen md:max-w-[90vw] transition-colors",
+                    isDark
+                        ? "bg-neutral-900 border-neutral-700"
+                        : "bg-white border-gray-200",
                     {
                         "ltr:lg:left-[300px] rtl:md:right-[300px]  lg:w-[calc(100vw-306px)] lg:px-8  ":
                             isSidenavOpen,
@@ -115,8 +150,13 @@ export default function Page() {
                     }
                 )}
             >
-                <h1 className="md:text-4xl text-3xl text-neutral-600  font-extrabold">
-                    Summaries
+                <h1
+                    className={cn(
+                        "md:text-4xl text-3xl font-extrabold",
+                        isDark ? "text-neutral-100" : "text-neutral-600"
+                    )}
+                >
+                    {t["Summaries"]}
                 </h1>
                 <div className="flex md:flex-col-reverse sm:flex-row lg:flex-row  items-center gap-2">
                     <div className="mt-5 md:block hidden ">
@@ -127,9 +167,13 @@ export default function Page() {
                     </div>
 
                     <div className="md:scale-100 flex md:self-end sm:self-auto lg:self-auto md:pr-0 pr-4 scale-90 ">
-                        <Button onClick={() => setIsAdding(true)}>
-                            {" "}
-                            <Plus className="w-5 h-5 min-w-5 min-h-5" /> {"Add"}
+                        <Button
+                            variant={isDark ? "blue" : "default"}
+                            className={isDark ? "bg-blue-600 text-white" : ""}
+                            onClick={() => setIsAdding(true)}
+                        >
+                            <Plus className="w-5 h-5 min-w-5 min-h-5" />{" "}
+                            {t["Add"]}
                         </Button>
                     </div>
                 </div>
@@ -155,12 +199,25 @@ export default function Page() {
                     >
                         {!data?.length && !isFetching && (
                             <div className="flex w-full items-center justify-center gap-4 h-80 col-span-3 flex-col">
-                                <p className="text-5xl font-bold text-neutral-400">
-                                    {"no items..."}
+                                <p
+                                    className={cn(
+                                        "text-5xl font-bold",
+                                        isDark
+                                            ? "text-neutral-600"
+                                            : "text-neutral-400"
+                                    )}
+                                >
+                                    {t["no items..."]}
                                 </p>
-                                <Button onClick={() => setIsAdding(true)}>
+                                <Button
+                                    variant={isDark ? "blue" : "default"}
+                                    className={
+                                        isDark ? "bg-blue-600 text-white" : ""
+                                    }
+                                    onClick={() => setIsAdding(true)}
+                                >
                                     <Plus className="w-5 h-5 min-w-5 min-h-5" />{" "}
-                                    {"Add"}
+                                    {t["Add"]}
                                 </Button>
                             </div>
                         )}

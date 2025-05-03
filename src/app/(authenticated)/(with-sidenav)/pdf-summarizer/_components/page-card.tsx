@@ -57,36 +57,36 @@ export default function PageCard(props: Props) {
         <div
             onClick={() => props.onSelectChange(!props.isSelected)}
             className={cn(
-                "group h-72 border-2 relative border-neutral-200 bg-white hover:border-blue-300  cursor-pointer transition-all rounded-xl flex flex-col overflow-hidden ",
-                { "border-blue-300": props.isSelected }
+                "group h-72 border-2 relative border-neutral-200 dark:border-neutral-700 bg-white dark:bg-neutral-900 hover:border-blue-300 dark:hover:border-blue-400 cursor-pointer transition-all rounded-xl flex flex-col overflow-hidden",
+                { "border-blue-300 dark:border-blue-400": props.isSelected }
             )}
         >
-            <div className="bg-white z-20 w-5 h-5 rounded-2xl absolute  top-3 right-3">
+            <div className="bg-white dark:bg-neutral-900 z-20 w-5 h-5 rounded-2xl absolute top-3 right-3">
                 <Checkbox
                     onCheckedChange={(value) =>
                         props.onSelectChange(Boolean(value))
                     }
                     checked={props.isSelected}
-                    className="w-5 h-5 "
+                    className="w-5 h-5"
                 />
             </div>
             <div
                 id={props.pageLocalId}
                 onClick={(e) => e.isPropagationStopped()}
-                className="flex-grow bg-gray-100 flex items-center justify-center relative"
+                className="flex-grow bg-gray-100 dark:bg-neutral-800 flex items-center justify-center relative"
                 ref={previewContainer}
             ></div>
 
             <Button
                 onClick={handlePreview}
                 variant={"outline"}
-                className=" text-base top-20 group-hover:opacity-100 opacity-0 left-16 px-3 hover:bg-white font-semibold h-9 absolute   right-16"
+                className="text-base top-20 group-hover:opacity-100 opacity-0 left-16 px-3 hover:bg-white dark:bg-neutral-700 dark:hover:bg-neutral-700 font-semibold h-9 absolute right-16"
             >
                 <Eye />
                 View
             </Button>
-            <div className="h-12 border-t left-0 items-center justify-center w-full absolute -bottom-1 border-neutral-200 flex px-4 bg-white">
-                <span className="font-semibold text-gray-700">
+            <div className="h-12 border-t left-0 items-center justify-center w-full absolute -bottom-1 border-neutral-200 dark:border-neutral-700 flex px-4 bg-white dark:bg-neutral-900">
+                <span className="font-semibold text-gray-700 dark:text-neutral-200">
                     Page - {props.index + 1}
                 </span>
             </div>

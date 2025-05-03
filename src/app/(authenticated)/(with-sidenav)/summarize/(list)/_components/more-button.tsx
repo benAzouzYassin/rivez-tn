@@ -17,6 +17,7 @@ import { useQueryClient } from "@tanstack/react-query"
 import { Info, MoreVerticalIcon, Trash2 } from "lucide-react"
 import { useRouter } from "nextjs-toploader/app"
 import { useMemo, useState } from "react"
+import { useTheme } from "next-themes"
 
 interface Props {
     itemId: number
@@ -31,6 +32,8 @@ export default function MoreButton(props: Props) {
     const queryClient = useQueryClient()
     const router = useRouter()
     const [isDeleting, setIsDeleting] = useState(false)
+    const { theme } = useTheme()
+    const isDark = theme === "dark"
 
     const translation = useMemo(
         () => ({
@@ -73,7 +76,7 @@ export default function MoreButton(props: Props) {
         return (
             <>
                 <PopoverList
-                    contentClassName="-translate-x-4 "
+                    contentClassName="-translate-x-4"
                     items={[
                         {
                             icon: <Info className="w-5 h-5" />,
@@ -84,7 +87,9 @@ export default function MoreButton(props: Props) {
                         {
                             icon: <Trash2 className="w-5 h-5" />,
                             label: t["Delete"],
-                            className: "focus:bg-red-200",
+                            className: isDark
+                                ? "focus:bg-red-900"
+                                : "focus:bg-red-200",
                             isDanger: true,
                             onClick: handleDelete,
                         },
@@ -94,11 +99,19 @@ export default function MoreButton(props: Props) {
                         role="button"
                         onClick={(e) => e.stopPropagation()}
                         className={cn(
-                            "h-8 border-2 bg-white hover:bg-neutral-100 flex items-center justify-center rounded-lg w-8 p-0 hover:cursor-pointer active:scale-95",
+                            "h-8 border-2 flex items-center justify-center rounded-lg w-8 p-0 hover:cursor-pointer active:scale-95 transition-colors",
+                            isDark
+                                ? "bg-neutral-900 border-neutral-700 hover:bg-neutral-800"
+                                : "bg-white border-gray-200 hover:bg-neutral-100",
                             props.className
                         )}
                     >
-                        <MoreVerticalIcon className="!h-6 !w-6 text-neutral-600 dark:text-neutral-100" />
+                        <MoreVerticalIcon
+                            className={cn(
+                                "!h-6 !w-6",
+                                isDark ? "text-neutral-100" : "text-neutral-600"
+                            )}
+                        />
                     </button>
                 </PopoverList>
                 <WarningDialog

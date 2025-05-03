@@ -111,26 +111,29 @@ export default function PagesSelection() {
     const isRtl = lang === "ar"
     if (isSmallScreen) {
         return (
-            <div className="flex items-center justify-center min-h-[50vh]">
+            <div className="flex items-center justify-center min-h-[50vh] bg-white dark:bg-neutral-900">
                 <AnimatedLoader />
             </div>
         )
     }
 
     return (
-        <div dir="ltr" className="rounded-2xl relative !overflow-y-hidden">
+        <div
+            dir="ltr"
+            className="rounded-2xl relative !overflow-y-hidden bg-white dark:bg-neutral-900 transition-colors"
+        >
             <div
                 className={cn(
-                    "relative !overflow-y-hidden h-[calc(103vh-110px)] p-2 min-w-[70vw]",
+                    "relative !overflow-y-hidden h-[calc(103vh-110px)] p-2 min-w-[70vw] bg-white dark:bg-neutral-900 transition-colors",
                     {
                         "grid grid-cols-18": files.length > 1,
                     }
                 )}
             >
                 {files.length > 1 && (
-                    <div className="pr-2 relative border-r h-[calc(103vh-120px)] pb-20 pt-10 col-span-6 xl:col-span-4">
+                    <div className="pr-2 relative border-r border-neutral-200 dark:border-neutral-800 h-[calc(103vh-120px)] pb-20 pt-10 col-span-6 xl:col-span-4 bg-white dark:bg-neutral-900">
                         <div className="relative !h-[calc(103vh-160px)]">
-                            <ScrollArea className="gap-2 !h-[calc(90vh-130px)] overflow-y-auto scale-x-[-1]">
+                            <ScrollArea className="gap-2 !h-[calc(90vh-130px)] overflow-y-auto scale-x-[-1] bg-white dark:bg-neutral-900">
                                 <div className="flex flex-col py-2 gap-3 scale-x-[-1]">
                                     {files.map((f) => (
                                         <FileItem
@@ -152,14 +155,14 @@ export default function PagesSelection() {
                 )}
                 <div
                     dir={isRtl ? "rtl" : "ltr"}
-                    className="col-span-12 xl:col-span-14"
+                    className="col-span-12 xl:col-span-14 bg-white dark:bg-neutral-900 transition-colors"
                 >
                     <div
                         className={cn(
                             "px-4 mt-5 overflow-y-hidden transition-all h-24"
                         )}
                     >
-                        <div className="h-20 text-lg text-neutral-600 border-neutral-200 font-bold flex items-center justify-between px-4 border rounded-2xl w-full">
+                        <div className="h-20 text-lg text-neutral-600 dark:text-neutral-200 border-neutral-200 dark:border-neutral-800 font-bold flex items-center justify-between px-4 border rounded-2xl w-full bg-white dark:bg-neutral-900 transition-colors">
                             <div className="flex items-center">
                                 <Checkbox
                                     id="selected-pages-checkbox"
@@ -177,7 +180,7 @@ export default function PagesSelection() {
                             <div className="xl:scale-100 scale-90 flex flex-nowrap items-center">
                                 <Button
                                     onClick={reset}
-                                    className="text-lg text-neutral-600 font-bold ltr:mr-2 rtl:ml-2 h-[44px]"
+                                    className="text-lg text-neutral-600 dark:text-neutral-200 font-bold ltr:mr-2 rtl:ml-2 h-[44px] bg-neutral-100 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700"
                                     variant={"secondary"}
                                 >
                                     {t.Cancel}
@@ -190,15 +193,15 @@ export default function PagesSelection() {
                         </div>
                     </div>
                     <div className="pl-4 rtl:-translate-x-3 relative -mt-1 h-fit w-[350px]">
-                        <SearchIcon className="absolute text-neutral-300 top-3 left-6" />
+                        <SearchIcon className="absolute text-neutral-300 dark:text-neutral-500 top-3 left-6" />
                         <Input
-                            className="pl-9 font-semibold text-lg w-[350px]"
+                            className="pl-9 font-semibold text-lg w-[350px] bg-white dark:bg-neutral-800 text-neutral-700 dark:text-neutral-200 border border-neutral-200 dark:border-neutral-700"
                             placeholder={t.Search}
                             value={searchQuery}
                             onChange={(e) => setSearchQuery(e.target.value)}
                         />
                     </div>
-                    <div className="pl-4 pr-2 pb-10 pt-1 border-t h-[calc(103vh-283px)]">
+                    <div className="pl-4 pr-2 pb-10 pt-1 border-t border-neutral-200 dark:border-neutral-800 h-[calc(103vh-283px)] bg-white dark:bg-neutral-900 transition-colors">
                         {selectedFile ? (
                             <Virtuoso
                                 className="pb-20"
@@ -208,9 +211,9 @@ export default function PagesSelection() {
                                 itemContent={(rowIndex) => (
                                     <div
                                         className={cn(
-                                            "grid grid-cols-2 2xl:grid-cols-4  gap-5 py-2",
+                                            "grid grid-cols-2 2xl:grid-cols-4 gap-5 py-2",
                                             {
-                                                "2xl:grid-cols-3 ":
+                                                "2xl:grid-cols-3":
                                                     files.length > 1,
                                             }
                                         )}
@@ -254,7 +257,7 @@ export default function PagesSelection() {
                             />
                         ) : (
                             <div className="flex items-center justify-center h-full">
-                                <p className="text-neutral-500">
+                                <p className="text-neutral-500 dark:text-neutral-400">
                                     {t["No file selected"]}
                                 </p>
                             </div>

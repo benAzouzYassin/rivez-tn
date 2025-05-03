@@ -8,6 +8,7 @@ import YoutubeLinkDialog from "./youtube-link-dialog"
 import { useIsSmallScreen } from "@/hooks/is-small-screen"
 import { getLanguage } from "@/utils/get-language"
 import { Button } from "@/components/ui/button"
+import { useTheme } from "next-themes"
 
 interface Props {
     onBack: () => void
@@ -16,6 +17,8 @@ interface Props {
 export default function Add(props: Props) {
     const [isDialogOpen, setIsDialogOpen] = useState(false)
     const isSmallScreen = useIsSmallScreen()
+    const { theme } = useTheme()
+    const isDark = theme === "dark"
 
     const translation = useMemo(
         () => ({
@@ -110,21 +113,43 @@ export default function Add(props: Props) {
     )
 
     return (
-        <main className="flex relative flex-col items-center w-full min-h-screen md:p-6 bg-white">
+        <main
+            className={
+                isDark
+                    ? "flex relative flex-col items-center w-full min-h-screen md:p-6 bg-neutral-900 transition-colors"
+                    : "flex relative flex-col items-center w-full min-h-screen md:p-6 bg-white transition-colors"
+            }
+        >
             {!props.hideBack && (
                 <Button
                     onClick={props.onBack}
-                    className="absolute left-6"
+                    className={
+                        isDark
+                            ? "absolute left-6 bg-neutral-800 text-neutral-200 hover:bg-neutral-700"
+                            : "absolute left-6"
+                    }
                     variant={"secondary"}
                 >
-                    <ArrowLeft className="w-6 min-w-6 min-h-6 stroke-[2.5] text-neutral-500 h-6 " />
+                    <ArrowLeft className="w-6 min-w-6 min-h-6 stroke-[2.5] text-neutral-500 h-6 dark:text-neutral-300" />
                 </Button>
-            )}{" "}
+            )}
             <div className="max-w-3xl w-full text-center">
-                <h1 className="md:text-4xl text-3xl font-extrabold text-neutral-700  pt-6">
+                <h1
+                    className={
+                        isDark
+                            ? "md:text-4xl text-3xl font-extrabold text-neutral-100 pt-6"
+                            : "md:text-4xl text-3xl font-extrabold text-neutral-700 pt-6"
+                    }
+                >
                     {t["Summarize something"]}
                 </h1>
-                <p className="text-lg text-gray-600 mt-2">
+                <p
+                    className={
+                        isDark
+                            ? "text-lg text-neutral-400 mt-2"
+                            : "text-lg text-gray-600 mt-2"
+                    }
+                >
                     {
                         t[
                             "Choose a method to create your summary quickly and easily."
@@ -132,7 +157,7 @@ export default function Add(props: Props) {
                     }
                 </p>
             </div>
-            <section className="grid  md:px-0 px-3  grid-cols-1 sm:grid-cols-2 max-w-[850px] pb-10 gap-x-10 gap-y-7 mt-10 ">
+            <section className="grid md:px-0 px-3 grid-cols-1 sm:grid-cols-2 max-w-[850px] pb-10 gap-x-10 gap-y-7 mt-10">
                 {items
                     .filter((item) => !item.disabled)
                     .map((item) => (

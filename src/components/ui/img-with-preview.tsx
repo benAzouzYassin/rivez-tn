@@ -21,7 +21,7 @@ export default function ImageWithPreview({
             <div
                 {...props}
                 className={cn(
-                    `active:scale-100  w-full h-full cursor-pointer hover:scale-105 transition-all bg-zinc-100 hover:opacity-90`,
+                    `active:scale-100  w-full h-full cursor-pointer hover:scale-105 transition-all dark:bg-zinc-400 bg-zinc-100 hover:opacity-90`,
                     className
                 )}
             />

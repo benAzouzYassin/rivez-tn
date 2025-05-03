@@ -123,10 +123,10 @@ export default function PagesViewer(props: Props) {
         return (
             <div
                 className={cn(
-                    "h-16 mt-3    transition-all animate-pulse  cursor-not-allowed flex border border-neutral-200 text-lg  from-neutral-100 text-[#545454] hover:bg-neutral-100 font-extrabold rounded-xl shadow-none w-full justify-start px-4"
+                    "h-16 mt-3 transition-all animate-pulse cursor-not-allowed flex border border-neutral-200 dark:border-neutral-700 text-lg from-neutral-100 text-[#545454] hover:bg-neutral-100 dark:hover:bg-neutral-800 font-extrabold rounded-xl shadow-none w-full justify-start px-4 bg-white dark:bg-neutral-900"
                 )}
             >
-                <p className="my-auto ml-3 rounded-sm h-3 w-[90%] bg-neutral-200"></p>
+                <p className="my-auto ml-3 rounded-sm h-3 w-[90%] bg-neutral-200 dark:bg-neutral-700"></p>
             </div>
         )
     }
@@ -148,9 +148,12 @@ export default function PagesViewer(props: Props) {
     const isRTL = containsArabic(activeFile.markdownPages.join(" "))
 
     return (
-        <div dir={"ltr"} className="flex h-[89vh] overflow-hidden bg-gray-50">
-            <div className="xl:w-[360px] w-0 h-[95vh] overflow-y-hidden fixed pb-20 bg-white">
-                <ScrollArea className="w-full scale-x-[-1] xl:block hidden h-[95vh] -mt-1 border overflow-y-auto py-4">
+        <div
+            dir={"ltr"}
+            className="flex h-[89vh] overflow-hidden bg-gray-50 dark:bg-neutral-900 transition-colors"
+        >
+            <div className="xl:w-[360px] w-0 h-[95vh] overflow-y-hidden fixed pb-20 bg-white dark:bg-neutral-900">
+                <ScrollArea className="w-full scale-x-[-1] xl:block hidden h-[95vh] -mt-1 border border-neutral-200 dark:border-neutral-700 overflow-y-auto py-4 bg-white dark:bg-neutral-900">
                     <div className="scale-x-[-1] pl-5 pr-3 pb-20 pt-5">
                         {props.files.map((file) => (
                             <SideItem
@@ -181,18 +184,18 @@ export default function PagesViewer(props: Props) {
             <div className={"xl:w-[21.5rem] xl:min-w-[21.5rem]"}></div>
             <div
                 className={cn(
-                    " md:max-w-[100%] max-w-screen flex-1 xl:max-w-[calc(100%-21.5rem)] xl:pl-4 relative"
+                    "md:max-w-[100%] max-w-screen flex-1 xl:max-w-[calc(100%-21.5rem)] xl:pl-4 relative"
                 )}
             >
                 <div className="w-screen"></div>
 
                 <div
                     ref={contentRef}
-                    className="bg-white md:p-5 p-2  rounded-lg h-[90vh]  overflow-y-auto pb-20 -mt-1 pt-8 border mx-auto"
+                    className="bg-white  dark:bg-neutral-900 md:p-5 p-2 rounded-lg h-[90vh] overflow-y-auto pb-20 -mt-1 pt-8 border border-neutral-200 dark:border-neutral-700 mx-auto transition-colors"
                 >
                     <div
                         className={cn(
-                            "md:flex hidden print:hidden  -mb-6  justify-end gap-2",
+                            "md:flex hidden print:hidden -mb-6 justify-end gap-2",
                             {
                                 "justify-start -mb-3": isRTL,
                             }
@@ -207,18 +210,23 @@ export default function PagesViewer(props: Props) {
                                     reactToPrintFn()
                                 })
                             }}
+                            className="z-50"
                         >
                             {t["Save"]}{" "}
                             <DownloadIcon className={isRTL ? "mr-1" : "ml-1"} />
                         </Button>
-                        <Button onClick={handleConvertToQuiz} variant={"blue"}>
+                        <Button
+                            className="z-50"
+                            onClick={handleConvertToQuiz}
+                            variant={"blue"}
+                        >
                             {t["Convert into Quiz"]}{" "}
                             <HelpCircle className={isRTL ? "mr-1" : "ml-1"} />
                         </Button>
                     </div>
                     <div
                         ref={markdownRef}
-                        className="print:px-10 md:mt-0  md:pt-4 -mt-10  relative "
+                        className="print:px-10 md:mt-0 md:pt-4 -mt-10 relative"
                     >
                         {isPrinting ? (
                             props.files.map((file) =>
@@ -236,7 +244,7 @@ export default function PagesViewer(props: Props) {
                             />
                         )}
 
-                        <div className="print:hidden flex border-t-2 pt-3 justify-between mb-4">
+                        <div className="print:hidden flex border-t-2 border-neutral-200 dark:border-neutral-700 pt-3 justify-between mb-4">
                             <Button
                                 variant={"secondary"}
                                 onClick={handlePreviousPage}

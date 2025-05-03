@@ -21,6 +21,7 @@ import {
 } from "react"
 import { z } from "zod"
 import { usePdfSummarizerStore } from "../store"
+import { useTheme } from "next-themes"
 
 pdfjsLib.GlobalWorkerOptions.workerSrc =
     "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js"
@@ -40,6 +41,8 @@ export default function FilesUpload() {
     const selectPages = usePdfSummarizerStore((s) => s.selectPages)
     const canvasRef = useRef(document.createElement("canvas"))
     const lang = getLanguage()
+    const { theme } = useTheme()
+    const isDark = theme === "dark"
 
     const translation: Translation = useMemo(
         () => ({
@@ -249,17 +252,27 @@ export default function FilesUpload() {
     return (
         <div className="w-full max-w-3xl pt-20 md:px-0 px-3 md:pt-28 space-y-6">
             <div className="text-center mb-10">
-                <h1 className="text-4xl font-bold text-neutral-600 mb-5">
+                <h1
+                    className={`text-4xl font-bold mb-5 ${
+                        isDark ? "text-neutral-100" : "text-neutral-600"
+                    }`}
+                >
                     {t["Summarize documents"]}
                 </h1>
             </div>
 
             <div
-                className={`flex active:scale-95 flex-col items-center justify-center h-64 md:h-96 ${
-                    isDragging
-                        ? "bg-blue-50 border-blue-400"
-                        : "bg-white border-gray-300"
-                } border-2 border-dashed rounded-3xl transition-all duration-200 ease-in-out hover:border-blue-300 hover:bg-blue-50`}
+                className={`flex active:scale-95 flex-col items-center justify-center h-64 md:h-96 border-2 border-dashed rounded-3xl transition-all duration-200 ease-in-out
+                    ${
+                        isDragging
+                            ? isDark
+                                ? "bg-blue-950/30 border-blue-300/50"
+                                : "bg-blue-50 border-blue-400"
+                            : isDark
+                            ? "bg-neutral-900 border-neutral-700"
+                            : "bg-white border-gray-300"
+                    }
+                    hover:border-blue-300/50 hover:bg-blue-50 dark:hover:bg-blue-950/30`}
                 onDragOver={handleDragOver}
                 onDragLeave={handleDragLeave}
                 onDrop={handleDrop}
@@ -277,16 +290,31 @@ export default function FilesUpload() {
                     htmlFor="file-upload"
                     className="cursor-pointer flex flex-col items-center h-full w-full justify-center p-6"
                 >
-                    <div className="w-20 h-20 bg-blue-50 rounded-full flex items-center justify-center mb-4">
+                    <div
+                        className={`w-20 h-20 rounded-full flex items-center justify-center mb-4
+                        ${isDark ? "bg-blue-950" : "bg-blue-50"}`}
+                    >
                         <FilesIcon className="h-10 w-10 text-red-400/90" />
                     </div>
-                    <p className="text-xl font-bold text-neutral-500 mb-1 text-center">
+                    <p
+                        className={`text-xl font-bold mb-1 text-center ${
+                            isDark ? "text-neutral-200" : "text-neutral-500"
+                        }`}
+                    >
                         {t["Drop PDFs here or click to browse"]}
                     </p>
-                    <p className="text-sm font-semibold text-neutral-500 text-center">
+                    <p
+                        className={`text-sm font-semibold text-center ${
+                            isDark ? "text-neutral-400" : "text-neutral-500"
+                        }`}
+                    >
                         {t["Only PDF files are supported"]}
                     </p>
-                    <p className="text-sm text-blue-500 font-medium text-center">
+                    <p
+                        className={`text-sm font-medium text-center ${
+                            isDark ? "text-blue-400" : "text-blue-500"
+                        }`}
+                    >
                         {t["You can also paste files (Ctrl+V / Cmd+V)"]}
                     </p>
                 </label>

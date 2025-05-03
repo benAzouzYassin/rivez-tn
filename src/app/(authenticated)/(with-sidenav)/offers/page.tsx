@@ -100,21 +100,20 @@ export default function Page() {
         >
             <section className="flex pb-32 mt-16 font-sans items-center justify-center">
                 <div className="md:grid flex flex-col-reverse w-[1000px] gap-8 px-2 md:h-[600px] md:grid-cols-2">
-                    <div className="border bg-[#f3f3f3] px-4 md:px-5 py-8 rounded-3xl">
-                        <h2 className="text-neutral-600 text-xl font-medium">
+                    <div className="border border-neutral-200 dark:border-neutral-700 bg-[#f3f3f3] dark:bg-neutral-800 px-4 md:px-5 py-8 rounded-3xl transition-colors">
+                        <h2 className="text-neutral-600 dark:text-neutral-200 text-xl font-medium">
                             {t["Trial"]}
                         </h2>
-                        <p className="text-4xl font-extrabold mt-3 text-neutral-600">
-                            {" "}
+                        <p className="text-4xl font-extrabold mt-3 text-neutral-600 dark:text-neutral-100">
                             {t["Free"]}
                         </p>
-                        <p className="mt-3 pl-1 text-lg text-neutral-600">
+                        <p className="mt-3 pl-1 text-lg text-neutral-600 dark:text-neutral-200">
                             {t["Limited access"]}
                         </p>
-                        <button className="h-20 rounded-2xl bg-neutral-400 w-full text-center text-[1.7rem] font-bold text-neutral-100">
+                        <button className="h-20 rounded-2xl bg-neutral-400 dark:bg-neutral-700 w-full text-center text-[1.7rem] font-bold text-neutral-100 dark:text-neutral-200 transition-colors">
                             {t["Current Plan"]}
                         </button>
-                        <p className="mt-2 pl-1 pb-3 text-lg text-gray-400">
+                        <p className="mt-2 pl-1 pb-3 text-lg text-gray-400 dark:text-neutral-400">
                             {
                                 t[
                                     "Basic access to interactive learning and skill development tools..."
@@ -122,26 +121,26 @@ export default function Page() {
                             }
                         </p>
                         <div className="flex mt-6 items-center gap-2">
-                            <div className="w-6 text-neutral-50 p-1 h-6 bg-neutral-400/80 scale-90 rounded-full flex items-center justify-center ">
+                            <div className="w-6 text-neutral-50 p-1 h-6 bg-neutral-400 dark:bg-neutral-700/80 scale-90 rounded-full flex items-center justify-center ">
                                 <Check className="stroke-3" />
                             </div>
-                            <p className="text-neutral-700">
+                            <p className="text-neutral-700 dark:text-neutral-200">
                                 {t["Unlimited custom quizzes."]}
                             </p>
                         </div>
                         <div className="flex mt-6 items-center gap-2">
-                            <div className="w-6 text-neutral-50 p-1 h-6 bg-neutral-400/80 scale-90 rounded-full flex items-center justify-center ">
+                            <div className="w-6 text-neutral-50 p-1 h-6 bg-neutral-400 dark:bg-neutral-700/80 scale-90 rounded-full flex items-center justify-center ">
                                 <Check className="stroke-3" />
                             </div>
-                            <p className="text-neutral-700">
+                            <p className="text-neutral-700 dark:text-neutral-200">
                                 {t["Limited Ai features"]}
                             </p>
                         </div>
                         <div className="flex mt-6 items-center gap-2">
-                            <div className="w-6 text-neutral-50 p-1 h-6 bg-neutral-400/80 scale-90 rounded-full flex items-center justify-center ">
+                            <div className="w-6 text-neutral-50 p-1 h-6 bg-neutral-400 dark:bg-neutral-700/80 scale-90 rounded-full flex items-center justify-center ">
                                 <Check className="stroke-3" />
                             </div>
-                            <p className="text-neutral-700">
+                            <p className="text-neutral-700 dark:text-neutral-200">
                                 {t["Supports: Text and PDFs"]}
                             </p>
                         </div>

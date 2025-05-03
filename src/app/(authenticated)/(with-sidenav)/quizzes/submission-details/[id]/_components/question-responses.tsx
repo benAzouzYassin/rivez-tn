@@ -87,7 +87,7 @@ const QuestionResponses = ({
                                 <h3 className="text-sm font-extrabold uppercase tracking-wider text-neutral-500 dark:text-neutral-400 mb-2">
                                     User Answers
                                 </h3>
-                                <div className="bg-neutral-50 dark:bg-neutral-800 p-6 rounded-xl border border-neutral-200 dark:border-neutral-700">
+                                <div className="bg-neutral-50 overflow-x-auto dark:bg-neutral-800 p-6 rounded-xl border border-neutral-200 dark:border-neutral-700">
                                     {questionType === "MULTIPLE_CHOICE" && (
                                         <MultipleChoiceResponses
                                             correctAnswers={correctAnswers}

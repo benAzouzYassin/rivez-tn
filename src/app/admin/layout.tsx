@@ -4,6 +4,8 @@ import { useRouter } from "nextjs-toploader/app"
 import { useEffect, useState } from "react"
 import AdminLayout from "@/components/layouts/admin-layout"
 import { useCurrentUser } from "@/hooks/use-current-user"
+import Cookies from "js-cookie"
+import { wait } from "@/utils/wait"
 export const dynamic = "force-static"
 
 export default function Layout({
@@ -11,6 +13,8 @@ export default function Layout({
 }: Readonly<{
     children: React.ReactNode
 }>) {
+    const lang = Cookies.get("selected-language")
+
     const router = useRouter()
     const [allowedToEnter, setAllowedToEnter] = useState<boolean | null>(null)
     const user = useCurrentUser()
@@ -32,6 +36,10 @@ export default function Layout({
         )
     }
 
+    if (lang !== "en") {
+        Cookies.set("selected-language", "en")
+        wait(100).then(() => window.location.reload())
+    }
     if (allowedToEnter) {
         return <AdminLayout>{children}</AdminLayout>
     }

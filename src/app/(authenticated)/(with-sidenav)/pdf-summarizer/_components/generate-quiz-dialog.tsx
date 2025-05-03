@@ -34,6 +34,7 @@ import { z } from "zod"
 import useQuizStore from "../../quizzes/add/[id]/store"
 import { DifficultySelect } from "./difficulty-select"
 import QuizImageUpload from "./image-upload"
+import { useTheme } from "next-themes"
 
 const POSSIBLE_QUESTIONS_TYPES = Object.keys(POSSIBLE_QUESTIONS)
 
@@ -128,7 +129,8 @@ export default function GenerateQuizDialog(props: Props) {
         }),
         []
     )
-
+    const { theme } = useTheme()
+    const isDark = theme === "dark"
     const lang = getLanguage()
     const t = translation[lang]
 
@@ -254,7 +256,7 @@ export default function GenerateQuizDialog(props: Props) {
                         />
                     </div>
                     <Collapsible className="group ">
-                        <CollapsibleTrigger className="w-full data-[state=open]:font-bold  data-[state=open]:text-neutral-500 data-[state=open]:bg-blue-300/80 data-[state=open]:border-transparent   mb-4 hover:bg-neutral-100 flex justify-between items-center rounded-xl transition-all duration-200 bg-[#F7F7F7]/50 font-medium border-2 p-3 h-12 border-[#E5E5E5] text-[#AFAFAF] cursor-pointer">
+                        <CollapsibleTrigger className="w-full data-[state=open]:font-bold  data-[state=open]:text-neutral-500 data-[state=open]:bg-blue-300/80 dark:data-[state=open]:bg-blue-300/80 data-[state=open]:border-transparent   mb-4 hover:bg-neutral-100 flex justify-between items-center rounded-xl transition-all duration-200 bg-[#F7F7F7]/50 dark:bg-neutral-800 dark:border-neutral-700 font-medium border-2 p-3 h-12  border-[#E5E5E5] text-[#AFAFAF] cursor-pointer">
                             <span className="underline underline-offset-4">
                                 {t.advancedOptions}
                             </span>
@@ -346,6 +348,7 @@ export default function GenerateQuizDialog(props: Props) {
                     </Collapsible>
 
                     <Button
+                        variant={isDark ? "blue" : "default"}
                         isLoading={isLoading}
                         type="button"
                         onClick={() => {

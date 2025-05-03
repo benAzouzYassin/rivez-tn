@@ -154,7 +154,7 @@ export default function Page() {
                 onConnect={onConnect}
                 fitView
             >
-                <Controls className="rounded-lg md:!block !hidden -translate-y-4 border border-gray-200 dark:border-neutral-700 bg-white dark:bg-neutral-800 transition-colors" />
+                <Controls className="rounded-lg dark:!text-black  md:!block !hidden -translate-y-4 border border-gray-200 dark:border-neutral-700 bg-white dark:bg-neutral-800 transition-colors" />
                 <Panel
                     position="bottom-right"
                     className="bg-transparent md:scale-100 scale-50"

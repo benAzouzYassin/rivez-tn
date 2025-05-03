@@ -114,7 +114,7 @@ function CustomNode({ data }: CustomNodeProps) {
                         <div className="grow">
                             <h3
                                 className={cn(
-                                    "text-sm font-bold text-neutral-600 font-sans first-letter:uppercase",
+                                    "text-sm font-bold dark:text-black text-neutral-600 font-sans first-letter:uppercase",
                                     { "text-right": isArabicTitle }
                                 )}
                             >
@@ -122,7 +122,7 @@ function CustomNode({ data }: CustomNodeProps) {
                             </h3>
                             <p
                                 className={cn(
-                                    "text-[8px] font-semibold text-neutral-500",
+                                    "text-[8px] font-semibold dark:text-neutral-800 text-neutral-500",
                                     {
                                         "text-right":
                                             isArabicDescription &&

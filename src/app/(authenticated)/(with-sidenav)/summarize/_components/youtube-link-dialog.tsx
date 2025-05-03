@@ -11,6 +11,7 @@ import { Input } from "@/components/ui/input"
 import { useRouter } from "nextjs-toploader/app"
 import { useState, useMemo } from "react"
 import { getLanguage } from "@/utils/get-language"
+import { useTheme } from "next-themes"
 
 interface Props {
     isOpen: boolean
@@ -18,6 +19,8 @@ interface Props {
 }
 
 export default function YoutubeLinkDialog(props: Props) {
+    const { theme } = useTheme()
+    const isDark = theme === "dark"
     const [isSubmitting, setIsSubmitting] = useState(false)
     const [youtubeUrl, setYoutubeUrl] = useState("")
     const router = useRouter()
@@ -101,6 +104,7 @@ export default function YoutubeLinkDialog(props: Props) {
                     </div>
 
                     <Button
+                        variant={isDark ? "blue" : "default"}
                         type="submit"
                         className="text-lg h-[52px] w-full"
                         isLoading={isSubmitting}
