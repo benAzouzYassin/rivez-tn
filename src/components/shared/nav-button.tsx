@@ -28,7 +28,12 @@ export function NavButton({
     additionalClasses,
 }: NavButtonProps) {
     const pathname = usePathname()
-    const isSelected = item.route && pathname.includes(item.route)
+    const formattedRoute = item.route?.split("?")[0]
+    const isSelected =
+        formattedRoute &&
+        (pathname.includes(formattedRoute) ||
+            pathname.startsWith(formattedRoute))
+
     const router = useRouter()
 
     return (

@@ -57,15 +57,15 @@ export default function Item({
                     }
                 }}
                 variant={"secondary"}
-                className="!p-3 h-64 min-h-64 flex   disabled:opacity-80 disabled:bg-neutral-200/70 w-full  text-start  hover:border-blue-300 hover:bg-blue-100/70 hover:shadow-blue-300 transition-all rounded-3xl  "
+                className="!p-3 h-64 dark:hover:bg-neutral-700/50 min-h-64 flex   disabled:opacity-80 disabled:bg-neutral-200/70 w-full  text-start  hover:border-blue-300 hover:bg-blue-100/70 hover:shadow-blue-300 transition-all rounded-3xl  "
             >
                 <div className=" items-start gap-4 flex justify-center flex-col">
-                    <div className=" min-h-10 min-w-10 w-fit flex items-center mx-auto justify-center p-2 border-2  rounded-xl">
+                    <div className=" min-h-10 min-w-10 w-fit flex items-center dark:border-neutral-600 mx-auto justify-center p-2 border-2  rounded-xl">
                         {icon}
                     </div>
                     <div className="flex flex-col justify-center items-center   mx-auto ">
-                        <div className="text-xl  text-neutral-600  font-extrabold">
-                            <h3> {text}</h3>{" "}
+                        <div className="text-xl  text-neutral-600  dark:text-neutral-200 font-extrabold">
+                            <h3 className="text-center"> {text}</h3>{" "}
                             <div className="flex rtl:flex-row-reverse flex-row items-center justify-center">
                                 <Badge
                                     variant={"blue"}
@@ -81,7 +81,7 @@ export default function Item({
                                 </span>
                             )}
                         </div>
-                        <p className=" text-center px-7 pt-2 text-medium text-base  text-wrap text-neutral-500">
+                        <p className=" text-center px-7 pt-2 text-medium text-base rtl:font-normal  text-wrap dark:text-neutral-300 text-neutral-500">
                             {description}
                         </p>
                     </div>

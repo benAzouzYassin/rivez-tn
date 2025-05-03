@@ -152,7 +152,7 @@ export default function Page() {
         return <GeneralLoadingScreen text={t["Processing your images"]} />
     }
     return (
-        <section className="relative items-center min-h-[89vh] bg-neutral-50">
+        <section className="relative items-center dark:bg-neutral-900 min-h-[89vh] bg-neutral-50">
             <Button
                 onClick={router.back}
                 className="absolute font-bold text-neutral-500 top-2 left-2 md:top-4 md:left-4 px-6"

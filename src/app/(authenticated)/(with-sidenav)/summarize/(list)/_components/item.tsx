@@ -49,7 +49,7 @@ export default function Item({ item }: Props) {
         >
             <div
                 className={cn(
-                    `h-48 min-h-48 w-full hover:cursor-pointer transition-all relative bg-gray-100 overflow-hidden`
+                    `h-48 min-h-48 w-full hover:cursor-pointer transition-all relative bg-gray-100 dark:bg-neutral-900/60 overflow-hidden`
                 )}
             >
                 {item.source === "pdf" && (
@@ -64,7 +64,7 @@ export default function Item({ item }: Props) {
                 )}
             </div>
 
-            <div className="flex flex-col border-t-2 w-full">
+            <div className="flex flex-col dark:border-neutral-700 border-t-2 w-full">
                 <CardHeader className="-mt-3">
                     <MoreButton
                         authorId={item.user_id}
@@ -83,7 +83,7 @@ export default function Item({ item }: Props) {
                             <div className="text-sm font-medium">
                                 <h2
                                     className={cn(
-                                        "text-2xl max-w-[95%]  pb-1 line-clamp-1 first-letter:uppercase text-neutral-600 font-extrabold",
+                                        "text-2xl dark:text-neutral-200/90 max-w-[95%]  pb-1 line-clamp-1 first-letter:uppercase text-neutral-600 font-extrabold",
                                         {
                                             "rtl:text-right": isRtl,
                                         }

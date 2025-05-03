@@ -100,59 +100,59 @@ export default function Page() {
     return (
         <section className="max-w-3xl mx-auto py-4 sm:py-8 px-3 sm:px-4">
             <div className="text-center mb-6 sm:mb-8">
-                <h1 className="text-3xl sm:text-4xl font-bold text-neutral-700">
+                <h1 className="text-3xl sm:text-4xl font-bold text-neutral-700 dark:text-neutral-100">
                     {t.completePayment}
                 </h1>
-                <p className="text-base sm:text-lg text-neutral-600 mt-2">
+                <p className="text-base sm:text-lg text-neutral-600 dark:text-neutral-300 mt-2">
                     {t.followSteps}
                 </p>
             </div>
 
-            <div className="bg-white border border-neutral-200 rounded-2xl sm:rounded-3xl overflow-hidden">
+            <div className="bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-700 rounded-2xl sm:rounded-3xl overflow-hidden transition-colors">
                 {/* Step 1: Bank Transfer */}
-                <div className="p-4 sm:p-6 border-b border-neutral-200">
+                <div className="p-4 sm:p-6 border-b border-neutral-200 dark:border-neutral-700">
                     <div className="flex items-center mb-3 sm:mb-4">
-                        <div className="bg-blue-100 w-7 h-7 sm:w-8 sm:h-8 rounded-full flex items-center justify-center rtl:ml-2 mr-2 sm:mr-3 flex-shrink-0">
-                            <span className="text-blue-600 font-bold text-sm sm:text-base">
+                        <div className="bg-blue-100 dark:bg-blue-900 w-7 h-7 sm:w-8 sm:h-8 rounded-full flex items-center justify-center rtl:ml-2 mr-2 sm:mr-3 flex-shrink-0">
+                            <span className="text-blue-600 dark:text-blue-300 font-bold text-sm sm:text-base">
                                 1
                             </span>
                         </div>
-                        <h2 className="text-lg sm:text-xl font-bold text-neutral-700">
+                        <h2 className="text-lg sm:text-xl font-bold text-neutral-700 dark:text-neutral-100">
                             {t.step1}
                         </h2>
                     </div>
 
                     <div className="sm:ml-11">
-                        <p className="text-neutral-700 mb-3 sm:mb-4 font-semibold text-sm sm:text-base">
+                        <p className="text-neutral-700 dark:text-neutral-200 mb-3 sm:mb-4 font-semibold text-sm sm:text-base">
                             {t.pleaseTransfer(price)}
                         </p>
 
-                        <div className="bg-gray-50 p-3 sm:p-4 rounded-xl border border-neutral-200">
+                        <div className="bg-gray-50 dark:bg-neutral-800 p-3 sm:p-4 rounded-xl border border-neutral-200 dark:border-neutral-700">
                             <div className="flex items-center mb-3 sm:mb-4">
                                 <img
                                     className="h-8 sm:h-12 mr-2 sm:mr-3 rounded"
                                     alt="Banque Zitouna Logo"
                                     src="/icons/banque-zitouna.png"
                                 />
-                                <span className="text-lg sm:text-xl font-semibold text-neutral-700">
+                                <span className="text-lg sm:text-xl font-semibold text-neutral-700 dark:text-neutral-100">
                                     {t.bankName}
                                 </span>
                             </div>
 
                             <div className="grid grid-cols-1 gap-3 sm:gap-4">
                                 <div>
-                                    <p className="text-xs sm:text-sm font-medium text-neutral-500">
+                                    <p className="text-xs sm:text-sm font-medium text-neutral-500 dark:text-neutral-400">
                                         {t.accountNameLabel}
                                     </p>
-                                    <p className="font-bold text-neutral-700 text-sm sm:text-base">
+                                    <p className="font-bold text-neutral-700 dark:text-neutral-100 text-sm sm:text-base">
                                         {t.accountName}
                                     </p>
                                 </div>
                                 <div>
-                                    <p className="text-xs sm:text-sm font-medium text-neutral-500">
+                                    <p className="text-xs sm:text-sm font-medium text-neutral-500 dark:text-neutral-400">
                                         {t.ribNumberLabel}
                                     </p>
-                                    <p className="font-bold text-neutral-700 font-mono text-sm sm:text-base break-all">
+                                    <p className="font-bold text-neutral-700 dark:text-neutral-100 font-mono text-sm sm:text-base break-all">
                                         {t.ribNumber}
                                     </p>
                                 </div>
@@ -164,18 +164,18 @@ export default function Page() {
                 {/* Step 2: Contact Confirmation */}
                 <div className="p-4 sm:p-6">
                     <div className="flex items-center mb-3 sm:mb-4">
-                        <div className="bg-blue-100 w-7 h-7 sm:w-8 sm:h-8 rounded-full flex items-center justify-center rtl:ml-2 mr-2 sm:mr-3 flex-shrink-0">
-                            <span className="text-blue-600 font-bold text-sm sm:text-base">
+                        <div className="bg-blue-100 dark:bg-blue-900 w-7 h-7 sm:w-8 sm:h-8 rounded-full flex items-center justify-center rtl:ml-2 mr-2 sm:mr-3 flex-shrink-0">
+                            <span className="text-blue-600 dark:text-blue-300 font-bold text-sm sm:text-base">
                                 2
                             </span>
                         </div>
-                        <h2 className="text-lg sm:text-xl font-bold text-neutral-700">
+                        <h2 className="text-lg sm:text-xl font-bold text-neutral-700 dark:text-neutral-100">
                             {t.step2}
                         </h2>
                     </div>
 
                     <div className="sm:ml-11">
-                        <p className="text-neutral-700 font-semibold mb-3 sm:mb-4 text-sm sm:text-base">
+                        <p className="text-neutral-700 dark:text-neutral-200 font-semibold mb-3 sm:mb-4 text-sm sm:text-base">
                             {t.afterTransfer}
                         </p>
                         <div className="grid grid-cols-1 w-full md:grid-cols-3 md:px-10 gap-3 mb-4">
@@ -200,7 +200,7 @@ export default function Page() {
                                     className="w-full h-14 text-base"
                                     variant="secondary"
                                 >
-                                    <FacebookIcon className="!w-9 border-2 rounded-full p-1 !h-9" />
+                                    <FacebookIcon className="!w-9 dark:border-neutral-500 border-2 rounded-full p-1 !h-9" />
                                     {t.facebook}
                                 </Button>
                             </Link>
@@ -210,13 +210,13 @@ export default function Page() {
                                     className="w-full h-14 text-base"
                                     variant="secondary"
                                 >
-                                    <PhoneIcon className="!w-5 stroke-neutral-500 fill-neutral-500 !h-5 mr-0" />
+                                    <PhoneIcon className="!w-5 stroke-neutral-500 fill-neutral-500 dark:stroke-neutral-300 dark:fill-neutral-300 !h-5 mr-0" />
                                     {t.callUs}
                                 </Button>
                             </Link>
                         </div>
 
-                        <p className="text-center pt-2 sm:pt-3 font-medium text-neutral-600 text-sm sm:text-base">
+                        <p className="text-center pt-2 sm:pt-3 font-medium text-neutral-600 dark:text-neutral-300 text-sm sm:text-base">
                             {t.phoneLabel}{" "}
                             <span dir="ltr" className="font-semibold">
                                 {t.phoneNumber}
@@ -224,7 +224,7 @@ export default function Page() {
                         </p>
                     </div>
 
-                    <div className="text-center mt-4 sm:mt-6 text-neutral-700 font-semibold text-xs sm:text-sm">
+                    <div className="text-center mt-4 sm:mt-6 text-neutral-700 dark:text-neutral-200 font-semibold text-xs sm:text-sm">
                         <p>{t.subscriptionInfo}</p>
                     </div>
                 </div>

@@ -126,17 +126,19 @@ export default function ImageUpload(props: Props) {
     return (
         <div className="w-full max-w-3xl pt-28 space-y-6">
             <div className="text-center mb-10">
-                <h1 className="text-4xl font-bold text-neutral-600 mb-5">
+                <h1 className="text-4xl font-bold text-neutral-600 dark:text-neutral-100 mb-5">
                     {t["Upload the images"]}
                 </h1>
             </div>
 
             <div
-                className={`flex active:scale-95 flex-col items-center justify-center h-64 md:h-96 ${
-                    isDragging
-                        ? "bg-blue-50 border-blue-400"
-                        : "bg-white border-gray-300"
-                } border-2 border-dashed rounded-3xl transition-all duration-200 ease-in-out hover:border-blue-300 hover:bg-blue-50`}
+                className={`flex active:scale-95 flex-col items-center justify-center h-64 md:h-96 border-2 border-dashed rounded-3xl transition-all duration-200 ease-in-out
+                    ${
+                        isDragging
+                            ? "bg-blue-50 border-blue-400 dark:bg-blue-950/30"
+                            : "bg-white border-gray-300 dark:bg-neutral-900 dark:border-neutral-700"
+                    }
+                    hover:border-blue-300 hover:bg-blue-50 dark:hover:bg-blue-950/30`}
                 onDragOver={handleDragOver}
                 onDragLeave={handleDragLeave}
                 onDrop={handleDrop}
@@ -154,16 +156,16 @@ export default function ImageUpload(props: Props) {
                     htmlFor="file-upload"
                     className="cursor-pointer flex flex-col items-center h-full w-full justify-center p-6"
                 >
-                    <div className="w-20 h-20 bg-blue-50 rounded-full flex items-center justify-center mb-4">
+                    <div className="w-20 h-20 bg-blue-50 dark:bg-blue-950 rounded-full flex items-center justify-center mb-4">
                         <ImageIcon className="h-10 w-10 text-blue-400/90" />
                     </div>
-                    <p className="text-xl font-bold text-neutral-500 mb-1 text-center">
+                    <p className="text-xl font-bold text-neutral-500 dark:text-neutral-200 mb-1 text-center">
                         {t["Drop images here or click to browse"]}
                     </p>
-                    <p className="text-sm font-semibold text-neutral-500 text-center mb-2">
+                    <p className="text-sm font-semibold text-neutral-500 dark:text-neutral-400 text-center mb-2">
                         {t["Supports JPG, PNG, GIF, and other image formats"]}
                     </p>
-                    <p className="text-sm text-blue-500 font-medium text-center">
+                    <p className="text-sm text-blue-500 dark:text-blue-400 font-medium text-center">
                         {t["You can also paste images (Ctrl+V / Cmd+V)"]}
                     </p>
                 </label>

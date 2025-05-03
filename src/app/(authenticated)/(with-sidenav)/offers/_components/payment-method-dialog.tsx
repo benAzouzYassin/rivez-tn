@@ -246,7 +246,7 @@ export default function PaymentMethodDialog(props: Props) {
                             </p>
                         </Button>
                     </div>
-                    <p className="text-center mt-6 font-bold text-neutral-700 text-2xl">
+                    <p className="text-center mt-6 font-bold dark:text-neutral-300 text-neutral-700 text-2xl">
                         {t.contactMethods}
                     </p>
 
@@ -273,14 +273,14 @@ export default function PaymentMethodDialog(props: Props) {
                                 className="text-lg w-full h-16"
                                 variant={"secondary"}
                             >
-                                <FacebookIcon className="!w-10 scale-90 border rounded-full p-1 !h-10" />{" "}
+                                <FacebookIcon className="!w-10 scale-90 border dark:border-neutral-100 rounded-full p-1 !h-10" />{" "}
                                 {t.facebook}
                             </Button>
                         </Link>
                     </div>
                     <p
                         dir="ltr"
-                        className="text-center  text-xl text-neutral-700 mt-6 font-bold"
+                        className="text-center  text-xl dark:text-neutral-300 text-neutral-700 mt-6 font-bold"
                     >
                         {t.phone}
                     </p>

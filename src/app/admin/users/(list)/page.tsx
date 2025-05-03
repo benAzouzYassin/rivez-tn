@@ -63,7 +63,14 @@ export default function Page() {
         <section className="flex flex-col min-h-[50vh] p-10">
             <div className="flex items-center gap-3">
                 <h1 className="text-[2.5rem] font-bold">Users List</h1>
-                <div className="text-lg font-extrabold opacity-80 py-1 px-5  rounded-full bg-blue-50 text-blue-600 border-2 border-blue-400">
+                <div
+                    className="
+                text-lg font-extrabold opacity-80 py-1 px-5 rounded-full
+                bg-blue-50 text-blue-600 border-2 border-blue-400
+                dark:bg-blue-900/30 dark:text-blue-200 dark:border-blue-700
+                transition-colors
+            "
+                >
                     {response?.count || 0} users
                 </div>
             </div>

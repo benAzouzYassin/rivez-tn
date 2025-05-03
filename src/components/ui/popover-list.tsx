@@ -28,7 +28,7 @@ export default function PopoverList(props: Props) {
     return (
         <Command
             onClick={(e) => e.stopPropagation()}
-            className="bg-transparent"
+            className="!bg-transparent"
         >
             <Popover onOpenChange={setIsOpen} open={isOpen}>
                 <PopoverTrigger onClick={(e) => e.stopPropagation()} asChild>

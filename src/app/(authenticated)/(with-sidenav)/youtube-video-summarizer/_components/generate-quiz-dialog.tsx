@@ -34,6 +34,7 @@ import { z } from "zod"
 import useQuizStore from "../../quizzes/add/[id]/store"
 import { DifficultySelect } from "./difficulty-select"
 import QuizImageUpload from "./quiz-image-upload"
+import { useTheme } from "next-themes"
 
 const POSSIBLE_QUESTIONS_TYPES = Object.keys(POSSIBLE_QUESTIONS)
 
@@ -209,15 +210,16 @@ export default function GenerateQuizDialog(props: Props) {
             setIsLoading(false)
         }
     }
-
+    const { theme } = useTheme()
+    const isDark = theme === "dark"
     return (
         <Dialog open={props.isOpen} onOpenChange={props.onOpenChange}>
-            <DialogContent className="md:!min-w-[800px]  md:w-[800px]">
-                <DialogTitle className="mt-10 text-neutral-600 text-center text-3xl font-extrabold">
+            <DialogContent className="md:!min-w-[800px] md:w-[800px] bg-white dark:bg-neutral-900 transition-colors">
+                <DialogTitle className="mt-10 text-neutral-600 dark:text-neutral-100 text-center text-3xl font-extrabold">
                     {t.generateQuiz}{" "}
                     <Badge
                         variant={"blue"}
-                        className="scale-80 -ml-1 py-0 px-2 font-bold inline-flex gap-[3px]  !text-lg"
+                        className="scale-80 -ml-1 py-0 px-2 font-bold inline-flex gap-[3px] !text-lg"
                     >
                         {mediumPrice} <CreditIcon className="!w-5 !h-5" />
                     </Badge>
@@ -253,16 +255,16 @@ export default function GenerateQuizDialog(props: Props) {
                             }
                         />
                     </div>
-                    <Collapsible className="group ">
-                        <CollapsibleTrigger className="w-full data-[state=open]:font-bold  data-[state=open]:text-neutral-500 data-[state=open]:bg-blue-300/80 data-[state=open]:border-transparent   mb-4 hover:bg-neutral-100 flex justify-between items-center rounded-xl transition-all duration-200 bg-[#F7F7F7]/50 font-medium border-2 p-3 h-12 border-[#E5E5E5] text-[#AFAFAF] cursor-pointer">
+                    <Collapsible className="group">
+                        <CollapsibleTrigger className="w-full data-[state=open]:font-bold data-[state=open]:text-neutral-500 dark:data-[state=open]:text-neutral-200 data-[state=open]:bg-blue-300/80 dark:data-[state=open]:bg-blue-900/40 data-[state=open]:border-transparent mb-4 hover:bg-neutral-100 dark:hover:bg-neutral-800 flex justify-between items-center rounded-xl transition-all duration-200 bg-[#F7F7F7]/50 dark:bg-neutral-800/60 font-medium border-2 p-3 h-12 border-[#E5E5E5] dark:border-neutral-700 text-[#AFAFAF] dark:text-neutral-400 cursor-pointer">
                             <span className="underline underline-offset-4">
                                 {t.advancedOptions}
                             </span>
                             <ChevronDown className="group-data-[state=open]:rotate-180 transition-transform duration-500" />
                         </CollapsibleTrigger>
-                        <CollapsibleContent className="bg-white data  mt-2 border-neutral-200">
-                            <div className=" -translate-y-7 p-2   border-blue-300/80  border-b-[6px]  border-x-[3px] rounded-b-2xl">
-                                <div className=" mt-5">
+                        <CollapsibleContent className="bg-white dark:bg-neutral-900 mt-2 border-neutral-200 dark:border-neutral-700">
+                            <div className="-translate-y-7 p-2 border-blue-300/80 dark:border-blue-900/40 border-b-[6px] border-x-[3px] rounded-b-2xl">
+                                <div className="mt-5">
                                     <Textarea
                                         {...form.register("notes")}
                                         placeholder={t.notesPlaceholder}
@@ -273,7 +275,7 @@ export default function GenerateQuizDialog(props: Props) {
                                     />
                                 </div>
 
-                                <div className=" -mt-1 gap-8">
+                                <div className="-mt-1 gap-8">
                                     <div className="pb-3">
                                         <Controller
                                             control={form.control}
@@ -346,6 +348,7 @@ export default function GenerateQuizDialog(props: Props) {
                     </Collapsible>
 
                     <Button
+                        variant={isDark ? "blue" : "default"}
                         isLoading={isLoading}
                         type="button"
                         onClick={() => {

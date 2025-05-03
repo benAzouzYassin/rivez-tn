@@ -47,7 +47,6 @@ export default function Page() {
                 },
             }),
     })
-    // const submissionsCount = data?.quiz_submissions[0].count || 0
     if (isLoading) {
         return (
             <div className="h-[100vh] dark:bg-neutral-900 flex items-center absolute top-0 left-0 bg-white w-full z-50 justify-center">
@@ -108,13 +107,14 @@ export default function Page() {
             }
         }) || []
     return (
-        <main className="p-10">
+        <main className="p-10 bg-white dark:bg-neutral-900 min-h-screen transition-colors">
             <div className="flex w-full items-center gap-4">
                 <div
                     className={cn(
                         "min-h-14 h-14 ml-4 relative w-14 min-w-14 rounded-xl",
                         {
-                            "bg-zinc-200/70": !data?.avatar_url,
+                            "bg-zinc-200/70 dark:bg-neutral-800/70":
+                                !data?.avatar_url,
                         }
                     )}
                 >
@@ -129,51 +129,55 @@ export default function Page() {
                     )}
                 </div>
                 <div>
-                    <h1 className="text-left text-2xl font-bold">
+                    <h1 className="text-left text-2xl font-bold text-neutral-900 dark:text-neutral-100">
                         {data?.username || data?.email}
                     </h1>
-                    <p className="font-semibold">{data?.email}</p>
-                    <p className="font-semibold">{data?.phone}</p>
+                    <p className="font-semibold text-neutral-700 dark:text-neutral-300">
+                        {data?.email}
+                    </p>
+                    <p className="font-semibold text-neutral-700 dark:text-neutral-300">
+                        {data?.phone}
+                    </p>
                 </div>
                 <div className="ml-auto scale-125 mr-4">
                     <TooltipWrapper content="XP Points">
                         <Badge
                             variant={"orange"}
-                            className=" bg-amber-100/30  h-8 min-w-7 gap-1 text-center flex items-center justify-center border text-amber-500 rounded-full "
+                            className="bg-amber-100/30 dark:bg-amber-900/40 h-8 min-w-7 gap-1 text-center flex items-center justify-center border text-amber-500 dark:text-amber-300 rounded-full"
                         >
-                            {data?.xp_points} <XpIcon className="h-4  w-4" />
+                            {data?.xp_points} <XpIcon className="h-4 w-4" />
                         </Badge>
                     </TooltipWrapper>
                 </div>
             </div>
             <section className="grid gap-5 mt-10 grid-cols-4">
-                <Card className="p-6 h-40 shadow-black/60 border-black/60">
+                <Card className="p-6 h-40 shadow-black/60 dark:shadow-black/40 border-black/60 dark:border-neutral-700 bg-white dark:bg-neutral-800 transition-colors">
                     <div className="flex justify-between items-start mb-2">
-                        <span className="text-neutral-400 font-bold">
+                        <span className="text-neutral-400 dark:text-neutral-300 font-bold">
                             Total submissions
                         </span>
-                        <ClipboardCheck className="w-6 h-6 stroke-3 text-neutral-400" />
+                        <ClipboardCheck className="w-6 h-6 stroke-3 text-neutral-400 dark:text-neutral-300" />
                     </div>
                     <div className="space-y-1">
-                        <div className="text-3xl mt-3 text-black/70 font-extrabold">
-                            {data?.submissionsCount || 0 || 0}
+                        <div className="text-3xl mt-3 text-black/70 dark:text-neutral-100 font-extrabold">
+                            {data?.submissionsCount || 0}
                         </div>
-                        <div className="text-sm first-letter:uppercase font-bold text-neutral-400">
+                        <div className="text-sm first-letter:uppercase font-bold text-neutral-400 dark:text-neutral-400">
                             {data?.username} finished{" "}
                             {data?.quiz_submissions.length || 0} quizzes.
                         </div>
                     </div>
                 </Card>
 
-                <Card className="p-6 shadow-green-400 border-green-400">
+                <Card className="p-6 shadow-green-400 dark:shadow-green-900 border-green-400 dark:border-green-700 bg-white dark:bg-neutral-800 transition-colors">
                     <div className="flex justify-between items-start mb-2">
-                        <span className="font-bold  text-neutral-400">
+                        <span className="font-bold text-neutral-400 dark:text-neutral-300">
                             Questions success Rate
                         </span>
-                        <Check className="w-6 h-6 stroke-3  text-neutral-400 " />
+                        <Check className="w-6 h-6 stroke-3 text-neutral-400 dark:text-neutral-300" />
                     </div>
                     <div className="space-y-1">
-                        <div className="text-3xl mt-3 text-green-500/90  font-extrabold">
+                        <div className="text-3xl mt-3 text-green-500/90 dark:text-green-400 font-extrabold">
                             {(
                                 ((successQuestions || 0) /
                                     (allAnswers?.length || 1)) *
@@ -181,22 +185,22 @@ export default function Page() {
                             ).toFixed(1)}{" "}
                             %
                         </div>
-                        <div className="text-sm font-bold  text-neutral-400">
+                        <div className="text-sm font-bold text-neutral-400 dark:text-neutral-400">
                             {data?.username} answered {successQuestions}{" "}
                             questions correctly
                         </div>
                     </div>
                 </Card>
 
-                <Card className="p-6 shadow-red-300 border-red-300">
+                <Card className="p-6 shadow-red-300 dark:shadow-red-900 border-red-300 dark:border-red-700 bg-white dark:bg-neutral-800 transition-colors">
                     <div className="flex justify-between items-start mb-2">
-                        <span className="text-neutral-400 font-bold">
+                        <span className="text-neutral-400 dark:text-neutral-300 font-bold">
                             Failed Questions
                         </span>
-                        <X className="w-6 h-6 stroke-3 text-neutral-400" />
+                        <X className="w-6 h-6 stroke-3 text-neutral-400 dark:text-neutral-300" />
                     </div>
                     <div className="space-y-1">
-                        <div className="text-3xl mt-3 text-red-500/90 font-extrabold">
+                        <div className="text-3xl mt-3 text-red-500/90 dark:text-red-400 font-extrabold">
                             {(
                                 ((failedQuestions || 0) /
                                     (allAnswers?.length || 1)) *
@@ -204,22 +208,22 @@ export default function Page() {
                             ).toFixed(1)}{" "}
                             %
                         </div>
-                        <div className="text-sm font-bold  text-neutral-400">
+                        <div className="text-sm font-bold text-neutral-400 dark:text-neutral-400">
                             {data?.username} answered {failedQuestions}{" "}
                             questions wrongly
                         </div>
                     </div>
                 </Card>
 
-                <Card className="p-6 shadow-neutral-300 border-neutral-300">
+                <Card className="p-6 shadow-neutral-300 dark:shadow-black/40 border-neutral-300 dark:border-neutral-700 bg-white dark:bg-neutral-800 transition-colors">
                     <div className="flex justify-between items-start mb-2">
-                        <span className="text-neutral-400 font-bold">
+                        <span className="text-neutral-400 dark:text-neutral-300 font-bold">
                             Skipped Questions
                         </span>
-                        <SkipForward className="w-6 h-6 stroke-3 text-neutral-400" />
+                        <SkipForward className="w-6 h-6 stroke-3 text-neutral-400 dark:text-neutral-300" />
                     </div>
                     <div className="space-y-1">
-                        <div className="text-3xl  mt-3 font-extrabold text-neutral-500">
+                        <div className="text-3xl mt-3 font-extrabold text-neutral-500 dark:text-neutral-200">
                             {(
                                 ((skippedQuestions || 0) /
                                     (allAnswers?.length || 1)) *
@@ -227,15 +231,15 @@ export default function Page() {
                             ).toFixed(1)}{" "}
                             %
                         </div>
-                        <div className="text-sm font-bold  text-neutral-400">
+                        <div className="text-sm font-bold text-neutral-400 dark:text-neutral-400">
                             {data?.username} skipped {skippedQuestions}{" "}
                             questions
                         </div>
                     </div>
                 </Card>
             </section>
-            <div className="mt-10 ">
-                <h2 className="text-2xl mb-4 font-extrabold">
+            <div className="mt-10">
+                <h2 className="text-2xl mb-4 font-extrabold text-neutral-900 dark:text-neutral-100">
                     Quiz submissions table :{" "}
                 </h2>
                 <DataTable columns={columns} data={tableData || []} />
@@ -247,7 +251,7 @@ export default function Page() {
                     onItemsPerPageChange={setItemsPerPage}
                 />
             </div>
-            <div className="mt-10 pb-20 ">
+            <div className="mt-10 pb-20">
                 <SubmissionsChart data={chartData} isLoading={isLoading} />
             </div>
         </main>

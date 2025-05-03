@@ -39,7 +39,7 @@ export default function MoreButton(props: Props) {
     return (
         <>
             <PopoverList
-                contentClassName="-translate-x-4 "
+                contentClassName="-translate-x-4"
                 items={[
                     {
                         icon: <Edit className="w-5 h-5" />,
@@ -67,7 +67,7 @@ export default function MoreButton(props: Props) {
                     {
                         icon: <Trash2 className="w-5 h-5" />,
                         label: "Delete",
-                        className: "focus:bg-red-200",
+                        className: "focus:bg-red-200 dark:focus:bg-red-900/40",
                         isDanger: true,
                         onClick: handleDelete,
                     },
@@ -75,7 +75,7 @@ export default function MoreButton(props: Props) {
             >
                 <button
                     role="button"
-                    className="h-8 border-2 bg-white hover:bg-neutral-50 flex items-center justify-center rounded-lg w-8 p-0 hover:cursor-pointer active:scale-95"
+                    className="h-8 border-2 border-neutral-200 dark:border-neutral-700 bg-white dark:bg-neutral-800 hover:bg-neutral-50 dark:hover:bg-neutral-700 flex items-center justify-center rounded-lg w-8 p-0 hover:cursor-pointer active:scale-95 transition-colors"
                 >
                     <MoreVerticalIcon className="!h-6 !w-6 text-neutral-600 dark:text-neutral-100" />
                 </button>

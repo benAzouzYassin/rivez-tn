@@ -107,7 +107,6 @@ export default function Page() {
                         className="
                             text-base
                             bg-blue-600 text-white
-                            dark:bg-blue-700 dark:text-blue-100
                             transition-colors
                         "
                         variant={"blue"}

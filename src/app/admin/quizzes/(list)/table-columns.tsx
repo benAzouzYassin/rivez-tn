@@ -84,7 +84,7 @@ export const columns: ColumnDef<Item>[] = [
         cell: ({ row }) => {
             const difficulty = row.original.difficulty
             return (
-                <p className="flex items-center border text-neutral-600 p-2 rounded-xl !text-base font-bold justify-center">
+                <p className="flex items-center dark:border-neutral-700  border dark:text-neutral-300 text-neutral-600 p-2 rounded-xl !text-base font-bold justify-center">
                     {difficulty}
                 </p>
             )
