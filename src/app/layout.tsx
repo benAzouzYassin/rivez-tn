@@ -71,9 +71,8 @@ export default async function RootLayout({
                     <ThemeProvider
                         storageKey="theme"
                         attribute="class"
-                        defaultTheme="system"
+                        defaultTheme="dark"
                         enableSystem
-                        disableTransitionOnChange
                     >
                         <SidenavProvider>
                             <NuqsAdapter>{children}</NuqsAdapter>
