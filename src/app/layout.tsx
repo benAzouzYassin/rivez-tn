@@ -22,7 +22,7 @@ const notoSansArabic = Noto_Sans_Arabic({
 })
 
 export const metadata: Metadata = {
-    title: "Fikr",
+    title: "Rivez.tn",
     description: "",
 }
 

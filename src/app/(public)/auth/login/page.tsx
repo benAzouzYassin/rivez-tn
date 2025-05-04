@@ -20,7 +20,7 @@ import { useForm } from "react-hook-form"
 import { z } from "zod"
 import { getLanguage } from "@/utils/get-language"
 import { LanguageSelector } from "@/components/shared/language-selector"
-import { ThemeToggle } from "@/components/shared/theme-toggle" // <-- Add this import
+import { ThemeToggle } from "@/components/shared/theme-toggle"
 
 export default function Page() {
     const { isLoading: isFetchingCurrentUser, refetch: refetchUser } =
@@ -202,7 +202,7 @@ export default function Page() {
                     </div>
                     <Button
                         type="submit"
-                        className="font-bold uppercase text-sm mt-4 dark:hover:bg-blue-600"
+                        className="font-bold uppercase text-sm mt-4 "
                         variant={"blue"}
                         isLoading={isSubmitting || isPasswordAuth}
                     >

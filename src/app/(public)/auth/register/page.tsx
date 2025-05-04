@@ -8,6 +8,7 @@ import AnimatedLoader from "@/components/ui/animated-loader"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { PhoneInput } from "@/components/ui/phone-input"
+import { isRegistered } from "@/data-access/users/read"
 import {
     registerUserWithGoogle,
     registerUserWithPassword,
@@ -130,7 +131,13 @@ export default function Page() {
 
     const onSubmit = async (formData: z.infer<typeof formSchema>) => {
         setIsPasswordAuth(true)
-
+        const isUserRegistered = await isRegistered(formData.email)
+        if (isUserRegistered) {
+            dismissToasts("loading")
+            setIsPasswordAuth(false)
+            toastError(t.error)
+            return
+        }
         const { success } = await registerUserWithPassword({
             email: formData.email,
             password: formData.password,
@@ -138,12 +145,7 @@ export default function Page() {
             phone: formData.phone || undefined,
         })
         if (success) {
-            refetchUser().then(() => {
-                const afterAuthRoute =
-                    (localStorage.getItem("afterAuthRedirect") || "/home") +
-                    "?is_new_user=true"
-                router.replace(afterAuthRoute)
-            })
+            router.push("/auth/verify-email")
         } else {
             toastError(t.error)
         }
@@ -220,7 +222,7 @@ export default function Page() {
                     <Button
                         isLoading={isPasswordAuth}
                         type="submit"
-                        className="font-bold uppercase text-sm mt-4 dark:hover:bg-blue-600"
+                        className="font-bold uppercase text-sm mt-4 "
                         variant={"blue"}
                     >
                         {t.create}

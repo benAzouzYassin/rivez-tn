@@ -14,7 +14,7 @@ export default function BackButton({ className, onClick, ...props }: Props) {
                 router.back()
                 onClick?.(e)
             }}
-            className={cn(" h-10 w-10 ", className)}
+            className={cn(" dark:hover:bg-neutral-800 h-10 w-10 ", className)}
             variant={"ghost"}
         >
             <XIcon />
