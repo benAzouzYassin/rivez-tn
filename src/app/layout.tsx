@@ -71,7 +71,7 @@ export default async function RootLayout({
                     <ThemeProvider
                         storageKey="theme"
                         attribute="class"
-                        defaultTheme="dark"
+                        defaultTheme="light"
                         enableSystem
                     >
                         <SidenavProvider>
