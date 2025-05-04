@@ -41,6 +41,9 @@ export async function GET(request: NextRequest) {
             .throwOnError()
         const creditToAdd = data[0].credit_count
         try {
+            if (!data[0].user_id) {
+                throw new Error("user_id is null")
+            }
             await supabase
                 .rpc("add_credits_to_user", {
                     credits: creditToAdd,
