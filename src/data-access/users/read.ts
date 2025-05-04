@@ -1,4 +1,5 @@
 import { supabase } from "@/lib/supabase-client-side"
+import axios from "axios"
 
 export async function readCurrentUser() {
     const userResponse = await supabase.auth.getUser()
@@ -194,4 +195,17 @@ export async function getUserCreditBalance(userId: string) {
         .single()
         .throwOnError()
     return response.data.credit_balance
+}
+
+export async function isRegistered(email: string) {
+    try {
+        const { status, data } = await axios.get(
+            `/api/user/is-registered?user_email=${email}`
+        )
+        if (status === 200 && data === true) {
+            return true
+        }
+    } catch (error) {
+        return false
+    }
 }

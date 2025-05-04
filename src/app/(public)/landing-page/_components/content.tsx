@@ -329,11 +329,9 @@ function Content({ translation, shouldSaveLang, currentLang }: Props) {
                                     {translation["Phone numbers :"]}
                                 </div>
                                 <p className="mt-2 text-[#1e1e1e]/80 dark:text-neutral-400">
-                                    +1 (555) 123-4567
+                                    +216 28 348 622
                                 </p>
-                                <p className="mt-2 text-[#1e1e1e]/80 dark:text-neutral-400">
-                                    +1 (555) 987-6543
-                                </p>
+                                <p className="mt-2 text-[#1e1e1e]/80 dark:text-neutral-400"></p>
                             </div>
                             <div className="flex flex-col items-center">
                                 <div className="text-[#1e1e1e] dark:text-neutral-200 gap-2 flex items-center font-bold mb-2">
@@ -341,21 +339,19 @@ function Content({ translation, shouldSaveLang, currentLang }: Props) {
                                     {translation["Locations :"]}
                                 </div>
                                 <p className="mt-2 text-[#1e1e1e]/80 dark:text-neutral-400">
-                                    123 Education Ave, Suite 200
+                                    Tunisia Nabeul Soliman 8020
                                 </p>
-                                <p className="mt-2 text-[#1e1e1e]/80 dark:text-neutral-400">
-                                    New York, NY 10001
-                                </p>
+                                <p className="mt-2 text-[#1e1e1e]/80 dark:text-neutral-400"></p>
                             </div>
                             <div className="flex flex-col items-center">
                                 <div className="text-[#1e1e1e] dark:text-neutral-200 gap-2 font-bold flex items-center mb-2">
                                     {translation["Contact us :"]}
                                 </div>
                                 <p className="mt-2 text-[#1e1e1e]/80 dark:text-neutral-400">
-                                    yassinebenazouz@gmail.com
+                                    yassinebenazouz123@gmail.com
                                 </p>
                                 <p className="mt-2 text-[#1e1e1e]/80 dark:text-neutral-400">
-                                    support@river.tn
+                                    yassine@benazouz.tn
                                 </p>
                             </div>
                         </div>
