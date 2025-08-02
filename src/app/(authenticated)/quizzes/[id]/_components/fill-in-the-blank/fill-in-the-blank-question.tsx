@@ -154,11 +154,11 @@ export default function FillInTheBlankQuestion(props: Props) {
     return (
         <>
             <div className="md:flex flex-col relative h-fit items-center justify-center">
-                <HintsSheet
+                {/* <HintsSheet
                     questionId={props.question.id}
                     questionContent={JSON.stringify(props.question.content)}
                     questionText={props.question.question}
-                />
+                /> */}
                 <div>
                     <p className="max-w-[1200px] md:mx-auto mb-1 pt-5 text-2xl md:text-3xl lg:text-4xl text-center font-extrabold top-0 text-neutral-700  w-full left-0">
                         {props.question?.question ||

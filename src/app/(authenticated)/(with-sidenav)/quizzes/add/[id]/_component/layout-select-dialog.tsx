@@ -255,7 +255,7 @@ export default function LayoutSelectDialog(props: Props) {
                                 <div
                                     className="flex flex-col items-center justify-center"
                                     onClick={() => {
-                                        handleLayoutSelect("matching-pairs")
+                                        handleLayoutSelect("fill-in-the-blank")
                                     }}
                                 >
                                     <h3 className="text-base font-bold text-neutral-500 dark:text-neutral-300 text-center">
