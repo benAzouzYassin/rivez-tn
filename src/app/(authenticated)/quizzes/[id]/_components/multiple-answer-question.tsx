@@ -119,11 +119,11 @@ export default function MultipleAnswerQuestion(props: Props) {
                     "flex flex-col relative h-fit items-center justify-center pb-44 bg-white dark:bg-neutral-900 transition-colors"
                 )}
             >
-                <HintsSheet
+                {/* <HintsSheet
                     questionContent={JSON.stringify(props.question.content)}
                     questionText={props.question.question}
                     questionId={props.question.id}
-                />
+                /> */}
                 <div
                     className={cn(" ", {
                         "flex flex-col w-full  items-center justify-center":

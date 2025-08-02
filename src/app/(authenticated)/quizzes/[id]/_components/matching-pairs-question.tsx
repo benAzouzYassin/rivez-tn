@@ -186,11 +186,11 @@ export default function MatchingPairsQuestion(props: Props) {
                     dark:bg-neutral-900
                 `}
             >
-                <HintsSheet
+                {/* <HintsSheet
                     questionContent={JSON.stringify(props.question.content)}
                     questionText={props.question.question}
                     questionId={props.question.id}
-                />
+                /> */}
                 <div>
                     <p
                         className={`

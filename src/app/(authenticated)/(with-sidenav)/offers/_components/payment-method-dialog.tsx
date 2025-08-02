@@ -167,13 +167,12 @@ export default function PaymentMethodDialog(props: Props) {
                             {t.paymentMethods}
                         </div>
                         <Button
-                            disabled
                             isLoading={loadingButton === "online"}
                             onClick={() => {
                                 setLoadingButton("online")
                                 handleOnlinePayment()
                             }}
-                            className="h-44 hover:bg-white w-full bg-neutral-200 hover:scale-105 flex flex-col rounded-3xl text-xl"
+                            className="h-44 hover:bg-white w-full hover:scale-105 flex flex-col rounded-3xl text-xl"
                             variant={"secondary"}
                         >
                             <div className="flex items-center gap-10">
@@ -193,9 +192,8 @@ export default function PaymentMethodDialog(props: Props) {
                             </p>
                         </Button>
                         <Button
-                            disabled
                             isLoading={loadingButton === "e-dinar"}
-                            className="h-44 hover:bg-white bg-neutral-200 w-full hover:scale-105 rounded-3xl overflow-hidden text-xl flex flex-col"
+                            className="h-44 hover:bg-white w-full hover:scale-105 rounded-3xl overflow-hidden text-xl flex flex-col"
                             variant={"secondary"}
                             onClick={() => {
                                 setLoadingButton("e-dinar")
@@ -232,8 +230,7 @@ export default function PaymentMethodDialog(props: Props) {
                             </Button>
                         </Link>
                         <Button
-                            disabled
-                            className="h-44 w-full bg-neutral-200 hover:bg-white hover:scale-105 flex flex-col rounded-3xl text-xl"
+                            className="h-44 w-full hover:bg-white hover:scale-105 flex flex-col rounded-3xl text-xl"
                             variant={"secondary"}
                         >
                             <img

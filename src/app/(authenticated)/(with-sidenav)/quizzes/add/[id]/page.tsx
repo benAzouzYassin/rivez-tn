@@ -23,7 +23,7 @@ export default function Page() {
     const shadowQuestionsCount = useQuizStore((s) => s.shadowQuestionsCount)
     const [isConfirming, setIsConfirming] = useState(false)
     const [isSubmitting, setIsSubmitting] = useState(false)
-    const didCloseConfirmationDialog = useRef(false)
+    const didCloseConfirmationDialog = useRef(true)
     useEffect(() => {
         if (!isGeneratingWithAi) {
             // we reset the state only when we are not generating.
@@ -71,7 +71,7 @@ export default function Page() {
                 </>
             ) : (
                 <div>
-                    <QuizStartDialog
+                    {/* <QuizStartDialog
                         isOpen={isConfirming}
                         isLoading={isSubmitting}
                         onEdit={() => {
@@ -90,7 +90,7 @@ export default function Page() {
                         onTake={() => {
                             setIsSubmitting(true)
                         }}
-                    />
+                    /> */}
                     <SelectedQuestionContent />
                     <AllQuestionsPreviews />
                 </div>
