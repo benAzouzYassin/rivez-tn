@@ -167,6 +167,7 @@ export default function PaymentMethodDialog(props: Props) {
                             {t.paymentMethods}
                         </div>
                         <Button
+                            disabled
                             isLoading={loadingButton === "online"}
                             onClick={() => {
                                 setLoadingButton("online")
@@ -192,6 +193,7 @@ export default function PaymentMethodDialog(props: Props) {
                             </p>
                         </Button>
                         <Button
+                            disabled
                             isLoading={loadingButton === "e-dinar"}
                             className="h-44 hover:bg-white w-full hover:scale-105 rounded-3xl overflow-hidden text-xl flex flex-col"
                             variant={"secondary"}
@@ -230,6 +232,7 @@ export default function PaymentMethodDialog(props: Props) {
                             </Button>
                         </Link>
                         <Button
+                            disabled
                             className="h-44 w-full hover:bg-white hover:scale-105 flex flex-col rounded-3xl text-xl"
                             variant={"secondary"}
                         >
