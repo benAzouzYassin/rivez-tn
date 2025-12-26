@@ -1,0 +1,15 @@
+node_modules
+.next
+dist
+build
+.turbo
+npm-debug.log
+yarn-error.log
+pnpm-lock.yaml
+package-lock.json
+bun.lockb
+.env
+.git
+.gitignore
+*.md
+public/readme
